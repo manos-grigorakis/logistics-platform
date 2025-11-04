@@ -1,6 +1,7 @@
 package com.manosgrigorakis.logisticsplatform.mapper;
 
 import com.manosgrigorakis.logisticsplatform.dto.role.RoleRequestDTO;
+import com.manosgrigorakis.logisticsplatform.dto.role.RoleResponseDTO;
 import com.manosgrigorakis.logisticsplatform.model.Role;
 
 public class RoleMapper {
@@ -12,8 +13,8 @@ public class RoleMapper {
     }
 
     // Entity => Response
-    public static RoleRequestDTO toResponse(Role role) {
-        RoleRequestDTO dto = new RoleRequestDTO();
+    public static RoleResponseDTO toResponse(Role role) {
+        RoleResponseDTO dto = new RoleResponseDTO();
         dto.setName(role.getName());
 
         return dto;
