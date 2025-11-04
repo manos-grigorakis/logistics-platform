@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: logistics-platform
+
+  datasource:
+    url: jdbc:mysql://${DB_HOST}:3306/${DB_NAME}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
