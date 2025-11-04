@@ -30,10 +30,13 @@ public class UserMapper {
     public static UserResponseDTO toResponse(User user) {
         UserResponseDTO dto = new UserResponseDTO();
 
+        dto.setId(user.getId());
         dto.setFirstName(user.getFirstName());
         dto.setLastName(user.getLastName());
         dto.setEmail(user.getEmail());
         dto.setPhone(user.getPhone());
+        dto.setCreatedAt(user.getCreatedAt());
+        dto.setUpdatedAt(user.getUpdatedAt());
 
         if (user.getRole() != null) {
             dto.setRoleId(user.getRole().getId());

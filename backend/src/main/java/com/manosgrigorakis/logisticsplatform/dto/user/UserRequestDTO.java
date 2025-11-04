@@ -1,10 +1,7 @@
 package com.manosgrigorakis.logisticsplatform.dto.user;
 
 import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,6 +25,7 @@ public class UserRequestDTO {
     @Size(max = 30)
     private String phone;
 
-    @NotEmpty(message = "Role ID is required")
+    @NotNull(message = "Role ID is required")
+    @Positive
     private Long roleId;
 }
