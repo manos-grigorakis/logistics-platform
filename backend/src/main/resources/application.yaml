@@ -10,3 +10,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+
+  security:
+    user:
+      name: ${SPRING_SECURITY_USERNAME}
+      password: ${SPRING_SECURITY_PASSWORD}
