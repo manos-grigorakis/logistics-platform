@@ -20,7 +20,7 @@ public class Role {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "name", nullable = false, length = 30)
+    @Column(name = "name", nullable = false, unique = true, length = 30)
     private String name;
 
     @OneToMany(mappedBy = "role")

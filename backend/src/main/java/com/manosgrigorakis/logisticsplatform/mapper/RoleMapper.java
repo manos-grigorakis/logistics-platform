@@ -15,7 +15,10 @@ public class RoleMapper {
     // Entity => Response
     public static RoleResponseDTO toResponse(Role role) {
         RoleResponseDTO dto = new RoleResponseDTO();
+        dto.setId(role.getId());
         dto.setName(role.getName());
+        dto.setCreatedAt(role.getCreatedAt());
+        dto.setUpdatedAt(role.getUpdatedAt());
 
         return dto;
     }
