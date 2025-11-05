@@ -14,6 +14,7 @@ public class UserResponseDTO {
     private String email;
     private String phone;
     private Long roleId;
+    private Boolean enabled;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

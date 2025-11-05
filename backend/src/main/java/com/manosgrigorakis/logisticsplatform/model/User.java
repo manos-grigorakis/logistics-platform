@@ -25,8 +25,14 @@ public class User {
     @Column(name = "email", nullable = false, unique = true, length = 320)
     private String email;
 
+    @Column(name = "password", nullable = false, length = 100)
+    private String password;
+
     @Column(name = "phone", length = 30)
     private String phone;
+
+    @Column(name = "enabled", nullable = false)
+    private Boolean enabled = true;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
