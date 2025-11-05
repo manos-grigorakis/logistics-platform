@@ -37,7 +37,7 @@ public class GenerateRandomPassword {
                 .map(String::valueOf)
                 .collect(Collectors.joining());
 
-        // Format password with the select separator
+        // Format password with the selected separator
         return formatWithSeparator(password, "(.{4})", "$1-");
     }
 
