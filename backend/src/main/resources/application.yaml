@@ -15,3 +15,6 @@ spring:
     user:
       name: ${SPRING_SECURITY_USERNAME}
       password: ${SPRING_SECURITY_PASSWORD}
+
+  jwt:
+    secret: ${JWT_SECRET}

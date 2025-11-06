@@ -1,39 +1,30 @@
 package com.manosgrigorakis.logisticsplatform.security;
 
+import com.manosgrigorakis.logisticsplatform.security.jwt.JwtAuthFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
-import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import javax.sql.DataSource;
 
 @Configuration
 public class SecurityConfig {
-    @Bean
-    public UserDetailsManager userDetailsManager(DataSource dataSource) {
-        // Map database to Spring Security
-        JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
+    private final JwtAuthFilter jwtAuthFilter;
+    private final UserDetailsService userDetailsService;
 
-        // Connect table users to Spring Security
-        jdbcUserDetailsManager.setUsersByUsernameQuery(
-                "SELECT email AS username, password, enabled FROM users WHERE email = ?"
-        );
-
-        // Connect table roles to Spring Security
-        jdbcUserDetailsManager.setAuthoritiesByUsernameQuery(
-                "SELECT u.email AS username, r.name AS authority " +
-                        "FROM users u " +
-                        "JOIN roles r ON u.role_id = r.id " +
-                        "WHERE u.email = ?"
-        );
-
-        return jdbcUserDetailsManager;
+    public SecurityConfig(JwtAuthFilter jwtAuthFilter, UserDetailsService userDetailsService) {
+        this.jwtAuthFilter = jwtAuthFilter;
+        this.userDetailsService = userDetailsService;
     }
 
     @Bean
@@ -41,6 +32,9 @@ public class SecurityConfig {
         // Permissions for each role based on API endpoints
         http.authorizeHttpRequests(configurer ->
                 configurer
+                        // Public endpoints
+                        .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+
                         // ROLES
                         .requestMatchers(HttpMethod.GET, "/api/roles").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/roles/**").hasAuthority("ADMIN")
@@ -55,12 +49,21 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/users/**").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasAuthority("ADMIN")
 
+                        // All other endpoints require authentication
+                        .anyRequest().authenticated()
         );
 
-        // Use HTTP Basic Authentication
-        http.httpBasic(Customizer.withDefaults());
+        // Stateless session (required for JWT)
+        http.sessionManagement(session ->
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        // Disable CSRF (DEV ONLY)
+        // Set custom authentication provider
+        http.authenticationProvider(authenticationProvider());
+
+        // Add JWT filter before Spring Security default filter
+        http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
+        // Disable CSRF
         http.csrf(csrf -> csrf.disable());
 
         return http.build();
@@ -69,5 +72,23 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    /* Custom authentication provider
+    Links UserDetailsService and PasswordEncoder */
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userDetailsService);
+        provider.setPasswordEncoder(passwordEncoder());
+
+        return provider;
+    }
+
+    // Authentication manager bean
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws
+            Exception {
+        return config.getAuthenticationManager();
     }
 }
