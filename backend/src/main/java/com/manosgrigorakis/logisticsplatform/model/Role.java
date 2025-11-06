@@ -23,6 +23,9 @@ public class Role {
     @Column(name = "name", nullable = false, unique = true, length = 30)
     private String name;
 
+    @Column(name = "description", nullable = true, length = 255)
+    private String description;
+
     @OneToMany(mappedBy = "role")
     private List<User> users;
 
@@ -37,8 +40,9 @@ public class Role {
     }
 
     @Builder
-    public Role(String name) {
+    public Role(String name, String description) {
         this.name = name;
+        this.description = description;
     }
 
     @PrePersist

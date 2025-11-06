@@ -47,6 +47,7 @@ public class RoleServiceImpl implements RoleService {
 
         Role role = Role.builder()
                 .name(dto.getName())
+                .description(dto.getDescription())
                 .build();
 
         roleRepository.save(role);
@@ -60,6 +61,7 @@ public class RoleServiceImpl implements RoleService {
                 .orElseThrow(() -> new EntityNotFoundException("Role not found with id: " + id));
 
         role.setName(dto.getName());
+        role.setDescription(dto.getDescription());
 
         Role updatedRole = roleRepository.save(role);
 

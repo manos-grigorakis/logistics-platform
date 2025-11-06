@@ -9,6 +9,7 @@ public class RoleMapper {
     public static Role toEntity(RoleRequestDTO dto) {
         return Role.builder()
                 .name(dto.getName())
+                .description(dto.getDescription())
                 .build();
     }
 
@@ -17,6 +18,7 @@ public class RoleMapper {
         RoleResponseDTO dto = new RoleResponseDTO();
         dto.setId(role.getId());
         dto.setName(role.getName());
+        dto.setDescription(role.getDescription());
         dto.setCreatedAt(role.getCreatedAt());
         dto.setUpdatedAt(role.getUpdatedAt());
 
