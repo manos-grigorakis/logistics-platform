@@ -6,5 +6,5 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RequestResetPasswordResponseDTO {
-    String message;
+    private String message;
 }
