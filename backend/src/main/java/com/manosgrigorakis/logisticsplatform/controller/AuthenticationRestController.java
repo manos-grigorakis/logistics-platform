@@ -1,6 +1,7 @@
 package com.manosgrigorakis.logisticsplatform.controller;
 
 import com.manosgrigorakis.logisticsplatform.dto.auth.*;
+import com.manosgrigorakis.logisticsplatform.dto.shared.MessageResponseDTO;
 import com.manosgrigorakis.logisticsplatform.service.AuthenticationService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -31,5 +32,25 @@ public class AuthenticationRestController {
                 "If they email is registered, you will get a reset link in your email.");
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/reset-password")
+    public ResponseEntity<ValidateResetPasswordTokenResponseDTO> validateResetPasswordToken(
+            @RequestParam("token") String token) {
+        authenticationService.validateResetPasswordToken(token);
+
+        ValidateResetPasswordTokenResponseDTO response = new ValidateResetPasswordTokenResponseDTO(
+                true,
+                "Token is valid."
+        );
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/reset-password/confirm")
+    public ResponseEntity<MessageResponseDTO> resetPassword(@RequestBody @Valid ResetPasswordRequestDTO dto) {
+        authenticationService.resetPassword(dto);
+
+        return ResponseEntity.ok(new MessageResponseDTO("Password successfully reset"));
     }
 }

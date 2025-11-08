@@ -35,6 +35,8 @@ public class SecurityConfig {
                         // Public endpoints
                         .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/request-reset").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/auth/reset-password/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/reset-password/confirm").permitAll()
 
                         // ROLES
                         .requestMatchers(HttpMethod.GET, "/api/roles").hasAuthority("ADMIN")

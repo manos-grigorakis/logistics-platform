@@ -3,6 +3,7 @@ package com.manosgrigorakis.logisticsplatform.service.impl;
 import com.manosgrigorakis.logisticsplatform.dto.auth.AuthRequestDTO;
 import com.manosgrigorakis.logisticsplatform.dto.auth.JwtResponseDTO;
 import com.manosgrigorakis.logisticsplatform.dto.auth.RequestResetPasswordRequestDTO;
+import com.manosgrigorakis.logisticsplatform.dto.auth.ResetPasswordRequestDTO;
 import com.manosgrigorakis.logisticsplatform.enums.TokenType;
 import com.manosgrigorakis.logisticsplatform.model.User;
 import com.manosgrigorakis.logisticsplatform.model.UserTokens;
@@ -12,10 +13,13 @@ import com.manosgrigorakis.logisticsplatform.security.jwt.JwtService;
 import com.manosgrigorakis.logisticsplatform.service.AuthenticationService;
 import com.manosgrigorakis.logisticsplatform.utils.GenerateSecureToken;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -27,14 +31,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
     private final UserTokensRepository userTokensRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public AuthenticationServiceImpl(
             JwtService jwtService, AuthenticationManager authenticationManager,
-            UserRepository userRepository, UserTokensRepository userTokensRepository) {
+            UserRepository userRepository, UserTokensRepository userTokensRepository,
+            PasswordEncoder passwordEncoder) {
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.userTokensRepository = userTokensRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -91,4 +98,37 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         // TODO: Send reset email
     }
+
+    @Override
+    public void validateResetPasswordToken(String token) {
+        validateResetToken(token);
+    }
+
+    @Override
+    public void resetPassword(ResetPasswordRequestDTO dto) {
+        UserTokens userTokens = validateResetToken(dto.getToken());
+
+        // Update user's password
+        User user = userTokens.getUser();
+        user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+        userRepository.save(user);
+
+        // Delete token (one time use)
+        userTokensRepository.delete(userTokens);
+    }
+
+    // Helper method that validates the token
+    private UserTokens validateResetToken(String token) {
+        UserTokens userTokens = userTokensRepository.findByToken(token)
+                .orElseThrow(
+                        () -> new EntityNotFoundException("User Token not found with token: " + token)
+                );
+
+        if (userTokens.isExpired()) {
+            throw new RuntimeException("Token is expired");
+        }
+
+        return userTokens;
+    }
+
 }
