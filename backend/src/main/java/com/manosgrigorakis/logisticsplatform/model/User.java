@@ -1,5 +1,6 @@
 package com.manosgrigorakis.logisticsplatform.model;
 
+import com.manosgrigorakis.logisticsplatform.enums.UserStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,7 +10,7 @@ import java.time.LocalDateTime;
 @Table(name = "users")
 @Getter
 @Setter
-@ToString
+@ToString(exclude = "role")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,14 +26,18 @@ public class User {
     @Column(name = "email", nullable = false, unique = true, length = 320)
     private String email;
 
-    @Column(name = "password", nullable = false, length = 100)
+    @Column(name = "password", nullable = true, length = 100)
     private String password;
 
     @Column(name = "phone", length = 30)
     private String phone;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private UserStatus status = UserStatus.SUSPENDED;
+
     @Column(name = "enabled", nullable = false)
-    private Boolean enabled = true;
+    private Boolean enabled = false;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
@@ -48,11 +53,12 @@ public class User {
     }
 
     @Builder
-    public User(String firstName, String lastName, String email, String phone) {
+    public User(String firstName, String lastName, String email, String phone, UserStatus status) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.phone = phone;
+        this.status = status;
     }
 
     @PrePersist

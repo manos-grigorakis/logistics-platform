@@ -1,5 +1,6 @@
 package com.manosgrigorakis.logisticsplatform.dto.user;
 
+import com.manosgrigorakis.logisticsplatform.enums.UserStatus;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,6 +15,7 @@ public class UserResponseDTO {
     private String email;
     private String phone;
     private Long roleId;
+    private UserStatus status;
     private Boolean enabled;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
