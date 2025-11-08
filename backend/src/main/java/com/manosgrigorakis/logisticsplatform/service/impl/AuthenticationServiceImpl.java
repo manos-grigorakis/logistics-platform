@@ -13,8 +13,7 @@ import com.manosgrigorakis.logisticsplatform.security.jwt.JwtService;
 import com.manosgrigorakis.logisticsplatform.service.AuthenticationService;
 import com.manosgrigorakis.logisticsplatform.utils.GenerateSecureToken;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,6 +21,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 
@@ -32,6 +32,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserRepository userRepository;
     private final UserTokensRepository userTokensRepository;
     private final PasswordEncoder passwordEncoder;
+
+    @Value("${app.reset_password.expires:30m}")
+    private Duration expiresIn;
 
     public AuthenticationServiceImpl(
             JwtService jwtService, AuthenticationManager authenticationManager,
@@ -80,7 +83,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String token = GenerateSecureToken.generateToken();
 
         // Set token expiration time
-        LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(30);
+        LocalDateTime expirationTime = LocalDateTime.now().plus(expiresIn);
 
         UserTokens userTokens = UserTokens.builder()
                 .token(token)
@@ -91,10 +94,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         userTokens.setUser(user);
 
         userTokensRepository.save(userTokens);
-
-        // DEBUD:
-        String resetUrl = "https://frontenddomain.com/reset-password?=" + token;
-        System.out.printf(resetUrl);
 
         // TODO: Send reset email
     }

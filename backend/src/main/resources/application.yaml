@@ -18,3 +18,7 @@ spring:
 
   jwt:
     secret: ${JWT_SECRET}
+
+app:
+  reset_password:
+    expires: ${TOKEN_EXPIRES_IN}
