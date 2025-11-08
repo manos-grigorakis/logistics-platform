@@ -9,7 +9,6 @@ import com.manosgrigorakis.logisticsplatform.repository.UserRepository;
 import com.manosgrigorakis.logisticsplatform.repository.UserTokensRepository;
 import com.manosgrigorakis.logisticsplatform.security.jwt.JwtService;
 import com.manosgrigorakis.logisticsplatform.service.AuthenticationService;
-import com.manosgrigorakis.logisticsplatform.utils.GenerateSecureToken;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,8 +19,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
-
 
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
@@ -31,20 +28,23 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserTokensRepository userTokensRepository;
     private final PasswordEncoder passwordEncoder;
     private final MailService mailService;
+    private final UserTokensServiceImpl userTokensService;
 
     @Value("${app.reset_password.expires:30m}")
-    private Duration expiresIn;
+    private Duration resetPasswordTokenExpiresIn;
 
     public AuthenticationServiceImpl(
             JwtService jwtService, AuthenticationManager authenticationManager,
             UserRepository userRepository, UserTokensRepository userTokensRepository,
-            PasswordEncoder passwordEncoder, MailService mailService) {
+            PasswordEncoder passwordEncoder, MailService mailService,
+            UserTokensServiceImpl userTokensService) {
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.userTokensRepository = userTokensRepository;
         this.passwordEncoder = passwordEncoder;
         this.mailService = mailService;
+        this.userTokensService = userTokensService;
     }
 
     @Override
@@ -96,22 +96,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 );
 
         // Generate token
-        String token = GenerateSecureToken.generateToken();
+        UserTokens userTokens = userTokensService.
+                generateUserTokens(TokenType.RESET_PASSWORD, resetPasswordTokenExpiresIn, user);
 
-        // Set token expiration time
-        LocalDateTime expirationTime = LocalDateTime.now().plus(expiresIn);
-
-        UserTokens userTokens = UserTokens.builder()
-                .token(token)
-                .type(TokenType.RESET_PASSWORD)
-                .expiresAt(expirationTime)
-                .build();
-
-        userTokens.setUser(user);
-
-        userTokensRepository.save(userTokens);
-
-        mailService.sendResetPasswordEmail(user.getFirstName(),user.getEmail(), token);
+        mailService.sendResetPasswordEmail(user.getFirstName(),user.getEmail(), userTokens.getToken());
     }
 
     @Override

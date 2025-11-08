@@ -40,7 +40,7 @@ app:
   setup_password:
     expires: ${SETUP_PASSWORD_TOKEN_EXPIRATION}
   reset_password:
-    expires: ${TOKEN_EXPIRES_IN}
+    expires: ${RESET_PASSWORD_TOKEN_EXPIRATION}
 
   mail:
     no_reply: ${NO_REPLY_MAIL}
