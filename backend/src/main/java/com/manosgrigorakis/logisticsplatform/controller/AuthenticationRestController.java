@@ -24,11 +24,11 @@ public class AuthenticationRestController {
     }
 
     @PostMapping("/request-reset")
-    public ResponseEntity<RequestResetPasswordResponseDTO> requestResetPassword(
+    public ResponseEntity<MessageResponseDTO> requestResetPassword(
             @RequestBody @Valid RequestResetPasswordRequestDTO dto) {
         authenticationService.requestResetPassword(dto);
 
-        RequestResetPasswordResponseDTO response = new RequestResetPasswordResponseDTO(
+        MessageResponseDTO response = new MessageResponseDTO(
                 "If they email is registered, you will get a reset link in your email.");
 
         return ResponseEntity.ok(response);
