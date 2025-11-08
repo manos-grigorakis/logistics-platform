@@ -32,6 +32,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserRepository userRepository;
     private final UserTokensRepository userTokensRepository;
     private final PasswordEncoder passwordEncoder;
+    private final MailService mailService;
 
     @Value("${app.reset_password.expires:30m}")
     private Duration expiresIn;
@@ -39,12 +40,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public AuthenticationServiceImpl(
             JwtService jwtService, AuthenticationManager authenticationManager,
             UserRepository userRepository, UserTokensRepository userTokensRepository,
-            PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder, MailService mailService) {
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.userTokensRepository = userTokensRepository;
         this.passwordEncoder = passwordEncoder;
+        this.mailService = mailService;
     }
 
     @Override
@@ -95,7 +97,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         userTokensRepository.save(userTokens);
 
-        // TODO: Send reset email
+        mailService.sendResetPasswordEmail(user.getFirstName(),user.getEmail(), token);
     }
 
     @Override
