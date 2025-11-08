@@ -24,15 +24,17 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final UserTokensServiceImpl userTokensService;
+    private final MailService mailService;
 
     @Value("${app.setup_password.expires:48h}")
     private Duration setupPasswordTokenExpirationTime;
 
     public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
-                           UserTokensServiceImpl userTokensService) {
+                           UserTokensServiceImpl userTokensService, MailService mailService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.userTokensService = userTokensService;
+        this.mailService = mailService;
     }
 
     @Override
@@ -79,7 +81,8 @@ public class UserServiceImpl implements UserService {
         UserTokens userTokens = userTokensService.generateUserTokens(
                 TokenType.CREATE_PASSWORD, setupPasswordTokenExpirationTime, user);
 
-        // TODO: send email to user to setup password
+        // Send mail
+        mailService.sendSetupPasswordMail(user, userTokens.getToken());
 
         return UserMapper.toResponse(user);
     }

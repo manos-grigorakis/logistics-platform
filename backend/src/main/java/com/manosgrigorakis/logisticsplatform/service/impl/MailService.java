@@ -1,5 +1,6 @@
 package com.manosgrigorakis.logisticsplatform.service.impl;
 
+import com.manosgrigorakis.logisticsplatform.model.User;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,17 +27,56 @@ public class MailService {
     @Value("classpath:templates/mails/reset-password/index.html")
     private Resource resetPasswordHtmlTemplate;
 
+    @Value("classpath:templates/mails/setup-password/index.html")
+    private Resource setupPasswordHtmlTemplate;
+
     @Value("${app.mail.displayName}")
     private String displayName;
 
     @Value("${app.reset_password.expires}")
     private String resetPasswordTokenExpiresIn;
 
-    private final JavaMailSender mailSender;
+    @Value("${app.setup_password.expires}")
+    private String setupPasswordTokenExpiresIn;
 
+    private final JavaMailSender mailSender;
 
     public MailService(JavaMailSender mailSender) {
         this.mailSender = mailSender;
+    }
+
+    public void sendSetupPasswordMail(User user, String token) {
+        try {
+            String subject = "Complete your account setup";
+            String url = frontendUrl + "/setup-password?token=" + token;
+            String role = user.getRole().getName();
+            String formatedRole = role.substring(0, 1).toUpperCase() + role.substring(1).toLowerCase();
+
+            // Format template
+            String htmlTemplate = new String(
+                    setupPasswordHtmlTemplate.getInputStream().readAllBytes(), StandardCharsets.UTF_8
+            );
+
+            // Format reset password expiration time (from 30m to 30)
+            String formattedTokenExpiration = setupPasswordTokenExpiresIn.
+                    substring(0, setupPasswordTokenExpiresIn.length() - 1);
+
+            // Replace placeholders
+            htmlTemplate = htmlTemplate
+                    .replace("${name}", user.getFirstName())
+                    .replace("${email}", user.getEmail())
+                    .replace("${role}", formatedRole)
+                    .replace("${setPasswordUrl}", url)
+                    .replace("${displayName}", displayName)
+                    .replace("${supportMail}", supportMail)
+                    .replace("${tokenExpiresIn}", formattedTokenExpiration)
+                    .replace("${currentYear}", String.valueOf(Year.now().getValue()));
+
+            MimeMessage mail = buildHtmlMail(user.getEmail(), subject, htmlTemplate);
+            mailSender.send(mail);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to build or process email template", e);
+        }
     }
 
     public void sendResetPasswordEmail(String name, String email, String token) {
