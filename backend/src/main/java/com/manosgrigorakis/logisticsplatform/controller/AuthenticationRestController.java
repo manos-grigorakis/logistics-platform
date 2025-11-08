@@ -23,6 +23,13 @@ public class AuthenticationRestController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/setup-password")
+    public ResponseEntity<MessageResponseDTO> setupPassword(@RequestBody @Valid SetupPasswordRequestDTO dto) {
+        authenticationService.setupPassword(dto);
+
+        return ResponseEntity.ok(new MessageResponseDTO("Your account has been successfully activated"));
+    }
+
     @PostMapping("/request-reset")
     public ResponseEntity<MessageResponseDTO> requestResetPassword(
             @RequestBody @Valid RequestResetPasswordRequestDTO dto) {

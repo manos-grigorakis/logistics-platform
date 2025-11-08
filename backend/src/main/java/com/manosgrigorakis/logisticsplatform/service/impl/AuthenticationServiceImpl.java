@@ -1,10 +1,8 @@
 package com.manosgrigorakis.logisticsplatform.service.impl;
 
-import com.manosgrigorakis.logisticsplatform.dto.auth.AuthRequestDTO;
-import com.manosgrigorakis.logisticsplatform.dto.auth.JwtResponseDTO;
-import com.manosgrigorakis.logisticsplatform.dto.auth.RequestResetPasswordRequestDTO;
-import com.manosgrigorakis.logisticsplatform.dto.auth.ResetPasswordRequestDTO;
+import com.manosgrigorakis.logisticsplatform.dto.auth.*;
 import com.manosgrigorakis.logisticsplatform.enums.TokenType;
+import com.manosgrigorakis.logisticsplatform.enums.UserStatus;
 import com.manosgrigorakis.logisticsplatform.model.User;
 import com.manosgrigorakis.logisticsplatform.model.UserTokens;
 import com.manosgrigorakis.logisticsplatform.repository.UserRepository;
@@ -74,6 +72,22 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
+    public void setupPassword(SetupPasswordRequestDTO dto) {
+        UserTokens userTokens =  validateToken(dto.getToken());
+
+        String hashedPassword = passwordEncoder.encode(dto.getPassword());
+
+        User user = userTokens.getUser();
+        user.setPassword(hashedPassword);
+        user.setStatus(UserStatus.ACTIVE);
+        user.setEnabled(true);
+        userRepository.save(user);
+
+        // Delete associated token
+        userTokensRepository.delete(userTokens);
+    }
+
+    @Override
     public void requestResetPassword(RequestResetPasswordRequestDTO dto) {
         // Check if user exists by email
         User user = userRepository.findByEmail(dto.getEmail())
@@ -102,12 +116,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public void validateResetPasswordToken(String token) {
-        validateResetToken(token);
+        validateToken(token);
     }
 
     @Override
     public void resetPassword(ResetPasswordRequestDTO dto) {
-        UserTokens userTokens = validateResetToken(dto.getToken());
+        UserTokens userTokens = validateToken(dto.getToken());
 
         // Update user's password
         User user = userTokens.getUser();
@@ -119,7 +133,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     // Helper method that validates the token
-    private UserTokens validateResetToken(String token) {
+    private UserTokens validateToken(String token) {
         UserTokens userTokens = userTokensRepository.findByToken(token)
                 .orElseThrow(
                         () -> new EntityNotFoundException("User Token not found with token: " + token)

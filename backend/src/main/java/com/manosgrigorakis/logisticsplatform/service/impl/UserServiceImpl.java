@@ -2,16 +2,20 @@ package com.manosgrigorakis.logisticsplatform.service.impl;
 
 import com.manosgrigorakis.logisticsplatform.dto.user.UserRequestDTO;
 import com.manosgrigorakis.logisticsplatform.dto.user.UserResponseDTO;
+import com.manosgrigorakis.logisticsplatform.enums.TokenType;
 import com.manosgrigorakis.logisticsplatform.enums.UserStatus;
 import com.manosgrigorakis.logisticsplatform.mapper.UserMapper;
 import com.manosgrigorakis.logisticsplatform.model.Role;
 import com.manosgrigorakis.logisticsplatform.model.User;
+import com.manosgrigorakis.logisticsplatform.model.UserTokens;
 import com.manosgrigorakis.logisticsplatform.repository.RoleRepository;
 import com.manosgrigorakis.logisticsplatform.repository.UserRepository;
 import com.manosgrigorakis.logisticsplatform.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,10 +23,16 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final UserTokensServiceImpl userTokensService;
 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
+    @Value("${app.setup_password.expires:48h}")
+    private Duration setupPasswordTokenExpirationTime;
+
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
+                           UserTokensServiceImpl userTokensService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.userTokensService = userTokensService;
     }
 
     @Override
@@ -64,6 +74,10 @@ public class UserServiceImpl implements UserService {
         user.setRole(role);
 
         userRepository.save(user);
+
+        // Generate token
+        UserTokens userTokens = userTokensService.generateUserTokens(
+                TokenType.CREATE_PASSWORD, setupPasswordTokenExpirationTime, user);
 
         // TODO: send email to user to setup password
 
