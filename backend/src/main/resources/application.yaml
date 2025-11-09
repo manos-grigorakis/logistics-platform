@@ -10,3 +10,39 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+
+  security:
+    user:
+      name: ${SPRING_SECURITY_USERNAME}
+      password: ${SPRING_SECURITY_PASSWORD}
+
+  jwt:
+    secret: ${JWT_SECRET}
+
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 3000
+          writetimeout: 5000
+
+app:
+  frontend:
+    url: ${FRONTEND_URL}
+  setup_password:
+    expires: ${SETUP_PASSWORD_TOKEN_EXPIRATION}
+  reset_password:
+    expires: ${RESET_PASSWORD_TOKEN_EXPIRATION}
+
+  mail:
+    no_reply: ${NO_REPLY_MAIL}
+    support: ${SUPPORT_MAIL}
+    displayName: ${DISPLAY_NAME}
