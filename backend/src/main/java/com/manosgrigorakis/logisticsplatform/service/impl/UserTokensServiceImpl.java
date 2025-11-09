@@ -6,6 +6,8 @@ import com.manosgrigorakis.logisticsplatform.model.UserTokens;
 import com.manosgrigorakis.logisticsplatform.repository.UserTokensRepository;
 import com.manosgrigorakis.logisticsplatform.service.UserTokensService;
 import com.manosgrigorakis.logisticsplatform.utils.GenerateSecureToken;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -14,6 +16,7 @@ import java.time.LocalDateTime;
 @Service
 public class UserTokensServiceImpl implements UserTokensService {
     private final UserTokensRepository userTokensRepository;
+    private final Logger log = LoggerFactory.getLogger(UserTokensServiceImpl.class);
 
     public UserTokensServiceImpl(UserTokensRepository userTokensRepository) {
         this.userTokensRepository = userTokensRepository;
@@ -35,6 +38,7 @@ public class UserTokensServiceImpl implements UserTokensService {
 
         userTokens.setUser(user);
         userTokensRepository.save(userTokens);
+        log.info("Token {} for user {} created", tokenType, user.getEmail());
 
         return userTokens;
     }
