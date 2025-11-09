@@ -12,6 +12,8 @@ import com.manosgrigorakis.logisticsplatform.repository.RoleRepository;
 import com.manosgrigorakis.logisticsplatform.repository.UserRepository;
 import com.manosgrigorakis.logisticsplatform.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,7 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final UserTokensServiceImpl userTokensService;
     private final MailService mailService;
+    private final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Value("${app.setup_password.expires:48h}")
     private Duration setupPasswordTokenExpirationTime;
@@ -59,11 +62,15 @@ public class UserServiceImpl implements UserService {
         Optional<User> existingUser = userRepository.findByEmail(dto.getEmail());
 
         if (existingUser.isPresent()) {
+            log.warn("Attempted to create duplicate user with email: {}", dto.getEmail());
             throw new RuntimeException("Email already exists");
         }
 
         Role role = roleRepository.findById(dto.getRoleId())
-                .orElseThrow(() -> new EntityNotFoundException("Role not found with id: " + dto.getRoleId()));
+                .orElseThrow(() -> {
+                    log.error("Create user failed. Role not found with id: {}", dto.getRoleId());
+                    return new EntityNotFoundException("Role not found with id: " + dto.getRoleId());
+                });
 
         User user = User.builder()
                 .firstName(dto.getFirstName())
@@ -74,15 +81,18 @@ public class UserServiceImpl implements UserService {
                 .build();
 
         user.setRole(role);
-
         userRepository.save(user);
+        log.info("User created: {}", user.getEmail());
 
         // Generate token
         UserTokens userTokens = userTokensService.generateUserTokens(
                 TokenType.CREATE_PASSWORD, setupPasswordTokenExpirationTime, user);
 
+        log.info("Password setup token created for user: {}", user.getEmail());
+
         // Send mail
         mailService.sendSetupPasswordMail(user, userTokens.getToken());
+        log.info("Password setup email sent to {}", user.getEmail());
 
         return UserMapper.toResponse(user);
     }
@@ -90,14 +100,21 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDTO updateUserById(Long id, UserRequestDTO dto) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+                .orElseThrow(() -> {
+                        log.error("Update failed. User not found with id: {}", id);
+                        return new EntityNotFoundException("User not found with id: " + id);
+                });
 
         Role role = roleRepository.findById(dto.getRoleId())
-                .orElseThrow(() -> new EntityNotFoundException("Role not found with id: " + dto.getRoleId()));
+                .orElseThrow(() -> {
+                    log.error("Updated failed. Role not found with id: {}", dto.getRoleId());
+                    return new EntityNotFoundException("Role not found with id: " + dto.getRoleId());
+                });
 
         Optional<User> existingUser = userRepository.findByEmail(dto.getEmail());
 
         if (existingUser.isPresent() && !existingUser.get().getId().equals(id)) {
+            log.warn("Update failed. Attempted to create duplicate user: {}", dto.getEmail());
             throw new RuntimeException("Email already exists");
         }
 
@@ -106,8 +123,8 @@ public class UserServiceImpl implements UserService {
         user.setEmail(dto.getEmail());
         user.setPhone(dto.getPhone());
         user.setRole(role);
-
         userRepository.save(user);
+        log.info("User updated: {}", dto.getEmail());
 
         return UserMapper.toResponse(user);
     }
@@ -115,9 +132,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUserById(Long id) {
         if (!userRepository.existsById(id)) {
+            log.error("Delete failed. User not found with id: {}", id);
             throw new EntityNotFoundException("User not found with id: " + id);
         }
 
         userRepository.deleteById(id);
+        log.info("User deleted: {}", id);
     }
 }
