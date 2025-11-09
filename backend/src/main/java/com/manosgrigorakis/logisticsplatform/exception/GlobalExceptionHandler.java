@@ -42,4 +42,35 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
+
+    // Duplicate Entry - 409
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handleDuplicateEntryException(DuplicateEntryException exc) {
+        Map<String, Object> details = Map.of(
+                "duplicateField", exc.getField(),
+                "duplicateValue", exc.getValue()
+        );
+
+        ErrorResponse response = new ErrorResponse(
+                HttpStatus.CONFLICT.value(),
+                exc.getMessage(),
+                System.currentTimeMillis(),
+                details
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+    }
+
+    // Server error - 500
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handleException(Exception exc) {
+        ErrorResponse response = new ErrorResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                exc.getMessage(),
+                System.currentTimeMillis(),
+                null
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }
