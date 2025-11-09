@@ -3,6 +3,8 @@ package com.manosgrigorakis.logisticsplatform.service.impl;
 import com.manosgrigorakis.logisticsplatform.model.User;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -15,6 +17,9 @@ import java.time.Year;
 
 @Service
 public class MailService {
+    private final JavaMailSender mailSender;
+    private final Logger log = LoggerFactory.getLogger(MailService.class);
+
     @Value("${app.frontend.url}")
     private String frontendUrl;
 
@@ -35,17 +40,16 @@ public class MailService {
 
     @Value("${app.reset_password.expires}")
     private String resetPasswordTokenExpiresIn;
-
+    
     @Value("${app.setup_password.expires}")
     private String setupPasswordTokenExpiresIn;
-
-    private final JavaMailSender mailSender;
 
     public MailService(JavaMailSender mailSender) {
         this.mailSender = mailSender;
     }
 
     public void sendSetupPasswordMail(User user, String token) {
+        log.info("Preparing password setup email for user {}", user.getEmail());
         try {
             String subject = "Complete your account setup";
             String url = frontendUrl + "/setup-password?token=" + token;
@@ -74,12 +78,16 @@ public class MailService {
 
             MimeMessage mail = buildHtmlMail(user.getEmail(), subject, htmlTemplate);
             mailSender.send(mail);
+            log.info("Password setup email sent successfully to {}", user.getEmail());
         } catch (IOException e) {
+            log.error("Failed to build or send password setup email for user {}: {}", user.getEmail(), e.getMessage());
             throw new RuntimeException("Failed to build or process email template", e);
         }
     }
 
     public void sendResetPasswordEmail(String name, String email, String token) {
+        log.info("Preparing password reset email for user {}", email);
+
         try {
             String subject = "Request for Password Reset";
             String resetUrl = frontendUrl + "/reset-password?token=" + token;
@@ -104,12 +112,15 @@ public class MailService {
 
             MimeMessage mail = buildHtmlMail(email, subject, htmlTemplate);
             mailSender.send(mail);
+            log.info("Password reset email sent successfully to {}", email);
         } catch (IOException e) {
+            log.error("Failed to build or send password reset email for user {}: {}", email, e.getMessage());
             throw new RuntimeException("Failed to build or process email template", e);
         }
     }
 
     private MimeMessage buildHtmlMail(String mailTo, String subject, String htmlTemplate) {
+        log.debug("Building HTML mail to {}", mailTo);
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -118,9 +129,11 @@ public class MailService {
             helper.setTo(mailTo);
             helper.setSubject(subject);
             helper.setText(htmlTemplate, true);
+            log.info("HTML email built successfully for {}", mailTo);
 
             return message;
         } catch (MessagingException e) {
+            log.error("Failed to build HTML email for {}: {}", mailTo, e.getMessage());
             throw new RuntimeException(e);
         }
     }
