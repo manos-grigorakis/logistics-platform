@@ -7,6 +7,8 @@ import com.manosgrigorakis.logisticsplatform.model.Role;
 import com.manosgrigorakis.logisticsplatform.repository.RoleRepository;
 import com.manosgrigorakis.logisticsplatform.service.RoleService;
 import jakarta.persistence.EntityNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +17,7 @@ import java.util.Optional;
 @Service
 public class RoleServiceImpl implements RoleService {
     private final RoleRepository roleRepository;
+    private final Logger log = LoggerFactory.getLogger(RoleServiceImpl.class);
 
     public RoleServiceImpl(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
@@ -32,7 +35,10 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public RoleResponseDTO getRoleById(Long id) {
         Role role = roleRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Role not found with id: " + id));
+                .orElseThrow(() -> {
+                        log.error("Role not found with id: {}", id);
+                        return new EntityNotFoundException("Role not found with id: " + id);
+                });
 
         return RoleMapper.toResponse(role);
     }
@@ -42,6 +48,7 @@ public class RoleServiceImpl implements RoleService {
         Optional<Role> existingRole = roleRepository.findByName(dto.getName());
 
         if (existingRole.isPresent()) {
+            log.warn("Attempted to create duplicate role: {}", dto.getName());
             throw new RuntimeException("Duplicate entry");
         }
 
@@ -51,6 +58,7 @@ public class RoleServiceImpl implements RoleService {
                 .build();
 
         roleRepository.save(role);
+        log.info("Role created: {}", dto.getName());
 
         return RoleMapper.toResponse(role);
     }
@@ -58,12 +66,16 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public RoleResponseDTO updateRole(Long id, RoleRequestDTO dto) {
         Role role = roleRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Role not found with id: " + id));
+                .orElseThrow(() -> {
+                    log.error("Update failed. Role not found: {}", id);
+                    return new EntityNotFoundException("Role not found with id: " + id);
+                });
 
         role.setName(dto.getName());
         role.setDescription(dto.getDescription());
 
         Role updatedRole = roleRepository.save(role);
+        log.info("Role updated: {}", dto.getName());
 
         return RoleMapper.toResponse(updatedRole);
     }
@@ -71,9 +83,11 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public void deleteRoleById(Long id) {
         if (!roleRepository.existsById(id)) {
+            log.error("Delete failed. Role not found with id: {}", id);
             throw new EntityNotFoundException("Role not found with id: " + id);
         }
 
         roleRepository.deleteById(id);
+        log.info("Role deleted: {}", id);
     }
 }
