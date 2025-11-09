@@ -14,10 +14,7 @@ import com.manosgrigorakis.logisticsplatform.service.AuthenticationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -76,6 +73,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw e;
         } catch (DisabledException e) {
             log.error("Authentication error for user {}: account disabled", dto.getEmail());
+            throw e;
+        } catch (LockedException e) {
+            log.error("Authentication error for user {}: account locked", dto.getEmail());
             throw e;
         }
     }

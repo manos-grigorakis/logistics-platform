@@ -1,5 +1,6 @@
 package com.manosgrigorakis.logisticsplatform.model;
 
+import com.manosgrigorakis.logisticsplatform.enums.UserStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,30 +9,26 @@ import java.util.Collection;
 import java.util.List;
 
 public class UserInfoDetails implements UserDetails {
-    private final String email; // Used instead of `username`
-    private final String password;
-    private final List<GrantedAuthority> authorities;
+    private final User user;
 
     public UserInfoDetails(User user) {
-        this.email = user.getEmail();
-        this.password = user.getPassword();
-        this.authorities = List.of(new SimpleGrantedAuthority(user.getRole().getName()));
+        this.user = user;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+        return List.of(new SimpleGrantedAuthority(user.getRole().getName()));
     }
 
     @Override
     public String getPassword() {
-        return password;
+        return user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return email;
-    }
+        return user.getEmail();
+    } // Use email instead of username
 
     @Override
     public boolean isAccountNonExpired() {
@@ -40,7 +37,7 @@ public class UserInfoDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !UserStatus.SUSPENDED.equals(user.getStatus());
     }
 
     @Override
@@ -50,6 +47,6 @@ public class UserInfoDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return Boolean.TRUE.equals(user.getEnabled());
     }
 }
