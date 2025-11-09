@@ -4,6 +4,8 @@ import com.manosgrigorakis.logisticsplatform.dto.user.UserRequestDTO;
 import com.manosgrigorakis.logisticsplatform.dto.user.UserResponseDTO;
 import com.manosgrigorakis.logisticsplatform.enums.TokenType;
 import com.manosgrigorakis.logisticsplatform.enums.UserStatus;
+import com.manosgrigorakis.logisticsplatform.exception.DuplicateEntryException;
+import com.manosgrigorakis.logisticsplatform.exception.ResourceNotFoundException;
 import com.manosgrigorakis.logisticsplatform.mapper.UserMapper;
 import com.manosgrigorakis.logisticsplatform.model.Role;
 import com.manosgrigorakis.logisticsplatform.model.User;
@@ -11,7 +13,6 @@ import com.manosgrigorakis.logisticsplatform.model.UserTokens;
 import com.manosgrigorakis.logisticsplatform.repository.RoleRepository;
 import com.manosgrigorakis.logisticsplatform.repository.UserRepository;
 import com.manosgrigorakis.logisticsplatform.service.UserService;
-import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -52,7 +53,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDTO getUserById(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
 
         return UserMapper.toResponse(user);
     }
@@ -63,13 +64,13 @@ public class UserServiceImpl implements UserService {
 
         if (existingUser.isPresent()) {
             log.warn("Attempted to create duplicate user with email: {}", dto.getEmail());
-            throw new RuntimeException("Email already exists");
+            throw new DuplicateEntryException("email", dto.getEmail());
         }
 
         Role role = roleRepository.findById(dto.getRoleId())
                 .orElseThrow(() -> {
                     log.error("Create user failed. Role not found with id: {}", dto.getRoleId());
-                    return new EntityNotFoundException("Role not found with id: " + dto.getRoleId());
+                    return new ResourceNotFoundException("Role not found with id: " + dto.getRoleId());
                 });
 
         User user = User.builder()
@@ -102,20 +103,20 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> {
                         log.error("Update failed. User not found with id: {}", id);
-                        return new EntityNotFoundException("User not found with id: " + id);
+                        return new ResourceNotFoundException("User not found with id: " + id);
                 });
 
         Role role = roleRepository.findById(dto.getRoleId())
                 .orElseThrow(() -> {
                     log.error("Updated failed. Role not found with id: {}", dto.getRoleId());
-                    return new EntityNotFoundException("Role not found with id: " + dto.getRoleId());
+                    return new ResourceNotFoundException("Role not found with id: " + dto.getRoleId());
                 });
 
         Optional<User> existingUser = userRepository.findByEmail(dto.getEmail());
 
         if (existingUser.isPresent() && !existingUser.get().getId().equals(id)) {
             log.warn("Update failed. Attempted to create duplicate user: {}", dto.getEmail());
-            throw new RuntimeException("Email already exists");
+            throw new DuplicateEntryException("email", dto.getEmail());
         }
 
         user.setFirstName(dto.getFirstName());
@@ -133,7 +134,7 @@ public class UserServiceImpl implements UserService {
     public void deleteUserById(Long id) {
         if (!userRepository.existsById(id)) {
             log.error("Delete failed. User not found with id: {}", id);
-            throw new EntityNotFoundException("User not found with id: " + id);
+            throw new ResourceNotFoundException("User not found with id: " + id);
         }
 
         userRepository.deleteById(id);
