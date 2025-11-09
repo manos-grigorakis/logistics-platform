@@ -3,20 +3,22 @@ package com.manosgrigorakis.logisticsplatform.service.impl;
 import com.manosgrigorakis.logisticsplatform.dto.auth.*;
 import com.manosgrigorakis.logisticsplatform.enums.TokenType;
 import com.manosgrigorakis.logisticsplatform.enums.UserStatus;
+import com.manosgrigorakis.logisticsplatform.exception.ResourceNotFoundException;
+import com.manosgrigorakis.logisticsplatform.exception.TokenExpiredException;
 import com.manosgrigorakis.logisticsplatform.model.User;
 import com.manosgrigorakis.logisticsplatform.model.UserTokens;
 import com.manosgrigorakis.logisticsplatform.repository.UserRepository;
 import com.manosgrigorakis.logisticsplatform.repository.UserTokensRepository;
 import com.manosgrigorakis.logisticsplatform.security.jwt.JwtService;
 import com.manosgrigorakis.logisticsplatform.service.AuthenticationService;
-import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -64,19 +66,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     )
             );
 
-            if (!authentication.isAuthenticated()) {
-                log.warn("Authentication failed for user {}", dto.getEmail());
-                throw new RuntimeException("Invalid credentials");
-            }
-
             // Generate JWT
             String token = jwtService.generateToken(dto.getEmail());
             log.info("User {} authenticated successfully", dto.getEmail());
 
             return new JwtResponseDTO(token);
-        } catch (AuthenticationException e) {
-            log.error("Authentication error for user {}: {}", dto.getEmail(), e.getMessage());
-            throw new RuntimeException("Authentication error:" + e.getMessage());
+        } catch (BadCredentialsException e) {
+            log.error("Authentication error for user {}: bad credentials", dto.getEmail());
+            throw e;
+        } catch (DisabledException e) {
+            log.error("Authentication error for user {}: account disabled", dto.getEmail());
+            throw e;
         }
     }
 
@@ -108,7 +108,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User user = userRepository.findByEmail(dto.getEmail())
                 .orElseThrow(() -> {
                     log.warn("Password reset failed. User not found with email {}", dto.getEmail());
-                    return new EntityNotFoundException("User not found with email: " + dto.getEmail());
+                    return new ResourceNotFoundException("User not found with email: " + dto.getEmail());
                 });
 
         // Generate token
@@ -145,15 +145,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         log.info("Validate user token");
         UserTokens userTokens = userTokensRepository.findByToken(token)
                 .orElseThrow(
-                        () -> new EntityNotFoundException("User Token not found with token: " + token)
+                        () -> new ResourceNotFoundException("User Token not found with token: " + token)
                 );
 
         if (userTokens.isExpired()) {
             log.warn("Expired token detected for user {}", userTokens.getUser().getEmail());
-            throw new RuntimeException("Token is expired");
+            throw new TokenExpiredException();
         }
 
         return userTokens;
     }
-
 }

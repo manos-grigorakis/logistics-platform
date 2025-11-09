@@ -32,6 +32,19 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+    // Token expired error - 400
+    @ExceptionHandler(TokenExpiredException.class)
+    public ResponseEntity<ErrorResponse> handleExpiredTokenException(TokenExpiredException exc) {
+        ErrorResponse response = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                "Token has expired",
+                System.currentTimeMillis(),
+                null
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
     // Bad credentials - 401
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ErrorResponse> handleBadCredentialsException(BadCredentialsException exc) {
@@ -59,7 +72,7 @@ public class GlobalExceptionHandler {
     }
 
     // Not found - 404
-    @ExceptionHandler
+    @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleResourceNotFoundException(ResourceNotFoundException exc) {
         ErrorResponse response = new ErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
@@ -72,7 +85,7 @@ public class GlobalExceptionHandler {
     }
 
     // Duplicate Entry - 409
-    @ExceptionHandler
+    @ExceptionHandler(DuplicateEntryException.class)
     public ResponseEntity<ErrorResponse> handleDuplicateEntryException(DuplicateEntryException exc) {
         Map<String, Object> details = Map.of(
                 "duplicateField", exc.getField(),
@@ -90,7 +103,7 @@ public class GlobalExceptionHandler {
     }
 
     // Server error - 500
-    @ExceptionHandler
+    @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception exc) {
         ErrorResponse response = new ErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
