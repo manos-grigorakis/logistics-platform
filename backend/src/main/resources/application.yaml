@@ -37,6 +37,8 @@ spring:
 app:
   frontend:
     url: ${FRONTEND_URL}
+    url_dev: ${FRONTEND_URL_DEV}
+    url_prod: ${FRONTEND_URL_PROD}
   setup_password:
     expires: ${SETUP_PASSWORD_TOKEN_EXPIRATION}
   reset_password:
