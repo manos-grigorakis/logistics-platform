@@ -1,14 +1,12 @@
 package com.manosgrigorakis.logisticsplatform.dto.auth;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class JwtResponseDTO {
+    private String tokenType = "Bearer";
     private String token;
-
-    public JwtResponseDTO(String token) {
-        this.token = token;
-    }
+    private UserDetailsDTO user;
 }

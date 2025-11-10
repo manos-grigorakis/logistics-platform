@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -63,11 +64,22 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     )
             );
 
+            User user = userRepository.findByEmail(dto.getEmail())
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
             // Generate JWT
             String token = jwtService.generateToken(dto.getEmail());
             log.info("User {} authenticated successfully", dto.getEmail());
 
-            return new JwtResponseDTO(token);
+            UserDetailsDTO userDetailsDTO = new UserDetailsDTO(
+                    user.getId(),
+                    user.getEmail(),
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getRole().getName()
+            );
+
+            return new JwtResponseDTO("Bearer",token, userDetailsDTO);
         } catch (BadCredentialsException e) {
             log.error("Authentication error for user {}: bad credentials", dto.getEmail());
             throw e;
