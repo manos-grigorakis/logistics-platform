@@ -1,6 +1,13 @@
 <section class="flex items-center justify-center min-h-screen">
   <div class="w-full max-w-md p-6 bg-white rounded-lg shadow-md">
     <h2 class="mb-4 text-3xl font-semibold text-center">Login</h2>
+    <div class="mb-5">
+      @if (loginFailed) {
+      <span class="block w-full p-1.5 text-center rounded-md text-danger bg-danger-light">{{
+        errorMessage
+      }}</span>
+      }
+    </div>
 
     <form action="" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <div class="mb-5">
