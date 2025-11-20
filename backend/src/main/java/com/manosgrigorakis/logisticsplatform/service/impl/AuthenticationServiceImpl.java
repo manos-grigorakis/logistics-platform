@@ -21,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.util.Optional;
 
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
@@ -117,11 +118,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         log.info("Password reset request for user with email {}", dto.getEmail());
 
         // Check if user exists by email
-        User user = userRepository.findByEmail(dto.getEmail())
-                .orElseThrow(() -> {
-                    log.warn("Password reset failed. User not found with email {}", dto.getEmail());
-                    return new ResourceNotFoundException("User not found with email: " + dto.getEmail());
-                });
+        Optional<User> optionalUser = userRepository.findByEmail(dto.getEmail());
+
+        if(optionalUser.isEmpty()) {
+            log.warn("Password reset failed. User not found with email {}", dto.getEmail());
+            return;
+        }
+
+        User user = optionalUser.get();
 
         // Generate token
         UserTokens userTokens = userTokensService.
