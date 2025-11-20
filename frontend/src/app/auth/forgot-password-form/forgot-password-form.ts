@@ -3,10 +3,11 @@ import { PrimaryButton } from '../../shared/ui/primary-button/primary-button';
 import { FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-forgot-password-form',
-  imports: [PrimaryButton, ReactiveFormsModule, LoadingSpinner],
+  imports: [PrimaryButton, ReactiveFormsModule, LoadingSpinner, RouterLink],
   templateUrl: './forgot-password-form.html',
   styleUrl: './forgot-password-form.css',
 })

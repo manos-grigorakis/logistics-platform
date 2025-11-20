@@ -3,12 +3,12 @@ import { PrimaryButton } from '../../shared/ui/primary-button/primary-button';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { LoginRequest } from '../models/login-request';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
 
 @Component({
   selector: 'app-login-form',
-  imports: [PrimaryButton, ReactiveFormsModule, LoadingSpinner],
+  imports: [PrimaryButton, ReactiveFormsModule, LoadingSpinner, RouterLink],
   templateUrl: './login-form.html',
   styleUrl: './login-form.css',
 })
