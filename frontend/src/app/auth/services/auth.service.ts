@@ -7,6 +7,7 @@ import { LoginRequest } from '../models/login-request';
 import { delay, Observable, Subscription, tap, of } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Router } from '@angular/router';
+import { toast } from 'ngx-sonner';
 
 @Injectable({
   providedIn: 'root',
@@ -115,6 +116,7 @@ export class AuthService {
     this.tokenSubscription = of(null)
       .pipe(delay(timeout))
       .subscribe(() => {
+        toast.info('Your session has expired. Please login again.');
         this.logout();
         this.router.navigate(['/login']);
       });
