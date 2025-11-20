@@ -4,10 +4,11 @@ import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angu
 import { AuthService } from '../services/auth.service';
 import { LoginRequest } from '../models/login-request';
 import { Router } from '@angular/router';
+import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
 
 @Component({
   selector: 'app-login-form',
-  imports: [PrimaryButton, ReactiveFormsModule],
+  imports: [PrimaryButton, ReactiveFormsModule, LoadingSpinner],
   templateUrl: './login-form.html',
   styleUrl: './login-form.css',
 })
@@ -16,6 +17,7 @@ export class LoginForm {
   private router = inject(Router);
   loginFailed: boolean = false;
   errorMessage?: string;
+  isLoading: boolean = false;
 
   authService: AuthService = inject(AuthService);
 
@@ -38,13 +40,16 @@ export class LoginForm {
       return;
     }
 
+    this.isLoading = true;
     const credentials: LoginRequest = this.loginForm.getRawValue();
 
     this.authService.authenticateUser(credentials).subscribe({
       next: (res) => {
+        this.isLoading = false;
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
+        this.isLoading = false;
         this.loginFailed = true;
 
         if (err.status === 401) {
