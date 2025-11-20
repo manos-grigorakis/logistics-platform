@@ -3,7 +3,7 @@ export interface User {
   firstName: string;
   lastName: string;
   email: string;
-  phone: string | null;
+  phone?: string | null;
   role: string;
-  enabled: boolean;
+  enabled?: boolean;
 }
