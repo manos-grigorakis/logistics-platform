@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { LoginResponse } from '../models/login-response';
 import { environment } from '../../../environments/environment';
@@ -8,6 +8,7 @@ import { delay, Observable, Subscription, tap, of } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Router } from '@angular/router';
 import { toast } from 'ngx-sonner';
+import { FormControl } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root',
@@ -35,6 +36,14 @@ export class AuthService {
           this.expirationCounter(res.token);
         }
       })
+    );
+  }
+
+  public forgotPassword(email: string): Observable<HttpResponse<any>> {
+    return this.http.post(
+      environment.apiUrl + '/auth/request-reset',
+      { email },
+      { observe: 'response' }
     );
   }
 
