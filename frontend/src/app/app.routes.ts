@@ -23,9 +23,9 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
-    path: 'reset-password',
+    path: 'forgot-password',
     component: ForgotPasswordPage,
-    title: 'Reset Password',
+    title: 'Forgot Password',
   },
   {
     path: '**',
