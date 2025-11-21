@@ -16,10 +16,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.util.Optional;
 
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
@@ -63,11 +65,22 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     )
             );
 
+            User user = userRepository.findByEmail(dto.getEmail())
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
             // Generate JWT
             String token = jwtService.generateToken(dto.getEmail());
             log.info("User {} authenticated successfully", dto.getEmail());
 
-            return new JwtResponseDTO(token);
+            UserDetailsDTO userDetailsDTO = new UserDetailsDTO(
+                    user.getId(),
+                    user.getEmail(),
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getRole().getName()
+            );
+
+            return new JwtResponseDTO("Bearer",token, userDetailsDTO);
         } catch (BadCredentialsException e) {
             log.error("Authentication error for user {}: bad credentials", dto.getEmail());
             throw e;
@@ -105,11 +118,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         log.info("Password reset request for user with email {}", dto.getEmail());
 
         // Check if user exists by email
-        User user = userRepository.findByEmail(dto.getEmail())
-                .orElseThrow(() -> {
-                    log.warn("Password reset failed. User not found with email {}", dto.getEmail());
-                    return new ResourceNotFoundException("User not found with email: " + dto.getEmail());
-                });
+        Optional<User> optionalUser = userRepository.findByEmail(dto.getEmail());
+
+        if(optionalUser.isEmpty()) {
+            log.warn("Password reset failed. User not found with email {}", dto.getEmail());
+            return;
+        }
+
+        User user = optionalUser.get();
 
         // Generate token
         UserTokens userTokens = userTokensService.
