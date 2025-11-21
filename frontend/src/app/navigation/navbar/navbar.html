@@ -61,8 +61,8 @@
             (click)="$event.stopPropagation()"
           >
             <div class="px-4 py-3 border-b border-secondary-500" role="none">
-              <p class="text-sm font-medium" role="none">Manos Grigorakis</p>
-              <p class="text-sm truncate text-body" role="none">manos.grigorakis@logistics.gr</p>
+              <p class="text-sm font-medium" role="none">{{ displayName }}</p>
+              <p class="text-sm truncate text-body" role="none">{{ user?.email }}</p>
             </div>
             <ul class="p-2 text-sm font-medium text-body" role="none">
               <app-dropdown-menu-item
