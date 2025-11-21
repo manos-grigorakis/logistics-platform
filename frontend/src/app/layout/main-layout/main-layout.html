@@ -1,0 +1,11 @@
+<app-navbar (toggleSidebar)="toggleSidebar()"></app-navbar>
+<app-sidebar [isOpen]="isSidebarOpen"></app-sidebar>
+
+<main>
+  <section
+    class="p-4 bg-secondary-50 mt-16 sm:ml-0 transition-all duration-200 ease-in-out"
+    [class.sm:ml-64]="isSidebarOpen"
+  >
+    <router-outlet></router-outlet>
+  </section>
+</main>

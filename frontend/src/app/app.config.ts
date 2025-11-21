@@ -4,10 +4,22 @@ import {
   provideZoneChangeDetection,
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
-
+import { provideIcons, provideNgIconsConfig } from '@ng-icons/core';
 import { routes } from './app.routes';
 import { provideHttpClient } from '@angular/common/http';
 import { JWT_OPTIONS, JwtHelperService } from '@auth0/angular-jwt';
+
+// Lucide Icons
+import {
+  lucideTruck,
+  lucideUsers,
+  lucideUserCog,
+  lucidePieChart,
+  lucideBuilding,
+  lucideUserCircle,
+  lucideCog,
+  lucideLogOut,
+} from '@ng-icons/lucide';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -17,5 +29,21 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
     JwtHelperService,
+
+    provideIcons({
+      lucideTruck,
+      lucideUsers,
+      lucideUserCog,
+      lucidePieChart,
+      lucideBuilding,
+      lucideUserCircle,
+      lucideCog,
+      lucideLogOut,
+    }),
+
+    provideNgIconsConfig({
+      size: '1.5rem',
+      color: 'currentColor',
+    }),
   ],
 };
