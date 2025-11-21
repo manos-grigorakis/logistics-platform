@@ -4,6 +4,7 @@ import { DashboardPage } from './dashboard/dashboard-page/dashboard-page';
 import { authGuard } from './guards/auth-guard';
 import { NotFoundPage } from './not-found-page/not-found-page';
 import { ForgotPasswordPage } from './auth/forgot-password-page/forgot-password-page';
+import { ResetPasswordPage } from './auth/reset-password-page/reset-password-page';
 
 export const routes: Routes = [
   {
@@ -26,6 +27,11 @@ export const routes: Routes = [
     path: 'forgot-password',
     component: ForgotPasswordPage,
     title: 'Forgot Password',
+  },
+  {
+    path: 'reset-password',
+    component: ResetPasswordPage,
+    title: 'Reset Password',
   },
   {
     path: '**',

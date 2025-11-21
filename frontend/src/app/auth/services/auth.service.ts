@@ -4,11 +4,13 @@ import { LoginResponse } from '../models/login-response';
 import { environment } from '../../../environments/environment';
 import { User } from '../models/User';
 import { LoginRequest } from '../models/login-request';
-import { delay, Observable, Subscription, tap, of } from 'rxjs';
+import { delay, Observable, Subscription, tap, of, map } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Router } from '@angular/router';
 import { toast } from 'ngx-sonner';
-import { FormControl } from '@angular/forms';
+import { ValidateResetPasswordTokenResponse } from '../models/validate-reset-password-token-response';
+import { ResetPasswordRequest } from '../models/reset-password-request';
+import { ResetPasswordResponse } from '../models/reset-password-response';
 
 @Injectable({
   providedIn: 'root',
@@ -44,6 +46,25 @@ export class AuthService {
       environment.apiUrl + '/auth/request-reset',
       { email },
       { observe: 'response' }
+    );
+  }
+
+  public validateResetPasswordToken(token: string): Observable<boolean> {
+    return this.http
+      .get<ValidateResetPasswordTokenResponse>(
+        `${environment.apiUrl}/auth/reset-password?token=${token}`
+      )
+      .pipe(
+        map((res) => {
+          return res.valid;
+        })
+      );
+  }
+
+  public resetPassword(data: ResetPasswordRequest): Observable<ResetPasswordResponse> {
+    return this.http.post<ResetPasswordResponse>(
+      `${environment.apiUrl}/auth/reset-password/confirm`,
+      data
     );
   }
 
