@@ -11,6 +11,7 @@ import { toast } from 'ngx-sonner';
 import { ValidateResetPasswordTokenResponse } from '../models/validate-reset-password-token-response';
 import { ResetPasswordRequest } from '../models/reset-password-request';
 import { ResetPasswordResponse } from '../models/reset-password-response';
+import { SetupPasswordRequest } from '../models/setup-password-request';
 
 @Injectable({
   providedIn: 'root',
@@ -66,6 +67,10 @@ export class AuthService {
       `${environment.apiUrl}/auth/reset-password/confirm`,
       data
     );
+  }
+
+  public setupPassword(data: SetupPasswordRequest): Observable<void> {
+    return this.http.post<void>(`${environment.apiUrl}/auth/setup-password`, data);
   }
 
   public logout(): void {
