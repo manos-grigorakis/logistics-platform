@@ -1,0 +1,16 @@
+import { Component, Input } from '@angular/core';
+import { NgIcon } from '@ng-icons/core';
+import { RouterLink } from '@angular/router';
+
+@Component({
+  selector: 'app-sidebar-menu-item',
+  imports: [RouterLink, NgIcon],
+  templateUrl: './sidebar-menu-item.html',
+  styleUrl: './sidebar-menu-item.css',
+})
+export class SidebarMenuItem {
+  @Input() route: string | null = null;
+  @Input() icon?: string;
+  @Input() label?: string;
+  @Input() badgeValue?: string;
+}

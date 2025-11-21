@@ -6,10 +6,18 @@ import {
 import { provideRouter } from '@angular/router';
 import { provideIcons, provideNgIconsConfig } from '@ng-icons/core';
 import { heroUser, heroCog8Tooth, heroArrowLeftEndOnRectangle } from '@ng-icons/heroicons/outline';
-
 import { routes } from './app.routes';
 import { provideHttpClient } from '@angular/common/http';
 import { JWT_OPTIONS, JwtHelperService } from '@auth0/angular-jwt';
+
+// Lucide Icons
+import {
+  lucideTruck,
+  lucideUsers,
+  lucideUserCog,
+  lucidePieChart,
+  lucideBuilding,
+} from '@ng-icons/lucide';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -24,6 +32,11 @@ export const appConfig: ApplicationConfig = {
       heroUser,
       heroCog8Tooth,
       heroArrowLeftEndOnRectangle,
+      lucideTruck,
+      lucideUsers,
+      lucideUserCog,
+      lucidePieChart,
+      lucideBuilding,
     }),
 
     provideNgIconsConfig({

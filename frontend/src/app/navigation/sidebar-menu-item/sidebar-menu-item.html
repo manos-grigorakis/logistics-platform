@@ -1,0 +1,14 @@
+<li>
+  <a
+    [routerLink]="route"
+    class="flex items-center px-2 py-1.5 text-body rounded hover:bg-secondary-800 hover:cursor-pointer"
+  >
+    <ng-icon [name]="icon"></ng-icon>
+    <span class="flex-1 ms-3 whitespace-nowrap">{{ label }}</span>
+    <span
+      class="hidden justify-center w-4.5 h-4.5 ms-2 text-xs font-medium bg-warning-dark border-warning-dark border rounded-full"
+      [class.inline-flex]="badgeValue"
+      >{{ badgeValue }}</span
+    >
+  </a>
+</li>
