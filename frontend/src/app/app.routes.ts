@@ -7,6 +7,7 @@ import { ResetPasswordPage } from './auth/reset-password-page/reset-password-pag
 import { SetupPasswordPage } from './auth/setup-password-page/setup-password-page';
 import { MainLayout } from './layout/main-layout/main-layout';
 import { MainDashboard } from './dashboard/main-dashboard/main-dashboard';
+import { UsersPage } from './users/users-page/users-page';
 
 export const routes: Routes = [
   {
@@ -17,6 +18,7 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: MainDashboard, title: 'Dashboard' },
+      { path: 'users', component: UsersPage, title: 'Users' },
     ],
   },
   {
