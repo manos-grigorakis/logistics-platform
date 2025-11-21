@@ -1,28 +1,28 @@
 import { Routes } from '@angular/router';
 import { LoginPage } from './auth/login-page/login-page';
-import { DashboardPage } from './dashboard/dashboard-page/dashboard-page';
 import { authGuard } from './guards/auth-guard';
 import { NotFoundPage } from './not-found-page/not-found-page';
 import { ForgotPasswordPage } from './auth/forgot-password-page/forgot-password-page';
 import { ResetPasswordPage } from './auth/reset-password-page/reset-password-page';
 import { SetupPasswordPage } from './auth/setup-password-page/setup-password-page';
+import { MainLayout } from './layout/main-layout/main-layout';
+import { MainDashboard } from './dashboard/main-dashboard/main-dashboard';
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: '/login',
-    pathMatch: 'full',
+    component: MainLayout,
+    title: 'Logistics Platform',
+    canActivate: [authGuard],
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: 'dashboard', component: MainDashboard, title: 'Dashboard' },
+    ],
   },
   {
     path: 'login',
     component: LoginPage,
     title: 'Login',
-  },
-  {
-    path: 'dashboard',
-    component: DashboardPage,
-    title: 'Dashboard',
-    canActivate: [authGuard],
   },
   {
     path: 'forgot-password',
