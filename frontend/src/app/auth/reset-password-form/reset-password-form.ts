@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, Validators, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PrimaryButton } from '../../shared/ui/primary-button/primary-button';
@@ -23,10 +23,16 @@ export class ResetPasswordForm implements OnInit {
 
   authService: AuthService = inject(AuthService);
 
-  newPassword = new FormControl<string>('', {
-    nonNullable: true,
-    validators: [Validators.required],
+  form = new FormGroup({
+    newPassword: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
   });
+
+  get newPassword(): FormControl {
+    return this.form.get('newPassword') as FormControl;
+  }
 
   ngOnInit(): void {
     const tokenParameter = this.route.snapshot.queryParamMap.get('token');
@@ -62,7 +68,11 @@ export class ResetPasswordForm implements OnInit {
   }
 
   public onSubmit(): void {
-    if (!this.newPassword.valid) return;
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+
     if (!this.isTokenValid) return;
 
     this.isLoading = true;

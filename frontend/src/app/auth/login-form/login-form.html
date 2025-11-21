@@ -10,7 +10,7 @@
       }
     </div>
 
-    <form action="" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <div class="mb-5">
         <label for="email" class="block mb-1">Email</label>
         <input

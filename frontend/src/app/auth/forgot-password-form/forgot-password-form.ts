@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { PrimaryButton } from '../../shared/ui/primary-button/primary-button';
-import { FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, Validators, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
 import { RouterLink } from '@angular/router';
@@ -17,13 +17,22 @@ export class ForgotPasswordForm {
   errorMessage?: string;
   isLoading: boolean = false;
 
-  email = new FormControl<string>('', {
-    nonNullable: true,
-    validators: [Validators.required, Validators.email],
+  form = new FormGroup({
+    email: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.email],
+    }),
   });
 
+  get email(): FormControl {
+    return this.form.get('email') as FormControl;
+  }
+
   public onSubmit(): void {
-    if (!this.email.valid) return;
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
 
     this.isLoading = true;
 
