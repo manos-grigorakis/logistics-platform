@@ -4,6 +4,8 @@ import {
   provideZoneChangeDetection,
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
+import { provideIcons, provideNgIconsConfig } from '@ng-icons/core';
+import { heroUser, heroCog8Tooth, heroArrowLeftEndOnRectangle } from '@ng-icons/heroicons/outline';
 
 import { routes } from './app.routes';
 import { provideHttpClient } from '@angular/common/http';
@@ -17,5 +19,16 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
     JwtHelperService,
+
+    provideIcons({
+      heroUser,
+      heroCog8Tooth,
+      heroArrowLeftEndOnRectangle,
+    }),
+
+    provideNgIconsConfig({
+      size: '1.5rem',
+      color: 'currentColor',
+    }),
   ],
 };

@@ -1,0 +1,91 @@
+<nav class="fixed top-0 z-50 w-full bg-secondary-900 border-b border-secondary-50">
+  <div class="px-3 py-3 lg:px-5 lg:pl-3">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center justify-start rtl:justify-end">
+        <!-- Burger button -->
+        <button
+          (click)="onBurgerClick()"
+          aria-controls="top-bar-sidebar"
+          type="button"
+          class="box-border p-2 text-sm font-medium leading-5 bg-transparent border border-transparent hover:cursor-pointer focus:outline-none"
+        >
+          <span class="sr-only">Open sidebar</span>
+          <svg
+            class="w-6 h-6"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke="white"
+              stroke-linecap="round"
+              stroke-width="2"
+              d="M5 7h14M5 12h14M5 17h10"
+            />
+          </svg>
+        </button>
+        <a routerLink="/dashboard" class="flex ms-2 md:me-24">
+          <!-- <img src="" class="h-6 me-3" alt="Logo" /> -->
+          <span class="self-center text-lg font-semibold text-white whitespace-nowrap"
+            >Logistics Platform</span
+          >
+        </a>
+      </div>
+      <div class="flex items-center">
+        <div class="relative flex flex-col items-center ms-3">
+          <div>
+            <button
+              type="button"
+              class="flex text-sm rounded-full hover:cursor-pointer"
+              aria-expanded="false"
+              (click)="toggleUserDropdown($event)"
+            >
+              <span class="sr-only">Open user menu</span>
+              <img
+                class="w-8 h-8 rounded-full"
+                src="https://hwchamber.co.uk/wp-content/uploads/2022/04/avatar-placeholder.gif"
+                alt="user avatar"
+              />
+            </button>
+          </div>
+
+          <!-- Dropdown -->
+          <div
+            class="absolute right-0 z-50 mt-10 bg-white rounded-md shadow-lg w-52 transition-opacity duration-200"
+            [class.opacity-0]="!isUserDropdownOpen"
+            [class.opacity-100]="isUserDropdownOpen"
+            [class.pointer-events-none]="!isUserDropdownOpen"
+            (click)="$event.stopPropagation()"
+          >
+            <div class="px-4 py-3 border-b border-secondary-500" role="none">
+              <p class="text-sm font-medium" role="none">Manos Grigorakis</p>
+              <p class="text-sm truncate text-body" role="none">manos.grigorakis@logistics.gr</p>
+            </div>
+            <ul class="p-2 text-sm font-medium text-body" role="none">
+              <app-dropdown-menu-item
+                route="#"
+                label="Account"
+                icon="heroUser"
+              ></app-dropdown-menu-item>
+
+              <app-dropdown-menu-item
+                route="#"
+                label="Settings"
+                icon="heroCog8Tooth"
+              ></app-dropdown-menu-item>
+
+              <app-dropdown-menu-item
+                (click)="logout()"
+                label="Logout"
+                icon="heroArrowLeftEndOnRectangle"
+              ></app-dropdown-menu-item>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
