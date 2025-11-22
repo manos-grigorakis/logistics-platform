@@ -1,0 +1,11 @@
+<button
+  (click)="onClick()"
+  [disabled]="isDisabled"
+  [ngClass]="[
+    'flex items-center justify-center rounded-full p-2 font-bold text-white shadow-sm transition focus:ring focus:ring-offset-1 focus:outline-none',
+    appliedColor,
+    isDisabled ? 'cursor-not-allowed opacity-50' : 'hover:cursor-pointer',
+  ]"
+>
+  <ng-icon [name]="icon" [size]="iconSize"></ng-icon>
+</button>
