@@ -1,0 +1,26 @@
+<label class="mb-1 block">
+  @if (showRequiredStar()) {
+    <span class="text-danger text-sm">*</span>
+  }
+  {{ label() }}
+  <input
+    [type]="type()"
+    [placeholder]="placeholder()"
+    [value]="value()"
+    [disabled]="disabled()"
+    (input)="onInput($event)"
+    (blur)="onBlur()"
+    class="focus:ring-primary-200 w-full rounded border border-gray-300 px-4 py-2 text-gray-700 focus:ring focus:outline-none"
+  />
+</label>
+
+@if (withErrors()) {
+  <div>
+    @if (control?.errors?.['required']) {
+      <span class="text-danger ml-1 text-sm">{{ label() }} is required</span>
+    }
+    @if (control?.errors?.['email']) {
+      <span class="text-danger ml-1 text-sm">Invalid email</span>
+    }
+  </div>
+}
