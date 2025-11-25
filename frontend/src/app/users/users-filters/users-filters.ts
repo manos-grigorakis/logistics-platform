@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, Input, HostListener, inject } from '@angular/core';
+import { Component, EventEmitter, Output, Input, inject } from '@angular/core';
 import { NgIcon } from '@ng-icons/core';
 import { SearchBar } from '../../shared/forms/search-bar/search-bar';
 import { RoundedIconButton } from '../../shared/forms/rounded-icon-button/rounded-icon-button';
@@ -13,7 +13,9 @@ import { Router } from '@angular/router';
 })
 export class UsersFilters {
   @Output() refresh = new EventEmitter<void>();
+  @Output() deleteClick = new EventEmitter<void>();
   @Input() isLoading: boolean = false;
+  @Input() isDeleteDisabled?: boolean;
   private router: Router = inject(Router);
 
   loadUsers(): void {
@@ -22,5 +24,9 @@ export class UsersFilters {
 
   public onCreateUser(): void {
     this.router.navigate(['users', 'create-user']);
+  }
+
+  public onDeleteClick(): void {
+    this.deleteClick.emit();
   }
 }

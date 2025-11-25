@@ -10,7 +10,7 @@ import { NgIcon } from '@ng-icons/core';
 })
 export class RoundedIconButton {
   @Output() clicked = new EventEmitter<void>();
-  @Input() isDisabled: boolean = false;
+  @Input() isDisabled?: boolean;
   @Input() icon?: string;
   @Input() iconSize: string = '16';
   @Input() color: 'info' | 'success' | 'warning' | 'danger' | 'primary' = 'primary';

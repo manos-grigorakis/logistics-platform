@@ -29,4 +29,11 @@ export class UsersService {
 
     return this.http.post<User>(`${environment.apiUrl}/users`, data, { headers: headers });
   }
+
+  public deleteUser(id: number): Observable<void> {
+    this.jwtToken = this.authService.getJwtToken();
+    const headers = { Authorization: `Bearer ${this.jwtToken}` };
+
+    return this.http.delete<void>(`${environment.apiUrl}/users/${id}`, { headers: headers });
+  }
 }

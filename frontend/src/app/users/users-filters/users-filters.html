@@ -20,7 +20,8 @@
 
       <!-- Delete -->
       <app-rounded-icon-button
-        [isDisabled]="true"
+        (clicked)="onDeleteClick()"
+        [isDisabled]="isDeleteDisabled"
         icon="lucideTrash"
         color="danger"
       ></app-rounded-icon-button>

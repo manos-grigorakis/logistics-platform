@@ -1,8 +1,10 @@
-import { Component, inject, OnInit, Output } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { UsersTable } from '../users-table/users-table';
 import { UsersService } from '../users.service';
 import { UsersListResponse } from '../models/users-list-response';
 import { UsersFilters } from '../users-filters/users-filters';
+import { toast } from 'ngx-sonner';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-users-page',
@@ -16,6 +18,7 @@ export class UsersPage implements OnInit {
   public isLoading: boolean = false;
   public users: UsersListResponse[] = [];
   public selectedUserIds = new Set<number>();
+  public disableDeleteButton: boolean = true;
 
   ngOnInit(): void {
     this.loadUsers();
@@ -31,7 +34,6 @@ export class UsersPage implements OnInit {
       },
       error: (err) => {
         this.isLoading = false;
-        console.log(err);
       },
     });
   }
@@ -43,5 +45,30 @@ export class UsersPage implements OnInit {
       this.selectedUserIds.add(userId);
       console.log(userId);
     }
+
+    this.disableDeleteButton = this.selectedUserIds.size === 0;
+  }
+
+  public onUserDeleteClick(): void {
+    if (this.selectedUserIds.size === 0) return;
+
+    const ids = Array.from(this.selectedUserIds);
+    const deleteUsers = ids.map((id) => this.usersService.deleteUser(id));
+
+    forkJoin(deleteUsers).subscribe({
+      next: (res) => {
+        toast.success('User(s) deleted successfully');
+        this.selectedUserIds.clear();
+        this.disableDeleteButton = true;
+        this.loadUsers();
+      },
+      error: (err) => {
+        if (err.status === 500) {
+          toast.error('Server error. Please try again');
+        } else {
+          toast.error('An error has occured. Please try again');
+        }
+      },
+    });
   }
 }
