@@ -7,7 +7,18 @@
       (deleteClick)="onUserDeleteClick()"
     ></app-users-filters>
   </div>
-
+  <app-modal
+    (closeModalClick)="hideModal()"
+    (confirmClick)="handleDelete()"
+    (cancelClick)="hideModal()"
+    [isEnabled]="showModal"
+    color="danger"
+    icon="lucideAlertTriangle"
+    confirmButtonText="Delete"
+    cancelButtonText="Cancel"
+    [header]="modalHeader"
+    [message]="modalMessage"
+  />
   <div class="relative overflow-x-auto rounded-lg bg-white shadow-md">
     <app-users-table
       [isLoading]="isLoading"

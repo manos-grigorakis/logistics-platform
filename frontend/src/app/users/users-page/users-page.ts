@@ -5,10 +5,11 @@ import { UsersListResponse } from '../models/users-list-response';
 import { UsersFilters } from '../users-filters/users-filters';
 import { toast } from 'ngx-sonner';
 import { forkJoin } from 'rxjs';
+import { Modal } from '../../shared/ui/modal/modal';
 
 @Component({
   selector: 'app-users-page',
-  imports: [UsersTable, UsersFilters],
+  imports: [UsersTable, UsersFilters, Modal],
   templateUrl: './users-page.html',
   styleUrl: './users-page.css',
 })
@@ -19,6 +20,9 @@ export class UsersPage implements OnInit {
   public users: UsersListResponse[] = [];
   public selectedUserIds = new Set<number>();
   public disableDeleteButton: boolean = true;
+  public showModal: boolean = false;
+  public modalHeader: string = '';
+  public modalMessage: string = '';
 
   ngOnInit(): void {
     this.loadUsers();
@@ -50,19 +54,34 @@ export class UsersPage implements OnInit {
   }
 
   public onUserDeleteClick(): void {
-    if (this.selectedUserIds.size === 0) return;
+    this.modalHeader = 'Delete Selected Users';
+    this.modalMessage = 'This action is permanent and cannot be undone';
+    this.showModal = true;
+  }
 
+  public handleDelete(): void {
+    this.deleteUsers();
+    this.disableDeleteButton = true;
+    this.showModal = false;
+  }
+
+  private deleteUsers(): void {
+    if (this.selectedUserIds.size === 0) return;
+    this.isLoading = true;
     const ids = Array.from(this.selectedUserIds);
     const deleteUsers = ids.map((id) => this.usersService.deleteUser(id));
 
     forkJoin(deleteUsers).subscribe({
       next: (res) => {
+        this.isLoading = false;
         toast.success('User(s) deleted successfully');
         this.selectedUserIds.clear();
         this.disableDeleteButton = true;
         this.loadUsers();
       },
       error: (err) => {
+        this.isLoading = false;
+
         if (err.status === 500) {
           toast.error('Server error. Please try again');
         } else {
@@ -70,5 +89,9 @@ export class UsersPage implements OnInit {
         }
       },
     });
+  }
+
+  public hideModal(): void {
+    this.showModal = false;
   }
 }
