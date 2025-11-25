@@ -9,6 +9,7 @@ import { MainLayout } from './layout/main-layout/main-layout';
 import { MainDashboard } from './dashboard/main-dashboard/main-dashboard';
 import { UsersPage } from './users/users-page/users-page';
 import { CreateUserPage } from './users/create-user-page/create-user-page';
+import { EditUser } from './users/edit-user/edit-user';
 
 export const routes: Routes = [
   {
@@ -24,6 +25,7 @@ export const routes: Routes = [
         children: [
           { path: '', component: UsersPage, title: 'Users' },
           { path: 'create-user', component: CreateUserPage, title: 'Create User' },
+          { path: 'edit-user/:id', component: EditUser, title: 'Edit User' },
         ],
       },
     ],

@@ -55,7 +55,9 @@
           }
         </td>
         <td class="px-2 py-4">
-          <a routerLink="#" class="text-fg-brand font-medium hover:underline">Edit</a>
+          <a [routerLink]="['edit-user', user.id]" class="text-fg-brand font-medium hover:underline"
+            >Edit</a
+          >
         </td>
       </tr>
     } @empty {
