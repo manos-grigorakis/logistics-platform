@@ -2,15 +2,13 @@ import { Component, inject, OnInit } from '@angular/core';
 import { UsersService } from '../users.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UsersListResponse } from '../models/users-list-response';
-import { ReactiveFormsModule } from '@angular/forms';
 import { CreateUserRequest } from '../models/create-user-request';
 import { toast } from 'ngx-sonner';
-import { Role } from '../../roles/models/role';
 import { UserForm } from '../user-form/user-form';
 
 @Component({
   selector: 'app-edit-user',
-  imports: [ReactiveFormsModule, UserForm],
+  imports: [UserForm],
   templateUrl: './edit-user.html',
   styleUrl: './edit-user.css',
 })
