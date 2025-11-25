@@ -8,6 +8,7 @@ import { SetupPasswordPage } from './auth/setup-password-page/setup-password-pag
 import { MainLayout } from './layout/main-layout/main-layout';
 import { MainDashboard } from './dashboard/main-dashboard/main-dashboard';
 import { UsersPage } from './users/users-page/users-page';
+import { CreateUserPage } from './users/create-user-page/create-user-page';
 
 export const routes: Routes = [
   {
@@ -18,7 +19,13 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: MainDashboard, title: 'Dashboard' },
-      { path: 'users', component: UsersPage, title: 'Users' },
+      {
+        path: 'users',
+        children: [
+          { path: '', component: UsersPage, title: 'Users' },
+          { path: 'create-user', component: CreateUserPage, title: 'Create User' },
+        ],
+      },
     ],
   },
   {

@@ -4,7 +4,11 @@
   <div class="flex items-center gap-6">
     <div class="flex items-center gap-4">
       <!-- Add -->
-      <app-rounded-icon-button icon="lucidePlus" color="success"></app-rounded-icon-button>
+      <app-rounded-icon-button
+        (clicked)="onCreateUser()"
+        icon="lucidePlus"
+        color="success"
+      ></app-rounded-icon-button>
 
       <!-- Refresh -->
       <app-rounded-icon-button
