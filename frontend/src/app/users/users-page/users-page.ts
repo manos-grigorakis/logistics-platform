@@ -13,8 +13,9 @@ import { UsersFilters } from '../users-filters/users-filters';
 export class UsersPage implements OnInit {
   private usersService: UsersService = inject(UsersService);
 
-  isLoading: boolean = false;
-  users: UsersListResponse[] = [];
+  public isLoading: boolean = false;
+  public users: UsersListResponse[] = [];
+  public selectedUserIds = new Set<number>();
 
   ngOnInit(): void {
     this.loadUsers();
@@ -26,11 +27,21 @@ export class UsersPage implements OnInit {
       next: (res) => {
         this.isLoading = false;
         this.users = res;
+        this.selectedUserIds.clear();
       },
       error: (err) => {
         this.isLoading = false;
         console.log(err);
       },
     });
+  }
+
+  public toggleUserSelection(userId: number): void {
+    if (this.selectedUserIds.has(userId)) {
+      this.selectedUserIds.delete(userId);
+    } else {
+      this.selectedUserIds.add(userId);
+      console.log(userId);
+    }
   }
 }

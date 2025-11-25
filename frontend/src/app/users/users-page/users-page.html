@@ -4,6 +4,11 @@
   </div>
 
   <div class="relative overflow-x-auto rounded-lg bg-white shadow-md">
-    <app-users-table [isLoading]="isLoading" [users]="users"></app-users-table>
+    <app-users-table
+      [isLoading]="isLoading"
+      [users]="users"
+      [selectedUserIds]="selectedUserIds"
+      (toggleUserSelection)="toggleUserSelection($event)"
+    ></app-users-table>
   </div>
 </div>
