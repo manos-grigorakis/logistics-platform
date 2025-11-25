@@ -25,6 +25,9 @@ import {
   lucideRefreshCcw,
   lucidePlus,
   lucideTrash,
+  lucideInfo,
+  lucideAlertTriangle,
+  lucideX,
 } from '@ng-icons/lucide';
 
 export const appConfig: ApplicationConfig = {
@@ -51,6 +54,9 @@ export const appConfig: ApplicationConfig = {
       lucideRefreshCcw,
       lucidePlus,
       lucideTrash,
+      lucideInfo,
+      lucideAlertTriangle,
+      lucideX,
     }),
 
     provideNgIconsConfig({
