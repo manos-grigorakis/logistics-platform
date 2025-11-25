@@ -23,11 +23,27 @@ export class UsersService {
     return this.http.get<UsersListResponse[]>(`${environment.apiUrl}/users`, { headers: headers });
   }
 
+  public getUser(id: number): Observable<UsersListResponse> {
+    this.jwtToken = this.authService.getJwtToken();
+    const headers = { Authorization: `Bearer ${this.jwtToken}` };
+
+    return this.http.get<UsersListResponse>(`${environment.apiUrl}/users/${id}`, {
+      headers: headers,
+    });
+  }
+
   public createUser(data: CreateUserRequest): Observable<User> {
     this.jwtToken = this.authService.getJwtToken();
     const headers = { Authorization: `Bearer ${this.jwtToken}` };
 
     return this.http.post<User>(`${environment.apiUrl}/users`, data, { headers: headers });
+  }
+
+  public updateUser(id: number, data: CreateUserRequest): Observable<User> {
+    this.jwtToken = this.authService.getJwtToken();
+    const headers = { Authorization: `Bearer ${this.jwtToken}` };
+
+    return this.http.put<User>(`${environment.apiUrl}/users/${id}`, data, { headers: headers });
   }
 
   public deleteUser(id: number): Observable<void> {
