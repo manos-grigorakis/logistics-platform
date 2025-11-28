@@ -6,10 +6,11 @@ import { PrimaryButton } from '../../shared/ui/primary-button/primary-button';
 import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
 import { ResetPasswordRequest } from '../models/reset-password-request';
 import { toast } from 'ngx-sonner';
+import { MainInput } from '../../shared/forms/main-input/main-input';
 
 @Component({
   selector: 'app-reset-password-form',
-  imports: [PrimaryButton, LoadingSpinner, ReactiveFormsModule],
+  imports: [PrimaryButton, LoadingSpinner, ReactiveFormsModule, MainInput],
   templateUrl: './reset-password-form.html',
   styleUrl: './reset-password-form.css',
 })
@@ -69,7 +70,11 @@ export class ResetPasswordForm implements OnInit {
 
   public onSubmit(): void {
     if (this.form.invalid) {
-      this.form.markAllAsTouched();
+      // Mark all controls as touched & re-run validators
+      Object.values(this.form.controls).forEach((control) => {
+        control.markAsTouched();
+        control.updateValueAndValidity({ emitEvent: true });
+      });
       return;
     }
 

@@ -2,20 +2,15 @@ import { Component, inject, OnInit } from '@angular/core';
 import { PrimaryButton } from '../../shared/ui/primary-button/primary-button';
 import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
 import { AuthService } from '../services/auth.service';
-import {
-  FormControl,
-  FormGroup,
-  ɵInternalFormsSharedModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SetupPasswordRequest } from '../models/setup-password-request';
 import { toast } from 'ngx-sonner';
+import { MainInput } from '../../shared/forms/main-input/main-input';
 
 @Component({
   selector: 'app-setup-password-form',
-  imports: [PrimaryButton, LoadingSpinner, ɵInternalFormsSharedModule, ReactiveFormsModule],
+  imports: [PrimaryButton, LoadingSpinner, ReactiveFormsModule, MainInput],
   templateUrl: './setup-password-form.html',
   styleUrl: './setup-password-form.css',
 })
@@ -53,7 +48,11 @@ export class SetupPasswordForm implements OnInit {
 
   public onSubmit(): void {
     if (this.form.invalid) {
-      this.form.markAllAsTouched();
+      // Mark all controls as touched & re-run validators
+      Object.values(this.form.controls).forEach((control) => {
+        control.markAsTouched();
+        control.updateValueAndValidity({ emitEvent: true });
+      });
       return;
     }
 
