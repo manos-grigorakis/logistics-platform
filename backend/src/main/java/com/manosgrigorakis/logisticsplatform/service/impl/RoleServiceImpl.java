@@ -2,11 +2,13 @@ package com.manosgrigorakis.logisticsplatform.service.impl;
 
 import com.manosgrigorakis.logisticsplatform.dto.role.RoleRequestDTO;
 import com.manosgrigorakis.logisticsplatform.dto.role.RoleResponseDTO;
+import com.manosgrigorakis.logisticsplatform.exception.DeleteConflictException;
 import com.manosgrigorakis.logisticsplatform.exception.DuplicateEntryException;
 import com.manosgrigorakis.logisticsplatform.exception.ResourceNotFoundException;
 import com.manosgrigorakis.logisticsplatform.mapper.RoleMapper;
 import com.manosgrigorakis.logisticsplatform.model.Role;
 import com.manosgrigorakis.logisticsplatform.repository.RoleRepository;
+import com.manosgrigorakis.logisticsplatform.repository.UserRepository;
 import com.manosgrigorakis.logisticsplatform.service.RoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,10 +20,12 @@ import java.util.Optional;
 @Service
 public class RoleServiceImpl implements RoleService {
     private final RoleRepository roleRepository;
+    private final UserRepository userRepository;
     private final Logger log = LoggerFactory.getLogger(RoleServiceImpl.class);
 
-    public RoleServiceImpl(RoleRepository roleRepository) {
+    public RoleServiceImpl(RoleRepository roleRepository, UserRepository userRepository) {
         this.roleRepository = roleRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -86,6 +90,13 @@ public class RoleServiceImpl implements RoleService {
         if (!roleRepository.existsById(id)) {
             log.error("Delete failed. Role not found with id: {}", id);
             throw new ResourceNotFoundException("Role not found with id: " + id);
+        }
+
+        long usersCount = userRepository.countByRoleId(id);
+
+        if(usersCount > 0) {
+            log.warn("Cannot delete role with id: {}. Active user(s) are still assigned", id);
+            throw new DeleteConflictException("role", "user(s)");
         }
 
         roleRepository.deleteById(id);
