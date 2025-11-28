@@ -19,10 +19,11 @@ public class CustomerMapper {
                 .build();
     }
 
-    // Entity => DTO
+    // Entity => Response
     public static CustomerResponseDTO toResponse(Customer customer) {
         CustomerResponseDTO dto = new CustomerResponseDTO();
         dto.setId(customer.getId());
+        dto.setTin(customer.getTin());
         dto.setCompanyName(customer.getCompanyName());
         dto.setFirstName(customer.getFirstName());
         dto.setLastName(customer.getLastName());
@@ -30,6 +31,8 @@ public class CustomerMapper {
         dto.setCustomerType(customer.getCustomerType());
         dto.setLocation(customer.getLocation());
         dto.setPhone(customer.getPhone());
+        dto.setCreatedAt(customer.getCreatedAt());
+        dto.setUpdatedAt(customer.getUpdatedAt());
 
         return dto;
     }

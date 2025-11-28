@@ -32,7 +32,7 @@ public class Customer {
     @Column(name = "last_name", nullable = false, length = 80)
     private String lastName;
 
-    @Column(name = "email", unique = true, length = 320)
+    @Column(name = "email", length = 320)
     private String email;
 
     @Enumerated(EnumType.STRING)
