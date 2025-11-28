@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { UsersService } from '../users.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UsersListResponse } from '../models/users-list-response';
-import { CreateUserRequest } from '../models/create-user-request';
+import { UserRequest } from '../models/user-request';
 import { toast } from 'ngx-sonner';
 import { UserForm } from '../user-form/user-form';
 
@@ -31,7 +31,7 @@ export class EditUser implements OnInit {
     this.fetchUserData(this.id);
   }
 
-  public onSubmit(data: CreateUserRequest): void {
+  public onSubmit(data: UserRequest): void {
     this.errorMessage = undefined;
     this.isLoading = true;
 

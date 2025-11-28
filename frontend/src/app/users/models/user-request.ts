@@ -1,4 +1,4 @@
-export interface CreateUserRequest {
+export interface UserRequest {
   firstName?: string;
   lastName?: string | null;
   email: string;

@@ -6,7 +6,7 @@ import { MainInput } from '../../shared/forms/main-input/main-input';
 import { RolesService } from '../../roles/roles.service';
 import { Role } from '../../roles/models/role';
 import { UsersListResponse } from '../models/users-list-response';
-import { CreateUserRequest } from '../models/create-user-request';
+import { UserRequest } from '../models/user-request';
 
 @Component({
   selector: 'app-user-form',
@@ -18,7 +18,7 @@ export class UserForm implements OnInit {
   @Input() isLoading: boolean = false;
   @Input() formUsage: 'create' | 'update' = 'create';
   @Input() errorMessage?: string;
-  @Output() onFormSubmit = new EventEmitter<CreateUserRequest>();
+  @Output() onFormSubmit = new EventEmitter<UserRequest>();
 
   private rolesService: RolesService = inject(RolesService);
   private formBuilder: FormBuilder = inject(FormBuilder);
@@ -97,7 +97,7 @@ export class UserForm implements OnInit {
 
     const { firstName, lastName, email, phone, roleId } = this.userForm.getRawValue();
 
-    const data: CreateUserRequest = {
+    const data: UserRequest = {
       firstName,
       lastName,
       email,

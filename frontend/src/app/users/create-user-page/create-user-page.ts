@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { UsersService } from '../users.service';
-import { CreateUserRequest } from '../models/create-user-request';
+import { UserRequest } from '../models/user-request';
 import { toast } from 'ngx-sonner';
 import { Router } from '@angular/router';
 import { UserForm } from '../user-form/user-form';
@@ -17,7 +17,7 @@ export class CreateUserPage {
   public isLoading: boolean = false;
   public errorMessage?: string;
 
-  public onSubmit(data: CreateUserRequest): void {
+  public onSubmit(data: UserRequest): void {
     this.errorMessage = undefined;
     this.isLoading = true;
 

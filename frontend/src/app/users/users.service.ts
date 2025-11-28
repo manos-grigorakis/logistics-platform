@@ -5,7 +5,7 @@ import { UsersListResponse } from './models/users-list-response';
 import { environment } from '../../environments/environment';
 import { AuthService } from '../auth/services/auth.service';
 import { User } from './models/user';
-import { CreateUserRequest } from './models/create-user-request';
+import { UserRequest } from './models/user-request';
 
 @Injectable({
   providedIn: 'root',
@@ -32,14 +32,14 @@ export class UsersService {
     });
   }
 
-  public createUser(data: CreateUserRequest): Observable<User> {
+  public createUser(data: UserRequest): Observable<User> {
     this.jwtToken = this.authService.getJwtToken();
     const headers = { Authorization: `Bearer ${this.jwtToken}` };
 
     return this.http.post<User>(`${environment.apiUrl}/users`, data, { headers: headers });
   }
 
-  public updateUser(id: number, data: CreateUserRequest): Observable<User> {
+  public updateUser(id: number, data: UserRequest): Observable<User> {
     this.jwtToken = this.authService.getJwtToken();
     const headers = { Authorization: `Bearer ${this.jwtToken}` };
 
