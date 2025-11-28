@@ -1,1 +1,39 @@
-<p>roles-table works!</p>
+<table class="text-body w-full text-left text-sm rtl:text-right">
+  @if (isLoading) {
+    <app-loading-spinner />
+  }
+
+  <thead class="text-body bg-secondary-700 text-sm text-white">
+    <tr>
+      <th scope="col" class="px-4 py-3 font-medium">Name</th>
+      <th scope="col" class="px-2 py-3 font-medium">Description</th>
+      <th scope="col" class="px-2 py-3 text-center font-medium">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (role of roles; track role.id) {
+      <tr>
+        <td class="px-4 py-4">{{ role.name }}</td>
+        <td class="px-2 py-4">{{ role.description || '-' }}</td>
+
+        <td class="flex justify-center gap-4 px-2 py-4">
+          <a
+            [routerLink]="['edit-role', role.id]"
+            class="text-info-dark hover:bg-info-light cursor-pointer rounded-md px-3 py-1 text-sm font-medium"
+            >Edit</a
+          >
+          <button
+            class="text-danger-dark hover:bg-danger-light cursor-pointer rounded-md px-3 py-1 text-sm font-medium"
+            (click)="onDeleteRole(role.id)"
+          >
+            Delete
+          </button>
+        </td>
+      </tr>
+    } @empty {
+      <tr>
+        <td class="w-full py-4 text-center text-lg" colspan="7">There are no roles</td>
+      </tr>
+    }
+  </tbody>
+</table>
