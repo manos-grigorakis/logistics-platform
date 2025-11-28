@@ -116,6 +116,19 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
 
+    // Delete Conflict Due to Data Integrity Violation - 409
+    @ExceptionHandler(DeleteConflictException.class)
+    public ResponseEntity<ErrorResponse> handleDeleteConflictException(DeleteConflictException exc) {
+        ErrorResponse response = new ErrorResponse(
+                HttpStatus.CONFLICT.value(),
+                exc.getMessage(),
+                System.currentTimeMillis(),
+                null
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+    }
+
     // Server error - 500
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception exc) {
