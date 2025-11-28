@@ -62,6 +62,13 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/users/**").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasAuthority("ADMIN")
 
+                        // Customers
+                        .requestMatchers(HttpMethod.GET, "/api/customers").hasAnyAuthority("ADMIN", "MANAGER")
+                        .requestMatchers(HttpMethod.GET, "/api/customers/**").hasAnyAuthority("ADMIN", "MANAGER")
+                        .requestMatchers(HttpMethod.POST, "/api/customers").hasAnyAuthority("ADMIN", "MANAGER")
+                        .requestMatchers(HttpMethod.PUT, "/api/customers/**").hasAnyAuthority("ADMIN", "MANAGER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/customers/**").hasAnyAuthority("ADMIN", "MANAGER")
+
                         // All other endpoints require authentication
                         .anyRequest().authenticated()
         );
