@@ -5,7 +5,7 @@ import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner'
 import { MainInput } from '../../shared/forms/main-input/main-input';
 import { RolesService } from '../../roles/roles.service';
 import { Role } from '../../roles/models/role';
-import { UsersListResponse } from '../models/users-list-response';
+import { UserResponse } from '../models/user-response';
 import { UserRequest } from '../models/user-request';
 
 @Component({
@@ -22,7 +22,7 @@ export class UserForm implements OnInit {
 
   private rolesService: RolesService = inject(RolesService);
   private formBuilder: FormBuilder = inject(FormBuilder);
-  private user?: UsersListResponse;
+  private user?: UserResponse;
 
   public roles: Role[] = [];
   public roleErrorMessage?: string;
@@ -47,7 +47,7 @@ export class UserForm implements OnInit {
     }),
   });
 
-  @Input() set userData(value: UsersListResponse | undefined) {
+  @Input() set userData(value: UserResponse | undefined) {
     this.user = value;
 
     if (value && this.formUsage === 'update') {

@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { UsersTable } from '../users-table/users-table';
 import { UsersService } from '../users.service';
-import { UsersListResponse } from '../models/users-list-response';
+import { UserResponse } from '../models/user-response';
 import { UsersFilters } from '../users-filters/users-filters';
 import { toast } from 'ngx-sonner';
 import { forkJoin } from 'rxjs';
@@ -17,8 +17,8 @@ export class UsersPage implements OnInit {
   private usersService: UsersService = inject(UsersService);
 
   public isLoading: boolean = false;
-  public users: UsersListResponse[] = [];
-  public displayedUsers: UsersListResponse[] = [];
+  public users: UserResponse[] = [];
+  public displayedUsers: UserResponse[] = [];
   public selectedUserIds = new Set<number>();
   public disableDeleteButton: boolean = true;
   public showModal: boolean = false;

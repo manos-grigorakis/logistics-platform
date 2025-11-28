@@ -1,4 +1,4 @@
-export interface UsersListResponse {
+export interface UserResponse {
   id: number;
   firstName: string;
   lastName: string;
@@ -7,4 +7,6 @@ export interface UsersListResponse {
   roleId: number;
   status: string;
   enable: boolean;
+  createdAt: string;
+  updatedAt: string | null;
 }

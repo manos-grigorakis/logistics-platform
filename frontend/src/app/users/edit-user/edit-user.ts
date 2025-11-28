@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { UsersService } from '../users.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UsersListResponse } from '../models/users-list-response';
+import { UserResponse } from '../models/user-response';
 import { UserRequest } from '../models/user-request';
 import { toast } from 'ngx-sonner';
 import { UserForm } from '../user-form/user-form';
@@ -17,7 +17,7 @@ export class EditUser implements OnInit {
   private route: ActivatedRoute = inject(ActivatedRoute);
   private router: Router = inject(Router);
   private id: number = 0;
-  public user?: UsersListResponse;
+  public user?: UserResponse;
 
   public errorMessage?: string;
   public isLoading: boolean = false;

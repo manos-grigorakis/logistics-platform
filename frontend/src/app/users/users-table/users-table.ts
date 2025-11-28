@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
-import { UsersListResponse } from '../models/users-list-response';
+import { UserResponse } from '../models/user-response';
 import { NgClass } from '@angular/common';
 
 @Component({
@@ -12,7 +12,7 @@ import { NgClass } from '@angular/common';
 })
 export class UsersTable {
   @Input() isLoading?: boolean;
-  @Input() users: UsersListResponse[] = [];
+  @Input() users: UserResponse[] = [];
   @Input() selectedUserIds = new Set<number>();
   @Output() toggleUserSelection = new EventEmitter<number>();
 

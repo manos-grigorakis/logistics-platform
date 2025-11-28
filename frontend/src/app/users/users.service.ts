@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { UsersListResponse } from './models/users-list-response';
+import { UserResponse } from './models/user-response';
 import { environment } from '../../environments/environment';
 import { AuthService } from '../auth/services/auth.service';
 import { User } from './models/user';
@@ -16,18 +16,18 @@ export class UsersService {
   private authService: AuthService = inject(AuthService);
   private jwtToken?: string | null;
 
-  public fetchUsers(): Observable<UsersListResponse[]> {
+  public fetchUsers(): Observable<UserResponse[]> {
     this.jwtToken = this.authService.getJwtToken();
     const headers = { Authorization: `Bearer ${this.jwtToken}` };
 
-    return this.http.get<UsersListResponse[]>(`${environment.apiUrl}/users`, { headers: headers });
+    return this.http.get<UserResponse[]>(`${environment.apiUrl}/users`, { headers: headers });
   }
 
-  public getUser(id: number): Observable<UsersListResponse> {
+  public getUser(id: number): Observable<UserResponse> {
     this.jwtToken = this.authService.getJwtToken();
     const headers = { Authorization: `Bearer ${this.jwtToken}` };
 
-    return this.http.get<UsersListResponse>(`${environment.apiUrl}/users/${id}`, {
+    return this.http.get<UserResponse>(`${environment.apiUrl}/users/${id}`, {
       headers: headers,
     });
   }
