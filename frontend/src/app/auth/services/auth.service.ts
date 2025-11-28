@@ -38,7 +38,7 @@ export class AuthService {
           // Set counter to logout user when token expires
           this.expirationCounter(res.token);
         }
-      })
+      }),
     );
   }
 
@@ -46,26 +46,26 @@ export class AuthService {
     return this.http.post(
       environment.apiUrl + '/auth/request-reset',
       { email },
-      { observe: 'response' }
+      { observe: 'response' },
     );
   }
 
   public validateResetPasswordToken(token: string): Observable<boolean> {
     return this.http
       .get<ValidateResetPasswordTokenResponse>(
-        `${environment.apiUrl}/auth/reset-password?token=${token}`
+        `${environment.apiUrl}/auth/reset-password?token=${token}`,
       )
       .pipe(
         map((res) => {
           return res.valid;
-        })
+        }),
       );
   }
 
   public resetPassword(data: ResetPasswordRequest): Observable<ResetPasswordResponse> {
     return this.http.post<ResetPasswordResponse>(
       `${environment.apiUrl}/auth/reset-password/confirm`,
-      data
+      data,
     );
   }
 
@@ -100,6 +100,21 @@ export class AuthService {
     this.userData = JSON.parse(storedUser);
 
     return this.userData;
+  }
+
+  public getUserRole(): string {
+    const token = this.getJwtToken();
+
+    if (!token || this.jwtHelper.isTokenExpired(token)) return '';
+
+    const decodedToken = this.jwtHelper.decodeToken(token);
+
+    return decodedToken.role || '';
+  }
+
+  public isAdmin(): boolean {
+    if (this.getUserRole() === 'ADMIN') return true;
+    return false;
   }
 
   // Helper methods

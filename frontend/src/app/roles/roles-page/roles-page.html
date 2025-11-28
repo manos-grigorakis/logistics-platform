@@ -1,0 +1,21 @@
+<div>
+  <app-modal
+    (closeModalClick)="hideModal()"
+    (confirmClick)="handleDeleteRole()"
+    (cancelClick)="hideModal()"
+    [isEnabled]="showModal"
+    color="danger"
+    icon="lucideAlertTriangle"
+    confirmButtonText="Delete"
+    cancelButtonText="Cancel"
+    [header]="modalHeader"
+    [message]="modalMessage"
+  />
+
+  <div class="mb-4 ml-auto max-w-3xs">
+    <app-primary-button value="Create Role" routerLink="/roles/create-role" />
+  </div>
+  <div class="relative overflow-x-auto rounded-lg bg-white shadow-md">
+    <app-roles-table [roles]="roles" (deleteRole)="onRoleDeleteRequest($event)" />
+  </div>
+</div>

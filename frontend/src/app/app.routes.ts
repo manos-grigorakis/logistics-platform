@@ -10,6 +10,10 @@ import { MainDashboard } from './dashboard/main-dashboard/main-dashboard';
 import { UsersPage } from './users/users-page/users-page';
 import { CreateUserPage } from './users/create-user-page/create-user-page';
 import { EditUserPage } from './users/edit-user-page/edit-user-page';
+import { RolesPage } from './roles/roles-page/roles-page';
+import { CreateRole } from './roles/create-role/create-role';
+import { EditRole } from './roles/edit-role/edit-role';
+import { roleGuard } from './guards/role-guard';
 
 export const routes: Routes = [
   {
@@ -22,10 +26,20 @@ export const routes: Routes = [
       { path: 'dashboard', component: MainDashboard, title: 'Dashboard' },
       {
         path: 'users',
+        canActivate: [roleGuard],
         children: [
           { path: '', component: UsersPage, title: 'Users' },
           { path: 'create-user', component: CreateUserPage, title: 'Create User' },
           { path: 'edit-user/:id', component: EditUserPage, title: 'Edit User' },
+        ],
+      },
+      {
+        path: 'roles',
+        canActivate: [roleGuard],
+        children: [
+          { path: '', component: RolesPage, title: 'Roles' },
+          { path: 'create-role', component: CreateRole, title: 'Create Role' },
+          { path: 'edit-role/:id', component: EditRole, title: 'Edit Role' },
         ],
       },
     ],

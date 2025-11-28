@@ -19,6 +19,7 @@ public class RoleMapper {
         dto.setId(role.getId());
         dto.setName(role.getName());
         dto.setDescription(role.getDescription());
+        dto.setEditable(role.isEditable());
         dto.setCreatedAt(role.getCreatedAt());
         dto.setUpdatedAt(role.getUpdatedAt());
 

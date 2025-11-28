@@ -1,0 +1,49 @@
+<div class="mx-auto mt-6 max-w-xl rounded-lg bg-white p-6 shadow-lg shadow-black/10">
+  <h2 class="mb-4 text-center text-3xl font-semibold">
+    @if (formUsage === 'create') {
+      Create a Role
+    } @else {
+      Update Role
+    }
+  </h2>
+
+  @if (isLoading) {
+    <app-loading-spinner />
+  }
+
+  <div class="mb-5">
+    @if (errorMessage) {
+      <span class="text-danger bg-danger-light block w-full rounded-md p-1.5 text-center">{{
+        errorMessage
+      }}</span>
+    }
+  </div>
+
+  <form [formGroup]="roleForm" (ngSubmit)="onSubmit()">
+    <div class="mb-6">
+      <app-main-input
+        formControlName="name"
+        label="Role Name"
+        placeholder="Role Name"
+        type="text"
+        [showRequiredStar]="true"
+      ></app-main-input>
+    </div>
+    <div class="mb-6">
+      <label for="description" class="mb-1 block">Description</label>
+      <textarea
+        formControlName="description"
+        id="description"
+        rows="4"
+        class="focus:ring-primary-200 placeholder:text-body w-full resize-none rounded border border-gray-300 px-4 py-2 text-gray-700 focus:ring focus:outline-none"
+        placeholder="Describe role"
+      ></textarea>
+    </div>
+
+    @if (formUsage === 'create') {
+      <app-primary-button value="Create Role" [isDisabled]="isLoading" />
+    } @else {
+      <app-primary-button value="Update Role" [isDisabled]="isLoading" />
+    }
+  </form>
+</div>
