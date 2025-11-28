@@ -26,6 +26,9 @@ public class Role {
     @Column(name = "description", nullable = true, length = 255)
     private String description;
 
+    @Column(name = "is_editable", nullable = false)
+    private boolean isEditable = true;
+
     @OneToMany(mappedBy = "role")
     private List<User> users;
 

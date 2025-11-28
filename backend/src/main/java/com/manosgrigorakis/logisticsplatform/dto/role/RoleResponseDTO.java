@@ -11,6 +11,7 @@ public class RoleResponseDTO {
     private Long id;
     private String name;
     private String description;
+    private boolean isEditable;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
