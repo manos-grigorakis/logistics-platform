@@ -9,10 +9,10 @@ import { UserForm } from '../user-form/user-form';
 @Component({
   selector: 'app-edit-user',
   imports: [UserForm],
-  templateUrl: './edit-user.html',
-  styleUrl: './edit-user.css',
+  templateUrl: './edit-user-page.html',
+  styleUrl: './edit-user-page.css',
 })
-export class EditUser implements OnInit {
+export class EditUserPage implements OnInit {
   private userService: UsersService = inject(UsersService);
   private route: ActivatedRoute = inject(ActivatedRoute);
   private router: Router = inject(Router);
