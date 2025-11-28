@@ -2,6 +2,7 @@ package com.manosgrigorakis.logisticsplatform.controller;
 
 import com.manosgrigorakis.logisticsplatform.dto.customer.CustomerRequestDTO;
 import com.manosgrigorakis.logisticsplatform.dto.customer.CustomerResponseDTO;
+import com.manosgrigorakis.logisticsplatform.dto.customer.UpdateCustomerRequestDTO;
 import com.manosgrigorakis.logisticsplatform.service.CustomerService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +33,7 @@ public class CustomerRestController {
     }
 
     @PutMapping("/{id}")
-    public CustomerResponseDTO updateCustomerById(@PathVariable Long id, @RequestBody @Valid CustomerRequestDTO dto) {
+    public CustomerResponseDTO updateCustomerById(@PathVariable Long id, @RequestBody @Valid UpdateCustomerRequestDTO dto) {
         return customerService.updateCustomerById(id, dto);
     }
 

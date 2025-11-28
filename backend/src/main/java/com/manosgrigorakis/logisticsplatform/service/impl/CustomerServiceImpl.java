@@ -2,6 +2,7 @@ package com.manosgrigorakis.logisticsplatform.service.impl;
 
 import com.manosgrigorakis.logisticsplatform.dto.customer.CustomerRequestDTO;
 import com.manosgrigorakis.logisticsplatform.dto.customer.CustomerResponseDTO;
+import com.manosgrigorakis.logisticsplatform.dto.customer.UpdateCustomerRequestDTO;
 import com.manosgrigorakis.logisticsplatform.exception.DuplicateEntryException;
 import com.manosgrigorakis.logisticsplatform.exception.ResourceNotFoundException;
 import com.manosgrigorakis.logisticsplatform.mapper.CustomerMapper;
@@ -74,8 +75,34 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerResponseDTO updateCustomerById(Long id, CustomerRequestDTO dto) {
-        return null;
+    public CustomerResponseDTO updateCustomerById(Long id, UpdateCustomerRequestDTO dto) {
+        Customer customer = customerRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.warn("Updated failed. Customer not found with id: {}", id);
+                    return new ResourceNotFoundException("Customer not found with id: " + id);
+                });
+
+        customer.setTin(customer.getTin());
+        customer.setCompanyName(dto.getCompanyName());
+        customer.setFirstName(dto.getFirstName());
+        customer.setLastName(dto.getLastName());
+        customer.setEmail(dto.getEmail());
+        customer.setCustomerType(dto.getCustomerType());
+        customer.setLocation(dto.getLocation());
+        customer.setPhone(dto.getPhone());
+
+        Optional<Customer> existingCustomerCompanyName = customerRepository.findByCompanyName(dto.getCompanyName());
+        Optional<Customer> existing = customerRepository.findByCompanyName(dto.getCompanyName());
+
+        if (existingCustomerCompanyName.isPresent() && !existing.get().getId().equals(customer.getId())) {
+            log.warn("Update failed. Attempted to update customer with existing company name: {}", dto.getCompanyName());
+            throw  new DuplicateEntryException("companyName", dto.getCompanyName());
+        }
+
+        Customer updatedCustomer = customerRepository.save(customer);
+        log.info("Customer updated: {}", dto.getCompanyName());
+
+        return CustomerMapper.toResponse(updatedCustomer);
     }
 
     @Override
