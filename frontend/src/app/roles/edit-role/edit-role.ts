@@ -46,7 +46,9 @@ export class EditRole implements OnInit {
       },
       error: (err) => {
         this.isLoading = false;
-        if (err.status === 500) {
+        if (err.status === 403) {
+          this.errorMessage = 'Role is protected and cannot be edited';
+        } else if (err.status === 500) {
           this.errorMessage = 'Server error. Please try again later';
         } else {
           this.errorMessage = 'An error occured. Please try again';
@@ -61,8 +63,15 @@ export class EditRole implements OnInit {
     this.rolesService.fetchRole(id).subscribe({
       next: (res) => {
         this.isLoading = false;
-        this.role = res;
         this.errorMessage = undefined;
+
+        if (!res.editable) {
+          toast.warning('This role is protected');
+          this.router.navigate(['/roles']);
+          return;
+        }
+
+        this.role = res;
       },
       error: (err) => {
         this.isLoading = false;

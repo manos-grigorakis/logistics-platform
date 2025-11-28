@@ -16,19 +16,27 @@
         <td class="px-4 py-4">{{ role.name }}</td>
         <td class="px-2 py-4">{{ role.description || '-' }}</td>
 
-        <td class="flex justify-center gap-4 px-2 py-4">
-          <a
-            [routerLink]="['edit-role', role.id]"
-            class="text-info-dark hover:bg-info-light cursor-pointer rounded-md px-3 py-1 text-sm font-medium"
-            >Edit</a
-          >
-          <button
-            class="text-danger-dark hover:bg-danger-light cursor-pointer rounded-md px-3 py-1 text-sm font-medium"
-            (click)="onDeleteRole(role.id)"
-          >
-            Delete
-          </button>
-        </td>
+        @if (role.editable) {
+          <td class="flex justify-center gap-4 px-2 py-4">
+            <a
+              [routerLink]="['edit-role', role.id]"
+              class="text-info-dark hover:bg-info-light cursor-pointer rounded-md px-3 py-1 text-sm font-medium"
+              >Edit</a
+            >
+            <button
+              class="text-danger-dark hover:bg-danger-light cursor-pointer rounded-md px-3 py-1 text-sm font-medium"
+              (click)="onDeleteRole(role.id)"
+            >
+              Delete
+            </button>
+          </td>
+        } @else {
+          <td class="flex justify-center px-2 py-4">
+            <span class="border-warning bg-warning-light text-warning-dark rounded border px-2"
+              >Protected Role</span
+            >
+          </td>
+        }
       </tr>
     } @empty {
       <tr>
