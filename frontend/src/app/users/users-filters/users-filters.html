@@ -1,5 +1,5 @@
 <div class="flex items-center justify-between space-x-4 p-4">
-  <app-search-bar></app-search-bar>
+  <app-search-bar [value]="searchTerm" (valueChange)="onSearchChange($event)"></app-search-bar>
 
   <div class="flex items-center gap-6">
     <div class="flex items-center gap-4">

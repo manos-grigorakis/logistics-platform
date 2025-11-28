@@ -18,11 +18,13 @@ export class UsersPage implements OnInit {
 
   public isLoading: boolean = false;
   public users: UsersListResponse[] = [];
+  public displayedUsers: UsersListResponse[] = [];
   public selectedUserIds = new Set<number>();
   public disableDeleteButton: boolean = true;
   public showModal: boolean = false;
   public modalHeader: string = '';
   public modalMessage: string = '';
+  public searchTerm: string = '';
 
   ngOnInit(): void {
     this.loadUsers();
@@ -34,6 +36,7 @@ export class UsersPage implements OnInit {
       next: (res) => {
         this.isLoading = false;
         this.users = res;
+        this.displayedUsers = res;
         this.selectedUserIds.clear();
       },
       error: (err) => {
@@ -93,5 +96,21 @@ export class UsersPage implements OnInit {
 
   public hideModal(): void {
     this.showModal = false;
+  }
+
+  public onSearchChanged(value: string): void {
+    this.searchTerm = value.trim().toLocaleLowerCase();
+
+    if (!this.searchTerm) {
+      this.displayedUsers = this.users;
+      return;
+    }
+
+    this.displayedUsers = this.users.filter(
+      (user) =>
+        user.firstName.toLocaleLowerCase().includes(this.searchTerm) ||
+        user.lastName.toLocaleLowerCase().includes(this.searchTerm) ||
+        user.email.toLocaleLowerCase().includes(this.searchTerm),
+    );
   }
 }

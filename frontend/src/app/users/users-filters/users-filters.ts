@@ -14,9 +14,12 @@ import { Router } from '@angular/router';
 export class UsersFilters {
   @Output() refresh = new EventEmitter<void>();
   @Output() deleteClick = new EventEmitter<void>();
+  @Output() searchChanged = new EventEmitter<string>();
   @Input() isLoading: boolean = false;
   @Input() isDeleteDisabled?: boolean;
   private router: Router = inject(Router);
+
+  public searchTerm: string = '';
 
   loadUsers(): void {
     this.refresh.emit();
@@ -28,5 +31,10 @@ export class UsersFilters {
 
   public onDeleteClick(): void {
     this.deleteClick.emit();
+  }
+
+  public onSearchChange(value: string): void {
+    this.searchTerm = value;
+    this.searchChanged.emit(value);
   }
 }

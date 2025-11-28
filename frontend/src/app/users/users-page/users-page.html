@@ -5,6 +5,7 @@
       [isLoading]="isLoading"
       [isDeleteDisabled]="disableDeleteButton"
       (deleteClick)="onUserDeleteClick()"
+      (searchChanged)="onSearchChanged($event)"
     ></app-users-filters>
   </div>
   <app-modal
@@ -22,7 +23,7 @@
   <div class="relative overflow-x-auto rounded-lg bg-white shadow-md">
     <app-users-table
       [isLoading]="isLoading"
-      [users]="users"
+      [users]="displayedUsers"
       [selectedUserIds]="selectedUserIds"
       (toggleUserSelection)="toggleUserSelection($event)"
     ></app-users-table>
