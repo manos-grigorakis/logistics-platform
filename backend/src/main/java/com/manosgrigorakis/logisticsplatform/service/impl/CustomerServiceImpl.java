@@ -43,17 +43,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerResponseDTO createCustomer(CustomerRequestDTO dto) {
-        Customer customer = Customer.builder()
-                .tin(dto.getTin())
-                .companyName(dto.getCompanyName())
-                .firstName(dto.getFirstName())
-                .lastName(dto.getLastName())
-                .email(dto.getEmail())
-                .customerType(dto.getCustomerType())
-                .location(dto.getLocation())
-                .phone(dto.getPhone())
-                .build();
-
+        Customer customer = CustomerMapper.toEntity(dto);
 
         Optional<Customer> existingCustomerByTin = customerRepository.findByTin(dto.getTin());
         Optional<Customer> existingCustomerCompanyName = customerRepository.findByCompanyName(dto.getCompanyName());
