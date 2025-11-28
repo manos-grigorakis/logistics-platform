@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { LoginPage } from './auth/login-page/login-page';
+import { LoginFormPage } from './auth/login-form-page/login-form-page';
 import { authGuard } from './guards/auth-guard';
 import { NotFoundPage } from './not-found-page/not-found-page';
 import { ForgotPasswordPage } from './auth/forgot-password-page/forgot-password-page';
@@ -32,7 +32,7 @@ export const routes: Routes = [
   },
   {
     path: 'login',
-    component: LoginPage,
+    component: LoginFormPage,
     title: 'Login',
   },
   {

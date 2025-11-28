@@ -10,10 +10,10 @@ import { MainInput } from '../../shared/forms/main-input/main-input';
 @Component({
   selector: 'app-login-form',
   imports: [PrimaryButton, ReactiveFormsModule, LoadingSpinner, RouterLink, MainInput],
-  templateUrl: './login-form.html',
-  styleUrl: './login-form.css',
+  templateUrl: './login-form-page.html',
+  styleUrl: './login-form-page.css',
 })
-export class LoginForm {
+export class LoginFormPage {
   private formBuilder = inject(FormBuilder);
   private router = inject(Router);
   loginFailed: boolean = false;
