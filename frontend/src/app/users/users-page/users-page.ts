@@ -57,7 +57,7 @@ export class UsersPage implements OnInit {
   }
 
   public onUserDeleteClick(): void {
-    this.modalHeader = 'Delete Selected Users';
+    this.modalHeader = 'Delete Selected User(s)';
     this.modalMessage = 'This action is permanent and cannot be undone';
     this.showModal = true;
   }
