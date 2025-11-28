@@ -76,6 +76,11 @@ public class RoleServiceImpl implements RoleService {
                     return new ResourceNotFoundException("Role not found with id: " + id);
                 });
 
+        if(roleRepository.existsByNameAndIdNot(dto.getName(), id)) {
+            log.warn("Update failed. Role name already exists: {}", dto.getName());
+            throw new DuplicateEntryException("name", dto.getName());
+        }
+
         role.setName(dto.getName());
         role.setDescription(dto.getDescription());
 
