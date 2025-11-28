@@ -9,4 +9,5 @@ import { SidebarMenuItem } from '../sidebar-menu-item/sidebar-menu-item';
 })
 export class Sidebar {
   @Input() isOpen?: boolean;
+  @Input() isAdmin?: boolean;
 }

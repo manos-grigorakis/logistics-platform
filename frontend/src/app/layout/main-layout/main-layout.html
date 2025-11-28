@@ -1,9 +1,9 @@
 <app-navbar (toggleSidebar)="toggleSidebar()"></app-navbar>
-<app-sidebar [isOpen]="isSidebarOpen"></app-sidebar>
+<app-sidebar [isOpen]="isSidebarOpen" [isAdmin]="authService.isAdmin()"></app-sidebar>
 
 <main>
   <section
-    class="p-4 bg-secondary-50 mt-16 sm:ml-0 transition-all duration-200 ease-in-out"
+    class="bg-secondary-50 mt-16 p-4 transition-all duration-200 ease-in-out sm:ml-0"
     [class.sm:ml-64]="isSidebarOpen"
   >
     <router-outlet></router-outlet>
