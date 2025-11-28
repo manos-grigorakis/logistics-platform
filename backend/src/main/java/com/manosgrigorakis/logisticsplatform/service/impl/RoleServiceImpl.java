@@ -12,6 +12,7 @@ import com.manosgrigorakis.logisticsplatform.repository.UserRepository;
 import com.manosgrigorakis.logisticsplatform.service.RoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -77,7 +78,8 @@ public class RoleServiceImpl implements RoleService {
                 });
 
         if(!role.isEditable()) {
-            throw new IllegalStateException("This role cannot be edited");
+            log.warn("Update failed. Attempt to edit non-editable role: {}", dto.getName());
+            throw new AccessDeniedException("This role is protected and cannot be edited");
         }
 
         if(roleRepository.existsByNameAndIdNot(dto.getName(), id)) {

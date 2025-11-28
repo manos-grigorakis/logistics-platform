@@ -2,6 +2,7 @@ package com.manosgrigorakis.logisticsplatform.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
@@ -83,6 +84,19 @@ public class GlobalExceptionHandler {
         );
 
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+    }
+
+    // Forbidden - 403
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException exc) {
+        ErrorResponse response = new ErrorResponse(
+                HttpStatus.FORBIDDEN.value(),
+                exc.getMessage(),
+                System.currentTimeMillis(),
+                null
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
     }
 
     // Not found - 404
