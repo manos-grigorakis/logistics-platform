@@ -5,10 +5,11 @@ import { AuthService } from '../services/auth.service';
 import { LoginRequest } from '../models/login-request';
 import { Router, RouterLink } from '@angular/router';
 import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
+import { MainInput } from '../../shared/forms/main-input/main-input';
 
 @Component({
   selector: 'app-login-form',
-  imports: [PrimaryButton, ReactiveFormsModule, LoadingSpinner, RouterLink],
+  imports: [PrimaryButton, ReactiveFormsModule, LoadingSpinner, RouterLink, MainInput],
   templateUrl: './login-form.html',
   styleUrl: './login-form.css',
 })
@@ -36,7 +37,11 @@ export class LoginForm {
 
   onSubmit(): void {
     if (this.loginForm.invalid) {
-      this.loginForm.markAllAsTouched();
+      // Mark all controls as touched & re-run validators
+      Object.values(this.loginForm.controls).forEach((control) => {
+        control.markAsTouched();
+        control.updateValueAndValidity({ emitEvent: true });
+      });
       return;
     }
 
