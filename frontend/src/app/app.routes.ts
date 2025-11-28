@@ -13,6 +13,7 @@ import { EditUserPage } from './users/edit-user-page/edit-user-page';
 import { RolesPage } from './roles/roles-page/roles-page';
 import { CreateRole } from './roles/create-role/create-role';
 import { EditRole } from './roles/edit-role/edit-role';
+import { roleGuard } from './guards/role-guard';
 
 export const routes: Routes = [
   {
@@ -25,6 +26,7 @@ export const routes: Routes = [
       { path: 'dashboard', component: MainDashboard, title: 'Dashboard' },
       {
         path: 'users',
+        canActivate: [roleGuard],
         children: [
           { path: '', component: UsersPage, title: 'Users' },
           { path: 'create-user', component: CreateUserPage, title: 'Create User' },
@@ -33,6 +35,7 @@ export const routes: Routes = [
       },
       {
         path: 'roles',
+        canActivate: [roleGuard],
         children: [
           { path: '', component: RolesPage, title: 'Roles' },
           { path: 'create-role', component: CreateRole, title: 'Create Role' },
