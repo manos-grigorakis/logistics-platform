@@ -3,12 +3,13 @@ package com.manosgrigorakis.logisticsplatform.controller;
 import com.manosgrigorakis.logisticsplatform.dto.customer.CustomerRequestDTO;
 import com.manosgrigorakis.logisticsplatform.dto.customer.CustomerResponseDTO;
 import com.manosgrigorakis.logisticsplatform.dto.customer.UpdateCustomerRequestDTO;
+import com.manosgrigorakis.logisticsplatform.filters.PageFilterRequest;
+import com.manosgrigorakis.logisticsplatform.filters.SortFilterRequest;
 import com.manosgrigorakis.logisticsplatform.service.CustomerService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/customers")
@@ -20,7 +21,10 @@ public class CustomerRestController {
     }
 
     @GetMapping()
-    public List<CustomerResponseDTO> getAllCustomers() {return customerService.getAllCustomers();}
+    public Page<CustomerResponseDTO> getAllCustomers(@ModelAttribute @Valid PageFilterRequest page,
+                                                     @ModelAttribute SortFilterRequest sort) {
+        return customerService.getAllCustomers(page, sort);
+    }
 
     @GetMapping("/{id}")
     public CustomerResponseDTO getCustomerById(@PathVariable Long id) {

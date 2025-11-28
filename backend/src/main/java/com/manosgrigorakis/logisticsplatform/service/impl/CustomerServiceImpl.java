@@ -5,15 +5,19 @@ import com.manosgrigorakis.logisticsplatform.dto.customer.CustomerResponseDTO;
 import com.manosgrigorakis.logisticsplatform.dto.customer.UpdateCustomerRequestDTO;
 import com.manosgrigorakis.logisticsplatform.exception.DuplicateEntryException;
 import com.manosgrigorakis.logisticsplatform.exception.ResourceNotFoundException;
+import com.manosgrigorakis.logisticsplatform.filters.PageFilterRequest;
+import com.manosgrigorakis.logisticsplatform.filters.SortFilterRequest;
 import com.manosgrigorakis.logisticsplatform.mapper.CustomerMapper;
 import com.manosgrigorakis.logisticsplatform.model.Customer;
 import com.manosgrigorakis.logisticsplatform.repository.CustomerRepository;
 import com.manosgrigorakis.logisticsplatform.service.CustomerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,8 +30,12 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<CustomerResponseDTO> getAllCustomers() {
-        return List.of();
+    public Page<CustomerResponseDTO> getAllCustomers(PageFilterRequest page, SortFilterRequest sort) {
+        Pageable pageable = PageRequest.of(page.getPage(), page.getSize(), sort.createSort());
+
+        Page<Customer> customerPage = customerRepository.findAll(pageable);
+
+        return customerPage.map(CustomerMapper::toResponse);
     }
 
     @Override
