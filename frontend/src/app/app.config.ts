@@ -19,6 +19,15 @@ import {
   lucideUserCircle,
   lucideCog,
   lucideLogOut,
+  lucideSearch,
+  lucideFilter,
+  lucideChevronDown,
+  lucideRefreshCcw,
+  lucidePlus,
+  lucideTrash,
+  lucideInfo,
+  lucideAlertTriangle,
+  lucideX,
 } from '@ng-icons/lucide';
 
 export const appConfig: ApplicationConfig = {
@@ -39,6 +48,15 @@ export const appConfig: ApplicationConfig = {
       lucideUserCircle,
       lucideCog,
       lucideLogOut,
+      lucideSearch,
+      lucideFilter,
+      lucideChevronDown,
+      lucideRefreshCcw,
+      lucidePlus,
+      lucideTrash,
+      lucideInfo,
+      lucideAlertTriangle,
+      lucideX,
     }),
 
     provideNgIconsConfig({

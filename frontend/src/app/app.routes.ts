@@ -7,6 +7,9 @@ import { ResetPasswordPage } from './auth/reset-password-page/reset-password-pag
 import { SetupPasswordPage } from './auth/setup-password-page/setup-password-page';
 import { MainLayout } from './layout/main-layout/main-layout';
 import { MainDashboard } from './dashboard/main-dashboard/main-dashboard';
+import { UsersPage } from './users/users-page/users-page';
+import { CreateUserPage } from './users/create-user-page/create-user-page';
+import { EditUserPage } from './users/edit-user-page/edit-user-page';
 
 export const routes: Routes = [
   {
@@ -17,6 +20,14 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: MainDashboard, title: 'Dashboard' },
+      {
+        path: 'users',
+        children: [
+          { path: '', component: UsersPage, title: 'Users' },
+          { path: 'create-user', component: CreateUserPage, title: 'Create User' },
+          { path: 'edit-user/:id', component: EditUserPage, title: 'Edit User' },
+        ],
+      },
     ],
   },
   {

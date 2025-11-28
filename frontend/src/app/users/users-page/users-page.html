@@ -1,0 +1,32 @@
+<div>
+  <div class="border-primary-500 mb-8 rounded border-b-5 shadow-md">
+    <app-users-filters
+      (refresh)="loadUsers()"
+      [isLoading]="isLoading"
+      [isDeleteDisabled]="disableDeleteButton"
+      (deleteClick)="onUserDeleteClick()"
+      (searchChanged)="onSearchChanged($event)"
+      (sortBy)="onSort($event)"
+    ></app-users-filters>
+  </div>
+  <app-modal
+    (closeModalClick)="hideModal()"
+    (confirmClick)="handleDelete()"
+    (cancelClick)="hideModal()"
+    [isEnabled]="showModal"
+    color="danger"
+    icon="lucideAlertTriangle"
+    confirmButtonText="Delete"
+    cancelButtonText="Cancel"
+    [header]="modalHeader"
+    [message]="modalMessage"
+  />
+  <div class="relative overflow-x-auto rounded-lg bg-white shadow-md">
+    <app-users-table
+      [isLoading]="isLoading"
+      [users]="displayedUsers"
+      [selectedUserIds]="selectedUserIds"
+      (toggleUserSelection)="toggleUserSelection($event)"
+    ></app-users-table>
+  </div>
+</div>
