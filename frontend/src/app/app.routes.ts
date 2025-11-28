@@ -1,10 +1,10 @@
 import { Routes } from '@angular/router';
-import { LoginFormPage } from './auth/login-form-page/login-form-page';
+import { LoginForm } from './auth/login-form/login-form';
 import { authGuard } from './guards/auth-guard';
 import { NotFoundPage } from './not-found-page/not-found-page';
 import { ForgotPasswordForm } from './auth/forgot-password-form/forgot-password-form';
-import { ResetPasswordPage } from './auth/reset-password-page/reset-password-page';
-import { SetupPasswordPage } from './auth/setup-password-page/setup-password-page';
+import { ResetPasswordForm } from './auth/reset-password-form/reset-password-form';
+import { SetupPasswordForm } from './auth/setup-password-form/setup-password-form';
 import { MainLayout } from './layout/main-layout/main-layout';
 import { MainDashboard } from './dashboard/main-dashboard/main-dashboard';
 import { UsersPage } from './users/users-page/users-page';
@@ -32,7 +32,7 @@ export const routes: Routes = [
   },
   {
     path: 'login',
-    component: LoginFormPage,
+    component: LoginForm,
     title: 'Login',
   },
   {
@@ -42,12 +42,12 @@ export const routes: Routes = [
   },
   {
     path: 'reset-password',
-    component: ResetPasswordPage,
+    component: ResetPasswordForm,
     title: 'Reset Password',
   },
   {
     path: 'setup-password',
-    component: SetupPasswordPage,
+    component: SetupPasswordForm,
     title: 'Setup Password',
   },
   {
