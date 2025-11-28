@@ -1,5 +1,17 @@
 <div>
+  <app-modal
+    (closeModalClick)="hideModal()"
+    (confirmClick)="handleDeleteRole()"
+    (cancelClick)="hideModal()"
+    [isEnabled]="showModal"
+    color="danger"
+    icon="lucideAlertTriangle"
+    confirmButtonText="Delete"
+    cancelButtonText="Cancel"
+    [header]="modalHeader"
+    [message]="modalMessage"
+  />
   <div class="relative overflow-x-auto rounded-lg bg-white shadow-md">
-    <app-roles-table [roles]="roles" />
+    <app-roles-table [roles]="roles" (deleteRole)="onRoleDeleteRequest($event)" />
   </div>
 </div>

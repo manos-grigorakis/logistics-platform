@@ -21,4 +21,11 @@ export class RolesService {
 
     return this.http.get<Role[]>(`${environment.apiUrl}/roles`, { headers: headers });
   }
+
+  public deleteRole(id: number): Observable<void> {
+    this.jwtToken = this.authService.getJwtToken();
+    const headers = { Authorization: `Bearer ${this.jwtToken}` };
+
+    return this.http.delete<void>(`${environment.apiUrl}/roles/${id}`, { headers: headers });
+  }
 }
