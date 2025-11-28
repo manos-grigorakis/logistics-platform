@@ -4,10 +4,12 @@ import { Role } from '../models/role';
 import { RolesService } from '../roles.service';
 import { Modal } from '../../shared/ui/modal/modal';
 import { toast } from 'ngx-sonner';
+import { RouterLink } from '@angular/router';
+import { PrimaryButton } from '../../shared/ui/primary-button/primary-button';
 
 @Component({
   selector: 'app-roles-page',
-  imports: [RolesTable, Modal],
+  imports: [RolesTable, Modal, RouterLink, PrimaryButton],
   templateUrl: './roles-page.html',
   styleUrl: './roles-page.css',
 })

@@ -30,6 +30,13 @@ export class RolesService {
     return this.http.get<Role>(`${environment.apiUrl}/roles/${id}`, { headers: headers });
   }
 
+  public createRole(data: RoleRequest): Observable<Role> {
+    this.jwtToken = this.authService.getJwtToken();
+    const headers = { Authorization: `Bearer ${this.jwtToken}` };
+
+    return this.http.post<Role>(`${environment.apiUrl}/roles`, data, { headers: headers });
+  }
+
   public updateRole(id: number, data: RoleRequest): Observable<Role> {
     this.jwtToken = this.authService.getJwtToken();
     const headers = { Authorization: `Bearer ${this.jwtToken}` };
