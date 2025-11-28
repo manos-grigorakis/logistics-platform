@@ -68,8 +68,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             User user = userRepository.findByEmail(dto.getEmail())
                     .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
+            String roleName = user.getRole().getName();
+
             // Generate JWT
-            String token = jwtService.generateToken(dto.getEmail());
+            String token = jwtService.generateToken(dto.getEmail(), roleName);
             log.info("User {} authenticated successfully", dto.getEmail());
 
             UserDetailsDTO userDetailsDTO = new UserDetailsDTO(
