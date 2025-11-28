@@ -4,10 +4,11 @@ import { FormControl, Validators, ReactiveFormsModule, FormGroup } from '@angula
 import { AuthService } from '../services/auth.service';
 import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
 import { RouterLink } from '@angular/router';
+import { MainInput } from '../../shared/forms/main-input/main-input';
 
 @Component({
   selector: 'app-forgot-password-form',
-  imports: [PrimaryButton, ReactiveFormsModule, LoadingSpinner, RouterLink],
+  imports: [PrimaryButton, ReactiveFormsModule, LoadingSpinner, RouterLink, MainInput],
   templateUrl: './forgot-password-form.html',
   styleUrl: './forgot-password-form.css',
 })
@@ -30,7 +31,11 @@ export class ForgotPasswordForm {
 
   public onSubmit(): void {
     if (this.form.invalid) {
-      this.form.markAllAsTouched();
+      // Mark all controls as touched & re-run validators
+      Object.values(this.form.controls).forEach((control) => {
+        control.markAsTouched();
+        control.updateValueAndValidity({ emitEvent: true });
+      });
       return;
     }
 
