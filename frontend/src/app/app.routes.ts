@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { LoginFormPage } from './auth/login-form-page/login-form-page';
 import { authGuard } from './guards/auth-guard';
 import { NotFoundPage } from './not-found-page/not-found-page';
-import { ForgotPasswordPage } from './auth/forgot-password-page/forgot-password-page';
+import { ForgotPasswordForm } from './auth/forgot-password-form/forgot-password-form';
 import { ResetPasswordPage } from './auth/reset-password-page/reset-password-page';
 import { SetupPasswordPage } from './auth/setup-password-page/setup-password-page';
 import { MainLayout } from './layout/main-layout/main-layout';
@@ -37,7 +37,7 @@ export const routes: Routes = [
   },
   {
     path: 'forgot-password',
-    component: ForgotPasswordPage,
+    component: ForgotPasswordForm,
     title: 'Forgot Password',
   },
   {
