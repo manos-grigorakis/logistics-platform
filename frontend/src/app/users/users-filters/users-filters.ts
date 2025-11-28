@@ -15,6 +15,7 @@ export class UsersFilters {
   @Output() refresh = new EventEmitter<void>();
   @Output() deleteClick = new EventEmitter<void>();
   @Output() searchChanged = new EventEmitter<string>();
+  @Output() sortBy = new EventEmitter<string>();
   @Input() isLoading: boolean = false;
   @Input() isDeleteDisabled?: boolean;
   private router: Router = inject(Router);
@@ -36,5 +37,9 @@ export class UsersFilters {
   public onSearchChange(value: string): void {
     this.searchTerm = value;
     this.searchChanged.emit(value);
+  }
+
+  public onSortByField(sortOption: string): void {
+    this.sortBy.emit(sortOption);
   }
 }

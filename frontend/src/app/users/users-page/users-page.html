@@ -6,6 +6,7 @@
       [isDeleteDisabled]="disableDeleteButton"
       (deleteClick)="onUserDeleteClick()"
       (searchChanged)="onSearchChanged($event)"
+      (sortBy)="onSort($event)"
     ></app-users-filters>
   </div>
   <app-modal

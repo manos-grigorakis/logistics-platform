@@ -36,13 +36,29 @@
       <li dropdown-menu-item>
         <a
           class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
+          (click)="onSortByField('asc-by-first-name')"
           >Ascending First Name</a
         >
       </li>
       <li dropdown-menu-item>
         <a
           class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
+          (click)="onSortByField('desc-by-first-name')"
           >Descending First Name</a
+        >
+      </li>
+      <li dropdown-menu-item>
+        <a
+          class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
+          (click)="onSortByField('asc-by-last-name')"
+          >Ascending Last Name</a
+        >
+      </li>
+      <li dropdown-menu-item>
+        <a
+          class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
+          (click)="onSortByField('desc-by-last-name')"
+          >Descending Last Name</a
         >
       </li>
     </app-dropdown-button>

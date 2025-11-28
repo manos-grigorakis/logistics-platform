@@ -113,4 +113,29 @@ export class UsersPage implements OnInit {
         user.email.toLocaleLowerCase().includes(this.searchTerm),
     );
   }
+
+  public onSort(sortOption: string): void {
+    switch (sortOption) {
+      case 'asc-by-first-name':
+        this.displayedUsers = [...this.displayedUsers].sort((a, b) =>
+          a.firstName.toLocaleLowerCase().localeCompare(b.firstName.toLocaleLowerCase()),
+        );
+        break;
+      case 'desc-by-first-name':
+        this.displayedUsers = [...this.displayedUsers].sort((a, b) =>
+          b.firstName.toLocaleLowerCase().localeCompare(a.firstName.toLocaleLowerCase()),
+        );
+        break;
+      case 'asc-by-last-name':
+        this.displayedUsers = [...this.displayedUsers].sort((a, b) =>
+          a.lastName.toLocaleLowerCase().localeCompare(b.lastName.toLocaleLowerCase()),
+        );
+        break;
+      case 'desc-by-last-name':
+        this.displayedUsers = [...this.displayedUsers].sort((a, b) =>
+          b.lastName.toLocaleLowerCase().localeCompare(a.lastName.toLocaleLowerCase()),
+        );
+        break;
+    }
+  }
 }
