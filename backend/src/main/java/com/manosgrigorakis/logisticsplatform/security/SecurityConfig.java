@@ -48,6 +48,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/auth/reset-password/confirm").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/setup-password").permitAll()
 
+                        // Metadata
+                        .requestMatchers(HttpMethod.GET, "/api/metadata/customer-types").authenticated()
+
                         // ROLES
                         .requestMatchers(HttpMethod.GET, "/api/roles").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/roles/**").hasAuthority("ADMIN")
