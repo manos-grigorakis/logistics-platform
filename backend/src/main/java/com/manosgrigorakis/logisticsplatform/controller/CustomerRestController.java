@@ -3,6 +3,7 @@ package com.manosgrigorakis.logisticsplatform.controller;
 import com.manosgrigorakis.logisticsplatform.dto.customer.CustomerRequestDTO;
 import com.manosgrigorakis.logisticsplatform.dto.customer.CustomerResponseDTO;
 import com.manosgrigorakis.logisticsplatform.dto.customer.UpdateCustomerRequestDTO;
+import com.manosgrigorakis.logisticsplatform.filters.CustomerFilterRequest;
 import com.manosgrigorakis.logisticsplatform.filters.PageFilterRequest;
 import com.manosgrigorakis.logisticsplatform.filters.SortFilterRequest;
 import com.manosgrigorakis.logisticsplatform.service.CustomerService;
@@ -21,9 +22,11 @@ public class CustomerRestController {
     }
 
     @GetMapping()
-    public Page<CustomerResponseDTO> getAllCustomers(@ModelAttribute @Valid PageFilterRequest page,
-                                                     @ModelAttribute SortFilterRequest sort) {
-        return customerService.getAllCustomers(page, sort);
+    public Page<CustomerResponseDTO> getAllCustomers(
+            @ModelAttribute @Valid CustomerFilterRequest customerFilter,
+            @ModelAttribute @Valid PageFilterRequest page,
+            @ModelAttribute SortFilterRequest sort) {
+        return customerService.getAllCustomers(customerFilter, page, sort);
     }
 
     @GetMapping("/{id}")

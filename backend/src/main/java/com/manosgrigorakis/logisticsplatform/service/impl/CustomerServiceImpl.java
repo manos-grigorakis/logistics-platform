@@ -5,17 +5,20 @@ import com.manosgrigorakis.logisticsplatform.dto.customer.CustomerResponseDTO;
 import com.manosgrigorakis.logisticsplatform.dto.customer.UpdateCustomerRequestDTO;
 import com.manosgrigorakis.logisticsplatform.exception.DuplicateEntryException;
 import com.manosgrigorakis.logisticsplatform.exception.ResourceNotFoundException;
+import com.manosgrigorakis.logisticsplatform.filters.CustomerFilterRequest;
 import com.manosgrigorakis.logisticsplatform.filters.PageFilterRequest;
 import com.manosgrigorakis.logisticsplatform.filters.SortFilterRequest;
 import com.manosgrigorakis.logisticsplatform.mapper.CustomerMapper;
 import com.manosgrigorakis.logisticsplatform.model.Customer;
 import com.manosgrigorakis.logisticsplatform.repository.CustomerRepository;
 import com.manosgrigorakis.logisticsplatform.service.CustomerService;
+import com.manosgrigorakis.logisticsplatform.specs.CustomerSpecs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -30,10 +33,25 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Page<CustomerResponseDTO> getAllCustomers(PageFilterRequest page, SortFilterRequest sort) {
+    public Page<CustomerResponseDTO> getAllCustomers(CustomerFilterRequest customerFilter,
+                                                     PageFilterRequest page, SortFilterRequest sort) {
+        Specification<Customer> spec = Specification.allOf();
+
+        if(customerFilter.getTin() != null) {
+            spec = spec.and(CustomerSpecs.likeTin(customerFilter.getTin()));
+        }
+
+        if(customerFilter.getCompanyName() != null) {
+            spec = spec.and(CustomerSpecs.likeCompanyName(customerFilter.getCompanyName()));
+        }
+
+        if(customerFilter.getCustomerType() != null) {
+            spec = spec.and(CustomerSpecs.equalCustomerType(customerFilter.getCustomerType()));
+        }
+
         Pageable pageable = PageRequest.of(page.getPage(), page.getSize(), sort.createSort());
 
-        Page<Customer> customerPage = customerRepository.findAll(pageable);
+        Page<Customer> customerPage = customerRepository.findAll(spec, pageable);
 
         return customerPage.map(CustomerMapper::toResponse);
     }
