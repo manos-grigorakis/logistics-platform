@@ -14,6 +14,7 @@ import { RolesPage } from './roles/roles-page/roles-page';
 import { CreateRole } from './roles/create-role/create-role';
 import { EditRole } from './roles/edit-role/edit-role';
 import { roleGuard } from './guards/role-guard';
+import { CustomersPage } from './customers/customers-page/customers-page';
 
 export const routes: Routes = [
   {
@@ -41,6 +42,10 @@ export const routes: Routes = [
           { path: 'create-role', component: CreateRole, title: 'Create Role' },
           { path: 'edit-role/:id', component: EditRole, title: 'Edit Role' },
         ],
+      },
+      {
+        path: 'customers',
+        children: [{ path: '', component: CustomersPage, title: 'Customers' }],
       },
     ],
   },

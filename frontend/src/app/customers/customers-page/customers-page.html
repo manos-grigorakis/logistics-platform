@@ -1,0 +1,11 @@
+<div>
+  <div class="relative overflow-x-auto rounded-lg bg-white shadow-md">
+    <app-customers-table
+      [isLoading]="isLoading"
+      [customers]="customers"
+      [errorMessage]="errorMessage"
+      [selectedCustomersIds]="selectCustomerIds"
+      (toggleCustomerSelection)="toggleCustomerSelection($event)"
+    />
+  </div>
+</div>

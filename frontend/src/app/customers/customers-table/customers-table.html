@@ -1,0 +1,64 @@
+<table class="text-body w-full text-left text-sm rtl:text-right">
+  @if (isLoading) {
+    <app-loading-spinner />
+  }
+  <thead class="text-body bg-secondary-700 text-sm text-white">
+    <tr>
+      <th scope="col" class="p-4"></th>
+      <th scope="col" class="px-2 py-3 font-medium">TIN</th>
+      <th scope="col" class="px-2 py-3 font-medium">Company Name</th>
+      <th scope="col" class="truncate px-2 py-3 font-medium">Email</th>
+      <th scope="col" class="px-2 py-3 font-medium">Customer Type</th>
+      <th scope="col" class="px-2 py-3 font-medium">Location</th>
+      <th scope="col" class="px-2 py-3 font-medium">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (customer of customers; track customer.id) {
+      <tr
+        [ngClass]="[
+          'hover:bg-secondary-200 hover:cursor-pointer',
+          selectedCustomersIds.has(customer.id) ? 'bg-secondary-200' : 'bg-white',
+        ]"
+        (click)="onRowClick(customer.id)"
+      >
+        <td class="w-4 p-4">
+          <div class="flex items-center">
+            <input
+              type="checkbox"
+              [checked]="selectedCustomersIds.has(customer.id)"
+              (click)="onCheckboxClick($event, customer.id)"
+              class="h-4 w-4 rounded-xs border accent-blue-600"
+            />
+            <label for="table-checkbox-22" class="sr-only">Table checkbox</label>
+          </div>
+        </td>
+        <td class="px-2 py-4">{{ customer.tin }}</td>
+        <td class="px-2 py-4">{{ customer.companyName }}</td>
+        <td class="px-2 py-4">{{ customer?.email || '-' }}</td>
+        <td class="px-2 py-4">{{ customer.customerType }}</td>
+        <td class="px-2 py-4">{{ customer?.location || '-' }}</td>
+
+        <td class="px-2 py-4">
+          <a
+            [routerLink]="['edit-customer', customer.id]"
+            class="text-fg-brand font-medium hover:underline"
+            >Edit</a
+          >
+        </td>
+      </tr>
+    } @empty {
+      <tr>
+        <td class="w-full py-4 text-center text-lg" colspan="7">
+          @if (errorMessage) {
+            <span class="bg-danger-light text-danger-dark border-danger rounded border px-2">{{
+              errorMessage
+            }}</span>
+          } @else {
+            There are no users
+          }
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
