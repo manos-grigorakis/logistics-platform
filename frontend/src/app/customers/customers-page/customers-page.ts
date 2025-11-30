@@ -3,15 +3,19 @@ import { CustomersService } from '../customers.service';
 import { Customer } from '../models/customer';
 import { CustomersTable } from '../customers-table/customers-table';
 import { Pagination } from '../../shared/ui/pagination/pagination';
+import { CustomersFilters } from '../customers-filters/customers-filters';
+import { FetchCustomersParameters } from '../models/fetch-customers-parameters';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-customers-page',
-  imports: [CustomersTable, Pagination],
+  imports: [CustomersTable, Pagination, CustomersFilters],
   templateUrl: './customers-page.html',
   styleUrl: './customers-page.css',
 })
 export class CustomersPage implements OnInit {
   private customersService: CustomersService = inject(CustomersService);
+  private searchChanged$ = new Subject<string>(); // Stream
 
   public isLoading: boolean = false;
   public customers: Customer[] = [];
@@ -27,6 +31,11 @@ export class CustomersPage implements OnInit {
 
   ngOnInit(): void {
     this.fetchCustomers();
+
+    // Add debouncer to search bar
+    this.searchChanged$
+      .pipe(debounceTime(400), distinctUntilChanged())
+      .subscribe((value) => this.onSearch(value));
   }
 
   public toggleCustomerSelection(customerId: number): void {
@@ -43,14 +52,34 @@ export class CustomersPage implements OnInit {
 
     this.currentPage = page;
     this.selectCustomerIds.clear();
-    this.fetchCustomers(page);
+    this.fetchCustomers({ page: page });
   }
 
-  private fetchCustomers(page?: number): void {
+  public onSearchChanged(value: string): void {
+    this.searchChanged$.next(value);
+  }
+
+  public onSearch(value: string): void {
+    const param = value.trim();
+    const tinRegex = /^\d{9}$/; // Exactly 9 digits
+
+    if (param.length === 0) {
+      this.fetchCustomers();
+      return;
+    }
+
+    if (tinRegex.test(param)) {
+      this.fetchCustomers({ tin: param });
+    } else if (param.length >= 3) {
+      this.fetchCustomers({ companyName: param });
+    }
+  }
+
+  private fetchCustomers(params?: FetchCustomersParameters): void {
     this.isLoading = true;
     this.errorMessage = undefined;
 
-    this.customersService.fetchCustomers(page).subscribe({
+    this.customersService.fetchCustomers(params).subscribe({
       next: (res) => {
         this.isLoading = false;
         this.customers = res.content;

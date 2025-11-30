@@ -1,0 +1,70 @@
+<div class="flex items-center justify-between space-x-4 p-4">
+  <app-search-bar
+    placeholder="Search by TIN or Company Name"
+    [value]="searchTerm"
+    (valueChange)="onSearchChange($event)"
+  ></app-search-bar>
+
+  <div class="flex items-center gap-6">
+    <div class="flex items-center gap-4">
+      <!-- Add -->
+      <app-rounded-icon-button
+        (clicked)="onCreateCustomer()"
+        icon="lucidePlus"
+        color="success"
+      ></app-rounded-icon-button>
+
+      <!-- Refresh -->
+      <app-rounded-icon-button
+        (clicked)="loadCustomers()"
+        [isDisabled]="isLoading"
+        icon="lucideRefreshCcw"
+        color="info"
+      ></app-rounded-icon-button>
+
+      <!-- Delete -->
+      <app-rounded-icon-button
+        (clicked)="onDeleteClick()"
+        [isDisabled]="isDeleteDisabled"
+        icon="lucideTrash"
+        color="danger"
+      ></app-rounded-icon-button>
+    </div>
+
+    <!-- Filters -->
+    <app-dropdown-button label="Filter by">
+      <ng-icon name="lucideFilter" size="16" dropdown-left-icon></ng-icon>
+      <ng-icon name="lucideChevronDown" size="16" dropdown-right-icon></ng-icon>
+
+      <!-- Menu Items -->
+      <li dropdown-menu-item>
+        <a
+          class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
+          (click)="onSortByField('asc-by-first-name')"
+          >Ascending First Name</a
+        >
+      </li>
+      <li dropdown-menu-item>
+        <a
+          class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
+          (click)="onSortByField('desc-by-first-name')"
+          >Descending First Name</a
+        >
+      </li>
+      <li dropdown-menu-item>
+        <a
+          class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
+          (click)="onSortByField('asc-by-last-name')"
+          >Ascending Last Name</a
+        >
+      </li>
+      <li dropdown-menu-item>
+        <a
+          class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
+          (click)="onSortByField('desc-by-last-name')"
+          >Descending Last Name</a
+        >
+      </li>
+    </app-dropdown-button>
+  </div>
+</div>
