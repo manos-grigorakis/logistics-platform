@@ -2,10 +2,11 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CustomersService } from '../customers.service';
 import { Customer } from '../models/customer';
 import { CustomersTable } from '../customers-table/customers-table';
+import { Pagination } from '../../shared/ui/pagination/pagination';
 
 @Component({
   selector: 'app-customers-page',
-  imports: [CustomersTable],
+  imports: [CustomersTable, Pagination],
   templateUrl: './customers-page.html',
   styleUrl: './customers-page.css',
 })
@@ -16,6 +17,13 @@ export class CustomersPage implements OnInit {
   public customers: Customer[] = [];
   public errorMessage?: string = undefined;
   public selectCustomerIds = new Set<number>();
+
+  // Pagination
+  public currentPage: number = 0;
+  public totalPages: number = 0;
+  public totalElements: number = 0;
+  public isFirstPage: boolean = false;
+  public pageSize: number = 0;
 
   ngOnInit(): void {
     this.fetchCustomers();
@@ -30,14 +38,28 @@ export class CustomersPage implements OnInit {
     }
   }
 
-  private fetchCustomers(): void {
+  public onPageChange(page: number): void {
+    if (page === this.currentPage) return;
+
+    this.currentPage = page;
+    this.selectCustomerIds.clear();
+    this.fetchCustomers(page);
+  }
+
+  private fetchCustomers(page?: number): void {
     this.isLoading = true;
     this.errorMessage = undefined;
 
-    this.customersService.fetchCustomers().subscribe({
+    this.customersService.fetchCustomers(page).subscribe({
       next: (res) => {
         this.isLoading = false;
         this.customers = res.content;
+
+        // pagination
+        this.currentPage = res.number;
+        this.totalPages = res.totalPages;
+        this.totalElements = res.totalElements;
+        this.pageSize = res.size;
       },
       error: (err) => {
         this.isLoading = false;
