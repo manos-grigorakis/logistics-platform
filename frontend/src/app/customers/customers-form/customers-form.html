@@ -1,0 +1,121 @@
+<div class="mx-auto mt-6 max-w-xl rounded-lg bg-white p-6 shadow-lg shadow-black/10">
+  <h2 class="mb-4 text-center text-3xl font-semibold">
+    @if (formUsage === 'create') {
+      Create a Customer
+    } @else {
+      Update Customer
+    }
+  </h2>
+
+  @if (isLoading) {
+    <app-loading-spinner />
+  }
+
+  <div class="mb-5">
+    @if (errorMessage) {
+      <span class="text-danger bg-danger-light block w-full rounded-md p-1.5 text-center">{{
+        errorMessage
+      }}</span>
+    }
+  </div>
+  <div class="mb-5">
+    @if (customerTypesError) {
+      <span class="text-danger bg-danger-light block w-full rounded-md p-1.5 text-center">{{
+        customerTypesError
+      }}</span>
+    }
+  </div>
+
+  <form [formGroup]="customerForm" (ngSubmit)="onSubmit()">
+    <div class="mb-6">
+      <app-main-input
+        formControlName="companyName"
+        label="Company Name"
+        placeholder="Company Name"
+        type="text"
+        [showRequiredStar]="true"
+      ></app-main-input>
+    </div>
+
+    <div class="mb-6">
+      <label for="role"><span class="text-danger mr-1 text-sm">*</span>Customer Type</label>
+      <select
+        formControlName="customerType"
+        id="role"
+        class="focus:ring-primary-200 w-full rounded border border-gray-300 px-4 py-2 text-gray-700 focus:ring focus:outline-none"
+      >
+        <option [ngValue]="null" disabled>Select a customer type</option>
+
+        @for (customerType of customerTypes; track $index) {
+          <option [ngValue]="customerType">{{ customerType }}</option>
+        } @empty {
+          <option disabled>No customer types available</option>
+        }
+      </select>
+      @if (customerType.invalid && (customerType.dirty || customerType.touched)) {
+        <div>
+          @if (customerType.hasError('required')) {
+            <span class="text-danger ml-1 text-sm">Customer Type is required</span>
+          }
+        </div>
+      }
+    </div>
+    <div class="mb-6">
+      <app-main-input
+        formControlName="tin"
+        label="TIN"
+        placeholder="TIN"
+        type="text"
+        patternErrorMessage="must be 9 digits"
+        [showRequiredStar]="true"
+      ></app-main-input>
+    </div>
+
+    <div class="mb-6 flex flex-col gap-6 sm:flex-row sm:gap-8">
+      <app-main-input
+        formControlName="firstName"
+        label="First Name"
+        placeholder="First Name"
+        type="text"
+        [showRequiredStar]="true"
+      ></app-main-input>
+      <app-main-input
+        formControlName="lastName"
+        label="Last Name"
+        placeholder="Last Name"
+        type="text"
+        [showRequiredStar]="true"
+      ></app-main-input>
+    </div>
+    <div class="mb-6">
+      <app-main-input
+        formControlName="email"
+        label="Email"
+        placeholder="Email"
+        type="email"
+      ></app-main-input>
+    </div>
+
+    <div class="mb-6">
+      <app-main-input
+        formControlName="location"
+        label="Location"
+        placeholder="Location"
+        type="text"
+      ></app-main-input>
+    </div>
+    <div class="mb-6">
+      <app-main-input
+        formControlName="phone"
+        label="Phone"
+        placeholder="Phone"
+        type="text"
+      ></app-main-input>
+    </div>
+    @if (formUsage === 'create') {
+      <app-primary-button value="Create Customer" [isDisabled]="isLoading"></app-primary-button>
+    } @else {
+      <app-primary-button value="Update Customer" [isDisabled]="isLoading"></app-primary-button>
+    }
+  </form>
+</div>
