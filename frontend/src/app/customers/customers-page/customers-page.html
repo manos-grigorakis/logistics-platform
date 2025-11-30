@@ -1,6 +1,10 @@
 <div>
   <div class="border-primary-500 mb-8 rounded border-b-5 shadow-md">
-    <app-customers-filters (searchChanged)="onSearchChanged($event)" />
+    <app-customers-filters
+      [isLoading]="isLoading"
+      (searchChanged)="onSearchChanged($event)"
+      (refresh)="onRefreshCustomers()"
+    />
   </div>
   <div class="relative overflow-x-auto rounded-lg bg-white shadow-md">
     <app-customers-table

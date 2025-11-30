@@ -75,6 +75,10 @@ export class CustomersPage implements OnInit {
     }
   }
 
+  public onRefreshCustomers(): void {
+    this.fetchCustomers();
+  }
+
   private fetchCustomers(params?: FetchCustomersParameters): void {
     this.isLoading = true;
     this.errorMessage = undefined;
@@ -82,6 +86,7 @@ export class CustomersPage implements OnInit {
     this.customersService.fetchCustomers(params).subscribe({
       next: (res) => {
         this.isLoading = false;
+        this.selectCustomerIds.clear();
         this.customers = res.content;
 
         // pagination
