@@ -36,6 +36,7 @@ export class MainInput implements ControlValueAccessor, Validator {
   public readonly value = signal('');
   public readonly disabled = signal(false);
   public readonly withErrors = signal(false);
+  public readonly patternErrorMessage = input<string>('');
 
   public control: AbstractControl | null = null;
 
