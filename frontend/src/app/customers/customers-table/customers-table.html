@@ -36,7 +36,13 @@
         <td class="px-2 py-4">{{ customer.tin }}</td>
         <td class="px-2 py-4">{{ customer.companyName }}</td>
         <td class="px-2 py-4">{{ customer?.email || '-' }}</td>
-        <td class="px-2 py-4">{{ customer.customerType }}</td>
+        <td class="bg-red-40 px-2 py-4">
+          <span
+            class="rounded border px-2"
+            [ngClass]="customerTypeBadgeColor(customer.customerType)"
+            >{{ customer.customerType | titlecase }}</span
+          >
+        </td>
         <td class="px-2 py-4">{{ customer?.location || '-' }}</td>
 
         <td class="px-2 py-4">
