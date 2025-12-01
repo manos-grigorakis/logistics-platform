@@ -6,6 +6,11 @@
       (refresh)="onRefreshCustomers()"
       [isDeleteDisabled]="disableDeleteButton"
       (deleteClick)="onCustomerDeleteClick()"
+      (sortBy)="onSort($event)"
+      (filterBy)="onFilter($event)"
+      [customerTypesData]="customerTypes"
+      [filterLabel]="activeFilterLabel"
+      [sortLabel]="activeSortLabel"
     />
   </div>
   <app-modal

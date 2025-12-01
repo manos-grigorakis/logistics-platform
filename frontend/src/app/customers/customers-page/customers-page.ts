@@ -8,6 +8,8 @@ import { FetchCustomersParameters } from '../models/fetch-customers-parameters';
 import { debounceTime, distinctUntilChanged, forkJoin, Subject } from 'rxjs';
 import { Modal } from '../../shared/ui/modal/modal';
 import { toast } from 'ngx-sonner';
+import { MetadataService } from '../../metadata/metadata.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-customers-page',
@@ -17,16 +19,29 @@ import { toast } from 'ngx-sonner';
 })
 export class CustomersPage implements OnInit {
   private customersService: CustomersService = inject(CustomersService);
+  private metadataService: MetadataService = inject(MetadataService);
   private searchChanged$ = new Subject<string>(); // Stream
+  private currentParams: FetchCustomersParameters = {
+    page: 0,
+  };
 
+  // Data and UI
   public isLoading: boolean = false;
   public customers: Customer[] = [];
   public errorMessage?: string = undefined;
-  public selectCustomerIds = new Set<number>();
   public disableDeleteButton: boolean = true;
+  public selectCustomerIds = new Set<number>();
+
+  // Modal
   public showModal: boolean = false;
   public modalHeader: string = '';
   public modalMessage: string = '';
+
+  // Filters
+  public isFilterActive: boolean = false;
+  public customerTypes: string[] = [];
+  public activeFilterLabel: string = 'Filter by';
+  public activeSortLabel: string = 'Sort by';
 
   // Pagination
   public currentPage: number = 0;
@@ -37,6 +52,7 @@ export class CustomersPage implements OnInit {
 
   ngOnInit(): void {
     this.fetchCustomers();
+    this.fetchCustomerTypes();
 
     // Add debouncer to search bar
     this.searchChanged$
@@ -72,14 +88,40 @@ export class CustomersPage implements OnInit {
     const tinRegex = /^\d{9}$/; // Exactly 9 digits
 
     if (param.length === 0) {
-      this.fetchCustomers();
+      this.fetchCustomers({
+        page: 0,
+        tin: undefined,
+        companyName: undefined,
+        sortBy: undefined,
+        sortDirection: undefined,
+        customerType: undefined,
+      });
       return;
     }
 
+    this.isFilterActive = true;
+    // Reset labels
+    this.activeSortLabel = 'Sort by';
+    this.activeFilterLabel = 'Filter by';
+
     if (tinRegex.test(param)) {
-      this.fetchCustomers({ tin: param });
+      this.fetchCustomers({
+        page: 0,
+        tin: param,
+        companyName: undefined,
+        sortBy: undefined,
+        sortDirection: undefined,
+        customerType: undefined,
+      });
     } else if (param.length >= 3) {
-      this.fetchCustomers({ companyName: param });
+      this.fetchCustomers({
+        page: 0,
+        tin: undefined,
+        companyName: param,
+        sortBy: undefined,
+        sortDirection: undefined,
+        customerType: undefined,
+      });
     }
   }
 
@@ -103,11 +145,63 @@ export class CustomersPage implements OnInit {
     this.showModal = false;
   }
 
+  public onSort(query: string) {
+    if (!query) return;
+
+    this.isFilterActive = true;
+
+    switch (query) {
+      case 'sort-all':
+        this.activeSortLabel = 'Sort by';
+        this.fetchCustomers({ page: 0, sortBy: undefined, sortDirection: undefined });
+        break;
+      case 'sort-asc-by-company-name':
+        this.activeSortLabel = 'A → Z';
+        this.fetchCustomers({ page: 0, sortBy: 'companyName', sortDirection: 'asc' });
+        break;
+      case 'sort-desc-by-company-name':
+        this.activeSortLabel = 'Z → A';
+        this.fetchCustomers({ page: 0, sortBy: 'companyName', sortDirection: 'desc' });
+        break;
+    }
+  }
+
+  public onFilter(query: string) {
+    if (!query) return;
+
+    this.isFilterActive = true;
+
+    switch (query) {
+      case 'filter-by-all':
+        this.activeFilterLabel = 'Filter by';
+        this.fetchCustomers({ page: 0, customerType: undefined });
+        break;
+      case 'filter-by-customer-type-company':
+        this.activeFilterLabel = 'Company';
+        this.fetchCustomers({ page: 0, customerType: 'COMPANY' });
+        break;
+      case 'filter-by-customer-type-individual':
+        this.activeFilterLabel = 'Individual';
+        this.fetchCustomers({ page: 0, customerType: 'INDIVIDUAL' });
+        break;
+    }
+  }
+
+  // Helpers
   private fetchCustomers(params?: FetchCustomersParameters): void {
     this.isLoading = true;
     this.errorMessage = undefined;
 
-    this.customersService.fetchCustomers(params).subscribe({
+    // Merge current state params with new params
+    const finalParams: FetchCustomersParameters = {
+      ...this.currentParams,
+      ...params,
+    };
+
+    // Saved for future requrests
+    this.currentParams = finalParams;
+
+    this.customersService.fetchCustomers(finalParams).subscribe({
       next: (res) => {
         this.isLoading = false;
         this.selectCustomerIds.clear();
@@ -121,19 +215,14 @@ export class CustomersPage implements OnInit {
       },
       error: (err) => {
         this.isLoading = false;
-
-        if (err.status === 500) {
-          this.errorMessage = 'Server error. Please try again';
-        } else {
-          this.errorMessage = 'An error occured. Please try again later';
-        }
+        this.handleError(err);
       },
     });
   }
 
   private deleteCustomers(): void {
     if (this.selectCustomerIds.size === 0) return;
-    this.isLoading = false;
+    this.isLoading = true;
 
     const ids = Array.from(this.selectCustomerIds);
     const deleteCustomers = ids.map((id) => this.customersService.deleteCustomer(id));
@@ -148,13 +237,32 @@ export class CustomersPage implements OnInit {
       },
       error: (err) => {
         this.isLoading = false;
-
-        if (err.status === 500) {
-          toast.error('Server error. Please try again');
-        } else {
-          toast.error('An error has occured. Please try again');
-        }
+        this.handleError(err);
       },
     });
+  }
+
+  private fetchCustomerTypes(): void {
+    this.isLoading = true;
+
+    this.metadataService.fetchCustomersTypes().subscribe({
+      next: (res) => {
+        this.isLoading = false;
+        this.customerTypes = res;
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this.handleError(err);
+      },
+    });
+  }
+
+  // Helper method that handles error status from HTTP request
+  private handleError(err: HttpErrorResponse): void {
+    if (err.status === 500) {
+      this.errorMessage = 'Server error. Please try again';
+    } else {
+      this.errorMessage = 'An error occured. Please try again later';
+    }
   }
 }

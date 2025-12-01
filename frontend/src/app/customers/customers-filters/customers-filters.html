@@ -31,8 +31,8 @@
       ></app-rounded-icon-button>
     </div>
 
-    <!-- Filters -->
-    <app-dropdown-button label="Filter by">
+    <!-- Sort -->
+    <app-dropdown-button [label]="sortLabel">
       <ng-icon name="lucideFilter" size="16" dropdown-left-icon></ng-icon>
       <ng-icon name="lucideChevronDown" size="16" dropdown-right-icon></ng-icon>
 
@@ -40,31 +40,46 @@
       <li dropdown-menu-item>
         <a
           class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
-          (click)="onSortByField('asc-by-first-name')"
-          >Ascending First Name</a
+          (click)="onSortByField('sort-all')"
+          >All</a
         >
       </li>
       <li dropdown-menu-item>
         <a
           class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
-          (click)="onSortByField('desc-by-first-name')"
-          >Descending First Name</a
+          (click)="onSortByField('sort-asc-by-company-name')"
+          >Company Name (A → Z)</a
         >
       </li>
       <li dropdown-menu-item>
         <a
           class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
-          (click)="onSortByField('asc-by-last-name')"
-          >Ascending Last Name</a
+          (click)="onSortByField('sort-desc-by-company-name')"
+          >Company Name (Z → A)</a
         >
       </li>
+    </app-dropdown-button>
+
+    <!-- Filter -->
+    <app-dropdown-button [label]="filterLabel">
+      <ng-icon name="lucideFilter" size="16" dropdown-left-icon></ng-icon>
+      <ng-icon name="lucideChevronDown" size="16" dropdown-right-icon></ng-icon>
       <li dropdown-menu-item>
         <a
           class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
-          (click)="onSortByField('desc-by-last-name')"
-          >Descending Last Name</a
+          (click)="onFilterByField('filter-by-all')"
+          >All</a
         >
       </li>
+      @for (customerType of customerTypesData; track $index) {
+        <li dropdown-menu-item>
+          <a
+            class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
+            (click)="onFilterByField(`filter-by-customer-type-${customerType.toLowerCase()}`)"
+            >{{ customerType | titlecase }}
+          </a>
+        </li>
+      }
     </app-dropdown-button>
   </div>
 </div>
