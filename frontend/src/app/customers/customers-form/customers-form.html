@@ -60,17 +60,18 @@
         </div>
       }
     </div>
-    <div class="mb-6">
-      <app-main-input
-        formControlName="tin"
-        label="TIN"
-        placeholder="TIN"
-        type="text"
-        patternErrorMessage="must be 9 digits"
-        [showRequiredStar]="true"
-      ></app-main-input>
-    </div>
-
+    @if (formUsage === 'create') {
+      <div class="mb-6">
+        <app-main-input
+          formControlName="tin"
+          label="TIN"
+          placeholder="TIN"
+          type="text"
+          patternErrorMessage="must be 9 digits"
+          [showRequiredStar]="true"
+        ></app-main-input>
+      </div>
+    }
     <div class="mb-6 flex flex-col gap-6 sm:flex-row sm:gap-8">
       <app-main-input
         formControlName="firstName"

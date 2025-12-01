@@ -5,6 +5,8 @@ import { environment } from '../../environments/environment';
 import { AuthService } from '../auth/services/auth.service';
 import { FetchCustomersResponse } from './models/fetch-customers-response';
 import { FetchCustomersParameters } from './models/fetch-customers-parameters';
+import { Customer } from './models/customer';
+import { CustomerRequest } from './models/customer-request';
 
 @Injectable({
   providedIn: 'root',
@@ -30,6 +32,29 @@ export class CustomersService {
     return this.http.get<FetchCustomersResponse>(`${environment.apiUrl}/customers`, {
       headers: headers,
       params: params,
+    });
+  }
+
+  public fetchCustomer(id: number): Observable<Customer> {
+    this.jwtToken = this.authService.getJwtToken();
+    const headers = { Authorization: `Bearer ${this.jwtToken}` };
+
+    return this.http.get<Customer>(`${environment.apiUrl}/customers/${id}`, { headers: headers });
+  }
+
+  public createCustomer(data: CustomerRequest): Observable<Customer> {
+    this.jwtToken = this.authService.getJwtToken();
+    const headers = { Authorization: `Bearer ${this.jwtToken}` };
+
+    return this.http.post<Customer>(`${environment.apiUrl}/customers`, data, { headers: headers });
+  }
+
+  public updateCustomer(id: number, data: CustomerRequest): Observable<Customer> {
+    this.jwtToken = this.authService.getJwtToken();
+    const headers = { Authorization: `Bearer ${this.jwtToken}` };
+
+    return this.http.put<Customer>(`${environment.apiUrl}/customers/${id}`, data, {
+      headers: headers,
     });
   }
 

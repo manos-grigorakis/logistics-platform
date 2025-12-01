@@ -68,6 +68,10 @@ export class CustomersForm implements OnInit {
   }
 
   ngOnInit(): void {
+    if (this.formUsage === 'update') {
+      this.tin.disable();
+    }
+
     this.fetchCustomerTypes();
   }
 
@@ -121,7 +125,7 @@ export class CustomersForm implements OnInit {
     }
 
     const data: CustomerRequest = {
-      companyName,
+      companyName: companyName.trim(),
       tin,
       customerType,
       firstName,
