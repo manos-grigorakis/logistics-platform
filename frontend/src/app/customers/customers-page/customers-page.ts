@@ -39,7 +39,6 @@ export class CustomersPage implements OnInit {
   }
 
   public toggleCustomerSelection(customerId: number): void {
-    console.log(customerId);
     if (this.selectCustomerIds.has(customerId)) {
       this.selectCustomerIds.delete(customerId);
     } else {
