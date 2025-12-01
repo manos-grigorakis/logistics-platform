@@ -5,11 +5,13 @@ import { CustomersTable } from '../customers-table/customers-table';
 import { Pagination } from '../../shared/ui/pagination/pagination';
 import { CustomersFilters } from '../customers-filters/customers-filters';
 import { FetchCustomersParameters } from '../models/fetch-customers-parameters';
-import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, forkJoin, Subject } from 'rxjs';
+import { Modal } from '../../shared/ui/modal/modal';
+import { toast } from 'ngx-sonner';
 
 @Component({
   selector: 'app-customers-page',
-  imports: [CustomersTable, Pagination, CustomersFilters],
+  imports: [CustomersTable, Pagination, CustomersFilters, Modal],
   templateUrl: './customers-page.html',
   styleUrl: './customers-page.css',
 })
@@ -21,6 +23,10 @@ export class CustomersPage implements OnInit {
   public customers: Customer[] = [];
   public errorMessage?: string = undefined;
   public selectCustomerIds = new Set<number>();
+  public disableDeleteButton: boolean = true;
+  public showModal: boolean = false;
+  public modalHeader: string = '';
+  public modalMessage: string = '';
 
   // Pagination
   public currentPage: number = 0;
@@ -44,6 +50,8 @@ export class CustomersPage implements OnInit {
     } else {
       this.selectCustomerIds.add(customerId);
     }
+
+    this.disableDeleteButton = this.selectCustomerIds.size === 0;
   }
 
   public onPageChange(page: number): void {
@@ -51,6 +59,7 @@ export class CustomersPage implements OnInit {
 
     this.currentPage = page;
     this.selectCustomerIds.clear();
+    this.disableDeleteButton = true;
     this.fetchCustomers({ page: page });
   }
 
@@ -78,6 +87,22 @@ export class CustomersPage implements OnInit {
     this.fetchCustomers();
   }
 
+  public onCustomerDeleteClick(): void {
+    this.modalHeader = 'Delete Selected Customer(s)';
+    this.modalMessage = 'This action is permanent and cannot be undone';
+    this.showModal = true;
+  }
+
+  public handleDelete(): void {
+    this.deleteCustomers();
+    this.disableDeleteButton = true;
+    this.showModal = false;
+  }
+
+  public hideModal(): void {
+    this.showModal = false;
+  }
+
   private fetchCustomers(params?: FetchCustomersParameters): void {
     this.isLoading = true;
     this.errorMessage = undefined;
@@ -101,6 +126,33 @@ export class CustomersPage implements OnInit {
           this.errorMessage = 'Server error. Please try again';
         } else {
           this.errorMessage = 'An error occured. Please try again later';
+        }
+      },
+    });
+  }
+
+  private deleteCustomers(): void {
+    if (this.selectCustomerIds.size === 0) return;
+    this.isLoading = false;
+
+    const ids = Array.from(this.selectCustomerIds);
+    const deleteCustomers = ids.map((id) => this.customersService.deleteCustomer(id));
+
+    forkJoin(deleteCustomers).subscribe({
+      next: (res) => {
+        this.isLoading = false;
+        toast.success('Customer(s) deleted successfully');
+        this.selectCustomerIds.clear();
+        this.disableDeleteButton = true;
+        this.fetchCustomers();
+      },
+      error: (err) => {
+        this.isLoading = false;
+
+        if (err.status === 500) {
+          toast.error('Server error. Please try again');
+        } else {
+          toast.error('An error has occured. Please try again');
         }
       },
     });

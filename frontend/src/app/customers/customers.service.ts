@@ -58,6 +58,13 @@ export class CustomersService {
     });
   }
 
+  public deleteCustomer(id: number): Observable<void> {
+    this.jwtToken = this.authService.getJwtToken();
+    const headers = { Authorization: `Bearer ${this.jwtToken}` };
+
+    return this.http.delete<void>(`${environment.apiUrl}/customers/${id}`, { headers: headers });
+  }
+
   // Helper method that creates param
   private addParam(param: HttpParams, key: string, value: any): HttpParams {
     if (value === undefined) return param;
