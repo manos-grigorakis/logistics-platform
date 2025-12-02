@@ -84,6 +84,9 @@ export class CustomersPage implements OnInit {
   }
 
   public onSearch(value: string): void {
+    this.selectCustomerIds.clear();
+    this.disableDeleteButton = true;
+
     const param = value.trim();
     const tinRegex = /^\d{9}$/; // Exactly 9 digits
 
@@ -126,6 +129,8 @@ export class CustomersPage implements OnInit {
   }
 
   public onRefreshCustomers(): void {
+    this.selectCustomerIds.clear();
+    this.disableDeleteButton = true;
     this.fetchCustomers();
   }
 
@@ -148,6 +153,8 @@ export class CustomersPage implements OnInit {
   public onSort(query: string) {
     if (!query) return;
 
+    this.selectCustomerIds.clear();
+    this.disableDeleteButton = true;
     this.isFilterActive = true;
 
     switch (query) {
@@ -169,6 +176,8 @@ export class CustomersPage implements OnInit {
   public onFilter(query: string) {
     if (!query) return;
 
+    this.selectCustomerIds.clear();
+    this.disableDeleteButton = true;
     this.isFilterActive = true;
 
     switch (query) {
