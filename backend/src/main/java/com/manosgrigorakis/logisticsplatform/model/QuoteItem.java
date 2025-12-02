@@ -20,6 +20,9 @@ public class QuoteItem {
     @Column(nullable = false, unique = true)
     private Long id;
 
+    @Column(name = "name", nullable = false, length = 80)
+    private String name;
+
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
@@ -40,7 +43,8 @@ public class QuoteItem {
     }
 
     @Builder
-    public QuoteItem(String description, BigDecimal price, Quote quote) {
+    public QuoteItem(String name, String description, BigDecimal price, Quote quote) {
+        this.name = name;
         this.description = description;
         this.price = price;
         this.quote = quote;
