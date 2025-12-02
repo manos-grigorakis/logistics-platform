@@ -1,0 +1,46 @@
+<div>
+  <div class="border-primary-500 mb-8 rounded border-b-5 shadow-md">
+    <app-customers-filters
+      [isLoading]="isLoading"
+      (searchChanged)="onSearchChanged($event)"
+      (refresh)="onRefreshCustomers()"
+      [isDeleteDisabled]="disableDeleteButton"
+      (deleteClick)="onCustomerDeleteClick()"
+      (sortBy)="onSort($event)"
+      (filterBy)="onFilter($event)"
+      [customerTypesData]="customerTypes"
+      [filterLabel]="activeFilterLabel"
+      [sortLabel]="activeSortLabel"
+    />
+  </div>
+  <app-modal
+    (closeModalClick)="hideModal()"
+    (confirmClick)="handleDelete()"
+    (cancelClick)="hideModal()"
+    [isEnabled]="showModal"
+    color="danger"
+    icon="lucideAlertTriangle"
+    confirmButtonText="Delete"
+    cancelButtonText="Cancel"
+    [header]="modalHeader"
+    [message]="modalMessage"
+  />
+  <div class="relative overflow-x-auto rounded-lg bg-white shadow-md">
+    <app-customers-table
+      [isLoading]="isLoading"
+      [customers]="customers"
+      [errorMessage]="errorMessage"
+      [selectedCustomersIds]="selectCustomerIds"
+      (toggleCustomerSelection)="toggleCustomerSelection($event)"
+    />
+  </div>
+  <div class="mt-8">
+    <app-pagination
+      [currentPage]="currentPage"
+      [totalElements]="totalElements"
+      [totalPages]="totalPages"
+      [pageSize]="pageSize"
+      (pageChanged)="onPageChange($event)"
+    />
+  </div>
+</div>

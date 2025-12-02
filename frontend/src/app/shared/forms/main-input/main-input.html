@@ -22,5 +22,8 @@
     @if (control?.errors?.['email']) {
       <span class="text-danger ml-1 text-sm">Invalid email</span>
     }
+    @if (control?.errors?.['pattern']) {
+      <span class="text-danger ml-1 text-sm"> {{ label() }} {{ patternErrorMessage() }} </span>
+    }
   </div>
 }

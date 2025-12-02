@@ -1,0 +1,50 @@
+<nav aria-label="Page navigation" class="flex flex-col items-center justify-center gap-2">
+  <ul class="flex gap-3 text-sm">
+    <li>
+      <button
+        class="text-body border-secondary-300 box-border flex h-9 items-center justify-center rounded border px-3 text-sm font-medium focus:outline-none"
+        [ngClass]="{
+          'text-secondary-400 cursor-not-allowed hover:bg-none': currentPage === 0,
+          'hover:bg-primary-500 cursor-pointer hover:text-white': currentPage !== 0,
+        }"
+        (click)="prevPage()"
+        [disabled]="currentPage === 0"
+      >
+        Previous
+      </button>
+    </li>
+
+    @for (page of allPages; track $index) {
+      <li>
+        <button
+          class="text-body hover:bg-primary-500 border-secondary-300 box-border flex h-9 items-center justify-center rounded border bg-none px-3 text-sm font-medium hover:cursor-pointer hover:text-white focus:outline-none"
+          [ngClass]="{
+            'bg-primary-500 text-white': isPageActive(page),
+          }"
+          (click)="goToPage(page)"
+        >
+          {{ page + 1 }}
+        </button>
+      </li>
+    }
+
+    <li>
+      <button
+        class="text-body border-secondary-300 box-border flex h-9 items-center justify-center rounded border px-3 text-sm font-medium focus:outline-none"
+        [ngClass]="{
+          'text-secondary-400 cursor-not-allowed hover:bg-none': currentPage === totalPages - 1,
+          'hover:bg-primary-500 cursor-pointer hover:text-white': currentPage < totalPages - 1,
+        }"
+        (click)="nextPage()"
+        [disabled]="currentPage === totalPages - 1"
+      >
+        Next
+      </button>
+    </li>
+  </ul>
+  <div class="mb-3 text-sm text-gray-600">
+    Showing <span class="font-medium">{{ startItem }}</span> to
+    <span class="font-medium">{{ endItem }}</span> of
+    <span class="font-medium">{{ totalElements }}</span> results
+  </div>
+</nav>
