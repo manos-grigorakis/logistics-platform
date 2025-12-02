@@ -131,7 +131,7 @@ export class CustomersForm implements OnInit {
       firstName,
       lastName,
       email,
-      phone: location?.trim() === '' ? null : location?.trim(),
+      phone: phone?.trim() === '' ? null : phone?.trim(),
       location: location?.trim() === '' ? null : location?.trim(),
     };
 
