@@ -1,0 +1,58 @@
+package com.manosgrigorakis.logisticsplatform.model;
+
+import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "quote_items")
+@Getter
+@Setter
+@ToString(exclude = {"quote"})
+public class QuoteItem {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false, unique = true)
+    private Long id;
+
+    @Column(name = "description", columnDefinition = "TEXT")
+    private String description;
+
+    @Column(name = "price", precision = 19, scale = 4, nullable = false)
+    private BigDecimal price;
+
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "quote_id", nullable = false)
+    private Quote quote;
+
+    public QuoteItem() {
+    }
+
+    @Builder
+    public QuoteItem(String description, BigDecimal price, Quote quote) {
+        this.description = description;
+        this.price = price;
+        this.quote = quote;
+    }
+
+    @PrePersist()
+    public void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
+
+    @PreUpdate()
+    public void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
+}

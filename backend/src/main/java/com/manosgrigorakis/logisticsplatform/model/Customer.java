@@ -8,12 +8,13 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "customers")
 @Getter
 @Setter
-@ToString()
+@ToString(exclude = {"quotes"})
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,6 +52,9 @@ public class Customer {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
+    private List<Quote> quotes;
+
     public Customer() {
     }
 
@@ -75,5 +79,15 @@ public class Customer {
     @PreUpdate
     public void onUpdate() {
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public void addQuote(Quote quote) {
+        quotes.add(quote);
+        quote.setCustomer(this);
+    }
+
+    public void removeQuote(Quote quote) {
+        quotes.remove(quote);
+        quote.setCustomer(null);
     }
 }
