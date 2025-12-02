@@ -1,0 +1,22 @@
+<section>
+  @if (isLoading) {
+    <app-loading-spinner />
+  }
+
+  @if (customer) {
+    <app-customer-header [customer]="customer" />
+    <div class="grid grid-cols-1 gap-8 rounded lg:grid-cols-3">
+      <div class="col-span-1 p-4 bg-white rounded shadow-sm lg:col-span-1">
+        <app-customer-sidebar [customer]="customer" />
+      </div>
+      <div class="col-span-1 bg-white rounded shadow-sm lg:col-span-2">
+        <app-customer-tabs />
+      </div>
+    </div>
+  } @else {
+    @if (errorMessage) {
+      <span>{{ errorMessage }}</span>
+    }
+    <h2>Customer not found</h2>
+  }
+</section>

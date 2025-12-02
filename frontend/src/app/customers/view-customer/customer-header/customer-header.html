@@ -1,0 +1,15 @@
+@if (customer) {
+  <div class="flex flex-col gap-1 p-4 mb-8 bg-white rounded shadow-sm">
+    <div class="flex">
+      <h2 class="text-2xl font-semibold">{{ customer.companyName }}</h2>
+      <div>
+        <span
+          class="px-2 ml-4 text-sm border rounded"
+          [ngClass]="customerTypeBadgeColor(customer.customerType)"
+          >{{ customer.customerType }}</span
+        >
+      </div>
+    </div>
+    <h3 class="font-medium text-gray-500">TIN: {{ customer.tin }}</h3>
+  </div>
+}

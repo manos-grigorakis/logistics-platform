@@ -34,7 +34,11 @@
           </div>
         </td>
         <td class="px-2 py-4">{{ customer.tin }}</td>
-        <td class="px-2 py-4">{{ customer.companyName }}</td>
+        <td class="px-2 py-4">
+          <a class="hover:underline" [routerLink]="['view-customer', customer.id]">{{
+            customer.companyName
+          }}</a>
+        </td>
         <td class="px-2 py-4">{{ customer?.email || '-' }}</td>
         <td class="bg-red-40 px-2 py-4">
           <span
