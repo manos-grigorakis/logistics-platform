@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
 import { NgClass } from '@angular/common';
 import { TitleCasePipe } from '@angular/common';
+import { customerTypeBadgeColor } from '../utils/customer-type-color.utils';
 
 @Component({
   selector: 'app-customers-table',
@@ -28,13 +29,6 @@ export class CustomersTable {
   }
 
   public customerTypeBadgeColor(type: string): string {
-    switch (type) {
-      case 'COMPANY':
-        return 'bg-primary-100 text-primary-800';
-      case 'INDIVIDUAL':
-        return 'bg-success-light text-success-dark';
-      default:
-        return 'bg-secondary-100 text-secondary-800';
-    }
+    return customerTypeBadgeColor(type);
   }
 }
