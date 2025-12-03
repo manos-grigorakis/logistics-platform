@@ -49,3 +49,12 @@ app:
 
   tax:
     vat: ${TAX_VAT}
+
+  aws:
+    region: ${AWS_REGION}
+
+  minio:
+    accessKey: ${MINIO_ACCESS_KEY}
+    secretKey: ${MINIO_SECRET_KEY}
+    endpoint: ${MINIO_ENDPOINT}
+    bucketName: ${MINIO_BUCKET_NAME}
