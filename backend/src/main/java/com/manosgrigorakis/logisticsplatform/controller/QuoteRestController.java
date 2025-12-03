@@ -23,4 +23,8 @@ public class QuoteRestController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+    @GetMapping("/pdf")
+    public void testMyPdF() {}
+
 }

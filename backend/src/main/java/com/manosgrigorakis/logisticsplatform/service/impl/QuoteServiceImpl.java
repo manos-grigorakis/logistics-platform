@@ -29,15 +29,17 @@ public class QuoteServiceImpl implements QuoteService {
     private final UserRepository userRepository;
     private final CustomerRepository customerRepository;
     private final Logger log = LoggerFactory.getLogger(QuoteServiceImpl.class);
+    private final PdfService pdfService;
 
     @Value("${tax.vat}")
     private Integer vatPercent;
 
     public QuoteServiceImpl(QuoteRepository quoteRepository, UserRepository userRepository,
-                            CustomerRepository customerRepository) {
+                            CustomerRepository customerRepository, PdfService pdfService) {
         this.quoteRepository = quoteRepository;
         this.userRepository = userRepository;
         this.customerRepository = customerRepository;
+        this.pdfService = pdfService;
     }
 
     @Override
@@ -83,7 +85,9 @@ public class QuoteServiceImpl implements QuoteService {
         quote.setGrossPrice(grossTotal.setScale(2, RoundingMode.HALF_UP));
         Quote savedQuote = quoteRepository.save(quote);
 
-        log.info("Quote created with id: {}", quote.getId());
+        pdfService.generateQuotePdf(quote);
+
+        log.info("Quote created with number {}", quote.getNumber());
         return QuoteMapper.toResponse(savedQuote);
     }
 
