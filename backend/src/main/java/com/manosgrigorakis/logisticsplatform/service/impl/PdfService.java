@@ -13,14 +13,12 @@ import org.springframework.stereotype.Service;
 import org.xhtmlrenderer.pdf.ITextFontResolver;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 @Service
 public class PdfService {
@@ -29,14 +27,13 @@ public class PdfService {
     private final Logger log = LoggerFactory.getLogger(PdfService.class);
 
     /**
-     * Generate a PDF file for the given Quote using  an HTML template
+     * Generate a PDF file for the given Quote using an HTML template
      *
      * @param quote The quote that injects data to the HTML template
+     * @return The generated PDF in bytes
      */
-    public void generateQuotePdf(Quote quote) {
+    public byte[] generateQuotePdf(Quote quote) {
         try {
-            // TODO: Save actual PDFs somewhere
-            String outputFile = "generated.pdf";
             String htmlTemplate = formatTemplate(greekQuoteHtmlTemplate, quote);
 
             final Document document = Jsoup.parse(htmlTemplate);
@@ -58,10 +55,11 @@ public class PdfService {
             renderer.layout();
 
             // Create the PDF file
-            try (OutputStream os = Files.newOutputStream(Paths.get(outputFile))) {
+            try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
                 // Render the final PDF
-                renderer.createPDF(os);
+                renderer.createPDF(byteArrayOutputStream);
                 log.info("Quote PDF file created with number {}", quote.getNumber());
+                return byteArrayOutputStream.toByteArray();
             }
         } catch (IOException e) {
             log.error("Failed to generate quote PDF file with number {}", quote.getNumber());
@@ -163,7 +161,6 @@ public class PdfService {
         String value = normalized.toPlainString().replace(".", ",");
         return value + " €";
     }
-
 
     /**
      * Builds the special terms for the HTML template
