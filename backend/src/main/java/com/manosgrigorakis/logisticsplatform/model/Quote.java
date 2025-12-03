@@ -42,8 +42,17 @@ public class Quote {
     @Column(name = "destination", nullable = false)
     private String destination;
 
-    @Column(name = "price", precision = 19, scale = 4, nullable = false)
-    private BigDecimal price;
+    @Column(name = "tax_rate_percentage", nullable = false)
+    private Integer taxRatePercentage;
+
+    @Column(name = "net_price", precision = 19, scale = 4, nullable = false)
+    private BigDecimal netPrice;
+
+    @Column(name = "vat_amount", precision = 19, scale = 4, nullable = false)
+    private BigDecimal vatAmount;
+
+    @Column(name = "grossPrice", precision = 19, scale = 4, nullable = false)
+    private BigDecimal grossPrice;
 
     @Column(name = "notes", columnDefinition = "TEXT")
     private String notes;
@@ -83,7 +92,6 @@ public class Quote {
         this.validityDays = validityDays;
         this.origin = origin;
         this.destination = destination;
-        this.price = price;
         this.notes = notes;
         this.specialTerms = specialTerms;
         this.quoteStatus = quoteStatus;

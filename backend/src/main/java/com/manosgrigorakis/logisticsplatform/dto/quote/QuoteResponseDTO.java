@@ -2,10 +2,6 @@ package com.manosgrigorakis.logisticsplatform.dto.quote;
 
 import com.manosgrigorakis.logisticsplatform.dto.quoteItem.QuoteItemResponseDTO;
 import com.manosgrigorakis.logisticsplatform.enums.QuoteStatus;
-import com.manosgrigorakis.logisticsplatform.model.Customer;
-import com.manosgrigorakis.logisticsplatform.model.QuoteItem;
-import com.manosgrigorakis.logisticsplatform.model.User;
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,7 +20,10 @@ public class QuoteResponseDTO {
     private LocalDate expirationDate;
     private String origin;
     private String destination;
-    private BigDecimal price;
+    private Integer taxRatePercentage;
+    private BigDecimal netPrice;
+    private BigDecimal vatAmount;
+    private BigDecimal grossPrice;
     private String notes;
     private String specialTerms;
     private QuoteStatus quoteStatus;
