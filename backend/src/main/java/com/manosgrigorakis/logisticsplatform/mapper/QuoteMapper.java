@@ -1,5 +1,6 @@
 package com.manosgrigorakis.logisticsplatform.mapper;
 
+import com.manosgrigorakis.logisticsplatform.dto.quote.QuoteCreatedResponseDTO;
 import com.manosgrigorakis.logisticsplatform.dto.quote.QuoteRequestDTO;
 import com.manosgrigorakis.logisticsplatform.dto.quote.QuoteResponseDTO;
 import com.manosgrigorakis.logisticsplatform.dto.quoteItem.QuoteItemRequestDTO;
@@ -67,6 +68,28 @@ public class QuoteMapper {
                 .stream()
                 .map(QuoteItemMapper::toResponse)
                 .toList());
+
+        return dto;
+    }
+
+    // Created Entity -> Response
+    public static QuoteCreatedResponseDTO toCreatedResponse(Quote quote) {
+        QuoteCreatedResponseDTO dto = new QuoteCreatedResponseDTO();
+        dto.setId(quote.getId());
+        dto.setNumber(quote.getNumber());
+        dto.setIssueDate(quote.getIssueDate());
+        dto.setExpirationDate(quote.getExpirationDate());
+        dto.setGrossPrice(quote.getGrossPrice());
+        dto.setQuoteStatus(quote.getQuoteStatus());
+
+        // Set Customer and full name
+        if (quote.getCustomer() != null) {
+            dto.setCustomerId(quote.getCustomer().getId());
+
+            if (quote.getCustomer().getFullName() != null) {
+                dto.setCustomerFullName(quote.getCustomer().getFullName());
+            }
+        }
 
         return dto;
     }

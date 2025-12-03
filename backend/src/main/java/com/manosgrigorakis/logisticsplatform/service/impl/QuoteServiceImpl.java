@@ -1,5 +1,6 @@
 package com.manosgrigorakis.logisticsplatform.service.impl;
 
+import com.manosgrigorakis.logisticsplatform.dto.quote.QuoteCreatedResponseDTO;
 import com.manosgrigorakis.logisticsplatform.dto.quote.QuoteRequestDTO;
 import com.manosgrigorakis.logisticsplatform.dto.quote.QuoteResponseDTO;
 import com.manosgrigorakis.logisticsplatform.exception.ResourceNotFoundException;
@@ -61,7 +62,7 @@ public class QuoteServiceImpl implements QuoteService {
     }
 
     @Override
-    public QuoteResponseDTO createQuote(QuoteRequestDTO dto) {
+    public QuoteCreatedResponseDTO createQuote(QuoteRequestDTO dto) {
         User user = userRepository.findById(dto.getUserId())
                 .orElseThrow(() -> {
                     log.warn("Create failed. User not found with id: {}", dto.getUserId());
@@ -97,8 +98,12 @@ public class QuoteServiceImpl implements QuoteService {
         byte[] quotePdf = pdfService.generateQuotePdf(quote);
         fileStorageService.store(quote.getNumber(), quotePdf, "application/pdf");
 
+        String presignedUrl = fileStorageService.createPresignedUrl(quote.getNumber());
+        QuoteCreatedResponseDTO response = QuoteMapper.toCreatedResponse(savedQuote);
+        response.setPdfUrl(presignedUrl);
+
         log.info("Quote created with number {}", quote.getNumber());
-        return QuoteMapper.toResponse(savedQuote);
+        return response;
     }
 
 

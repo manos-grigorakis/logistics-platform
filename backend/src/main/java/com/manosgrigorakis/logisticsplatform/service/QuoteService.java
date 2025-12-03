@@ -1,5 +1,6 @@
 package com.manosgrigorakis.logisticsplatform.service;
 
+import com.manosgrigorakis.logisticsplatform.dto.quote.QuoteCreatedResponseDTO;
 import com.manosgrigorakis.logisticsplatform.dto.quote.QuoteRequestDTO;
 import com.manosgrigorakis.logisticsplatform.dto.quote.QuoteResponseDTO;
 import org.springframework.data.domain.Page;
@@ -9,7 +10,7 @@ public interface QuoteService {
 
     QuoteResponseDTO getQuoteById(Long id);
 
-    QuoteResponseDTO createQuote(QuoteRequestDTO dto);
+    QuoteCreatedResponseDTO createQuote(QuoteRequestDTO dto);
 
     QuoteResponseDTO updateQuote(Long id, QuoteRequestDTO dto);
 }

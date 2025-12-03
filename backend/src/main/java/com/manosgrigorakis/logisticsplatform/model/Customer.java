@@ -90,4 +90,8 @@ public class Customer {
         quotes.remove(quote);
         quote.setCustomer(null);
     }
+
+    public String getFullName() {
+        return this.firstName + " " + this.lastName;
+    }
 }

@@ -1,7 +1,7 @@
 package com.manosgrigorakis.logisticsplatform.controller;
 
+import com.manosgrigorakis.logisticsplatform.dto.quote.QuoteCreatedResponseDTO;
 import com.manosgrigorakis.logisticsplatform.dto.quote.QuoteRequestDTO;
-import com.manosgrigorakis.logisticsplatform.dto.quote.QuoteResponseDTO;
 import com.manosgrigorakis.logisticsplatform.service.QuoteService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -18,8 +18,8 @@ public class QuoteRestController {
     }
 
     @PostMapping()
-    public ResponseEntity<QuoteResponseDTO> createQuote(@RequestBody @Valid QuoteRequestDTO dto) {
-        QuoteResponseDTO response = quoteService.createQuote(dto);
+    public ResponseEntity<QuoteCreatedResponseDTO> createQuote(@RequestBody @Valid QuoteRequestDTO dto) {
+        QuoteCreatedResponseDTO response = quoteService.createQuote(dto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
