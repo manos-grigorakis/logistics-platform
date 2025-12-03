@@ -46,3 +46,6 @@ app:
     no_reply: ${NO_REPLY_MAIL}
     support: ${SUPPORT_MAIL}
     displayName: ${DISPLAY_NAME}
+
+  tax:
+    vat: ${TAX_VAT}
