@@ -11,6 +11,7 @@ import com.manosgrigorakis.logisticsplatform.model.User;
 import com.manosgrigorakis.logisticsplatform.repository.CustomerRepository;
 import com.manosgrigorakis.logisticsplatform.repository.QuoteRepository;
 import com.manosgrigorakis.logisticsplatform.repository.UserRepository;
+import com.manosgrigorakis.logisticsplatform.service.FileStorageService;
 import com.manosgrigorakis.logisticsplatform.service.QuoteService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,16 +31,23 @@ public class QuoteServiceImpl implements QuoteService {
     private final CustomerRepository customerRepository;
     private final Logger log = LoggerFactory.getLogger(QuoteServiceImpl.class);
     private final PdfService pdfService;
+    private final FileStorageService fileStorageService;
 
     @Value("${tax.vat}")
     private Integer vatPercent;
 
-    public QuoteServiceImpl(QuoteRepository quoteRepository, UserRepository userRepository,
-                            CustomerRepository customerRepository, PdfService pdfService) {
+    public QuoteServiceImpl(
+            QuoteRepository quoteRepository,
+            UserRepository userRepository,
+            CustomerRepository customerRepository,
+            PdfService pdfService,
+            FileStorageService fileStorageService)
+    {
         this.quoteRepository = quoteRepository;
         this.userRepository = userRepository;
         this.customerRepository = customerRepository;
         this.pdfService = pdfService;
+        this.fileStorageService = fileStorageService;
     }
 
     @Override
@@ -70,7 +78,7 @@ public class QuoteServiceImpl implements QuoteService {
 
         int currentYear = LocalDate.now().getYear();
         String lastNumber = quoteRepository.findLastQuoteNumberByYear(currentYear)
-                        .orElse("Q-" + currentYear + "-0000");
+                .orElse("Q-" + currentYear + "-0000");
 
         String newNumber = generateNextQuoteNumber(lastNumber);
         quote.setNumber(newNumber);
@@ -85,7 +93,9 @@ public class QuoteServiceImpl implements QuoteService {
         quote.setGrossPrice(grossTotal.setScale(2, RoundingMode.HALF_UP));
         Quote savedQuote = quoteRepository.save(quote);
 
-        pdfService.generateQuotePdf(quote);
+        // Generate PDF and store / upload it
+        byte[] quotePdf = pdfService.generateQuotePdf(quote);
+        fileStorageService.store(quote.getNumber(), quotePdf, "application/pdf");
 
         log.info("Quote created with number {}", quote.getNumber());
         return QuoteMapper.toResponse(savedQuote);
