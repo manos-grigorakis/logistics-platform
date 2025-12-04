@@ -1,13 +1,13 @@
 package com.manosgrigorakis.logisticsplatform.service.impl;
 
-import com.manosgrigorakis.logisticsplatform.dto.quote.QuoteCreatedResponseDTO;
-import com.manosgrigorakis.logisticsplatform.dto.quote.QuoteRequestDTO;
-import com.manosgrigorakis.logisticsplatform.dto.quote.QuoteResponseDTO;
-import com.manosgrigorakis.logisticsplatform.dto.quote.QuoteUpdateRequestDTO;
+import com.manosgrigorakis.logisticsplatform.dto.quote.*;
 import com.manosgrigorakis.logisticsplatform.dto.quoteItem.QuoteItemRequestDTO;
 import com.manosgrigorakis.logisticsplatform.enums.QuoteStatus;
 import com.manosgrigorakis.logisticsplatform.exception.ConflictException;
 import com.manosgrigorakis.logisticsplatform.exception.ResourceNotFoundException;
+import com.manosgrigorakis.logisticsplatform.filters.PageFilterRequest;
+import com.manosgrigorakis.logisticsplatform.filters.QuoteFilterRequest;
+import com.manosgrigorakis.logisticsplatform.filters.SortFilterRequest;
 import com.manosgrigorakis.logisticsplatform.mapper.QuoteItemMapper;
 import com.manosgrigorakis.logisticsplatform.mapper.QuoteMapper;
 import com.manosgrigorakis.logisticsplatform.model.Customer;
@@ -19,10 +19,14 @@ import com.manosgrigorakis.logisticsplatform.repository.QuoteRepository;
 import com.manosgrigorakis.logisticsplatform.repository.UserRepository;
 import com.manosgrigorakis.logisticsplatform.service.FileStorageService;
 import com.manosgrigorakis.logisticsplatform.service.QuoteService;
+import com.manosgrigorakis.logisticsplatform.specs.QuotesSpecs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -30,6 +34,8 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+
+import static com.manosgrigorakis.logisticsplatform.utils.SpecsUtils.andIf;
 
 @Service
 public class QuoteServiceImpl implements QuoteService {
@@ -60,8 +66,20 @@ public class QuoteServiceImpl implements QuoteService {
     }
 
     @Override
-    public Page<QuoteResponseDTO> getAllQuotes() {
-        return null;
+    public Page<QuoteListResponseDTO> getAllQuotes(
+            QuoteFilterRequest quoteFilter,
+            PageFilterRequest page,
+            SortFilterRequest sort)
+    {
+        Specification<Quote> spec = Specification.allOf();
+        spec = andIf(spec, quoteFilter.getNumber(), QuotesSpecs::likeNumber);
+        spec = andIf(spec, quoteFilter.getCompanyName(), QuotesSpecs::likeCompanyName);
+        spec = andIf(spec, quoteFilter.getQuoteStatus(), QuotesSpecs::equalQuoteStatus);
+
+        Pageable pageable = PageRequest.of(page.getPage(), page.getSize(), sort.createSort());
+        Page<Quote> quotePage = quoteRepository.findAll(spec, pageable);
+
+        return quotePage.map(QuoteMapper::toListResponse);
     }
 
     @Override
