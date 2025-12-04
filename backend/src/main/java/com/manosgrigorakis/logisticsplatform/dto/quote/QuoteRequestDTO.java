@@ -1,7 +1,6 @@
 package com.manosgrigorakis.logisticsplatform.dto.quote;
 
 import com.manosgrigorakis.logisticsplatform.dto.quoteItem.QuoteItemRequestDTO;
-import com.manosgrigorakis.logisticsplatform.enums.QuoteStatus;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;

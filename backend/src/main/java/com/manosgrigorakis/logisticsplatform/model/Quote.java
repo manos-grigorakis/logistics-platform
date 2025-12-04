@@ -1,7 +1,6 @@
 package com.manosgrigorakis.logisticsplatform.model;
 
 import com.manosgrigorakis.logisticsplatform.enums.QuoteStatus;
-import com.manosgrigorakis.logisticsplatform.exception.ConflictException;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,8 +12,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 @Entity
 @Table(name = "quotes")
