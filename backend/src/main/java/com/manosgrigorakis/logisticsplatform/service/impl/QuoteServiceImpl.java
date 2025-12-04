@@ -94,6 +94,7 @@ public class QuoteServiceImpl implements QuoteService {
                 });
 
         Quote quote = QuoteMapper.toEntity(dto, user, customer);
+        quote.setQuoteStatus(QuoteStatus.DRAFT);
 
         int currentYear = LocalDate.now().getYear();
         String lastNumber = quoteRepository.findLastQuoteNumberByYear(currentYear)

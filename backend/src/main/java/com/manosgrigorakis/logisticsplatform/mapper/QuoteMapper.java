@@ -20,7 +20,6 @@ public class QuoteMapper {
                 .destination(dto.getDestination())
                 .notes(dto.getNotes())
                 .specialTerms(dto.getSpecialTerms())
-                .quoteStatus(dto.getQuoteStatus())
                 .user(user)
                 .customer(customer)
                 .build();

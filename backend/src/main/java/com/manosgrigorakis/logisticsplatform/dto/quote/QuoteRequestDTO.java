@@ -31,9 +31,6 @@ public class QuoteRequestDTO {
     @Nullable
     private String specialTerms;
 
-    @NotNull(message = "Quote Status is required")
-    private QuoteStatus quoteStatus;
-
     @NotNull(message = "User ID is required")
     @Positive(message = "User ID must be positive")
     private Long userId;
