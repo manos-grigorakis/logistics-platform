@@ -11,6 +11,14 @@ public enum QuoteStatus {
      * otherwise returns {@code false}
      */
     public boolean isFinal() {
-        return this == SENT || this == ACCEPTED || this == EXPIRED;
+        return this == ACCEPTED || this == EXPIRED;
+    }
+
+    /**
+     * Returns {@code true} if quote status is EXPIRED
+     * otherwise returns {@code false}
+     */
+    public boolean isExpired() {
+        return this == EXPIRED;
     }
 }

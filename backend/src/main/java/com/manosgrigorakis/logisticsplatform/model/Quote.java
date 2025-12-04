@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Entity
 @Table(name = "quotes")
@@ -138,10 +139,18 @@ public class Quote {
     }
 
     /**
-     * Returns {@code true} if quote is editable based on its status
+     * Returns {@code true} if quote is editable
      * otherwise it returns {@code false}
      */
     public boolean isEditable() {
-        return !isFinalized();
+        return this.quoteStatus == QuoteStatus.DRAFT;
+    }
+
+    /**
+     * Returns {@code true} if quote is expired,
+     * otherwise it returns {@code false}
+     */
+    public boolean isExpired() {
+        return this.quoteStatus.isExpired();
     }
 }
