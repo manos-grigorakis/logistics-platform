@@ -10,6 +10,8 @@ public class QuoteItemMapper {
         return QuoteItem.builder()
                 .name(dto.getName())
                 .description(dto.getDescription())
+                .quantity(dto.getQuantity())
+                .unit(dto.getUnit())
                 .price(dto.getPrice())
                 .build();
     }
@@ -20,6 +22,8 @@ public class QuoteItemMapper {
         dto.setId(quoteItem.getId());
         dto.setName(quoteItem.getName());
         dto.setDescription(quoteItem.getDescription());
+        dto.setQuantity(quoteItem.getQuantity());
+        dto.setUnit(quoteItem.getUnit());
         dto.setPrice(quoteItem.getPrice());
         return dto;
     }

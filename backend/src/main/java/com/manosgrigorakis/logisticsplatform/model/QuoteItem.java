@@ -1,5 +1,6 @@
 package com.manosgrigorakis.logisticsplatform.model;
 
+import com.manosgrigorakis.logisticsplatform.enums.QuoteItemUnit;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,6 +27,13 @@ public class QuoteItem {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
+    @Column(name = "quantity", nullable = false)
+    private Integer quantity;
+
+    @Column(name = "unit", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private QuoteItemUnit unit;
+
     @Column(name = "price", precision = 19, scale = 4, nullable = false)
     private BigDecimal price;
 
@@ -43,9 +51,18 @@ public class QuoteItem {
     }
 
     @Builder
-    public QuoteItem(String name, String description, BigDecimal price, Quote quote) {
+    public QuoteItem(
+            String name,
+            String description,
+            Integer quantity,
+            QuoteItemUnit unit,
+            BigDecimal price,
+            Quote quote)
+    {
         this.name = name;
         this.description = description;
+        this.quantity = quantity;
+        this.unit = unit;
         this.price = price;
         this.quote = quote;
     }

@@ -1,5 +1,6 @@
 package com.manosgrigorakis.logisticsplatform.dto.quoteItem;
 
+import com.manosgrigorakis.logisticsplatform.enums.QuoteItemUnit;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
@@ -18,6 +19,12 @@ public class QuoteItemRequestDTO {
 
     @Nullable
     private String description;
+
+    @NotBlank(message = "Quantity is required")
+    private Integer quantity;
+
+    @NotNull(message = "Unit is required HOUR | PIECE | PALLET")
+    private QuoteItemUnit unit;
 
     @NotNull(message = "Price is required")
     @DecimalMin("0.00")
