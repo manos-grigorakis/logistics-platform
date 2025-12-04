@@ -3,7 +3,12 @@ package com.manosgrigorakis.logisticsplatform.service.impl;
 import com.manosgrigorakis.logisticsplatform.dto.quote.QuoteCreatedResponseDTO;
 import com.manosgrigorakis.logisticsplatform.dto.quote.QuoteRequestDTO;
 import com.manosgrigorakis.logisticsplatform.dto.quote.QuoteResponseDTO;
+import com.manosgrigorakis.logisticsplatform.dto.quote.QuoteUpdateRequestDTO;
+import com.manosgrigorakis.logisticsplatform.dto.quoteItem.QuoteItemRequestDTO;
+import com.manosgrigorakis.logisticsplatform.enums.QuoteStatus;
+import com.manosgrigorakis.logisticsplatform.exception.ConflictException;
 import com.manosgrigorakis.logisticsplatform.exception.ResourceNotFoundException;
+import com.manosgrigorakis.logisticsplatform.mapper.QuoteItemMapper;
 import com.manosgrigorakis.logisticsplatform.mapper.QuoteMapper;
 import com.manosgrigorakis.logisticsplatform.model.Customer;
 import com.manosgrigorakis.logisticsplatform.model.Quote;
@@ -24,15 +29,18 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class QuoteServiceImpl implements QuoteService {
     private final QuoteRepository quoteRepository;
     private final UserRepository userRepository;
     private final CustomerRepository customerRepository;
-    private final Logger log = LoggerFactory.getLogger(QuoteServiceImpl.class);
+
     private final PdfService pdfService;
     private final FileStorageService fileStorageService;
+
+    private final Logger log = LoggerFactory.getLogger(QuoteServiceImpl.class);
 
     @Value("${tax.vat}")
     private Integer vatPercent;
@@ -116,10 +124,52 @@ public class QuoteServiceImpl implements QuoteService {
         return response;
     }
 
-
     @Override
-    public QuoteResponseDTO updateQuote(Long id, QuoteRequestDTO dto) {
-        return null;
+    public QuoteResponseDTO updateQuote(Long id, QuoteUpdateRequestDTO dto) {
+        Quote quote = quoteRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.warn("Update failed. Quote not found with id: {}", id);
+                    return new ResourceNotFoundException("Quote not found with id: " + id);
+                });
+
+        Customer customer = customerRepository.findById(dto.getCustomerId())
+                .orElseThrow(() -> {
+                    log.warn("Update failed. Customer not found with id: {}", dto.getCustomerId());
+                    return new ResourceNotFoundException("Customer not found with id: " + dto.getCustomerId());
+                });
+
+        if (!quote.isEditable()) {
+            throw new ConflictException(
+                    "Quote is not editable",
+                    Map.of("quoteStatus", quote.getQuoteStatus())
+            );
+        }
+
+        // Update fields
+        quote.setValidityDays(dto.getValidityDays());
+        quote.setOrigin(dto.getOrigin());
+        quote.setDestination(dto.getDestination());
+        quote.setNotes(dto.getNotes());
+        quote.setSpecialTerms(dto.getSpecialTerms());
+        quote.setUser(quote.getUser());
+        quote.setCustomer(quote.getCustomer());
+
+        // Clear old items
+        quote.getQuoteItems().clear();
+
+        for(QuoteItemRequestDTO itemDto : dto.getQuoteItems()) {
+            QuoteItem item = QuoteItemMapper.toEntity(itemDto);
+            quote.addQuoteItem(item);
+        }
+
+        Quote savedQuote = quoteRepository.save(quote);
+        log.info("Quote updated with number: {}", quote.getNumber());
+        // Create presigned url
+        String presignedUrl = fileStorageService.createPresignedUrl(quote.getNumber());
+
+        QuoteResponseDTO response = QuoteMapper.toResponse(savedQuote);
+        response.setPdfUrl(presignedUrl);
+        return response;
     }
 
     /**

@@ -3,6 +3,7 @@ package com.manosgrigorakis.logisticsplatform.controller;
 import com.manosgrigorakis.logisticsplatform.dto.quote.QuoteCreatedResponseDTO;
 import com.manosgrigorakis.logisticsplatform.dto.quote.QuoteRequestDTO;
 import com.manosgrigorakis.logisticsplatform.dto.quote.QuoteResponseDTO;
+import com.manosgrigorakis.logisticsplatform.dto.quote.QuoteUpdateRequestDTO;
 import com.manosgrigorakis.logisticsplatform.service.QuoteService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -28,5 +29,10 @@ public class QuoteRestController {
         QuoteCreatedResponseDTO response = quoteService.createQuote(dto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PutMapping("/{id}")
+    public QuoteResponseDTO updateQuoteById(@PathVariable Long id, @RequestBody @Valid QuoteUpdateRequestDTO dto) {
+        return quoteService.updateQuote(id, dto);
     }
 }

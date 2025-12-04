@@ -1,6 +1,7 @@
 package com.manosgrigorakis.logisticsplatform.model;
 
 import com.manosgrigorakis.logisticsplatform.enums.QuoteStatus;
+import com.manosgrigorakis.logisticsplatform.exception.ConflictException;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name = "quotes")
@@ -125,5 +127,21 @@ public class Quote {
     public void removeQuoteItem(QuoteItem item) {
         quoteItems.remove(item);
         item.setQuote(this);
+    }
+
+    /**
+     * Returns {@code true} if quote status is finalized
+     * otherwise it returns {@code false}
+     */
+    public boolean isFinalized() {
+        return this.quoteStatus.isFinal();
+    }
+
+    /**
+     * Returns {@code true} if quote is editable based on its status
+     * otherwise it returns {@code false}
+     */
+    public boolean isEditable() {
+        return !isFinalized();
     }
 }
