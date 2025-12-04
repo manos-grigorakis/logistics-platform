@@ -88,7 +88,7 @@ public class PdfService {
         String specialTerms = buildSpecialTerms(quote);
         String notes = buildNotes(quote);
 
-        // Format issueData
+        // Format issueDate
         String formatedDate = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(quote.getIssueDate());
 
         htmlTemplate = htmlTemplate
