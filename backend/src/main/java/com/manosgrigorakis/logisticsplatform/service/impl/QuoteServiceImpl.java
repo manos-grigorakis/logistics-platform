@@ -58,7 +58,17 @@ public class QuoteServiceImpl implements QuoteService {
 
     @Override
     public QuoteResponseDTO getQuoteById(Long id) {
-        return null;
+        Quote quote = quoteRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.warn("Quote not found with id: {}", id);
+                    return new ResourceNotFoundException("Quote not found with id: " + id);
+                });
+
+        String presignedUrl = fileStorageService.createPresignedUrl(quote.getNumber());
+
+        QuoteResponseDTO response = QuoteMapper.toResponse(quote);
+        response.setPdfUrl(presignedUrl);
+        return response;
     }
 
     @Override

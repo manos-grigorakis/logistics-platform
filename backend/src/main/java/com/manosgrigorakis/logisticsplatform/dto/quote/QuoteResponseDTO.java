@@ -15,6 +15,7 @@ import java.util.List;
 public class QuoteResponseDTO {
     private Long id;
     private String number;
+    private String pdfUrl;
     private LocalDate issueDate;
     private Integer validityDays ;
     private LocalDate expirationDate;

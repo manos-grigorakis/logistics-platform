@@ -2,6 +2,7 @@ package com.manosgrigorakis.logisticsplatform.controller;
 
 import com.manosgrigorakis.logisticsplatform.dto.quote.QuoteCreatedResponseDTO;
 import com.manosgrigorakis.logisticsplatform.dto.quote.QuoteRequestDTO;
+import com.manosgrigorakis.logisticsplatform.dto.quote.QuoteResponseDTO;
 import com.manosgrigorakis.logisticsplatform.service.QuoteService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,11 @@ public class QuoteRestController {
 
     public QuoteRestController(QuoteService quoteService) {
         this.quoteService = quoteService;
+    }
+
+    @GetMapping("/{id}")
+    public QuoteResponseDTO getQuoteById(@PathVariable Long id) {
+        return quoteService.getQuoteById(id);
     }
 
     @PostMapping()
