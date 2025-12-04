@@ -19,6 +19,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Service
 public class PdfService {
@@ -86,9 +88,12 @@ public class PdfService {
         String specialTerms = buildSpecialTerms(quote);
         String notes = buildNotes(quote);
 
+        // Format issueData
+        String formatedDate = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(quote.getIssueDate());
+
         htmlTemplate = htmlTemplate
                 .replace("${quoteNumber}", quote.getNumber())
-                .replace("${issueDate}", quote.getIssueDate().toString())
+                .replace("${issueDate}", formatedDate)
                 .replace("${company}", quote.getCustomer().getCompanyName())
                 .replace("${attn}", attn)
                 .replace("${origin}", quote.getOrigin())
