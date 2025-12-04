@@ -122,11 +122,15 @@ public class PdfService {
         for (QuoteItem item : quote.getQuoteItems()) {
             String name = item.getName();
             String description = item.getDescription();
+            String quantity = item.getQuantity().toString();
+            String unit = item.getUnit().getDisplayName("el");
             String price = formatMoney(item.getPrice());
 
             rows.append("<tr class=\"price-row\">")
-                    .append("<td>").append(escapeHtml(name)).append("</td>")
+                    .append("<td class=\"nowrap\">").append(escapeHtml(name)).append("</td>")
                     .append("<td>").append(escapeHtml(description)).append("</td>")
+                    .append("<td style=\"text-align: center;\">").append(escapeHtml(quantity)).append("</td>")
+                    .append("<td style=\"text-align: center;\">").append(escapeHtml(unit)).append("</td>")
                     .append("<td class=\"text-right\">").append(escapeHtml(price)).append("</td>")
                     .append("</tr>");
         }
