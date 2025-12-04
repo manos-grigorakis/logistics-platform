@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Οικονομική Προσφορά</title>
+    <style>
+        @page {
+          size: A4;
+        }
+
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+
+        body {
+          font-family: "Noto Sans", sans-serif;
+        }
+
+        /* Container */
+        .container {
+          width: 100%;
+          margin: 0 auto;
+          background: #ffffff;
+        }
+
+        /* Header */
+        .header-block {
+          display: table;
+          width: 100%;
+          height: 500px;
+        }
+
+        .header-block > .header-inner {
+          display: table-cell;
+          vertical-align: middle;
+          text-align: center;
+        }
+
+        .header {
+          background: #1e3c72;
+          color: #ffffff;
+          padding: 30px;
+          border-radius: 5px;
+        }
+
+        .company-name {
+          font-size: 26px;
+          font-weight: bold;
+          margin-bottom: 5px;
+        }
+
+        .company-tagline {
+          font-size: 13px;
+          margin-bottom: 20px;
+        }
+
+        /* Contact */
+        .contact-item {
+          display: inline-block;
+          width: 48%;
+          margin-bottom: 10px;
+          vertical-align: top;
+          font-size: 13px;
+        }
+
+        /* Content Area */
+        .content {
+          padding: 45px 35px 35px 35px;
+        }
+
+        .quote-title {
+          text-align: center;
+          font-size: 28px;
+          color: #1e3c72;
+          font-weight: bold;
+          margin-bottom: 8px;
+        }
+
+        .quote-subtitle {
+          text-align: center;
+          font-size: 13px;
+          color: #555555;
+          margin-bottom: 25px;
+        }
+
+        /* Info Section */
+        .info-table {
+          width: 100%;
+          border-collapse: separate;
+          margin-bottom: 25px;
+        }
+
+        .info-box {
+          background: #f8f9fa;
+          padding: 15px;
+          border-radius: 5px;
+        }
+
+        .info-label {
+          font-size: 11px;
+          color: #777777;
+          text-transform: uppercase;
+          margin-bottom: 4px;
+        }
+
+        .info-value {
+          font-size: 15px;
+          font-weight: bold;
+          color: #333333;
+        }
+
+        /* Route Section */
+        .route-section {
+          width: 100%;
+          background: #e7eefc;
+          padding: 20px;
+          border-radius: 5px;
+          margin: 0 auto 30px auto;
+        }
+
+        .route-table {
+          width: 100%;
+          text-align: center;
+          border-collapse: collapse;
+        }
+
+        .route-label {
+          font-size: 11px;
+          color: #666666;
+          text-transform: uppercase;
+          margin-bottom: 5px;
+        }
+
+        .route-value {
+          font-size: 17px;
+          font-weight: bold;
+          color: #1e3c72;
+        }
+
+        /* Section Titles */
+        .section-title {
+          font-size: 18px;
+          color: #1e3c72;
+          border-bottom: 3px solid #2a5298;
+          padding-bottom: 6px;
+          margin-bottom: 15px;
+        }
+
+        /* Price Table */
+        .price-section {
+          page-break-before: always;
+          page-break-inside: avoid;
+          margin-bottom: 15px;
+        }
+
+        .price-table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-bottom: 12px;
+          font-size: 14px;
+          page-break-inside: avoid;
+        }
+
+        .price-table tr {
+          page-break-inside: avoid;
+        }
+
+        .price-table th {
+          background: #1e3c72;
+          color: #ffffff;
+          padding: 12px;
+          text-transform: uppercase;
+          font-size: 13px;
+        }
+
+        .price-table td {
+          padding: 12px;
+          border-bottom: 1px solid #e0e0e0;
+        }
+
+        .price-table tfoot tr td {
+            border-bottom: none;
+        }
+
+        .price-row:hover {
+          background: #f2f2f2;
+        }
+
+        .text-right {
+          text-align: right;
+        }
+
+        .vat-note {
+          font-size: 12px;
+          color: #c0392b;
+          margin: 8px 0px;
+          text-align: right;
+        }
+
+        .nowrap {
+          white-space: nowrap;
+        }
+
+        /* Totals */
+        .totals-label {
+          text-align: right;
+          padding: 4px 8px;
+          color: #444444;
+        }
+
+        .totals-value {
+          text-align: right;
+          padding: 4px 10px 4px 0px;
+          color: #333333;
+        }
+
+        .totals-value-bold {
+          font-weight: bold;
+        }
+
+        .notes {
+            margin-top: 20px;
+        }
+
+        /* Terms */
+        .terms {
+          page-break-inside: avoid;
+          page-break-before: always;
+          background: #fafafa;
+          padding: 10px;
+          border-radius: 5px;
+          margin-bottom: 40px;
+          margin-top: 40px;
+        }
+
+        .terms-title {
+          font-size: 15px;
+          font-weight: bold;
+          color: #1e3c72;
+          margin-bottom: 10px;
+        }
+
+        .terms ul {
+          margin-left: 40px;
+          margin-bottom: 15px;
+          page-break-inside: avoid;
+        }
+
+        .terms li {
+          margin-bottom: 8px;
+          color: #555555;
+          line-height: 1.5;
+        }
+
+        .terms-note {
+          color: #666666;
+          font-style: italic;
+        }
+
+        .terms-note.inner {
+            margin-left: 40px;
+        }
+
+        /* FOOTER */
+        .footer {
+          background: #1e3c72;
+          color: #ffffff;
+          text-align: center;
+          padding: 25px;
+          margin-top: 20px;
+          border-radius: 5px;
+        }
+
+        .signature {
+          font-size: 15px;
+          font-weight: bold;
+        }
+
+        .representative {
+          font-size: 12px;
+          opacity: 0.9;
+          margin-top: 4px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <div class="company-name">ΕΤΑΙΡΙΑ ΕΘΝΙΚΩΝ ΜΕΤΑΦΟΡΩΝ ΓΡΗΓΟΡΑΚΗΣ</div>
+        <div class="company-tagline">Αξιοπιστία & Ασφάλεια στις Μεταφορές</div>
+
+        <div class="contact-item">Άγιος Νικόλαος, Κρήτη</div>
+        <div class="contact-item">+30 28410 83055, 22512</div>
+        <div class="contact-item">grigorakis.ioannis@gmail.com</div>
+        <div class="contact-item link">www.grigorakis-transport.gr</div>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+        <div class="header-block">
+            <div class="header-inner">
+                <h1 class="quote-title">ΟΙΚΟΝΟΜΙΚΗ ΠΡΟΣΦΟΡΑ</h1>
+                <p class="quote-subtitle">
+                    Αρ. Προσφοράς: ${quoteNumber}<br/>
+                    Ημερομηνία Έκδοσης: ${issueDate}
+                </p>
+
+                <!-- Info table -->
+                <table class="info-table">
+                    <tr>
+                        <td width="50%">
+                            <div class="info-box">
+                                <div class="info-label">Προς</div>
+                                <div class="info-value">${company}</div>
+                            </div>
+                        </td>
+                        <td width="50%">
+                            <div class="info-box">
+                                <div class="info-label">Υποψη</div>
+                                <div class="info-value">${attn}</div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+
+                <!-- Route section -->
+                <div class="route-section">
+                    <table class="route-table">
+                        <tr>
+                            <td width="50%">
+                                <div class="route-label">Απο</div>
+                                <div class="route-value">${origin}</div>
+                            </td>
+
+                            <td width="50%">
+                                <div class="route-label">Προς</div>
+                                <div class="route-value">${destination}</div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Price table -->
+        <div class="price-section">
+            <h2 class="section-title">Τιμοκατάλογος Υπηρεσιών</h2>
+            <div class="vat-note">* Οι τιμές δεν περιλαμβάνουν Φ.Π.Α 24%</div>
+            <table class="price-table">
+                <thead>
+                <tr>
+                    <th  style="width: 20%;">Ονομα</th>
+                    <th  style="width: 35%;">Περιγραφη</th>
+                    <th  style="width: 10%; text-align: center;">Ποσοτητα</th>
+                    <th  style="width: 15%; text-align: center;">Μοναδα</th>
+                    <th class="text-right nowrap" style="width: 20%;">Τιμη (€)</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                ${itemsRows}
+                </tbody>
+
+                <tfoot>
+                <tr>
+                    <td colspan="4" class="totals-label">Καθαρή Αξία:</td>
+                    <td class="totals-value nowrap">${netPrice}</td>
+                </tr>
+                <tr>
+                    <td colspan="4" class="totals-label">Φ.Π.Α:</td>
+                    <td class="totals-value nowrap">${vatAmount}</td>
+                </tr>
+                <tr>
+                    <td colspan="4" class="totals-label totals-total-label nowrap">
+                        Συνολική Αξία (με Φ.Π.Α):
+                    </td>
+                    <td class="totals-value totals-total-value nowrap">
+                        ${grossPrice}
+                    </td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <div class="notes">
+            <h2 class="section-title">Σημειώσεις</h2>
+            <div>${notes}</div>
+        </div>
+
+        <!-- Terms -->
+        <div class="terms">
+            <h3 class="terms-title">Γενικοί Όροι:</h3>
+            <ul>
+                <li>Η προσφορά ισχύει για ${validityDate} ημέρες.</li>
+                <li>Πληρωμή με την ολοκλήρωση της υπηρεσίας.</li>
+                <li>Ασφαλής πρόσβαση & χώρος εκφόρτωσης απαιτούνται.</li>
+                <li>Η προσφορά δεν αποτελεί σύμβαση.</li>
+            </ul>
+
+            <h3 class="terms-title">Ειδικοί Όροι:</h3>
+            <div class="terms-note">
+                <div class="terms-note inner">${specialTerms}</div>
+            </div>
+        </div>
+
+        <p style="text-align: center; margin-top: 20px; color: #555555">
+            Για οποιαδήποτε διευκρίνηση είμαστε στη διάθεσή σας.
+        </p>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="signature">Με εκτίμηση,<br/>Ιωάννης Γρηγοράκης</div>
+        <div class="representative">Νόμιμος Εκπρόσωπος</div>
+    </div>
+</div>
+</body>
+</html>
