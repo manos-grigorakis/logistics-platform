@@ -1,0 +1,19 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+
+logging:
+  level:
+    root: INFO
+    com.manosgrigorakis.logisticsplatform: DEBUG
+
+swagger:
+  enabled: true

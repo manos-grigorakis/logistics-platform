@@ -31,6 +31,9 @@ public class SecurityConfig {
     @Value("${app.frontend.url}")
     private String frontendUrl;
 
+    @Value("${swagger.enabled:false}")
+    private boolean swaggerEnabled;
+
     public SecurityConfig(JwtAuthFilter jwtAuthFilter, UserDetailsService userDetailsService) {
         this.jwtAuthFilter = jwtAuthFilter;
         this.userDetailsService = userDetailsService;
@@ -39,48 +42,59 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // Permissions for each role based on API endpoints
-        http.authorizeHttpRequests(configurer ->
+        http.authorizeHttpRequests(configurer -> {
+
+            // Swagger
+            if (swaggerEnabled) {
                 configurer
-                        // Public endpoints
-                        .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/auth/request-reset").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/auth/reset-password/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/auth/reset-password/confirm").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/auth/setup-password").permitAll()
+                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**").permitAll()
+                        .requestMatchers("/swagger-ui.html").permitAll()
+                        .requestMatchers("/swagger-resources/**").permitAll()
+                        .requestMatchers("/webjars/**").permitAll();
+            }
 
-                        // Metadata
-                        .requestMatchers(HttpMethod.GET, "/api/metadata/customer-types").authenticated()
+            configurer
+                    // Public endpoints
+                    .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/auth/request-reset").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/auth/reset-password/**").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/auth/reset-password/confirm").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/auth/setup-password").permitAll()
 
-                        // ROLES
-                        .requestMatchers(HttpMethod.GET, "/api/roles").hasAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/roles/**").hasAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/roles").hasAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/roles/**").hasAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/roles/**").hasAuthority("ADMIN")
+                    // Metadata
+                    .requestMatchers(HttpMethod.GET, "/api/metadata/customer-types").authenticated()
 
-                        // USERS
-                        .requestMatchers(HttpMethod.GET, "/api/users").hasAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/users/**").hasAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/users").hasAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/users/**").hasAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasAuthority("ADMIN")
+                    // ROLES
+                    .requestMatchers(HttpMethod.GET, "/api/roles").hasAuthority("ADMIN")
+                    .requestMatchers(HttpMethod.GET, "/api/roles/**").hasAuthority("ADMIN")
+                    .requestMatchers(HttpMethod.POST, "/api/roles").hasAuthority("ADMIN")
+                    .requestMatchers(HttpMethod.PUT, "/api/roles/**").hasAuthority("ADMIN")
+                    .requestMatchers(HttpMethod.DELETE, "/api/roles/**").hasAuthority("ADMIN")
 
-                        // Customers
-                        .requestMatchers(HttpMethod.GET, "/api/customers").hasAnyAuthority("ADMIN", "MANAGER")
-                        .requestMatchers(HttpMethod.GET, "/api/customers/**").hasAnyAuthority("ADMIN", "MANAGER")
-                        .requestMatchers(HttpMethod.POST, "/api/customers").hasAnyAuthority("ADMIN", "MANAGER")
-                        .requestMatchers(HttpMethod.PUT, "/api/customers/**").hasAnyAuthority("ADMIN", "MANAGER")
-                        .requestMatchers(HttpMethod.DELETE, "/api/customers/**").hasAnyAuthority("ADMIN", "MANAGER")
+                    // USERS
+                    .requestMatchers(HttpMethod.GET, "/api/users").hasAuthority("ADMIN")
+                    .requestMatchers(HttpMethod.GET, "/api/users/**").hasAuthority("ADMIN")
+                    .requestMatchers(HttpMethod.POST, "/api/users").hasAuthority("ADMIN")
+                    .requestMatchers(HttpMethod.PUT, "/api/users/**").hasAuthority("ADMIN")
+                    .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasAuthority("ADMIN")
 
-                        // Quotes
-                        .requestMatchers(HttpMethod.GET, "/api/quotes").hasAnyAuthority("ADMIN", "MANAGER")
-                        .requestMatchers(HttpMethod.GET, "/api/quotes/**").hasAnyAuthority("ADMIN", "MANAGER")
-                        .requestMatchers(HttpMethod.POST, "/api/quotes").hasAnyAuthority("ADMIN", "MANAGER")
-                        .requestMatchers(HttpMethod.PUT, "/api/quotes/**").hasAnyAuthority("ADMIN", "MANAGER")
+                    // Customers
+                    .requestMatchers(HttpMethod.GET, "/api/customers").hasAnyAuthority("ADMIN", "MANAGER")
+                    .requestMatchers(HttpMethod.GET, "/api/customers/**").hasAnyAuthority("ADMIN", "MANAGER")
+                    .requestMatchers(HttpMethod.POST, "/api/customers").hasAnyAuthority("ADMIN", "MANAGER")
+                    .requestMatchers(HttpMethod.PUT, "/api/customers/**").hasAnyAuthority("ADMIN", "MANAGER")
+                    .requestMatchers(HttpMethod.DELETE, "/api/customers/**").hasAnyAuthority("ADMIN", "MANAGER")
 
-                        // All other endpoints require authentication
-                        .anyRequest().authenticated()
-        );
+                    // Quotes
+                    .requestMatchers(HttpMethod.GET, "/api/quotes").hasAnyAuthority("ADMIN", "MANAGER")
+                    .requestMatchers(HttpMethod.GET, "/api/quotes/**").hasAnyAuthority("ADMIN", "MANAGER")
+                    .requestMatchers(HttpMethod.POST, "/api/quotes").hasAnyAuthority("ADMIN", "MANAGER")
+                    .requestMatchers(HttpMethod.PUT, "/api/quotes/**").hasAnyAuthority("ADMIN", "MANAGER")
+
+                    // All other endpoints require authentication
+                    .anyRequest().authenticated();
+        });
 
         // Stateless session (required for JWT)
         http.sessionManagement(session ->
