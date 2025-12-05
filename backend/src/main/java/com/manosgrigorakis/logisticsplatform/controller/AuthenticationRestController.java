@@ -56,7 +56,7 @@ public class AuthenticationRestController {
         authenticationService.requestResetPassword(dto);
 
         MessageResponseDTO response = new MessageResponseDTO(
-                "If they email is registered, you will get a reset link in your email.");
+                "If the email is registered, you will get a reset link in your email.");
 
         return ResponseEntity.ok(response);
     }
