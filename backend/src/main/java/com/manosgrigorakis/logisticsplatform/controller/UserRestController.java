@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
-@Tag(name = "02. Users", description = "CRUD operation on users")
+@Tag(name = "Users", description = "CRUD operation on users")
 public class UserRestController {
     private final UserService userService;
 
