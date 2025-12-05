@@ -6,6 +6,7 @@ import com.manosgrigorakis.logisticsplatform.service.AuthenticationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,7 @@ public class AuthenticationRestController {
     }
 
     @Operation(summary = "User Login", description = "Authenticates user and returns JWT token")
+    @SecurityRequirements()
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "User authenticated successfully"),
             @ApiResponse(responseCode = "401", description = "Invalid credentials | Locked Account"),
@@ -34,6 +36,7 @@ public class AuthenticationRestController {
     }
 
     @Operation(summary = "Setup User Password", description = "Setup the user's password and activates their account")
+    @SecurityRequirements()
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Setup the user's passwords and activates their account"),
             @ApiResponse(responseCode = "400", description = "Setup token is expired"),
@@ -47,6 +50,7 @@ public class AuthenticationRestController {
     }
 
     @Operation(summary = "Request Reset Password", description = "Request for reset password")
+    @SecurityRequirements()
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Generates a URI for the user to reset their password"),
     })
@@ -62,6 +66,7 @@ public class AuthenticationRestController {
     }
 
     @Operation(summary = "Validates Reset Password Token", description = "Validation of reset password token")
+    @SecurityRequirements()
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Validation token is valid"),
             @ApiResponse(responseCode = "400", description = "Validation token is expired"),
@@ -81,6 +86,7 @@ public class AuthenticationRestController {
     }
 
     @Operation(summary = "Reset user's password", description = "Reset user's password")
+    @SecurityRequirements()
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "User's password reset successfully"),
             @ApiResponse(responseCode = "400", description = "Validation token is expired"),
