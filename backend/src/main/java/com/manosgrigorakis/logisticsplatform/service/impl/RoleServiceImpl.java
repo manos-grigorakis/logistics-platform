@@ -2,9 +2,9 @@ package com.manosgrigorakis.logisticsplatform.service.impl;
 
 import com.manosgrigorakis.logisticsplatform.dto.role.RoleRequestDTO;
 import com.manosgrigorakis.logisticsplatform.dto.role.RoleResponseDTO;
-import com.manosgrigorakis.logisticsplatform.exception.DeleteConflictException;
-import com.manosgrigorakis.logisticsplatform.exception.DuplicateEntryException;
-import com.manosgrigorakis.logisticsplatform.exception.ResourceNotFoundException;
+import com.manosgrigorakis.logisticsplatform.common.exception.DeleteConflictException;
+import com.manosgrigorakis.logisticsplatform.common.exception.DuplicateEntryException;
+import com.manosgrigorakis.logisticsplatform.common.exception.ResourceNotFoundException;
 import com.manosgrigorakis.logisticsplatform.mapper.RoleMapper;
 import com.manosgrigorakis.logisticsplatform.model.Role;
 import com.manosgrigorakis.logisticsplatform.repository.RoleRepository;

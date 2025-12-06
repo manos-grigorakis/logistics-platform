@@ -1,4 +1,4 @@
-package com.manosgrigorakis.logisticsplatform.exception;
+package com.manosgrigorakis.logisticsplatform.common.exception;
 
 import lombok.Getter;
 

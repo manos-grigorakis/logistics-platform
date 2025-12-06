@@ -1,4 +1,4 @@
-package com.manosgrigorakis.logisticsplatform.exception;
+package com.manosgrigorakis.logisticsplatform.common.exception;
 
 public class ResourceNotFoundException extends RuntimeException {
     public ResourceNotFoundException(String message) {

@@ -3,8 +3,8 @@ package com.manosgrigorakis.logisticsplatform.service.impl;
 import com.manosgrigorakis.logisticsplatform.dto.quote.*;
 import com.manosgrigorakis.logisticsplatform.dto.quoteItem.QuoteItemRequestDTO;
 import com.manosgrigorakis.logisticsplatform.enums.QuoteStatus;
-import com.manosgrigorakis.logisticsplatform.exception.ConflictException;
-import com.manosgrigorakis.logisticsplatform.exception.ResourceNotFoundException;
+import com.manosgrigorakis.logisticsplatform.common.exception.ConflictException;
+import com.manosgrigorakis.logisticsplatform.common.exception.ResourceNotFoundException;
 import com.manosgrigorakis.logisticsplatform.filters.PageFilterRequest;
 import com.manosgrigorakis.logisticsplatform.filters.QuoteFilterRequest;
 import com.manosgrigorakis.logisticsplatform.filters.SortFilterRequest;
@@ -33,7 +33,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Map;
 
 import static com.manosgrigorakis.logisticsplatform.utils.SpecsUtils.andIf;
