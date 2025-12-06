@@ -47,6 +47,9 @@ public class QuoteServiceImpl implements QuoteService {
     private final PdfService pdfService;
     private final FileStorageService fileStorageService;
 
+    private final QuoteCalculator quoteCalculator;
+    private final QuoteNumberGenerator quoteNumberGenerator;
+
     private final Logger log = LoggerFactory.getLogger(QuoteServiceImpl.class);
 
     @Value("${tax.vat}")
@@ -57,13 +60,18 @@ public class QuoteServiceImpl implements QuoteService {
             UserRepository userRepository,
             CustomerRepository customerRepository,
             PdfService pdfService,
-            FileStorageService fileStorageService)
+            FileStorageService fileStorageService,
+            QuoteCalculator quoteCalculator,
+            QuoteNumberGenerator quoteNumberGenerator
+            )
     {
         this.quoteRepository = quoteRepository;
         this.userRepository = userRepository;
         this.customerRepository = customerRepository;
         this.pdfService = pdfService;
         this.fileStorageService = fileStorageService;
+        this.quoteCalculator = quoteCalculator;
+        this.quoteNumberGenerator = quoteNumberGenerator;
     }
 
     @Override
@@ -119,10 +127,10 @@ public class QuoteServiceImpl implements QuoteService {
         String lastNumber = quoteRepository.findLastQuoteNumberByYear(currentYear)
                 .orElse("Q-" + currentYear + "-0000");
 
-        String newNumber = generateNextQuoteNumber(lastNumber);
+        String newNumber = quoteNumberGenerator.generateNextQuoteNumber(lastNumber);
         quote.setNumber(newNumber);
 
-        BigDecimal netTotal = calculateNetTotal(quote);
+        BigDecimal netTotal = quoteCalculator.calculateNetTotal(quote);
         BigDecimal vatAmount = FinancialCalculator.calculateVatAmount(netTotal, vatPercent);
         BigDecimal grossTotal = FinancialCalculator.calculateGrossTotal(netTotal, vatAmount);
 
@@ -174,7 +182,7 @@ public class QuoteServiceImpl implements QuoteService {
         }
 
         // Calculate
-        BigDecimal netTotal = calculateNetTotal(quote);
+        BigDecimal netTotal = quoteCalculator.calculateNetTotal(quote);
         BigDecimal vatAmount = FinancialCalculator.calculateVatAmount(netTotal, vatPercent);
         BigDecimal grossTotal = FinancialCalculator.calculateGrossTotal(netTotal, vatAmount);
 
@@ -204,45 +212,5 @@ public class QuoteServiceImpl implements QuoteService {
         QuoteResponseDTO response = QuoteMapper.toResponse(savedQuote);
         response.setPdfUrl(presignedUrl);
         return response;
-    }
-
-    /**
-     * Calculate the net total of a Quote
-     * The method sums the total price of all related quote item (pre-tax)
-     * @param quote The Quote entity containing the related Quote Items
-     * @return net total
-     */
-    private BigDecimal calculateNetTotal(Quote quote) {
-        BigDecimal netTotal = BigDecimal.ZERO;
-
-        // Get quote Items
-        List<QuoteItem> quoteItems = quote.getQuoteItems();
-
-        // Add each item price
-        for(QuoteItem quoteItem : quoteItems) {
-            BigDecimal itemPrice = quoteItem.getPrice();
-            int quantity = quoteItem.getQuantity();
-
-            if(itemPrice != null) {
-                netTotal = netTotal.add(itemPrice.multiply(BigDecimal.valueOf(quantity)));
-            }
-        }
-
-        return netTotal.setScale(2, RoundingMode.HALF_UP);
-    }
-
-    /**
-     * Generates the next sequential number based on the last number
-     * Quote number format: Q-YYYY-NNNN (e.g. Q-2025-0001)
-     * @param lastNumber The last issued quote number (e.g. Q-2025-0004)
-     * @return The next quote number in sequence (e.g. Q-2025-0005)
-     */
-    private String generateNextQuoteNumber(String lastNumber) {
-        String[] parts = lastNumber.split("-");
-        int year = Integer.parseInt(parts[1]);
-        int sequence = Integer.parseInt(parts[2]);
-        int nextSequence = sequence + 1;
-
-        return String.format("Q-%d-%04d", year, nextSequence);
     }
 }
