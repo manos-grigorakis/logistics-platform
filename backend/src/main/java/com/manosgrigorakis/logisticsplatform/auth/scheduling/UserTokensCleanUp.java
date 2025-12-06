@@ -1,4 +1,4 @@
-package com.manosgrigorakis.logisticsplatform.scheduling;
+package com.manosgrigorakis.logisticsplatform.auth.scheduling;
 
 import com.manosgrigorakis.logisticsplatform.auth.repository.UserTokensRepository;
 import org.slf4j.Logger;

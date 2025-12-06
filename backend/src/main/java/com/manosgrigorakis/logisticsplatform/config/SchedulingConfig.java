@@ -1,4 +1,4 @@
-package com.manosgrigorakis.logisticsplatform.scheduling;
+package com.manosgrigorakis.logisticsplatform.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;

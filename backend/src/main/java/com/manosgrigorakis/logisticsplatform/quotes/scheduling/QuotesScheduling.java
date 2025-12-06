@@ -1,4 +1,4 @@
-package com.manosgrigorakis.logisticsplatform.scheduling;
+package com.manosgrigorakis.logisticsplatform.quotes.scheduling;
 
 import com.manosgrigorakis.logisticsplatform.quotes.enums.QuoteStatus;
 import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
