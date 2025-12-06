@@ -20,6 +20,7 @@ import com.manosgrigorakis.logisticsplatform.repository.UserRepository;
 import com.manosgrigorakis.logisticsplatform.service.FileStorageService;
 import com.manosgrigorakis.logisticsplatform.service.QuoteService;
 import com.manosgrigorakis.logisticsplatform.specs.QuotesSpecs;
+import com.manosgrigorakis.logisticsplatform.utils.FinancialCalculator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -122,8 +123,8 @@ public class QuoteServiceImpl implements QuoteService {
         quote.setNumber(newNumber);
 
         BigDecimal netTotal = calculateNetTotal(quote);
-        BigDecimal vatAmount = calculateVatAmount(netTotal);
-        BigDecimal grossTotal = calculateGrossTotal(netTotal, vatAmount);
+        BigDecimal vatAmount = FinancialCalculator.calculateVatAmount(netTotal, vatPercent);
+        BigDecimal grossTotal = FinancialCalculator.calculateGrossTotal(netTotal, vatAmount);
 
         quote.setTaxRatePercentage(vatPercent);
         quote.setNetPrice(netTotal.setScale(2, RoundingMode.HALF_UP));
@@ -213,37 +214,6 @@ public class QuoteServiceImpl implements QuoteService {
         }
 
         return netTotal;
-    }
-
-    /**
-     * Calculates the VAT amount based on net total,
-     * using the configured tax rate
-     * @param netTotal Amount before tax
-     * @return Calculated VAT amount
-     */
-    private BigDecimal calculateVatAmount(BigDecimal netTotal) {
-        return netTotal.multiply(getVatRate());
-    }
-
-    /**
-     * Calculates the gross total of a Quote
-     * The method sums the net total with vat amount
-     * @param netTotal Amount before tax
-     * @param vatAmount Calculated tax
-     * @return gross total
-     */
-    private BigDecimal calculateGrossTotal(BigDecimal netTotal, BigDecimal vatAmount) {
-        return netTotal.add(vatAmount)
-                .setScale(2, RoundingMode.HALF_UP);
-    }
-
-    /**
-     * Converts VAT percentage to VAT rate
-     * @return The factor of vatPercent (e.g. 24 -> 0.24)
-     */
-    private BigDecimal getVatRate() {
-        return BigDecimal.valueOf(vatPercent)
-                .divide(BigDecimal.valueOf(100), 4, RoundingMode.HALF_UP);
     }
 
     /**
