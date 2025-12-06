@@ -1,4 +1,4 @@
-package com.manosgrigorakis.logisticsplatform.utils;
+package com.manosgrigorakis.logisticsplatform.common.utils;
 
 import org.springframework.data.jpa.domain.Specification;
 

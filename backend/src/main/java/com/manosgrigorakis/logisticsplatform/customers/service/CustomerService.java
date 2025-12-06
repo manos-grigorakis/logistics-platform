@@ -5,8 +5,8 @@ import com.manosgrigorakis.logisticsplatform.customers.dto.CustomerRequestDTO;
 import com.manosgrigorakis.logisticsplatform.customers.dto.CustomerResponseDTO;
 import com.manosgrigorakis.logisticsplatform.customers.dto.UpdateCustomerRequestDTO;
 import com.manosgrigorakis.logisticsplatform.customers.dto.CustomerFilterRequest;
-import com.manosgrigorakis.logisticsplatform.filters.PageFilterRequest;
-import com.manosgrigorakis.logisticsplatform.filters.SortFilterRequest;
+import com.manosgrigorakis.logisticsplatform.common.dto.PageFilterRequest;
+import com.manosgrigorakis.logisticsplatform.common.dto.SortFilterRequest;
 import org.springframework.data.domain.Page;
 
 public interface CustomerService {

@@ -1,4 +1,4 @@
-package com.manosgrigorakis.logisticsplatform.dto.shared;
+package com.manosgrigorakis.logisticsplatform.common.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

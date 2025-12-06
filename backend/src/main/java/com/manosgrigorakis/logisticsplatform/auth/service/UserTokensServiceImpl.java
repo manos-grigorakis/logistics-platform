@@ -4,7 +4,7 @@ import com.manosgrigorakis.logisticsplatform.auth.enums.TokenType;
 import com.manosgrigorakis.logisticsplatform.users.model.User;
 import com.manosgrigorakis.logisticsplatform.auth.model.UserTokens;
 import com.manosgrigorakis.logisticsplatform.auth.repository.UserTokensRepository;
-import com.manosgrigorakis.logisticsplatform.utils.GenerateSecureToken;
+import com.manosgrigorakis.logisticsplatform.common.utils.GenerateSecureToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

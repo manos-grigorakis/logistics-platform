@@ -6,8 +6,8 @@ import com.manosgrigorakis.logisticsplatform.customers.dto.UpdateCustomerRequest
 import com.manosgrigorakis.logisticsplatform.common.exception.DuplicateEntryException;
 import com.manosgrigorakis.logisticsplatform.common.exception.ResourceNotFoundException;
 import com.manosgrigorakis.logisticsplatform.customers.dto.CustomerFilterRequest;
-import com.manosgrigorakis.logisticsplatform.filters.PageFilterRequest;
-import com.manosgrigorakis.logisticsplatform.filters.SortFilterRequest;
+import com.manosgrigorakis.logisticsplatform.common.dto.PageFilterRequest;
+import com.manosgrigorakis.logisticsplatform.common.dto.SortFilterRequest;
 import com.manosgrigorakis.logisticsplatform.customers.mapper.CustomerMapper;
 import com.manosgrigorakis.logisticsplatform.customers.model.Customer;
 import com.manosgrigorakis.logisticsplatform.customers.repository.CustomerRepository;

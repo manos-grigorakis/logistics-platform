@@ -1,4 +1,4 @@
-package com.manosgrigorakis.logisticsplatform.filters;
+package com.manosgrigorakis.logisticsplatform.common.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

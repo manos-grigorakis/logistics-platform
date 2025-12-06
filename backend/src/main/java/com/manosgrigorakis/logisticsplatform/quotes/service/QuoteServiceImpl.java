@@ -5,9 +5,9 @@ import com.manosgrigorakis.logisticsplatform.quotes.dto.quote.*;
 import com.manosgrigorakis.logisticsplatform.quotes.enums.QuoteStatus;
 import com.manosgrigorakis.logisticsplatform.common.exception.ConflictException;
 import com.manosgrigorakis.logisticsplatform.common.exception.ResourceNotFoundException;
-import com.manosgrigorakis.logisticsplatform.filters.PageFilterRequest;
+import com.manosgrigorakis.logisticsplatform.common.dto.PageFilterRequest;
 import com.manosgrigorakis.logisticsplatform.quotes.dto.quote.QuoteFilterRequest;
-import com.manosgrigorakis.logisticsplatform.filters.SortFilterRequest;
+import com.manosgrigorakis.logisticsplatform.common.dto.SortFilterRequest;
 import com.manosgrigorakis.logisticsplatform.quotes.mapper.QuoteItemMapper;
 import com.manosgrigorakis.logisticsplatform.quotes.mapper.QuoteMapper;
 import com.manosgrigorakis.logisticsplatform.customers.model.Customer;
@@ -20,7 +20,7 @@ import com.manosgrigorakis.logisticsplatform.quotes.repository.QuoteRepository;
 import com.manosgrigorakis.logisticsplatform.users.repository.UserRepository;
 import com.manosgrigorakis.logisticsplatform.service.FileStorageService;
 import com.manosgrigorakis.logisticsplatform.quotes.specs.QuotesSpecs;
-import com.manosgrigorakis.logisticsplatform.utils.FinancialCalculator;
+import com.manosgrigorakis.logisticsplatform.common.utils.FinancialCalculator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,7 +35,7 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.Map;
 
-import static com.manosgrigorakis.logisticsplatform.utils.SpecsUtils.andIf;
+import static com.manosgrigorakis.logisticsplatform.common.utils.SpecsUtils.andIf;
 
 @Service
 public class QuoteServiceImpl implements QuoteService {
