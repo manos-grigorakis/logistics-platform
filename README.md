@@ -1,8 +1,9 @@
 # logistics-platform
 
+![Status](https://img.shields.io/badge/status-active-brightgreen)
 ![Build & Tests](https://github.com/manos-grigorakis/logistics-platform/actions/workflows/build-and-test.yaml/badge.svg)
-![Coverage](https://github.com/manos-grigorakis/logistics-platform/blob/feat/pipeline-for-tests/.github/badges/jacoco.svg?raw=true)
-![Branches Coverage](https://github.com/manos-grigorakis/logistics-platform/blob/feat/pipeline-for-tests/.github/badges/branches.svg?raw=true)
+![Coverage](https://github.com/manos-grigorakis/logistics-platform/blob/main/.github/badges/jacoco.svg?raw=true)
+![Branches Coverage](https://github.com/manos-grigorakis/logistics-platform/blob/main/.github/badges/branches.svg?raw=true)
 
 ## Prerequisites
 
