@@ -1,4 +1,4 @@
-package com.manosgrigorakis.logisticsplatform.service.impl;
+package com.manosgrigorakis.logisticsplatform.infrastructure.document;
 
 import com.lowagie.text.pdf.BaseFont;
 import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;

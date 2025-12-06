@@ -2,7 +2,7 @@ package com.manosgrigorakis.logisticsplatform.auth.service;
 
 import com.manosgrigorakis.logisticsplatform.auth.dto.*;
 import com.manosgrigorakis.logisticsplatform.auth.enums.TokenType;
-import com.manosgrigorakis.logisticsplatform.service.impl.MailService;
+import com.manosgrigorakis.logisticsplatform.infrastructure.mail.MailService;
 import com.manosgrigorakis.logisticsplatform.users.enums.UserStatus;
 import com.manosgrigorakis.logisticsplatform.common.exception.ResourceNotFoundException;
 import com.manosgrigorakis.logisticsplatform.common.exception.TokenExpiredException;

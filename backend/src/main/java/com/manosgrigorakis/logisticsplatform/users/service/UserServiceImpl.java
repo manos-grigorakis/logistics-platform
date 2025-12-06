@@ -1,6 +1,6 @@
 package com.manosgrigorakis.logisticsplatform.users.service;
 
-import com.manosgrigorakis.logisticsplatform.service.impl.MailService;
+import com.manosgrigorakis.logisticsplatform.infrastructure.mail.MailService;
 import com.manosgrigorakis.logisticsplatform.auth.service.UserTokensServiceImpl;
 import com.manosgrigorakis.logisticsplatform.users.dto.UserRequestDTO;
 import com.manosgrigorakis.logisticsplatform.users.dto.UserResponseDTO;

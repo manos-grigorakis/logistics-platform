@@ -1,4 +1,4 @@
-package com.manosgrigorakis.logisticsplatform.service;
+package com.manosgrigorakis.logisticsplatform.infrastructure.storage;
 
 public interface FileStorageService {
     void store(String key, byte[] content, String contentType);

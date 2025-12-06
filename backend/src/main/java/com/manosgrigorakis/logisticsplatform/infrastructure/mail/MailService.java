@@ -1,4 +1,4 @@
-package com.manosgrigorakis.logisticsplatform.service.impl;
+package com.manosgrigorakis.logisticsplatform.infrastructure.mail;
 
 import com.manosgrigorakis.logisticsplatform.users.model.User;
 import jakarta.mail.MessagingException;
