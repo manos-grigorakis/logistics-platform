@@ -1,5 +1,6 @@
 # logistics-platform
 
+![Build & Tests](https://github.com/manos-grigorakis/logistics-platform/actions/workflows/build-and-test.yaml/badge.svg)
 ![Coverage](https://raw.githubusercontent.com/manos-grigorakis/logistics-platform/feat/pipeline-for-tests/.github/badges/jacoco.svg)
 ![Branches Coverage](https://raw.githubusercontent.com/manos-grigorakis/logistics-platform/feat/pipeline-for-tests/.github/badges/branches.svg)
 
