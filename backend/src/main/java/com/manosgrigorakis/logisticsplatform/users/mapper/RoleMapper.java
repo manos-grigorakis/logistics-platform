@@ -1,8 +1,8 @@
-package com.manosgrigorakis.logisticsplatform.mapper;
+package com.manosgrigorakis.logisticsplatform.users.mapper;
 
-import com.manosgrigorakis.logisticsplatform.dto.role.RoleRequestDTO;
-import com.manosgrigorakis.logisticsplatform.dto.role.RoleResponseDTO;
-import com.manosgrigorakis.logisticsplatform.model.Role;
+import com.manosgrigorakis.logisticsplatform.users.dto.RoleRequestDTO;
+import com.manosgrigorakis.logisticsplatform.users.dto.RoleResponseDTO;
+import com.manosgrigorakis.logisticsplatform.users.model.Role;
 
 public class RoleMapper {
     // DTO => Entity

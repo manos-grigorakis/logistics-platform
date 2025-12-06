@@ -1,8 +1,8 @@
 package com.manosgrigorakis.logisticsplatform.service.impl;
 
-import com.manosgrigorakis.logisticsplatform.model.User;
+import com.manosgrigorakis.logisticsplatform.users.model.User;
 import com.manosgrigorakis.logisticsplatform.model.UserInfoDetails;
-import com.manosgrigorakis.logisticsplatform.repository.UserRepository;
+import com.manosgrigorakis.logisticsplatform.users.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;

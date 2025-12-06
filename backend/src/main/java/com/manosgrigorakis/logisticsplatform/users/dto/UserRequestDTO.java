@@ -1,4 +1,4 @@
-package com.manosgrigorakis.logisticsplatform.dto.user;
+package com.manosgrigorakis.logisticsplatform.users.dto;
 
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.*;

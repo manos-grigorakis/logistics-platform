@@ -1,4 +1,4 @@
-package com.manosgrigorakis.logisticsplatform.dto.role;
+package com.manosgrigorakis.logisticsplatform.users.dto;
 
 import lombok.Getter;
 import lombok.Setter;

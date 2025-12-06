@@ -1,15 +1,14 @@
-package com.manosgrigorakis.logisticsplatform.service.impl;
+package com.manosgrigorakis.logisticsplatform.users.service;
 
-import com.manosgrigorakis.logisticsplatform.dto.role.RoleRequestDTO;
-import com.manosgrigorakis.logisticsplatform.dto.role.RoleResponseDTO;
+import com.manosgrigorakis.logisticsplatform.users.dto.RoleRequestDTO;
+import com.manosgrigorakis.logisticsplatform.users.dto.RoleResponseDTO;
 import com.manosgrigorakis.logisticsplatform.common.exception.DeleteConflictException;
 import com.manosgrigorakis.logisticsplatform.common.exception.DuplicateEntryException;
 import com.manosgrigorakis.logisticsplatform.common.exception.ResourceNotFoundException;
-import com.manosgrigorakis.logisticsplatform.mapper.RoleMapper;
-import com.manosgrigorakis.logisticsplatform.model.Role;
-import com.manosgrigorakis.logisticsplatform.repository.RoleRepository;
-import com.manosgrigorakis.logisticsplatform.repository.UserRepository;
-import com.manosgrigorakis.logisticsplatform.service.RoleService;
+import com.manosgrigorakis.logisticsplatform.users.mapper.RoleMapper;
+import com.manosgrigorakis.logisticsplatform.users.model.Role;
+import com.manosgrigorakis.logisticsplatform.users.repository.RoleRepository;
+import com.manosgrigorakis.logisticsplatform.users.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.AccessDeniedException;

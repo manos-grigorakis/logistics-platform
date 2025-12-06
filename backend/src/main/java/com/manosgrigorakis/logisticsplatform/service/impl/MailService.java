@@ -1,6 +1,6 @@
 package com.manosgrigorakis.logisticsplatform.service.impl;
 
-import com.manosgrigorakis.logisticsplatform.model.User;
+import com.manosgrigorakis.logisticsplatform.users.model.User;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.slf4j.Logger;

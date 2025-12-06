@@ -2,12 +2,12 @@ package com.manosgrigorakis.logisticsplatform.service.impl;
 
 import com.manosgrigorakis.logisticsplatform.dto.auth.*;
 import com.manosgrigorakis.logisticsplatform.enums.TokenType;
-import com.manosgrigorakis.logisticsplatform.enums.UserStatus;
+import com.manosgrigorakis.logisticsplatform.users.enums.UserStatus;
 import com.manosgrigorakis.logisticsplatform.common.exception.ResourceNotFoundException;
 import com.manosgrigorakis.logisticsplatform.common.exception.TokenExpiredException;
-import com.manosgrigorakis.logisticsplatform.model.User;
+import com.manosgrigorakis.logisticsplatform.users.model.User;
 import com.manosgrigorakis.logisticsplatform.model.UserTokens;
-import com.manosgrigorakis.logisticsplatform.repository.UserRepository;
+import com.manosgrigorakis.logisticsplatform.users.repository.UserRepository;
 import com.manosgrigorakis.logisticsplatform.repository.UserTokensRepository;
 import com.manosgrigorakis.logisticsplatform.security.jwt.JwtService;
 import com.manosgrigorakis.logisticsplatform.service.AuthenticationService;

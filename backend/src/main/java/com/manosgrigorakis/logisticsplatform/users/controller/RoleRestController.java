@@ -1,8 +1,8 @@
-package com.manosgrigorakis.logisticsplatform.controller;
+package com.manosgrigorakis.logisticsplatform.users.controller;
 
-import com.manosgrigorakis.logisticsplatform.dto.role.RoleRequestDTO;
-import com.manosgrigorakis.logisticsplatform.dto.role.RoleResponseDTO;
-import com.manosgrigorakis.logisticsplatform.service.RoleService;
+import com.manosgrigorakis.logisticsplatform.users.dto.RoleRequestDTO;
+import com.manosgrigorakis.logisticsplatform.users.dto.RoleResponseDTO;
+import com.manosgrigorakis.logisticsplatform.users.service.RoleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

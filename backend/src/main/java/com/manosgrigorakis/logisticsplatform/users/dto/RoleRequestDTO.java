@@ -1,4 +1,4 @@
-package com.manosgrigorakis.logisticsplatform.dto.role;
+package com.manosgrigorakis.logisticsplatform.users.dto;
 
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;

@@ -1,7 +1,7 @@
-package com.manosgrigorakis.logisticsplatform.service;
+package com.manosgrigorakis.logisticsplatform.users.service;
 
-import com.manosgrigorakis.logisticsplatform.dto.role.RoleRequestDTO;
-import com.manosgrigorakis.logisticsplatform.dto.role.RoleResponseDTO;
+import com.manosgrigorakis.logisticsplatform.users.dto.RoleRequestDTO;
+import com.manosgrigorakis.logisticsplatform.users.dto.RoleResponseDTO;
 
 import java.util.List;
 

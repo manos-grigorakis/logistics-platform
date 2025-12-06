@@ -1,6 +1,6 @@
-package com.manosgrigorakis.logisticsplatform.dto.user;
+package com.manosgrigorakis.logisticsplatform.users.dto;
 
-import com.manosgrigorakis.logisticsplatform.enums.UserStatus;
+import com.manosgrigorakis.logisticsplatform.users.enums.UserStatus;
 import lombok.Getter;
 import lombok.Setter;
 

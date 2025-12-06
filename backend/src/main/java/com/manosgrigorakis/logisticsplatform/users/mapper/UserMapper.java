@@ -1,9 +1,9 @@
-package com.manosgrigorakis.logisticsplatform.mapper;
+package com.manosgrigorakis.logisticsplatform.users.mapper;
 
-import com.manosgrigorakis.logisticsplatform.dto.user.UserRequestDTO;
-import com.manosgrigorakis.logisticsplatform.dto.user.UserResponseDTO;
-import com.manosgrigorakis.logisticsplatform.model.Role;
-import com.manosgrigorakis.logisticsplatform.model.User;
+import com.manosgrigorakis.logisticsplatform.users.dto.UserRequestDTO;
+import com.manosgrigorakis.logisticsplatform.users.dto.UserResponseDTO;
+import com.manosgrigorakis.logisticsplatform.users.model.Role;
+import com.manosgrigorakis.logisticsplatform.users.model.User;
 
 public class UserMapper {
     // DTO => Entity

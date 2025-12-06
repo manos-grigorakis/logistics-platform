@@ -1,6 +1,7 @@
 package com.manosgrigorakis.logisticsplatform.model;
 
-import com.manosgrigorakis.logisticsplatform.enums.UserStatus;
+import com.manosgrigorakis.logisticsplatform.users.enums.UserStatus;
+import com.manosgrigorakis.logisticsplatform.users.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

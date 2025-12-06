@@ -1,7 +1,7 @@
 package com.manosgrigorakis.logisticsplatform.service.impl;
 
 import com.manosgrigorakis.logisticsplatform.enums.TokenType;
-import com.manosgrigorakis.logisticsplatform.model.User;
+import com.manosgrigorakis.logisticsplatform.users.model.User;
 import com.manosgrigorakis.logisticsplatform.model.UserTokens;
 import com.manosgrigorakis.logisticsplatform.repository.UserTokensRepository;
 import com.manosgrigorakis.logisticsplatform.service.UserTokensService;

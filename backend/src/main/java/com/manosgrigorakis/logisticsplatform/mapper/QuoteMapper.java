@@ -8,7 +8,7 @@ import com.manosgrigorakis.logisticsplatform.dto.quoteItem.QuoteItemRequestDTO;
 import com.manosgrigorakis.logisticsplatform.model.Customer;
 import com.manosgrigorakis.logisticsplatform.model.Quote;
 import com.manosgrigorakis.logisticsplatform.model.QuoteItem;
-import com.manosgrigorakis.logisticsplatform.model.User;
+import com.manosgrigorakis.logisticsplatform.users.model.User;
 
 import java.util.List;
 

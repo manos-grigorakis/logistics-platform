@@ -1,4 +1,4 @@
-package com.manosgrigorakis.logisticsplatform.model;
+package com.manosgrigorakis.logisticsplatform.users.model;
 
 import jakarta.persistence.*;
 import lombok.Builder;

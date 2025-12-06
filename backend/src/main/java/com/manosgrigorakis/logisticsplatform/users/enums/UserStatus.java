@@ -1,4 +1,4 @@
-package com.manosgrigorakis.logisticsplatform.enums;
+package com.manosgrigorakis.logisticsplatform.users.enums;
 
 public enum UserStatus {
     INVITED,
