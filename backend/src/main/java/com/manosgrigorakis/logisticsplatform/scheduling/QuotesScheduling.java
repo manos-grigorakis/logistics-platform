@@ -1,8 +1,8 @@
 package com.manosgrigorakis.logisticsplatform.scheduling;
 
-import com.manosgrigorakis.logisticsplatform.enums.QuoteStatus;
-import com.manosgrigorakis.logisticsplatform.model.Quote;
-import com.manosgrigorakis.logisticsplatform.repository.QuoteRepository;
+import com.manosgrigorakis.logisticsplatform.quotes.enums.QuoteStatus;
+import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
+import com.manosgrigorakis.logisticsplatform.quotes.repository.QuoteRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;

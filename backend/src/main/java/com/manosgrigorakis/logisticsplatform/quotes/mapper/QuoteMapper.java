@@ -1,13 +1,13 @@
-package com.manosgrigorakis.logisticsplatform.mapper;
+package com.manosgrigorakis.logisticsplatform.quotes.mapper;
 
-import com.manosgrigorakis.logisticsplatform.dto.quote.QuoteCreatedResponseDTO;
-import com.manosgrigorakis.logisticsplatform.dto.quote.QuoteListResponseDTO;
-import com.manosgrigorakis.logisticsplatform.dto.quote.QuoteRequestDTO;
-import com.manosgrigorakis.logisticsplatform.dto.quote.QuoteResponseDTO;
-import com.manosgrigorakis.logisticsplatform.dto.quoteItem.QuoteItemRequestDTO;
+import com.manosgrigorakis.logisticsplatform.quotes.dto.quote.QuoteCreatedResponseDTO;
+import com.manosgrigorakis.logisticsplatform.quotes.dto.quote.QuoteListResponseDTO;
+import com.manosgrigorakis.logisticsplatform.quotes.dto.quote.QuoteRequestDTO;
+import com.manosgrigorakis.logisticsplatform.quotes.dto.quote.QuoteResponseDTO;
+import com.manosgrigorakis.logisticsplatform.quotes.dto.quoteItem.QuoteItemRequestDTO;
 import com.manosgrigorakis.logisticsplatform.customers.model.Customer;
-import com.manosgrigorakis.logisticsplatform.model.Quote;
-import com.manosgrigorakis.logisticsplatform.model.QuoteItem;
+import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
+import com.manosgrigorakis.logisticsplatform.quotes.model.QuoteItem;
 import com.manosgrigorakis.logisticsplatform.users.model.User;
 
 import java.util.List;

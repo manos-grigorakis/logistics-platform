@@ -1,4 +1,4 @@
-package com.manosgrigorakis.logisticsplatform.service.impl;
+package com.manosgrigorakis.logisticsplatform.quotes.service;
 
 import org.springframework.stereotype.Component;
 

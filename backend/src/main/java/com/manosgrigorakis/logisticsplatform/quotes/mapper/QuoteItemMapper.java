@@ -1,8 +1,8 @@
-package com.manosgrigorakis.logisticsplatform.mapper;
+package com.manosgrigorakis.logisticsplatform.quotes.mapper;
 
-import com.manosgrigorakis.logisticsplatform.dto.quoteItem.QuoteItemRequestDTO;
-import com.manosgrigorakis.logisticsplatform.dto.quoteItem.QuoteItemResponseDTO;
-import com.manosgrigorakis.logisticsplatform.model.QuoteItem;
+import com.manosgrigorakis.logisticsplatform.quotes.dto.quoteItem.QuoteItemRequestDTO;
+import com.manosgrigorakis.logisticsplatform.quotes.dto.quoteItem.QuoteItemResponseDTO;
+import com.manosgrigorakis.logisticsplatform.quotes.model.QuoteItem;
 
 public class QuoteItemMapper {
     // DTO => Entity

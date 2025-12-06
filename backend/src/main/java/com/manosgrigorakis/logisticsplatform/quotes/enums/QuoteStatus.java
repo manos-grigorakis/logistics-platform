@@ -1,4 +1,4 @@
-package com.manosgrigorakis.logisticsplatform.enums;
+package com.manosgrigorakis.logisticsplatform.quotes.enums;
 
 public enum QuoteStatus {
     DRAFT,

@@ -1,7 +1,7 @@
-package com.manosgrigorakis.logisticsplatform.service.impl;
+package com.manosgrigorakis.logisticsplatform.quotes.service;
 
-import com.manosgrigorakis.logisticsplatform.model.Quote;
-import com.manosgrigorakis.logisticsplatform.model.QuoteItem;
+import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
+import com.manosgrigorakis.logisticsplatform.quotes.model.QuoteItem;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;

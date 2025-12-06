@@ -1,9 +1,9 @@
 package com.manosgrigorakis.logisticsplatform.quotes;
 
-import com.manosgrigorakis.logisticsplatform.enums.QuoteItemUnit;
-import com.manosgrigorakis.logisticsplatform.model.Quote;
-import com.manosgrigorakis.logisticsplatform.model.QuoteItem;
-import com.manosgrigorakis.logisticsplatform.service.impl.QuoteCalculator;
+import com.manosgrigorakis.logisticsplatform.quotes.enums.QuoteItemUnit;
+import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
+import com.manosgrigorakis.logisticsplatform.quotes.model.QuoteItem;
+import com.manosgrigorakis.logisticsplatform.quotes.service.QuoteCalculator;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;

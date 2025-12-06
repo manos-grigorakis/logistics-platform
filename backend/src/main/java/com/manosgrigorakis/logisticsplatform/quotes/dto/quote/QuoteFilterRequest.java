@@ -1,6 +1,6 @@
-package com.manosgrigorakis.logisticsplatform.filters;
+package com.manosgrigorakis.logisticsplatform.quotes.dto.quote;
 
-import com.manosgrigorakis.logisticsplatform.enums.QuoteStatus;
+import com.manosgrigorakis.logisticsplatform.quotes.enums.QuoteStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;

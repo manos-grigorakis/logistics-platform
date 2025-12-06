@@ -1,6 +1,6 @@
-package com.manosgrigorakis.logisticsplatform.dto.quote;
+package com.manosgrigorakis.logisticsplatform.quotes.dto.quote;
 
-import com.manosgrigorakis.logisticsplatform.dto.quoteItem.QuoteItemRequestDTO;
+import com.manosgrigorakis.logisticsplatform.quotes.dto.quoteItem.QuoteItemRequestDTO;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -13,7 +13,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class QuoteRequestDTO {
+public class QuoteUpdateRequestDTO {
     @NotNull(message = "Validity days are required")
     @Positive(message = "Validity days must be a positive number")
     private Integer validityDays;
@@ -29,10 +29,6 @@ public class QuoteRequestDTO {
 
     @Nullable
     private String specialTerms;
-
-    @NotNull(message = "User ID is required")
-    @Positive(message = "User ID must be positive")
-    private Long userId;
 
     @NotNull(message = "Customer ID is required")
     @Positive(message = "Customer ID must be positive")

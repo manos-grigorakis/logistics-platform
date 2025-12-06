@@ -1,10 +1,10 @@
-package com.manosgrigorakis.logisticsplatform.controller;
+package com.manosgrigorakis.logisticsplatform.quotes.controller;
 
-import com.manosgrigorakis.logisticsplatform.dto.quote.*;
 import com.manosgrigorakis.logisticsplatform.filters.PageFilterRequest;
-import com.manosgrigorakis.logisticsplatform.filters.QuoteFilterRequest;
+import com.manosgrigorakis.logisticsplatform.quotes.dto.quote.QuoteFilterRequest;
 import com.manosgrigorakis.logisticsplatform.filters.SortFilterRequest;
-import com.manosgrigorakis.logisticsplatform.service.QuoteService;
+import com.manosgrigorakis.logisticsplatform.quotes.dto.quote.*;
+import com.manosgrigorakis.logisticsplatform.quotes.service.QuoteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

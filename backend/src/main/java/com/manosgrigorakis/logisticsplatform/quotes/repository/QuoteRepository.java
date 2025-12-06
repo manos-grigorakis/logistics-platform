@@ -1,7 +1,7 @@
-package com.manosgrigorakis.logisticsplatform.repository;
+package com.manosgrigorakis.logisticsplatform.quotes.repository;
 
-import com.manosgrigorakis.logisticsplatform.enums.QuoteStatus;
-import com.manosgrigorakis.logisticsplatform.model.Quote;
+import com.manosgrigorakis.logisticsplatform.quotes.enums.QuoteStatus;
+import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;

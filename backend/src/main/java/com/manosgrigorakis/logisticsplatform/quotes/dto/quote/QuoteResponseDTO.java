@@ -1,7 +1,7 @@
-package com.manosgrigorakis.logisticsplatform.dto.quote;
+package com.manosgrigorakis.logisticsplatform.quotes.dto.quote;
 
-import com.manosgrigorakis.logisticsplatform.dto.quoteItem.QuoteItemResponseDTO;
-import com.manosgrigorakis.logisticsplatform.enums.QuoteStatus;
+import com.manosgrigorakis.logisticsplatform.quotes.dto.quoteItem.QuoteItemResponseDTO;
+import com.manosgrigorakis.logisticsplatform.quotes.enums.QuoteStatus;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -1,7 +1,7 @@
 package com.manosgrigorakis.logisticsplatform.customers.model;
 
 import com.manosgrigorakis.logisticsplatform.customers.enums.CustomerType;
-import com.manosgrigorakis.logisticsplatform.model.Quote;
+import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;

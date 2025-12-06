@@ -1,6 +1,6 @@
-package com.manosgrigorakis.logisticsplatform.model;
+package com.manosgrigorakis.logisticsplatform.quotes.model;
 
-import com.manosgrigorakis.logisticsplatform.enums.QuoteItemUnit;
+import com.manosgrigorakis.logisticsplatform.quotes.enums.QuoteItemUnit;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;

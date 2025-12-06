@@ -1,9 +1,9 @@
-package com.manosgrigorakis.logisticsplatform.service;
+package com.manosgrigorakis.logisticsplatform.quotes.service;
 
-import com.manosgrigorakis.logisticsplatform.dto.quote.*;
 import com.manosgrigorakis.logisticsplatform.filters.PageFilterRequest;
-import com.manosgrigorakis.logisticsplatform.filters.QuoteFilterRequest;
+import com.manosgrigorakis.logisticsplatform.quotes.dto.quote.QuoteFilterRequest;
 import com.manosgrigorakis.logisticsplatform.filters.SortFilterRequest;
+import com.manosgrigorakis.logisticsplatform.quotes.dto.quote.*;
 import org.springframework.data.domain.Page;
 
 public interface QuoteService {

@@ -1,4 +1,4 @@
-package com.manosgrigorakis.logisticsplatform.enums;
+package com.manosgrigorakis.logisticsplatform.quotes.enums;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

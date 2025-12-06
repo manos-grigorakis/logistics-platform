@@ -1,8 +1,8 @@
 package com.manosgrigorakis.logisticsplatform.service.impl;
 
 import com.lowagie.text.pdf.BaseFont;
-import com.manosgrigorakis.logisticsplatform.model.Quote;
-import com.manosgrigorakis.logisticsplatform.model.QuoteItem;
+import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
+import com.manosgrigorakis.logisticsplatform.quotes.model.QuoteItem;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
@@ -19,7 +19,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 @Service
