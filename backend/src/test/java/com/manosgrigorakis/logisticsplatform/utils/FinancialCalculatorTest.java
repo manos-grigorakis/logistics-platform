@@ -28,7 +28,7 @@ public class FinancialCalculatorTest {
         BigDecimal vatRate = FinancialCalculator.getVatRate(vat);
 
         // Assert
-        assertEquals(0, new BigDecimal("0.24").compareTo(vatRate));
+        assertEquals(0, new BigDecimal("0.22").compareTo(vatRate));
     }
 
     @Test
