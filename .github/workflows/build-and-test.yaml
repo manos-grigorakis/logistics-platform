@@ -51,7 +51,7 @@ jobs:
           jacoco-csv-file: backend/target/site/jacoco/jacoco.csv
 
       - name: Commit badge to repo
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "Update coverage badges"
           file_pattern: ".jacoco*.svg"
