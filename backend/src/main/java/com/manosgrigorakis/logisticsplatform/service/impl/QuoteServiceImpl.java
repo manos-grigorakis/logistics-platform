@@ -207,9 +207,10 @@ public class QuoteServiceImpl implements QuoteService {
         // Add each item price
         for(QuoteItem quoteItem : quoteItems) {
             BigDecimal itemPrice = quoteItem.getPrice();
+            int quantity = quoteItem.getQuantity();
 
             if(itemPrice != null) {
-                netTotal = netTotal.add(itemPrice);
+                netTotal = netTotal.add(itemPrice.multiply(BigDecimal.valueOf(quantity)));
             }
         }
 
