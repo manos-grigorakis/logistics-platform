@@ -1,0 +1,67 @@
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  security:
+    user:
+      name: testuser
+      password: testpass123
+
+  datasource:
+    url: "jdbc:h2:mem:testdb"
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+  mail:
+    host: localhost
+    port: 1025
+    username: test
+    password: test
+  main:
+    web-application-type: none
+
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
+
+logging:
+  level:
+    root: INFO
+
+jwt:
+  secret: "dGhpcy1pcy1qd3QtdGVzdC1zZWNyZXQtbG9uZy1rZXktMTIzNDU2"
+
+swagger:
+  enabled: false
+
+app:
+  frontend:
+    url: "http://localhost:4200"
+  setup_password:
+    expires: "20m"
+  reset_password:
+    expires: "20m"
+
+  mail:
+    no_reply: "example@example.com"
+    support: "support@exampe.com"
+    displayName: "Logistics Platform"
+
+  aws:
+    region: "eu-central-1"
+
+  minio:
+    accessKey: admin
+    secretKey: admin
+    endpoint: "http://localhost:9001"
+    bucketName: "my_bucket"
+
+tax:
+  vat: 24
