@@ -1,6 +1,6 @@
 package com.manosgrigorakis.logisticsplatform.quotes;
 
-import com.manosgrigorakis.logisticsplatform.service.impl.QuoteNumberGenerator;
+import com.manosgrigorakis.logisticsplatform.quotes.service.QuoteNumberGenerator;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

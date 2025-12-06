@@ -1,0 +1,13 @@
+package com.manosgrigorakis.logisticsplatform.auth.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class ValidateResetPasswordTokenResponseDTO {
+    private boolean valid;
+    private String message;
+}
