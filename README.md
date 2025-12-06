@@ -1,5 +1,8 @@
 # logistics-platform
 
+![Coverage](https://raw.githubusercontent.com/manos-grigorakis/logistics-platform/feat/pipeline-for-tests/.jacoco.svg)
+![Branches Coverage](https://raw.githubusercontent.com/manos-grigorakis/logistics-platform/feat/pipeline-for-tests/.jacoco-branches.svg)
+
 ## Prerequisites
 
 **Backend**
