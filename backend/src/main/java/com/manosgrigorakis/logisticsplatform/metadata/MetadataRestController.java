@@ -1,4 +1,4 @@
-package com.manosgrigorakis.logisticsplatform.controller;
+package com.manosgrigorakis.logisticsplatform.metadata;
 
 import com.manosgrigorakis.logisticsplatform.customers.enums.CustomerType;
 import io.swagger.v3.oas.annotations.Operation;
