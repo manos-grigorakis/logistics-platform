@@ -1,18 +1,17 @@
-package com.manosgrigorakis.logisticsplatform.service.impl;
+package com.manosgrigorakis.logisticsplatform.customers.service;
 
-import com.manosgrigorakis.logisticsplatform.dto.customer.CustomerRequestDTO;
-import com.manosgrigorakis.logisticsplatform.dto.customer.CustomerResponseDTO;
-import com.manosgrigorakis.logisticsplatform.dto.customer.UpdateCustomerRequestDTO;
+import com.manosgrigorakis.logisticsplatform.customers.dto.CustomerRequestDTO;
+import com.manosgrigorakis.logisticsplatform.customers.dto.CustomerResponseDTO;
+import com.manosgrigorakis.logisticsplatform.customers.dto.UpdateCustomerRequestDTO;
 import com.manosgrigorakis.logisticsplatform.common.exception.DuplicateEntryException;
 import com.manosgrigorakis.logisticsplatform.common.exception.ResourceNotFoundException;
 import com.manosgrigorakis.logisticsplatform.filters.CustomerFilterRequest;
 import com.manosgrigorakis.logisticsplatform.filters.PageFilterRequest;
 import com.manosgrigorakis.logisticsplatform.filters.SortFilterRequest;
-import com.manosgrigorakis.logisticsplatform.mapper.CustomerMapper;
-import com.manosgrigorakis.logisticsplatform.model.Customer;
-import com.manosgrigorakis.logisticsplatform.repository.CustomerRepository;
-import com.manosgrigorakis.logisticsplatform.service.CustomerService;
-import com.manosgrigorakis.logisticsplatform.specs.CustomerSpecs;
+import com.manosgrigorakis.logisticsplatform.customers.mapper.CustomerMapper;
+import com.manosgrigorakis.logisticsplatform.customers.model.Customer;
+import com.manosgrigorakis.logisticsplatform.customers.repository.CustomerRepository;
+import com.manosgrigorakis.logisticsplatform.customers.specs.CustomerSpecs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;

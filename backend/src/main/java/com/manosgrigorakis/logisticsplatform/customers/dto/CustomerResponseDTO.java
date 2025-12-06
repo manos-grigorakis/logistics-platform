@@ -1,6 +1,6 @@
-package com.manosgrigorakis.logisticsplatform.dto.customer;
+package com.manosgrigorakis.logisticsplatform.customers.dto;
 
-import com.manosgrigorakis.logisticsplatform.enums.CustomerType;
+import com.manosgrigorakis.logisticsplatform.customers.enums.CustomerType;
 import lombok.Getter;
 import lombok.Setter;
 

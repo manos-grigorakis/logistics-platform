@@ -5,7 +5,7 @@ import com.manosgrigorakis.logisticsplatform.dto.quote.QuoteListResponseDTO;
 import com.manosgrigorakis.logisticsplatform.dto.quote.QuoteRequestDTO;
 import com.manosgrigorakis.logisticsplatform.dto.quote.QuoteResponseDTO;
 import com.manosgrigorakis.logisticsplatform.dto.quoteItem.QuoteItemRequestDTO;
-import com.manosgrigorakis.logisticsplatform.model.Customer;
+import com.manosgrigorakis.logisticsplatform.customers.model.Customer;
 import com.manosgrigorakis.logisticsplatform.model.Quote;
 import com.manosgrigorakis.logisticsplatform.model.QuoteItem;
 import com.manosgrigorakis.logisticsplatform.users.model.User;

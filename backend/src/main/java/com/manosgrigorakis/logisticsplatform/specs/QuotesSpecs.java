@@ -1,7 +1,7 @@
 package com.manosgrigorakis.logisticsplatform.specs;
 
 import com.manosgrigorakis.logisticsplatform.enums.QuoteStatus;
-import com.manosgrigorakis.logisticsplatform.model.Customer;
+import com.manosgrigorakis.logisticsplatform.customers.model.Customer;
 import com.manosgrigorakis.logisticsplatform.model.Quote;
 import jakarta.persistence.criteria.Join;
 import org.springframework.data.jpa.domain.Specification;

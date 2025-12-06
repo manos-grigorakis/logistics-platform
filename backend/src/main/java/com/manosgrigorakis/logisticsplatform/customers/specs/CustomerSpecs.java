@@ -1,7 +1,7 @@
-package com.manosgrigorakis.logisticsplatform.specs;
+package com.manosgrigorakis.logisticsplatform.customers.specs;
 
-import com.manosgrigorakis.logisticsplatform.enums.CustomerType;
-import com.manosgrigorakis.logisticsplatform.model.Customer;
+import com.manosgrigorakis.logisticsplatform.customers.enums.CustomerType;
+import com.manosgrigorakis.logisticsplatform.customers.model.Customer;
 import org.springframework.data.jpa.domain.Specification;
 
 public class CustomerSpecs {

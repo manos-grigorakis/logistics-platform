@@ -1,6 +1,6 @@
 package com.manosgrigorakis.logisticsplatform.filters;
 
-import com.manosgrigorakis.logisticsplatform.enums.CustomerType;
+import com.manosgrigorakis.logisticsplatform.customers.enums.CustomerType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;

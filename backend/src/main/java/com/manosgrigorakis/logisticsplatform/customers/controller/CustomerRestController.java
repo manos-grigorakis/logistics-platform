@@ -1,12 +1,12 @@
-package com.manosgrigorakis.logisticsplatform.controller;
+package com.manosgrigorakis.logisticsplatform.customers.controller;
 
-import com.manosgrigorakis.logisticsplatform.dto.customer.CustomerRequestDTO;
-import com.manosgrigorakis.logisticsplatform.dto.customer.CustomerResponseDTO;
-import com.manosgrigorakis.logisticsplatform.dto.customer.UpdateCustomerRequestDTO;
+import com.manosgrigorakis.logisticsplatform.customers.dto.CustomerRequestDTO;
+import com.manosgrigorakis.logisticsplatform.customers.dto.CustomerResponseDTO;
+import com.manosgrigorakis.logisticsplatform.customers.dto.UpdateCustomerRequestDTO;
 import com.manosgrigorakis.logisticsplatform.filters.CustomerFilterRequest;
 import com.manosgrigorakis.logisticsplatform.filters.PageFilterRequest;
 import com.manosgrigorakis.logisticsplatform.filters.SortFilterRequest;
-import com.manosgrigorakis.logisticsplatform.service.CustomerService;
+import com.manosgrigorakis.logisticsplatform.customers.service.CustomerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

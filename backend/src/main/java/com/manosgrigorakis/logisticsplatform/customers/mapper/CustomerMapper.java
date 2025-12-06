@@ -1,8 +1,8 @@
-package com.manosgrigorakis.logisticsplatform.mapper;
+package com.manosgrigorakis.logisticsplatform.customers.mapper;
 
-import com.manosgrigorakis.logisticsplatform.dto.customer.CustomerRequestDTO;
-import com.manosgrigorakis.logisticsplatform.dto.customer.CustomerResponseDTO;
-import com.manosgrigorakis.logisticsplatform.model.Customer;
+import com.manosgrigorakis.logisticsplatform.customers.dto.CustomerRequestDTO;
+import com.manosgrigorakis.logisticsplatform.customers.dto.CustomerResponseDTO;
+import com.manosgrigorakis.logisticsplatform.customers.model.Customer;
 
 public class CustomerMapper {
     // DTO => Entity

@@ -1,6 +1,6 @@
-package com.manosgrigorakis.logisticsplatform.repository;
+package com.manosgrigorakis.logisticsplatform.customers.repository;
 
-import com.manosgrigorakis.logisticsplatform.model.Customer;
+import com.manosgrigorakis.logisticsplatform.customers.model.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;

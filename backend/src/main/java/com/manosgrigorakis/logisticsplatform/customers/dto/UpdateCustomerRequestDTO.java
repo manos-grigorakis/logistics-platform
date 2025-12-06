@@ -1,6 +1,6 @@
-package com.manosgrigorakis.logisticsplatform.dto.customer;
+package com.manosgrigorakis.logisticsplatform.customers.dto;
 
-import com.manosgrigorakis.logisticsplatform.enums.CustomerType;
+import com.manosgrigorakis.logisticsplatform.customers.enums.CustomerType;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -11,11 +11,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CustomerRequestDTO {
-    @NotBlank(message = "Tin is required")
-    @Size(min = 9, max = 9)
-    private String tin;
-
+public class UpdateCustomerRequestDTO {
     @NotBlank(message = "Company name is required")
     @Size(max = 80)
     private String companyName;
@@ -27,7 +23,8 @@ public class CustomerRequestDTO {
     @NotBlank(message = "Last name is required")
     @Size(max = 80)
     private String lastName;
-    
+
+    @NotBlank(message = "Email is required")
     @Size(max = 320)
     @Email
     private String email;

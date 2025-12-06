@@ -1,6 +1,6 @@
 package com.manosgrigorakis.logisticsplatform.controller;
 
-import com.manosgrigorakis.logisticsplatform.enums.CustomerType;
+import com.manosgrigorakis.logisticsplatform.customers.enums.CustomerType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
