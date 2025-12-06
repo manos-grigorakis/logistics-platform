@@ -1,16 +1,16 @@
-package com.manosgrigorakis.logisticsplatform.service.impl;
+package com.manosgrigorakis.logisticsplatform.auth.service;
 
-import com.manosgrigorakis.logisticsplatform.dto.auth.*;
-import com.manosgrigorakis.logisticsplatform.enums.TokenType;
+import com.manosgrigorakis.logisticsplatform.auth.dto.*;
+import com.manosgrigorakis.logisticsplatform.auth.enums.TokenType;
+import com.manosgrigorakis.logisticsplatform.service.impl.MailService;
 import com.manosgrigorakis.logisticsplatform.users.enums.UserStatus;
 import com.manosgrigorakis.logisticsplatform.common.exception.ResourceNotFoundException;
 import com.manosgrigorakis.logisticsplatform.common.exception.TokenExpiredException;
 import com.manosgrigorakis.logisticsplatform.users.model.User;
-import com.manosgrigorakis.logisticsplatform.model.UserTokens;
+import com.manosgrigorakis.logisticsplatform.auth.model.UserTokens;
 import com.manosgrigorakis.logisticsplatform.users.repository.UserRepository;
-import com.manosgrigorakis.logisticsplatform.repository.UserTokensRepository;
+import com.manosgrigorakis.logisticsplatform.auth.repository.UserTokensRepository;
 import com.manosgrigorakis.logisticsplatform.security.jwt.JwtService;
-import com.manosgrigorakis.logisticsplatform.service.AuthenticationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;

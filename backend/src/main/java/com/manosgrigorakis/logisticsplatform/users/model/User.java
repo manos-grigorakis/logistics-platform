@@ -1,7 +1,7 @@
 package com.manosgrigorakis.logisticsplatform.users.model;
 
 import com.manosgrigorakis.logisticsplatform.users.enums.UserStatus;
-import com.manosgrigorakis.logisticsplatform.model.UserTokens;
+import com.manosgrigorakis.logisticsplatform.auth.model.UserTokens;
 import jakarta.persistence.*;
 import lombok.*;
 

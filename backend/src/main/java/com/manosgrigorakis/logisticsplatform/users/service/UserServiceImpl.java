@@ -1,17 +1,17 @@
 package com.manosgrigorakis.logisticsplatform.users.service;
 
 import com.manosgrigorakis.logisticsplatform.service.impl.MailService;
-import com.manosgrigorakis.logisticsplatform.service.impl.UserTokensServiceImpl;
+import com.manosgrigorakis.logisticsplatform.auth.service.UserTokensServiceImpl;
 import com.manosgrigorakis.logisticsplatform.users.dto.UserRequestDTO;
 import com.manosgrigorakis.logisticsplatform.users.dto.UserResponseDTO;
-import com.manosgrigorakis.logisticsplatform.enums.TokenType;
+import com.manosgrigorakis.logisticsplatform.auth.enums.TokenType;
 import com.manosgrigorakis.logisticsplatform.users.enums.UserStatus;
 import com.manosgrigorakis.logisticsplatform.common.exception.DuplicateEntryException;
 import com.manosgrigorakis.logisticsplatform.common.exception.ResourceNotFoundException;
 import com.manosgrigorakis.logisticsplatform.users.mapper.UserMapper;
 import com.manosgrigorakis.logisticsplatform.users.model.Role;
 import com.manosgrigorakis.logisticsplatform.users.model.User;
-import com.manosgrigorakis.logisticsplatform.model.UserTokens;
+import com.manosgrigorakis.logisticsplatform.auth.model.UserTokens;
 import com.manosgrigorakis.logisticsplatform.users.repository.RoleRepository;
 import com.manosgrigorakis.logisticsplatform.users.repository.UserRepository;
 import org.slf4j.Logger;

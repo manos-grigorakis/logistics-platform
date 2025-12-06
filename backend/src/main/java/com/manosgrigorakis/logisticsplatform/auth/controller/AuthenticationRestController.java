@@ -1,8 +1,8 @@
-package com.manosgrigorakis.logisticsplatform.controller;
+package com.manosgrigorakis.logisticsplatform.auth.controller;
 
-import com.manosgrigorakis.logisticsplatform.dto.auth.*;
+import com.manosgrigorakis.logisticsplatform.auth.dto.*;
 import com.manosgrigorakis.logisticsplatform.dto.shared.MessageResponseDTO;
-import com.manosgrigorakis.logisticsplatform.service.AuthenticationService;
+import com.manosgrigorakis.logisticsplatform.auth.service.AuthenticationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

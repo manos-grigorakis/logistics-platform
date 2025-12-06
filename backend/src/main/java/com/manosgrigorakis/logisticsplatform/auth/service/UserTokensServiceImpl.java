@@ -1,10 +1,9 @@
-package com.manosgrigorakis.logisticsplatform.service.impl;
+package com.manosgrigorakis.logisticsplatform.auth.service;
 
-import com.manosgrigorakis.logisticsplatform.enums.TokenType;
+import com.manosgrigorakis.logisticsplatform.auth.enums.TokenType;
 import com.manosgrigorakis.logisticsplatform.users.model.User;
-import com.manosgrigorakis.logisticsplatform.model.UserTokens;
-import com.manosgrigorakis.logisticsplatform.repository.UserTokensRepository;
-import com.manosgrigorakis.logisticsplatform.service.UserTokensService;
+import com.manosgrigorakis.logisticsplatform.auth.model.UserTokens;
+import com.manosgrigorakis.logisticsplatform.auth.repository.UserTokensRepository;
 import com.manosgrigorakis.logisticsplatform.utils.GenerateSecureToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

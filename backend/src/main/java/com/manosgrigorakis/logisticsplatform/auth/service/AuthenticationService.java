@@ -1,6 +1,6 @@
-package com.manosgrigorakis.logisticsplatform.service;
+package com.manosgrigorakis.logisticsplatform.auth.service;
 
-import com.manosgrigorakis.logisticsplatform.dto.auth.*;
+import com.manosgrigorakis.logisticsplatform.auth.dto.*;
 
 public interface AuthenticationService {
     JwtResponseDTO authenticateAndGetToken(AuthRequestDTO dto);

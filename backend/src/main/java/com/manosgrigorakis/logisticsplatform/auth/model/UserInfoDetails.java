@@ -1,4 +1,4 @@
-package com.manosgrigorakis.logisticsplatform.model;
+package com.manosgrigorakis.logisticsplatform.auth.model;
 
 import com.manosgrigorakis.logisticsplatform.users.enums.UserStatus;
 import com.manosgrigorakis.logisticsplatform.users.model.User;

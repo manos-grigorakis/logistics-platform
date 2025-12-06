@@ -1,6 +1,6 @@
-package com.manosgrigorakis.logisticsplatform.model;
+package com.manosgrigorakis.logisticsplatform.auth.model;
 
-import com.manosgrigorakis.logisticsplatform.enums.TokenType;
+import com.manosgrigorakis.logisticsplatform.auth.enums.TokenType;
 import com.manosgrigorakis.logisticsplatform.users.model.User;
 import jakarta.persistence.*;
 import lombok.*;

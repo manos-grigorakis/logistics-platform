@@ -1,7 +1,7 @@
-package com.manosgrigorakis.logisticsplatform.service.impl;
+package com.manosgrigorakis.logisticsplatform.auth.service;
 
 import com.manosgrigorakis.logisticsplatform.users.model.User;
-import com.manosgrigorakis.logisticsplatform.model.UserInfoDetails;
+import com.manosgrigorakis.logisticsplatform.auth.model.UserInfoDetails;
 import com.manosgrigorakis.logisticsplatform.users.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

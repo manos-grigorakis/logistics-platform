@@ -1,4 +1,4 @@
-package com.manosgrigorakis.logisticsplatform.dto.auth;
+package com.manosgrigorakis.logisticsplatform.auth.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

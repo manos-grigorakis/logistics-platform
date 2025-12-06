@@ -1,6 +1,6 @@
-package com.manosgrigorakis.logisticsplatform.repository;
+package com.manosgrigorakis.logisticsplatform.auth.repository;
 
-import com.manosgrigorakis.logisticsplatform.model.UserTokens;
+import com.manosgrigorakis.logisticsplatform.auth.model.UserTokens;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

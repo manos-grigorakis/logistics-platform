@@ -1,4 +1,4 @@
-package com.manosgrigorakis.logisticsplatform.dto.auth;
+package com.manosgrigorakis.logisticsplatform.auth.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -6,10 +6,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SetupPasswordRequestDTO {
+public class ResetPasswordRequestDTO {
     @NotBlank(message = "Token is required")
     private String token;
 
-    @NotBlank(message = "Password is required")
-    private String password;
+    @NotBlank(message = "New password is required")
+    private String newPassword;
 }
