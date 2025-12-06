@@ -3,6 +3,7 @@ package com.manosgrigorakis.logisticsplatform.infrastructure.storage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.core.exception.SdkClientException;
 import software.amazon.awssdk.core.sync.RequestBody;
@@ -17,6 +18,7 @@ import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequ
 import java.time.Duration;
 
 @Service
+@Profile("!test")
 public class S3FileStorageServiceImpl implements FileStorageService {
     private static final Logger log = LoggerFactory.getLogger(S3FileStorageServiceImpl.class);
 
