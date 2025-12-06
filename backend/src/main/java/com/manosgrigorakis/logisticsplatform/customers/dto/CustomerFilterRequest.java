@@ -1,4 +1,4 @@
-package com.manosgrigorakis.logisticsplatform.filters;
+package com.manosgrigorakis.logisticsplatform.customers.dto;
 
 import com.manosgrigorakis.logisticsplatform.customers.enums.CustomerType;
 import io.swagger.v3.oas.annotations.media.Schema;

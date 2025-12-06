@@ -3,7 +3,7 @@ package com.manosgrigorakis.logisticsplatform.customers.controller;
 import com.manosgrigorakis.logisticsplatform.customers.dto.CustomerRequestDTO;
 import com.manosgrigorakis.logisticsplatform.customers.dto.CustomerResponseDTO;
 import com.manosgrigorakis.logisticsplatform.customers.dto.UpdateCustomerRequestDTO;
-import com.manosgrigorakis.logisticsplatform.filters.CustomerFilterRequest;
+import com.manosgrigorakis.logisticsplatform.customers.dto.CustomerFilterRequest;
 import com.manosgrigorakis.logisticsplatform.filters.PageFilterRequest;
 import com.manosgrigorakis.logisticsplatform.filters.SortFilterRequest;
 import com.manosgrigorakis.logisticsplatform.customers.service.CustomerService;
