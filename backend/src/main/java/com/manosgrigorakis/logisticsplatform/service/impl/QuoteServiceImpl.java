@@ -165,15 +165,6 @@ public class QuoteServiceImpl implements QuoteService {
             );
         }
 
-        // Update fields
-        quote.setValidityDays(dto.getValidityDays());
-        quote.setOrigin(dto.getOrigin());
-        quote.setDestination(dto.getDestination());
-        quote.setNotes(dto.getNotes());
-        quote.setSpecialTerms(dto.getSpecialTerms());
-        quote.setUser(quote.getUser());
-        quote.setCustomer(quote.getCustomer());
-
         // Clear old items
         quote.getQuoteItems().clear();
 
@@ -182,11 +173,34 @@ public class QuoteServiceImpl implements QuoteService {
             quote.addQuoteItem(item);
         }
 
-        Quote savedQuote = quoteRepository.save(quote);
-        log.info("Quote updated with number: {}", quote.getNumber());
-        // Create presigned url
-        String presignedUrl = fileStorageService.createPresignedUrl(quote.getNumber());
+        // Calculate
+        BigDecimal netTotal = calculateNetTotal(quote);
+        BigDecimal vatAmount = FinancialCalculator.calculateVatAmount(netTotal, vatPercent);
+        BigDecimal grossTotal = FinancialCalculator.calculateGrossTotal(netTotal, vatAmount);
 
+        // Update fields
+        quote.setValidityDays(dto.getValidityDays());
+        quote.setOrigin(dto.getOrigin());
+        quote.setDestination(dto.getDestination());
+        quote.setNotes(dto.getNotes());
+        quote.setSpecialTerms(dto.getSpecialTerms());
+        quote.setCustomer(customer);
+        quote.setNetPrice(netTotal);
+        quote.setVatAmount(vatAmount);
+        quote.setGrossPrice(grossTotal);
+
+        Quote savedQuote = quoteRepository.save(quote);
+
+        // Re-generate PDF and store / upload it
+        byte[] quotePdf = pdfService.generateQuotePdf(savedQuote);
+        fileStorageService.store(savedQuote.getNumber(), quotePdf, "application/pdf");
+
+        log.info("Quote updated with number: {}", savedQuote.getNumber());
+
+        // Create presigned url
+        String presignedUrl = fileStorageService.createPresignedUrl(savedQuote.getNumber());
+
+        // Set response
         QuoteResponseDTO response = QuoteMapper.toResponse(savedQuote);
         response.setPdfUrl(presignedUrl);
         return response;
@@ -214,7 +228,7 @@ public class QuoteServiceImpl implements QuoteService {
             }
         }
 
-        return netTotal;
+        return netTotal.setScale(2, RoundingMode.HALF_UP);
     }
 
     /**

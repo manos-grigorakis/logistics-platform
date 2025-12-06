@@ -21,7 +21,7 @@ public class FinancialCalculator {
      * @return Calculated VAT amount
      */
     public static BigDecimal calculateVatAmount(BigDecimal netTotal, int vatPercent) {
-        return netTotal.multiply(getVatRate(vatPercent));
+        return netTotal.multiply(getVatRate(vatPercent)).setScale(2, RoundingMode.HALF_UP);
     }
 
     /**
