@@ -1,0 +1,82 @@
+<div
+  id="default-modal"
+  tabindex="-1"
+  aria-hidden="true"
+  class="inset-0 z-50 flex w-screen items-center justify-center overflow-x-hidden overflow-y-auto bg-slate-100/50"
+  [ngClass]="isEnabled ? 'fixed' : 'hidden'"
+>
+  <div class="relative w-full max-w-[1200px] p-4">
+    <div class="relative rounded bg-white p-4 shadow-sm md:p-6">
+      <!-- Modal header -->
+      <div class="flex items-center justify-between pb-4 md:pb-5">
+        <button
+          type="button"
+          class="text-body ms-auto inline-flex h-9 w-9 items-center justify-center rounded bg-transparent text-sm hover:cursor-pointer"
+          data-modal-hide="default-modal"
+          (click)="onCloseModalClick()"
+        >
+          <svg
+            class="h-5 w-5"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18 17.94 6M18 18 6.06 6"
+            />
+          </svg>
+          <span class="sr-only">Close modal</span>
+        </button>
+      </div>
+      <!-- Modal body -->
+      <div class="overflow-x-auto">
+        <div class="border-secondary-200 flex justify-between border-b pb-2">
+          <h2 class="text-2xl font-medium">PDF Preview:</h2>
+          <div class="flex gap-2">
+            <button
+              class="bg-primary-500 flex items-center gap-1 rounded-md px-2 py-1 font-medium text-white transition-all duration-150"
+              [ngClass]="{
+                'disabled cursor-not-allowed opacity-50': !pdfUrl,
+                'hover:bg-primary-600 cursor-pointer': pdfUrl,
+              }"
+              (click)="downloadPdf()"
+              [disabled]="!pdfUrl"
+            >
+              <ng-icon name="lucideDownload" size="16" /> Download
+            </button>
+            <button
+              class="bg-success flex items-center gap-1 rounded-md px-2 py-1 font-medium text-white transition-all duration-150"
+              [ngClass]="{
+                'disabled cursor-not-allowed opacity-50': !pdfUrl,
+                'hover:bg-success-dark cursor-pointer': pdfUrl,
+              }"
+              (click)="onSendMailClick()"
+              [disabled]="!pdfUrl"
+            >
+              <ng-icon name="lucideMail" size="16" /> Send via Mail
+            </button>
+          </div>
+        </div>
+
+        @if (pdfUrl) {
+          <pdf-viewer
+            [src]="pdfUrl"
+            [original-size]="false"
+            [zoom]="1"
+            style="height: 700px; width: 100%"
+          />
+        } @else {
+          <span class="block pt-4 text-center text-lg">PDF cannot be previewed</span>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+<!-- -->
