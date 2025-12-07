@@ -18,6 +18,7 @@ import { CustomersPage } from './customers/customers-page/customers-page';
 import { CreateCustomer } from './customers/create-customer/create-customer';
 import { EditCustomer } from './customers/edit-customer/edit-customer';
 import { ViewCustomer } from './customers/view-customer/view-customer';
+import { QuotesPage } from './quotes/quotes-page/quotes-page';
 
 export const routes: Routes = [
   {
@@ -54,6 +55,10 @@ export const routes: Routes = [
           { path: 'edit-customer/:id', component: EditCustomer, title: 'Edit Customer' },
           { path: 'view-customer/:id', component: ViewCustomer, title: 'View Customer' },
         ],
+      },
+      {
+        path: 'quotes',
+        children: [{ path: '', component: QuotesPage, title: 'Quotes' }],
       },
     ],
   },
