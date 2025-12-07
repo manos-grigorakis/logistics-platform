@@ -4,6 +4,7 @@ import { AuthService } from '../auth/services/auth.service';
 import { Observable } from 'rxjs';
 import { FetchQuotesResponse } from './models/fetch-quotes-response';
 import { environment } from '../../environments/environment';
+import { QuoteResponse } from './models/quote-response';
 
 @Injectable({
   providedIn: 'root',
@@ -20,5 +21,12 @@ export class QuotesService {
     return this.http.get<FetchQuotesResponse>(`${environment.apiUrl}/quotes`, {
       headers: headers,
     });
+  }
+
+  public fetchQuoteById(id: number): Observable<QuoteResponse> {
+    this.jwtToken = this.authService.getJwtToken();
+    const headers = { Authorization: `Bearer ${this.jwtToken}` };
+
+    return this.http.get<QuoteResponse>(`${environment.apiUrl}/quotes/${id}`, { headers: headers });
   }
 }

@@ -1,5 +1,17 @@
 <div>
+  <app-modal-file
+    [isEnabled]="showModal"
+    [pdfUrl]="pdfUrl"
+    [pdfName]="pdfNumber"
+    (closeModal)="closeModal()"
+  />
+
   <div class="relative overflow-x-auto rounded-lg bg-white shadow-md">
-    <app-quotes-table [isLoading]="isLoading" [quotes]="quotes" [errorMessage]="errorMessage" />
+    <app-quotes-table
+      [isLoading]="isLoading"
+      [quotes]="quotes"
+      [errorMessage]="errorMessage"
+      (onViewQuote)="onViewQuoteClick($event)"
+    />
   </div>
 </div>
