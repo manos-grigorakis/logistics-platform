@@ -34,7 +34,7 @@ public class QuoteItem {
     @Enumerated(EnumType.STRING)
     private QuoteItemUnit unit;
 
-    @Column(name = "price", precision = 19, scale = 4, nullable = false)
+    @Column(name = "price", precision = 19, scale = 2, nullable = false)
     private BigDecimal price;
 
     @Column(name = "created_at", nullable = false)
