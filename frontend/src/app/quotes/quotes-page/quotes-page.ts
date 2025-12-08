@@ -71,6 +71,33 @@ export class QuotesPage implements OnInit {
     }
   }
 
+  public onFilter(query: string) {
+    if (!query) return;
+
+    switch (query) {
+      case 'filter-by-all':
+        this.activeFilterLabel = 'Filter by';
+        this.fetchQuotes({ page: 0, quoteStatus: undefined, sortDirection: undefined });
+        break;
+      case 'filter-by-quote-status-draft':
+        this.activeFilterLabel = 'Draft';
+        this.fetchQuotes({ page: 0, quoteStatus: 'DRAFT' });
+        break;
+      case 'filter-by-quote-status-sent':
+        this.activeFilterLabel = 'Sent';
+        this.fetchQuotes({ page: 0, quoteStatus: 'SENT' });
+        break;
+      case 'filter-by-quote-status-accepted':
+        this.activeFilterLabel = 'Accepted';
+        this.fetchQuotes({ page: 0, quoteStatus: 'ACCEPTED' });
+        break;
+      case 'filter-by-quote-status-expired':
+        this.activeFilterLabel = 'Expired';
+        this.fetchQuotes({ page: 0, quoteStatus: 'EXPIRED' });
+        break;
+    }
+  }
+
   private fetchQuotes(params?: FetchQuotesParameters): void {
     this.isLoading = true;
     this.errorMessage = undefined;
