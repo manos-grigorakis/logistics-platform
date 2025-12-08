@@ -3,6 +3,7 @@
     <app-quotes-filters
       [sortLabel]="activeSortLabel"
       [filterLabel]="activeFilterLabel"
+      (refresh)="onRefresh()"
       (sortBy)="onSort($event)"
       (filterBy)="onFilter($event)"
     />

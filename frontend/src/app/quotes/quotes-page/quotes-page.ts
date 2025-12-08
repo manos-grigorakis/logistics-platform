@@ -113,6 +113,10 @@ export class QuotesPage implements OnInit {
     this.fetchQuotes({ page: page });
   }
 
+  public onRefresh(): void {
+    this.fetchQuotes();
+  }
+
   private fetchQuotes(params?: FetchQuotesParameters): void {
     this.isLoading = true;
     this.errorMessage = undefined;
