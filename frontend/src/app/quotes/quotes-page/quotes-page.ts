@@ -5,10 +5,11 @@ import { QuotesListItem } from '../models/quotes-list-item';
 import { ModalFile } from '../../shared/ui/modal-file/modal-file';
 import { QuotesFilters } from '../quotes-filters/quotes-filters';
 import { FetchQuotesParameters } from '../models/fetch-quotes-parameters';
+import { Pagination } from '../../shared/ui/pagination/pagination';
 
 @Component({
   selector: 'app-quotes-page',
-  imports: [QuotesTable, ModalFile, QuotesFilters],
+  imports: [QuotesTable, ModalFile, QuotesFilters, Pagination],
   templateUrl: './quotes-page.html',
   styleUrl: './quotes-page.css',
 })
@@ -30,6 +31,13 @@ export class QuotesPage implements OnInit {
   public activeSortLabel: string = 'Sort by';
 
   public activeFilterLabel: string = 'Filter by';
+
+  // Pagination
+  public currentPage: number = 0;
+  public totalPages: number = 0;
+  public totalElements: number = 0;
+  public isFirstPage: boolean = false;
+  public pageSize: number = 0;
 
   ngOnInit(): void {
     this.fetchQuotes();
@@ -98,6 +106,13 @@ export class QuotesPage implements OnInit {
     }
   }
 
+  public onPageChange(page: number): void {
+    if (page === this.currentPage) return;
+
+    this.currentPage = page;
+    this.fetchQuotes({ page: page });
+  }
+
   private fetchQuotes(params?: FetchQuotesParameters): void {
     this.isLoading = true;
     this.errorMessage = undefined;
@@ -116,6 +131,12 @@ export class QuotesPage implements OnInit {
         this.isLoading = false;
         this.errorMessage = undefined;
         this.quotes = res.content;
+
+        // pagination
+        this.currentPage = res.number;
+        this.totalPages = res.totalPages;
+        this.totalElements = res.totalElements;
+        this.pageSize = res.size;
       },
       error: (err) => {
         this.isLoading = false;

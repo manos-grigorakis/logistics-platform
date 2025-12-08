@@ -23,4 +23,14 @@
       (onViewQuote)="onViewQuoteClick($event)"
     />
   </div>
+
+  <div class="mt-8">
+    <app-pagination
+      [currentPage]="currentPage"
+      [totalElements]="totalElements"
+      [totalPages]="totalPages"
+      [pageSize]="pageSize"
+      (pageChanged)="onPageChange($event)"
+    />
+  </div>
 </div>
