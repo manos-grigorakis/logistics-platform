@@ -6,6 +6,7 @@ import { ModalFile } from '../../shared/ui/modal-file/modal-file';
 import { QuotesFilters } from '../quotes-filters/quotes-filters';
 import { FetchQuotesParameters } from '../models/fetch-quotes-parameters';
 import { Pagination } from '../../shared/ui/pagination/pagination';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-quotes-page',
@@ -15,7 +16,7 @@ import { Pagination } from '../../shared/ui/pagination/pagination';
 })
 export class QuotesPage implements OnInit {
   private quotesService: QuotesService = inject(QuotesService);
-
+  private searchChanged$ = new Subject<string>(); // Stream
   private currentParams: FetchQuotesParameters = {
     page: 0,
   };
@@ -41,6 +42,15 @@ export class QuotesPage implements OnInit {
 
   ngOnInit(): void {
     this.fetchQuotes();
+
+    // Add debouncer to search bar
+    this.searchChanged$
+      .pipe(debounceTime(400), distinctUntilChanged())
+      .subscribe((value) => this.onSearch(value));
+  }
+
+  public onSearchChanged(value: string): void {
+    this.searchChanged$.next(value);
   }
 
   public onViewQuoteClick(id: number) {
@@ -115,6 +125,51 @@ export class QuotesPage implements OnInit {
 
   public onRefresh(): void {
     this.fetchQuotes();
+  }
+
+  public onSearch(value: string): void {
+    let param = value.trim();
+
+    if (param.length === 0) {
+      this.fetchQuotes({
+        page: 0,
+        number: undefined,
+        companyName: undefined,
+        sortBy: undefined,
+        sortDirection: undefined,
+        quoteStatus: undefined,
+      });
+      return;
+    }
+
+    this.activeFilterLabel = 'Filter by';
+    this.activeSortLabel = 'Sort by';
+
+    const minSearchByNumber = 5;
+    const normalized = param.toUpperCase();
+    const quoteMatch = normalized.startsWith('Q-');
+
+    if (quoteMatch && param.length < minSearchByNumber) return;
+
+    if (quoteMatch) {
+      this.fetchQuotes({
+        page: 0,
+        number: normalized,
+        companyName: undefined,
+        sortBy: undefined,
+        sortDirection: undefined,
+        quoteStatus: undefined,
+      });
+    } else {
+      this.fetchQuotes({
+        page: 0,
+        number: undefined,
+        companyName: param,
+        sortBy: undefined,
+        sortDirection: undefined,
+        quoteStatus: undefined,
+      });
+    }
   }
 
   private fetchQuotes(params?: FetchQuotesParameters): void {
