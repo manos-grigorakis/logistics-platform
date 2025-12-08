@@ -3,15 +3,21 @@ import { QuotesService } from '../quotes.service';
 import { QuotesTable } from '../quotes-table/quotes-table';
 import { QuotesListItem } from '../models/quotes-list-item';
 import { ModalFile } from '../../shared/ui/modal-file/modal-file';
+import { QuotesFilters } from '../quotes-filters/quotes-filters';
+import { FetchQuotesParameters } from '../models/fetch-quotes-parameters';
 
 @Component({
   selector: 'app-quotes-page',
-  imports: [QuotesTable, ModalFile],
+  imports: [QuotesTable, ModalFile, QuotesFilters],
   templateUrl: './quotes-page.html',
   styleUrl: './quotes-page.css',
 })
 export class QuotesPage implements OnInit {
   private quotesService: QuotesService = inject(QuotesService);
+
+  private currentParams: FetchQuotesParameters = {
+    page: 0,
+  };
 
   public isLoading: boolean = false;
   public quotes: QuotesListItem[] = [];
@@ -19,6 +25,11 @@ export class QuotesPage implements OnInit {
   public pdfUrl?: string;
   public pdfNumber: string = '';
   public showModal: boolean = false;
+
+  // Filters
+  public activeSortLabel: string = 'Sort by';
+
+  public activeFilterLabel: string = 'Filter by';
 
   ngOnInit(): void {
     this.fetchQuotes();
@@ -33,10 +44,47 @@ export class QuotesPage implements OnInit {
     this.showModal = false;
   }
 
-  private fetchQuotes(): void {
-    this.isLoading = true;
+  public onSort(query: string) {
+    if (!query) return;
 
-    this.quotesService.fetchQuotes().subscribe({
+    switch (query) {
+      case 'sort-all':
+        this.activeSortLabel = 'Sort by';
+        this.fetchQuotes({ page: 0, sortBy: undefined, sortDirection: undefined });
+        break;
+      case 'sort-asc-by-number':
+        this.activeSortLabel = 'Number 0 → 9';
+        this.fetchQuotes({ page: 0, sortBy: 'number', sortDirection: 'asc' });
+        break;
+      case 'sort-desc-by-number':
+        this.activeSortLabel = 'Number 9 → 0';
+        this.fetchQuotes({ page: 0, sortBy: 'number', sortDirection: 'desc' });
+        break;
+      case 'sort-asc-by-issue-date':
+        this.activeSortLabel = 'Date 0 → 9';
+        this.fetchQuotes({ page: 0, sortBy: 'issueDate', sortDirection: 'asc' });
+        break;
+      case 'sort-desc-by-issue-date':
+        this.activeSortLabel = 'Date 9 → 0';
+        this.fetchQuotes({ page: 0, sortBy: 'issueDate', sortDirection: 'desc' });
+        break;
+    }
+  }
+
+  private fetchQuotes(params?: FetchQuotesParameters): void {
+    this.isLoading = true;
+    this.errorMessage = undefined;
+
+    // Merge current state params with new params
+    const finalParams: FetchQuotesParameters = {
+      ...this.currentParams,
+      ...params,
+    };
+
+    // Saved for future requrests
+    this.currentParams = finalParams;
+
+    this.quotesService.fetchQuotes(finalParams).subscribe({
       next: (res) => {
         this.isLoading = false;
         this.errorMessage = undefined;
@@ -67,7 +115,6 @@ export class QuotesPage implements OnInit {
       },
       error: (err) => {
         this.isLoading = false;
-
         if (err.status === 404) {
           this.errorMessage = `Quote with id ${id} not exist`;
         } else if (err.status === 500) {

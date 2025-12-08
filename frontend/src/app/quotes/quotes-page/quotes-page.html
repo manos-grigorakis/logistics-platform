@@ -1,4 +1,12 @@
 <div>
+  <div class="border-primary-500 mb-8 rounded border-b-5 shadow-md">
+    <app-quotes-filters
+      [sortLabel]="activeSortLabel"
+      [filterLabel]="activeFilterLabel"
+      (sortBy)="onSort($event)"
+    />
+  </div>
+
   <app-modal-file
     [isEnabled]="showModal"
     [pdfUrl]="pdfUrl"
