@@ -19,7 +19,7 @@
         <td class="px-2 py-4">{{ quote.companyName }}</td>
         <td class="px-2 py-4">{{ quote.grossPrice | currency: 'EUR' }}</td>
         <td class="px-2 py-4">{{ quote.status }}</td>
-        <td class="px-2 py-4">{{ quote.issueDate }}</td>
+        <td class="px-2 py-4">{{ quote.issueDate | date }}</td>
         <td class="px-2 py-4">
           <a
             [routerLink]="['edit-quote', quote.id]"

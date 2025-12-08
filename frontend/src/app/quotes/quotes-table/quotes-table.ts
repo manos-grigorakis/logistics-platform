@@ -3,10 +3,11 @@ import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner'
 import { CurrencyPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { QuotesListItem } from '../models/quotes-list-item';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-quotes-table',
-  imports: [LoadingSpinner, CurrencyPipe, RouterLink],
+  imports: [LoadingSpinner, CurrencyPipe, RouterLink, DatePipe],
   templateUrl: './quotes-table.html',
   styleUrl: './quotes-table.css',
 })
