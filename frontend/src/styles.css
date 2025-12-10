@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import '@ng-select/ng-select/themes/default.theme.css';
 
 @theme {
   /* Primary Colors */
@@ -57,4 +58,76 @@ body {
     system-ui,
     -apple-system,
     sans-serif;
+}
+
+/* Overrides Tailwind for Ngx Editor Component */
+.NgxEditor__Content ul {
+  list-style: disc !important;
+  margin-left: 1.5rem;
+}
+
+.NgxEditor__Content ol {
+  list-style: decimal !important;
+  margin-left: 1.5rem;
+}
+
+.NgxEditor__Content {
+  min-height: 120px;
+  padding: 10px;
+}
+
+.NgxEditor__Content:focus {
+  border: 1px solid var(--color-primary-200);
+  outline: none;
+}
+
+/* Ng Select */
+/* Base container */
+.tw-select .ng-select-container {
+  @apply rounded border border-gray-300 bg-white px-4 py-2 text-gray-700;
+  @apply focus-within:border-primary-200 focus:ring focus:outline-none;
+}
+
+/* Placeholder */
+.tw-select .ng-select-container .ng-value-placeholder {
+  @apply text-gray-400;
+}
+
+/* Arrow icon positioning */
+.tw-select .ng-arrow-wrapper {
+  @apply right-3;
+}
+
+.ng-select.tw-select.ng-select-focused .ng-select-container {
+  @apply border-primary-200 ring-primary-200 ring-1 ring-offset-0;
+  outline: none !important;
+}
+
+.ng-select.tw-select:focus {
+  outline: none !important;
+}
+
+/* Dropdown panel styling */
+.tw-select .ng-dropdown-panel {
+  @apply mt-1 rounded border border-gray-200 bg-white;
+}
+
+/* Items styling */
+.tw-select .ng-option {
+  @apply cursor-pointer px-3 py-2 text-gray-700 hover:bg-gray-100;
+}
+
+/* Selected option */
+.tw-select .ng-option-selected {
+  @apply bg-primary-50 font-medium;
+}
+
+/* Highlighted option with keyboard/mouse */
+.tw-select .ng-option-marked {
+  @apply bg-secondary-200;
+}
+
+.tw-select .ng-clear-wrapper {
+  margin-right: 0.75rem;
+  margin-left: 0.5rem;
 }

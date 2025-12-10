@@ -1,0 +1,24 @@
+<div [formGroup]="parentForm">
+  <h3 class="mb-4 text-lg font-semibold">Additional Information</h3>
+  <!-- Notes -->
+  <div class="mb-6">
+    <label (click)="onClickFocusEditor(editorNotes)">Notes</label>
+    <div class="NgxEditor__Wrapper mt-1">
+      <ngx-editor-menu [editor]="editorNotes" [toolbar]="toolbar" />
+      <ngx-editor formControlName="notes" [editor]="editorNotes" placeholder="Add some notes..." />
+    </div>
+  </div>
+
+  <!-- Special Terms -->
+  <div>
+    <label (click)="onClickFocusEditor(editorSpecialTerms)">Special Terms</label>
+    <div class="NgxEditor__Wrapper mt-1">
+      <ngx-editor-menu [editor]="editorSpecialTerms" [toolbar]="toolbar" />
+      <ngx-editor
+        formControlName="specialTerms"
+        [editor]="editorSpecialTerms"
+        placeholder="Add some special terms..."
+      />
+    </div>
+  </div>
+</div>

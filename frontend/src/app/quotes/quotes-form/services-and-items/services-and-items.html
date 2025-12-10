@@ -1,0 +1,96 @@
+<div [formGroup]="parentForm">
+  <!-- Header -->
+  <div class="mb-4 flex justify-between">
+    <h3 class="text-lg font-semibold">Services & Items</h3>
+    <app-rounded-icon-button
+      icon="lucidePlus"
+      color="success"
+      type="button"
+      (clicked)="onAddItemClick()"
+    />
+  </div>
+  <div class="flex flex-col gap-4" formArrayName="items">
+    @for (item of items.controls; track item; let i = $index) {
+      <div [formGroupName]="i" class="bg-secondary-100 rounded border border-gray-200 p-8">
+        <!-- Card Header -->
+        <div class="mb-2 flex justify-between">
+          <h4 class="font-light text-gray-700">#Item {{ i + 1 }}</h4>
+
+          <app-rounded-icon-button
+            type="button"
+            icon="lucideTrash"
+            color="danger"
+            (clicked)="onRemoveItemClick(i)"
+          />
+        </div>
+
+        <!-- Fields -->
+        <app-main-input
+          formControlName="name"
+          label="Name"
+          placeholder="Service/Item Name"
+          type="text"
+          [showRequiredStar]="true"
+        />
+
+        <!-- Numeric -->
+        <div class="my-6 flex gap-2">
+          <app-main-input
+            formControlName="price"
+            label="Price"
+            placeholder="0.00"
+            type="text"
+            [showRequiredStar]="true"
+            patternErrorMessage="must by a number"
+          />
+          <app-main-input
+            formControlName="quantity"
+            label="Quantity"
+            placeholder="1"
+            type="number"
+            [showRequiredStar]="true"
+            patternErrorMessage="must by a number"
+          />
+
+          <!-- Units -->
+          <div>
+            <label for="role"><span class="text-danger mr-1 text-sm">*</span>Unit</label>
+            <select
+              formControlName="unit"
+              id="unit"
+              class="focus:ring-primary-200 w-full rounded border border-gray-300 px-4 py-2 text-gray-700 focus:ring focus:outline-none"
+            >
+              <option [ngValue]="null" disabled>Select a unit</option>
+
+              @for (unit of quoteItemUnits; track $index) {
+                <option [ngValue]="unit | lowercase">{{ unit | titlecase }}</option>
+              } @empty {
+                <option disabled>No units are available</option>
+              }
+            </select>
+            @if (
+              getUnitControl(i).invalid && (getUnitControl(i).dirty || getUnitControl(i).touched)
+            ) {
+              <div>
+                @if (getUnitControl(i).hasError('required')) {
+                  <span class="text-danger ml-1 text-sm">Unit is required</span>
+                }
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="flex flex-col">
+          <label for="description">Description</label>
+          <textarea
+            id="description"
+            placeholder="Description goes here..."
+            class="focus:ring-primary-200 w-full resize-none rounded border border-gray-300 px-4 py-2 text-gray-700 placeholder-gray-700 focus:ring focus:outline-none"
+            formControlName="description"
+          ></textarea>
+        </div>
+      </div>
+    }
+  </div>
+</div>

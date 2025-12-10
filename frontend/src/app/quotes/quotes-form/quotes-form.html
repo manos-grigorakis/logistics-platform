@@ -1,0 +1,74 @@
+<div class="mx-auto mt-6 max-w-3xl rounded-lg bg-white p-6 shadow-lg shadow-black/10">
+  <h2 class="mb-4 text-center text-3xl font-semibold">
+    @if (formUsage === 'create') {
+      Create a Quote
+    } @else {
+      Update Quote
+    }
+  </h2>
+
+  @if (isLoading) {
+    <app-loading-spinner />
+  }
+
+  <div class="mb-5">
+    @if (errorMessage) {
+      <span class="text-danger bg-danger-light block w-full rounded-md p-1.5 text-center">{{
+        errorMessage
+      }}</span>
+    }
+  </div>
+  <div class="mb-5">
+    @if (itemsErrorMessage) {
+      <span class="text-danger bg-danger-light block w-full rounded-md p-1.5 text-center">{{
+        itemsErrorMessage
+      }}</span>
+    }
+  </div>
+  <div class="mb-5">
+    @if (customerErrorMessage) {
+      <span class="text-danger bg-danger-light block w-full rounded-md p-1.5 text-center">{{
+        customerErrorMessage
+      }}</span>
+    }
+  </div>
+
+  <form [formGroup]="quoteForm" (ngSubmit)="onSubmitClick()">
+    <!-- Basic information -->
+    <div class="mb-6">
+      <app-basic-information
+        [parentForm]="quoteForm"
+        [customersList]="customersList"
+        [customersLoading]="customersLoading"
+        [customerSearch$]="customerSearch$"
+      />
+    </div>
+
+    <!-- Services & Items -->
+    <div class="mb-6">
+      <app-services-and-items
+        [parentForm]="quoteForm"
+        [items]="items"
+        [quoteItemUnits]="quoteItemUnits"
+        (onAddItem)="onClickAddItem()"
+        (onRemoveItem)="onClickRemoveItem($event)"
+      />
+    </div>
+
+    <!-- Additional Information -->
+    <div class="mb-6">
+      <app-additional-information
+        [parentForm]="quoteForm"
+        (notesHtmlChange)="notesHtml = $event"
+        (specialTermsHtmlChange)="specialTermsHtml = $event"
+      />
+    </div>
+
+    <!-- Button -->
+    @if (formUsage === 'create') {
+      <app-primary-button value="Create Quote" [isDisabled]="isLoading" />
+    } @else {
+      <app-primary-button value="Update Quote" [isDisabled]="isLoading" />
+    }
+  </form>
+</div>
