@@ -6,6 +6,8 @@ import { FetchQuotesResponse } from './models/fetch-quotes-response';
 import { environment } from '../../environments/environment';
 import { QuoteResponse } from './models/quote-response';
 import { FetchQuotesParameters } from './models/fetch-quotes-parameters';
+import { QuoteRequest } from './models/quote-request';
+import { CreatedQuoteResponse } from './models/created-quote-response';
 
 @Injectable({
   providedIn: 'root',
@@ -39,6 +41,15 @@ export class QuotesService {
     const headers = { Authorization: `Bearer ${this.jwtToken}` };
 
     return this.http.get<QuoteResponse>(`${environment.apiUrl}/quotes/${id}`, { headers: headers });
+  }
+
+  public createQuote(data: QuoteRequest): Observable<CreatedQuoteResponse> {
+    this.jwtToken = this.authService.getJwtToken();
+    const headers = { Authorization: `Bearer ${this.jwtToken}` };
+
+    return this.http.post<CreatedQuoteResponse>(`${environment.apiUrl}/quotes`, data, {
+      headers: headers,
+    });
   }
 
   // Helper method that creates param
