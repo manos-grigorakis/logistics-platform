@@ -1,5 +1,6 @@
 package com.manosgrigorakis.logisticsplatform.users;
 
+import com.manosgrigorakis.logisticsplatform.common.exception.DuplicateEntryException;
 import com.manosgrigorakis.logisticsplatform.common.exception.ResourceNotFoundException;
 import com.manosgrigorakis.logisticsplatform.infrastructure.storage.FileStorageService;
 import com.manosgrigorakis.logisticsplatform.users.dto.RoleRequestDTO;
@@ -46,5 +47,25 @@ public class RoleServiceTest {
 
         // Assert
         assertEquals("MANAGER", role.getName());
+    }
+
+    @Test
+    void createRole_shouldThrow_whenRoleExists() {
+        // Arrange
+        roleRepository.save(createRole("admin", true));
+
+        RoleRequestDTO dto = new RoleRequestDTO();
+        dto.setName("admin");
+
+        // Act & Assert
+        assertThrows(DuplicateEntryException.class,
+                () -> roleService.createRole(dto));
+    }
+
+    private Role createRole(String name, boolean isEditable) {
+        Role role = new Role();
+        role.setName(name);
+        role.setEditable(isEditable);
+        return role;
     }
 }
