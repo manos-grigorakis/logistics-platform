@@ -57,10 +57,7 @@ public class RoleServiceImpl implements RoleService {
             throw new DuplicateEntryException("name", dto.getName());
         }
 
-        Role role = Role.builder()
-                .name(dto.getName())
-                .description(dto.getDescription())
-                .build();
+        Role role = RoleMapper.toEntity(dto);
 
         roleRepository.save(role);
         log.info("Role created: {}", dto.getName());
@@ -86,7 +83,7 @@ public class RoleServiceImpl implements RoleService {
             throw new DuplicateEntryException("name", dto.getName());
         }
 
-        role.setName(dto.getName());
+        role.setName(dto.getName().toUpperCase());
         role.setDescription(dto.getDescription());
 
         Role updatedRole = roleRepository.save(role);

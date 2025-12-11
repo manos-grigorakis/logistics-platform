@@ -8,7 +8,7 @@ public class RoleMapper {
     // DTO => Entity
     public static Role toEntity(RoleRequestDTO dto) {
         return Role.builder()
-                .name(dto.getName())
+                .name(dto.getName().toUpperCase())
                 .description(dto.getDescription())
                 .build();
     }
