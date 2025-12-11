@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,12 +50,14 @@ public class CustomerRestController {
 
     @Operation(summary = "Create a Customer", description = "Creates a new customer")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Customer created successfully"),
+            @ApiResponse(responseCode = "201", description = "Customer created successfully"),
             @ApiResponse(responseCode = "409", description = "TIN already exists | Company name already exists"),
     })
     @PostMapping()
-    public CustomerResponseDTO createCustomer(@RequestBody @Valid CustomerRequestDTO dto) {
-        return customerService.createCustomer(dto);
+    public ResponseEntity<CustomerResponseDTO> createCustomer(@RequestBody @Valid CustomerRequestDTO dto) {
+        CustomerResponseDTO response = customerService.createCustomer(dto);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @Operation(summary = "Update Customer by Id", description = "Update customer by id")
