@@ -52,6 +52,15 @@ export class QuotesService {
     });
   }
 
+  public updateQuoteById(id: number, data: QuoteRequest): Observable<CreatedQuoteResponse> {
+    this.jwtToken = this.authService.getJwtToken();
+    const headers = { Authorization: `Bearer ${this.jwtToken}` };
+
+    return this.http.put<CreatedQuoteResponse>(`${environment.apiUrl}/quotes/${id}`, data, {
+      headers: headers,
+    });
+  }
+
   // Helper method that creates param
   private addParam(param: HttpParams, key: string, value: any): HttpParams {
     if (value === undefined) return param;

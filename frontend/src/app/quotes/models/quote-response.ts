@@ -1,3 +1,4 @@
+import { CustomerSummary } from './customer-summary';
 import { QuoteItems } from './quote-items';
 
 export interface QuoteResponse {
@@ -19,6 +20,6 @@ export interface QuoteResponse {
   createdAt: string;
   updatedAt: string | null;
   userId: number;
-  customerId: number;
+  customer: CustomerSummary;
   quoteItems: QuoteItems[];
 }
