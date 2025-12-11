@@ -57,7 +57,7 @@ public class QuoteServiceTest {
     @Test
     void getQuoteById_shouldReturnQuote() {
         // Arrange
-        QuoteRequestDTO dto = this.createQuote();
+        QuoteRequestDTO dto = this.createQuote(createUser().getId(), createCustomer().getId());
         QuoteCreatedResponseDTO responseDTO = quoteService.createQuote(dto);
 
         // Act
@@ -72,7 +72,7 @@ public class QuoteServiceTest {
     void createQuote_shouldCreateQuote() {
         // Arrange
         LocalDate today = LocalDate.now();
-        QuoteRequestDTO dto = this.createQuote();
+        QuoteRequestDTO dto = this.createQuote(createUser().getId(), createCustomer().getId());
 
         // Act
         QuoteCreatedResponseDTO responseDTO = quoteService.createQuote(dto);
@@ -98,7 +98,7 @@ public class QuoteServiceTest {
     @Test
     void updateQuote_shouldUpdateQuote() {
         // Arrange
-        QuoteRequestDTO dto = this.createQuote();
+        QuoteRequestDTO dto = this.createQuote(createUser().getId(), createCustomer().getId());
         QuoteCreatedResponseDTO responseDTO = quoteService.createQuote(dto);
         Quote foundedQuote = quoteRepository.findById(responseDTO.getId())
                 .orElseThrow();
@@ -133,14 +133,7 @@ public class QuoteServiceTest {
     @Test
     void createQuote_shouldThrow_whenUserNotFound() {
         // Arrange
-        QuoteItemRequestDTO itemRequestDTO = createItem("Boat", 1, new BigDecimal("100.00"));
-        QuoteRequestDTO dto = new QuoteRequestDTO();
-        dto.setOrigin("Athens");
-        dto.setDestination("Karditsa");
-        dto.setValidityDays(30);
-        dto.setUserId(9999L);
-        dto.setCustomerId(createCustomer().getId());
-        dto.setQuoteItems(List.of(itemRequestDTO));
+        QuoteRequestDTO dto = this.createQuote(9999L, createCustomer().getId());
 
         // Act & Assert
         assertThrows(ResourceNotFoundException.class,
@@ -150,14 +143,7 @@ public class QuoteServiceTest {
     @Test
     void createQuote_shouldThrow_whenCustomerNotFound() {
         // Arrange
-        QuoteItemRequestDTO itemRequestDTO = createItem("Boat", 1, new BigDecimal("100.00"));
-        QuoteRequestDTO dto = new QuoteRequestDTO();
-        dto.setOrigin("Athens");
-        dto.setDestination("Karditsa");
-        dto.setValidityDays(30);
-        dto.setUserId(createUser().getId());
-        dto.setCustomerId(9999L);
-        dto.setQuoteItems(List.of(itemRequestDTO));
+        QuoteRequestDTO dto = this.createQuote(createUser().getId(), 9999L);
 
         // Act & Assert
         assertThrows(ResourceNotFoundException.class,
@@ -165,17 +151,15 @@ public class QuoteServiceTest {
     }
 
     // Helpers
-    private QuoteRequestDTO createQuote() {
+    private QuoteRequestDTO createQuote(Long userId, Long customerId) {
         QuoteItemRequestDTO itemRequestDTO = createItem("Boat", 1, new BigDecimal("100.00"));
-
         QuoteRequestDTO dto = new QuoteRequestDTO();
         dto.setOrigin("Athens");
         dto.setDestination("Karditsa");
         dto.setValidityDays(30);
-        dto.setUserId(createUser().getId());
-        dto.setCustomerId(createCustomer().getId());
+        dto.setUserId(userId);
+        dto.setCustomerId(customerId);
         dto.setQuoteItems(List.of(itemRequestDTO));
-
         return dto;
     }
 
