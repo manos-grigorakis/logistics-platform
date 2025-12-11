@@ -45,7 +45,7 @@ public class RoleRestController {
 
     @Operation(summary = "Create a Role", description = "Create a new role")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Role created successfully"),
+            @ApiResponse(responseCode = "201", description = "Role created successfully"),
             @ApiResponse(responseCode = "409", description = "Role name already exists")
     })
     @PostMapping
