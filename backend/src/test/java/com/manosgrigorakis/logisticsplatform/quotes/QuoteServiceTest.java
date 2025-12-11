@@ -1,5 +1,6 @@
 package com.manosgrigorakis.logisticsplatform.quotes;
 
+import com.manosgrigorakis.logisticsplatform.common.exception.ResourceNotFoundException;
 import com.manosgrigorakis.logisticsplatform.customers.enums.CustomerType;
 import com.manosgrigorakis.logisticsplatform.customers.model.Customer;
 import com.manosgrigorakis.logisticsplatform.customers.repository.CustomerRepository;
@@ -127,6 +128,40 @@ public class QuoteServiceTest {
         assertEquals("Boat", response.getQuoteItems().get(0).getName());
         assertEquals("Box", response.getQuoteItems().get(1).getName());
 
+    }
+
+    @Test
+    void createQuote_shouldThrow_whenUserNotFound() {
+        // Arrange
+        QuoteItemRequestDTO itemRequestDTO = createItem("Boat", 1, new BigDecimal("100.00"));
+        QuoteRequestDTO dto = new QuoteRequestDTO();
+        dto.setOrigin("Athens");
+        dto.setDestination("Karditsa");
+        dto.setValidityDays(30);
+        dto.setUserId(9999L);
+        dto.setCustomerId(createCustomer().getId());
+        dto.setQuoteItems(List.of(itemRequestDTO));
+
+        // Act & Assert
+        assertThrows(ResourceNotFoundException.class,
+                () -> quoteService.createQuote(dto));
+    }
+
+    @Test
+    void createQuote_shouldThrow_whenCustomerNotFound() {
+        // Arrange
+        QuoteItemRequestDTO itemRequestDTO = createItem("Boat", 1, new BigDecimal("100.00"));
+        QuoteRequestDTO dto = new QuoteRequestDTO();
+        dto.setOrigin("Athens");
+        dto.setDestination("Karditsa");
+        dto.setValidityDays(30);
+        dto.setUserId(createUser().getId());
+        dto.setCustomerId(9999L);
+        dto.setQuoteItems(List.of(itemRequestDTO));
+
+        // Act & Assert
+        assertThrows(ResourceNotFoundException.class,
+                () -> quoteService.createQuote(dto));
     }
 
     // Helpers
