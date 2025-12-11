@@ -59,7 +59,7 @@ public class QuoteRestController {
             - Creates a presigned URL for preview
             """)
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Customer created successfully"),
+            @ApiResponse(responseCode = "201", description = "Customer created successfully"),
             @ApiResponse(responseCode = "404", description = "User doesn't exists | Customer doesn't exists"),
     })
     @PostMapping()

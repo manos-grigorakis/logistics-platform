@@ -48,7 +48,7 @@ public class UserRestController {
             Sends an email with a generated token, so user can activate their account
            \s""")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "User created successfully"),
+            @ApiResponse(responseCode = "201", description = "User created successfully"),
             @ApiResponse(responseCode = "404", description = "Role doesn't exist"),
             @ApiResponse(responseCode = "409", description = "User email already exist"),
     })
