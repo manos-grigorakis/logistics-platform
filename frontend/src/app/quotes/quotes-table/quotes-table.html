@@ -18,15 +18,23 @@
         <td class="px-2 py-4">{{ quote.number }}</td>
         <td class="px-2 py-4">{{ quote.companyName }}</td>
         <td class="px-2 py-4">{{ quote.grossPrice | currency: 'EUR' }}</td>
-        <td class="px-2 py-4">{{ quote.status }}</td>
-        <td class="px-2 py-4">{{ quote.issueDate | date }}</td>
         <td class="px-2 py-4">
-          <a
-            [routerLink]="['edit-quote', quote.id]"
-            class="text-fg-brand cursor-pointer font-medium hover:underline"
-            >Edit</a
-          >
+          <span class="rounded border px-2" [ngClass]="quoteStatusBadgeColor(quote.status)">
+            {{ quote.status | titlecase }}
+          </span>
         </td>
+        <td class="px-2 py-4">{{ quote.issueDate | date }}</td>
+        @if (quote.status === 'DRAFT') {
+          <td class="px-2 py-4">
+            <a
+              [routerLink]="['edit-quote', quote.id]"
+              class="text-fg-brand cursor-pointer font-medium hover:underline"
+              >Edit</a
+            >
+          </td>
+        } @else {
+          <td class="px-2 py-4">-</td>
+        }
       </tr>
     } @empty {
       <tr>
