@@ -7,6 +7,7 @@ export interface Quote {
   origin: string;
   destination: string;
   validityDays: number;
+  quoteStatus?: string;
   quoteItems: QuoteItems[];
   notes: string | null;
   specialTerms: string | null;
