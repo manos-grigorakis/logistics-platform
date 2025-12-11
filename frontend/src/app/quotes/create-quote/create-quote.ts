@@ -37,18 +37,18 @@ export class CreateQuote implements OnInit {
 
     if (!this.userId) return;
 
-    const formatedData: QuoteRequest = {
+    const formattedData: QuoteRequest = {
       userId: this.userId,
       customerId: data.customerId,
       origin: data.origin,
       destination: data.destination,
       validityDays: data.validityDays,
-      notes: data.notes?.trim() === '' ? null : data.notes?.trim(),
-      specialTerms: data.specialTerms?.trim() === '' ? null : data.specialTerms?.trim(),
+      notes: data.notes,
+      specialTerms: data.specialTerms,
       quoteItems: data.items,
     };
 
-    this.quotesService.createQuote(formatedData).subscribe({
+    this.quotesService.createQuote(formattedData).subscribe({
       next: (res) => {
         this.isLoading = false;
         this.errorMessage = undefined;
