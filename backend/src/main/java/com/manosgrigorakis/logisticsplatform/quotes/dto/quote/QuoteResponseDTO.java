@@ -1,5 +1,6 @@
 package com.manosgrigorakis.logisticsplatform.quotes.dto.quote;
 
+import com.manosgrigorakis.logisticsplatform.quotes.dto.CustomerSummaryDTO;
 import com.manosgrigorakis.logisticsplatform.quotes.dto.quoteItem.QuoteItemResponseDTO;
 import com.manosgrigorakis.logisticsplatform.quotes.enums.QuoteStatus;
 import lombok.Getter;
@@ -31,6 +32,6 @@ public class QuoteResponseDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Long userId;
-    private Long customerId;
+    private CustomerSummaryDTO customer;
     private List<QuoteItemResponseDTO> quoteItems;
 }
