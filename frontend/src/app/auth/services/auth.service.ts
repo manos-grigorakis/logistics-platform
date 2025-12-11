@@ -117,6 +117,12 @@ export class AuthService {
     return false;
   }
 
+  public getUserId(): number | undefined | null {
+    if (!this.loadUserData()) return null;
+
+    return this.loadUserData()?.id;
+  }
+
   // Helper methods
   // Initiallize auth state
   private initiallizeAuth(): void {

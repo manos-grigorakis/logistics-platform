@@ -1,0 +1,61 @@
+<div [formGroup]="parentForm">
+  <h3 class="mb-4 text-lg font-semibold">Basic Information</h3>
+  <!-- Customer Search -->
+  <div class="mb-6">
+    <label for="customerId" (click)="onClickFocusCustomersSelect()" class="mb-1 block">
+      <span class="text-danger mr-1 text-sm">*</span>Customer
+    </label>
+    <ng-select
+      #customerSelect
+      class="tw-select"
+      placeholder="Search a customer"
+      bindLabel="companyName"
+      bindValue="id"
+      formControlName="customerId"
+      loadingText="Loading customers..."
+      notFoundText="No results"
+      [items]="customersList"
+      [loading]="customersLoading"
+      [typeahead]="customerSearch$"
+      [searchable]="true"
+      [clearable]="true"
+    ></ng-select>
+    @if (customerId.invalid && (customerId.dirty || customerId.touched)) {
+      <div>
+        @if (customerId.hasError('required')) {
+          <span class="text-danger mt-1 ml-1 text-sm">Customer is required</span>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="mb-6 flex gap-2">
+    <app-main-input
+      formControlName="origin"
+      label="Origin"
+      placeholder="Origin"
+      type="text"
+      [showRequiredStar]="true"
+      class="flex-1"
+    />
+
+    <app-main-input
+      formControlName="destination"
+      label="Destination"
+      placeholder="Destination"
+      type="text"
+      [showRequiredStar]="true"
+      class="flex-1"
+    />
+  </div>
+  <div class="mb-6">
+    <app-main-input
+      formControlName="validityDays"
+      label="Validity Days"
+      placeholder="Validity Days"
+      type="text"
+      [showRequiredStar]="true"
+      patternErrorMessage="must by a number"
+    />
+  </div>
+</div>

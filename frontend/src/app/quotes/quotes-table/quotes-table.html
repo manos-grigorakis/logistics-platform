@@ -1,0 +1,53 @@
+<table class="text-body w-full text-left text-sm rtl:text-right">
+  @if (isLoading) {
+    <app-loading-spinner />
+  }
+  <thead class="text-body bg-secondary-700 text-sm text-white">
+    <tr>
+      <th scope="col" class="px-2 py-3 font-medium">Number</th>
+      <th scope="col" class="px-2 py-3 font-medium">Company Name</th>
+      <th scope="col" class="truncate px-2 py-3 font-medium">Gross Price</th>
+      <th scope="col" class="px-2 py-3 font-medium">Status</th>
+      <th scope="col" class="px-2 py-3 font-medium">Issue Date</th>
+      <th scope="col" class="px-2 py-3 font-medium">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (quote of quotes; track quote.id) {
+      <tr (click)="onViewQuoteClick(quote.id)" class="hover:bg-secondary-200 hover:cursor-pointer">
+        <td class="px-2 py-4">{{ quote.number }}</td>
+        <td class="px-2 py-4">{{ quote.companyName }}</td>
+        <td class="px-2 py-4">{{ quote.grossPrice | currency: 'EUR' }}</td>
+        <td class="px-2 py-4">
+          <span class="rounded border px-2" [ngClass]="quoteStatusBadgeColor(quote.status)">
+            {{ quote.status | titlecase }}
+          </span>
+        </td>
+        <td class="px-2 py-4">{{ quote.issueDate | date }}</td>
+        @if (quote.status === 'DRAFT') {
+          <td class="px-2 py-4">
+            <a
+              [routerLink]="['edit-quote', quote.id]"
+              class="text-fg-brand cursor-pointer font-medium hover:underline"
+              >Edit</a
+            >
+          </td>
+        } @else {
+          <td class="px-2 py-4">-</td>
+        }
+      </tr>
+    } @empty {
+      <tr>
+        <td class="w-full py-4 text-center text-lg" colspan="7">
+          @if (errorMessage) {
+            <span class="bg-danger-light text-danger-dark border-danger rounded border px-2">{{
+              errorMessage
+            }}</span>
+          } @else {
+            There are no quotes
+          }
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>

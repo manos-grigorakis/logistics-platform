@@ -47,13 +47,13 @@ public class Quote {
     @Column(name = "tax_rate_percentage", nullable = false)
     private Integer taxRatePercentage;
 
-    @Column(name = "net_price", precision = 19, scale = 4, nullable = false)
+    @Column(name = "net_price", precision = 19, scale = 2, nullable = false)
     private BigDecimal netPrice;
 
-    @Column(name = "vat_amount", precision = 19, scale = 4, nullable = false)
+    @Column(name = "vat_amount", precision = 19, scale = 2, nullable = false)
     private BigDecimal vatAmount;
 
-    @Column(name = "grossPrice", precision = 19, scale = 4, nullable = false)
+    @Column(name = "grossPrice", precision = 19, scale = 2, nullable = false)
     private BigDecimal grossPrice;
 
     @Column(name = "notes", columnDefinition = "TEXT")

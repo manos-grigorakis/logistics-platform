@@ -32,6 +32,8 @@ import {
   lucideMail,
   lucidePhone,
   lucideCalendar,
+  lucideFileText,
+  lucideDownload,
 } from '@ng-icons/lucide';
 
 export const appConfig: ApplicationConfig = {
@@ -65,6 +67,8 @@ export const appConfig: ApplicationConfig = {
       lucideMail,
       lucidePhone,
       lucideCalendar,
+      lucideFileText,
+      lucideDownload,
     }),
 
     provideNgIconsConfig({

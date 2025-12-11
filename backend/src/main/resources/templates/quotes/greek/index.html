@@ -216,12 +216,28 @@
           color: #333333;
         }
 
-        .totals-value-bold {
-          font-weight: bold;
+        .notes {
+            margin-top: 25px;
         }
 
-        .notes {
-            margin-top: 20px;
+        .notes-content {
+            margin-top: 8px;
+            margin-left: 30px;
+            font-size: 13px;
+            color: #333333;
+        }
+
+        .notes-content p {
+            margin: 0 0 4px 0;
+        }
+
+        .notes-content ul {
+            margin: 0;
+            padding-left: 18px;
+        }
+
+        .notes-content li {
+            margin-bottom: 3px;
         }
 
         /* Terms */
@@ -236,7 +252,7 @@
         }
 
         .terms-title {
-          font-size: 15px;
+          font-size: 13px;
           font-weight: bold;
           color: #1e3c72;
           margin-bottom: 10px;
@@ -249,18 +265,16 @@
         }
 
         .terms li {
-          margin-bottom: 8px;
-          color: #555555;
-          line-height: 1.5;
+            margin-bottom: 8px;
+            color: #555555;
+            line-height: 1.5;
+            font-size: 12px;
         }
 
         .terms-note {
-          color: #666666;
-          font-style: italic;
-        }
-
-        .terms-note.inner {
-            margin-left: 40px;
+            color: #666666;
+            font-style: italic;
+            font-size: 12px;
         }
 
         /* FOOTER */
@@ -388,7 +402,7 @@
 
         <div class="notes">
             <h2 class="section-title">Σημειώσεις</h2>
-            <div>${notes}</div>
+            <div class="notes-content">${notes}</div>
         </div>
 
         <!-- Terms -->

@@ -178,16 +178,10 @@ public class PdfService {
      */
     private static String buildSpecialTerms(Quote quote) {
         String terms = quote.getSpecialTerms();
-
         // Case: no special terms provided
-        if (terms == null || terms.trim().isEmpty()) {
-            return "Συμπληρώνονται ανάλογα με το έργο.";
+        if (terms == null || terms.trim().isEmpty() || terms.equals("<p></p>")) {
+            return "<ul><li>Συμπληρώνονται ανάλογα με το έργο.</li></ul>";
         }
-
-        terms = escapeHtml(terms);
-
-        // Convert line breaks to <br/> for PDF
-        terms = terms.replace("\n", "<br/>");
 
         return terms;
     }
@@ -203,13 +197,9 @@ public class PdfService {
         String notes = quote.getNotes();
 
         // Case: no notes provided
-        if (notes == null || notes.trim().isEmpty()) {
+        if (notes == null || notes.trim().isEmpty() || notes.equals("<p></p>")) {
             return "Δεν υπάρχουν επιπλέον σημειώσεις.";
         }
-
-        // Escape and keep line breaks
-        notes = escapeHtml(notes);
-        notes = notes.replace("\n", "<br/>");
 
         return notes;
     }

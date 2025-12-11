@@ -18,6 +18,9 @@ import { CustomersPage } from './customers/customers-page/customers-page';
 import { CreateCustomer } from './customers/create-customer/create-customer';
 import { EditCustomer } from './customers/edit-customer/edit-customer';
 import { ViewCustomer } from './customers/view-customer/view-customer';
+import { QuotesPage } from './quotes/quotes-page/quotes-page';
+import { CreateQuote } from './quotes/create-quote/create-quote';
+import { EditQuote } from './quotes/edit-quote/edit-quote';
 
 export const routes: Routes = [
   {
@@ -53,6 +56,14 @@ export const routes: Routes = [
           { path: 'create-customer', component: CreateCustomer, title: 'Create Customer' },
           { path: 'edit-customer/:id', component: EditCustomer, title: 'Edit Customer' },
           { path: 'view-customer/:id', component: ViewCustomer, title: 'View Customer' },
+        ],
+      },
+      {
+        path: 'quotes',
+        children: [
+          { path: '', component: QuotesPage, title: 'Quotes' },
+          { path: 'create-quote', component: CreateQuote, title: 'Create Quote' },
+          { path: 'edit-quote/:id', component: EditQuote, title: 'Quotes' },
         ],
       },
     ],
