@@ -74,15 +74,9 @@ public class UserServiceImpl implements UserService {
                     return new ResourceNotFoundException("Role not found with id: " + dto.getRoleId());
                 });
 
-        User user = User.builder()
-                .firstName(dto.getFirstName())
-                .lastName(dto.getLastName())
-                .email(dto.getEmail())
-                .phone(dto.getPhone())
-                .status(UserStatus.INVITED)
-                .build();
+        User user = UserMapper.toEntity(dto, role);
+        user.setStatus(UserStatus.INVITED);
 
-        user.setRole(role);
         userRepository.save(user);
         log.info("User created: {}", user.getEmail());
 
