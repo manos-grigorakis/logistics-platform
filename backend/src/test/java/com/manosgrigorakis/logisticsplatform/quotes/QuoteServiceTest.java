@@ -54,6 +54,20 @@ public class QuoteServiceTest {
     private QuoteServiceImpl quoteService;
 
     @Test
+    void getQuoteById_shouldReturnQuote() {
+        // Arrange
+        QuoteRequestDTO dto = this.createQuote();
+        QuoteCreatedResponseDTO responseDTO = quoteService.createQuote(dto);
+
+        // Act
+        QuoteResponseDTO response = quoteService.getQuoteById(responseDTO.getId());
+
+        // Assert
+        assertEquals(responseDTO.getId(), response.getId());
+        assertEquals(0, response.getGrossPrice().compareTo(responseDTO.getGrossPrice()));
+    }
+
+    @Test
     void createQuote_shouldCreateQuote() {
         // Arrange
         LocalDate today = LocalDate.now();
