@@ -7,7 +7,6 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
 import {
   AbstractControl,
   FormArray,
@@ -16,15 +15,20 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
 import { PrimaryButton } from '../../shared/ui/primary-button/primary-button';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MetadataService } from '../../metadata/metadata.service';
 import { CustomersService } from '../../customers/customers.service';
-import { Customer } from '../../customers/models/customer';
 import { debounceTime, Subject } from 'rxjs';
 import { AdditionalInformation } from './additional-information/additional-information';
 import { BasicInformation } from './basic-information/basic-information';
 import { ServicesAndItems } from './services-and-items/services-and-items';
+import { CustomerSummary } from '../models/customer-summary';
+import { toDoc } from 'ngx-editor';
+import { Quote } from '../models/quote';
+import { QuoteItems } from '../models/quote-items';
+import { QuoteFormPayload } from '../models/quote-form-payload';
 
 @Component({
   selector: 'app-quotes-form',
@@ -50,6 +54,7 @@ export class QuotesForm implements OnInit, AfterViewInit {
   private metadataService: MetadataService = inject(MetadataService);
   private customersService: CustomersService = inject(CustomersService);
 
+  public quote?: Quote;
   public quoteItemUnits: string[] = [];
   public itemsErrorMessage?: string = undefined;
   public customerErrorMessage?: string = undefined;
@@ -57,7 +62,7 @@ export class QuotesForm implements OnInit, AfterViewInit {
   // Customers
   public customerSearch$ = new Subject<string>();
   public customersLoading: boolean = false;
-  public customersList: Customer[] = [];
+  public customersList: CustomerSummary[] = [];
 
   // Parsed HTML data
   public notesHtml: string | null = null;
@@ -78,14 +83,16 @@ export class QuotesForm implements OnInit, AfterViewInit {
       Validators.min(1),
       Validators.pattern(/^\d+$/), // Only digits
     ]),
-    notes: new FormControl<string | null>(null),
     items: this.formBuilder.array([]),
-    specialTerms: new FormControl<string | null>(null),
+    notes: new FormControl<string | unknown | null>(null),
+    specialTerms: new FormControl<string | unknown | null>(null),
   });
 
   ngOnInit(): void {
     // Fetch some inial customers
-    this.fetchCustomers('');
+    if (this.formUsage === 'create') {
+      this.fetchCustomers('');
+    }
 
     this.metadataService.fetchQuoteItemUnits();
     this.metadataService.quoteItemUnits$.subscribe((units) => (this.quoteItemUnits = units));
@@ -95,6 +102,44 @@ export class QuotesForm implements OnInit, AfterViewInit {
     // Debouncer on customers search
     this.customerSearch$.pipe(debounceTime(300)).subscribe((value) => {
       this.fetchCustomers(value || '');
+    });
+  }
+
+  @Input() set quoteData(value: Quote | undefined) {
+    if (!value) return;
+
+    this.quote = value;
+
+    // Remove old items
+    const formItems = this.items;
+    formItems.clear();
+
+    // Update items
+    value.quoteItems.forEach((item) => {
+      const group = this.createItem();
+      group.patchValue(item);
+      formItems.push(group);
+    });
+
+    if (value.customer) {
+      const exists = this.customersList.some((c) => c.id === value.customer.id);
+      if (!exists) {
+        const customerSummary: CustomerSummary = {
+          id: value.customer.id,
+          companyName: value.customer.companyName,
+        };
+        this.customersList = [customerSummary, ...this.customersList];
+      }
+    }
+
+    // Update rest fields
+    this.quoteForm.patchValue({
+      customerId: value.customer.id,
+      origin: value.origin,
+      destination: value.destination,
+      validityDays: value.validityDays,
+      notes: value.notes ? toDoc(value.notes) : null,
+      specialTerms: value.specialTerms ? toDoc(value.specialTerms) : null,
     });
   }
 
@@ -129,11 +174,14 @@ export class QuotesForm implements OnInit, AfterViewInit {
     }
 
     const raw = this.quoteForm.getRawValue();
-    const payload = {
-      ...raw,
+    const payload: QuoteFormPayload = {
+      customerId: raw.customerId!,
+      origin: raw.origin,
+      destination: raw.destination,
       validityDays: parseInt(this.validityDays.value),
       notes: this.notesHtml,
       specialTerms: this.specialTermsHtml,
+      items: raw.items as QuoteItems[],
     };
 
     this.onSubmit.emit(payload);
