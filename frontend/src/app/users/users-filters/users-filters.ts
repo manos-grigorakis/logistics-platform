@@ -12,17 +12,19 @@ import { Router } from '@angular/router';
   styleUrl: './users-filters.css',
 })
 export class UsersFilters {
+  @Input() isLoading: boolean = false;
+  @Input() isDeleteDisabled?: boolean;
+  @Input() sortLabel?: string;
   @Output() refresh = new EventEmitter<void>();
   @Output() deleteClick = new EventEmitter<void>();
   @Output() searchChanged = new EventEmitter<string>();
   @Output() sortBy = new EventEmitter<string>();
-  @Input() isLoading: boolean = false;
-  @Input() isDeleteDisabled?: boolean;
-  private router: Router = inject(Router);
 
   public searchTerm: string = '';
 
-  loadUsers(): void {
+  private router: Router = inject(Router);
+
+  public loadUsers(): void {
     this.refresh.emit();
   }
 

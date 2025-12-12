@@ -1,12 +1,13 @@
 <div>
   <div class="border-primary-500 mb-8 rounded border-b-5 shadow-md">
     <app-users-filters
-      (refresh)="loadUsers()"
+      [sortLabel]="sortLabel"
       [isLoading]="isLoading"
       [isDeleteDisabled]="disableDeleteButton"
       (deleteClick)="onUserDeleteClick()"
       (searchChanged)="onSearchChanged($event)"
       (sortBy)="onSort($event)"
+      (refresh)="loadUsers()"
     ></app-users-filters>
   </div>
   <app-modal
