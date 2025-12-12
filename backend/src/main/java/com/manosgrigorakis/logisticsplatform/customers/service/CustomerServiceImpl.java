@@ -97,6 +97,14 @@ public class CustomerServiceImpl implements CustomerService {
                     return new ResourceNotFoundException("Customer not found with id: " + id);
                 });
 
+        Optional<Customer> existingCustomerCompanyName = customerRepository.findByCompanyName(dto.getCompanyName());
+        Optional<Customer> existing = customerRepository.findByCompanyName(dto.getCompanyName());
+
+        if (existingCustomerCompanyName.isPresent() && !existing.get().getId().equals(customer.getId())) {
+            log.warn("Update failed. Attempted to update customer with existing company name: {}", dto.getCompanyName());
+            throw  new DuplicateEntryException("companyName", dto.getCompanyName());
+        }
+
         customer.setTin(customer.getTin());
         customer.setCompanyName(dto.getCompanyName());
         customer.setFirstName(dto.getFirstName());
@@ -105,14 +113,6 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setCustomerType(dto.getCustomerType());
         customer.setLocation(dto.getLocation());
         customer.setPhone(dto.getPhone());
-
-        Optional<Customer> existingCustomerCompanyName = customerRepository.findByCompanyName(dto.getCompanyName());
-        Optional<Customer> existing = customerRepository.findByCompanyName(dto.getCompanyName());
-
-        if (existingCustomerCompanyName.isPresent() && !existing.get().getId().equals(customer.getId())) {
-            log.warn("Update failed. Attempted to update customer with existing company name: {}", dto.getCompanyName());
-            throw  new DuplicateEntryException("companyName", dto.getCompanyName());
-        }
 
         Customer updatedCustomer = customerRepository.save(customer);
         log.info("Customer updated: {}", dto.getCompanyName());
