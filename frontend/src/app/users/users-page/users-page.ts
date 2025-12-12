@@ -17,6 +17,7 @@ export class UsersPage implements OnInit {
   public isLoading: boolean = false;
   public users: UserResponse[] = [];
   public displayedUsers: UserResponse[] = [];
+  public errorMessage?: string;
   public selectedUserIds = new Set<number>();
   public disableDeleteButton: boolean = true;
   public showModal: boolean = false;
@@ -44,6 +45,12 @@ export class UsersPage implements OnInit {
       },
       error: (err) => {
         this.isLoading = false;
+
+        if (err.status === 500) {
+          this.errorMessage = 'Server error. Please try again';
+        } else {
+          this.errorMessage = 'An error occured. Please try again';
+        }
       },
     });
   }

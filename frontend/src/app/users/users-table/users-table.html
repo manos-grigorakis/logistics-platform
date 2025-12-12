@@ -62,7 +62,15 @@
       </tr>
     } @empty {
       <tr>
-        <td class="w-full py-4 text-center text-lg" colspan="7">There are no users</td>
+        <td class="w-full py-4 text-center text-lg" colspan="7">
+          @if (errorMessage) {
+            <span class="bg-danger-light text-danger-dark border-danger rounded border px-2">{{
+              errorMessage
+            }}</span>
+          } @else {
+            There are no users
+          }
+        </td>
       </tr>
     }
   </tbody>
