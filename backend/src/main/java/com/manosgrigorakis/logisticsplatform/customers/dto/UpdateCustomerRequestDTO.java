@@ -24,7 +24,6 @@ public class UpdateCustomerRequestDTO {
     @Size(max = 80)
     private String lastName;
 
-    @NotBlank(message = "Email is required")
     @Size(max = 320)
     @Email
     private String email;
