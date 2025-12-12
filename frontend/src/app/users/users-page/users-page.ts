@@ -14,17 +14,19 @@ import { Modal } from '../../shared/ui/modal/modal';
   styleUrl: './users-page.css',
 })
 export class UsersPage implements OnInit {
-  private usersService: UsersService = inject(UsersService);
-
   public isLoading: boolean = false;
   public users: UserResponse[] = [];
   public displayedUsers: UserResponse[] = [];
+  public errorMessage?: string;
   public selectedUserIds = new Set<number>();
   public disableDeleteButton: boolean = true;
   public showModal: boolean = false;
   public modalHeader: string = '';
   public modalMessage: string = '';
   public searchTerm: string = '';
+  public sortLabel: string = 'Sort by';
+
+  private usersService: UsersService = inject(UsersService);
 
   ngOnInit(): void {
     this.loadUsers();
@@ -32,6 +34,8 @@ export class UsersPage implements OnInit {
 
   public loadUsers(): void {
     this.isLoading = true;
+    this.disableDeleteButton = true;
+
     this.usersService.fetchUsers().subscribe({
       next: (res) => {
         this.isLoading = false;
@@ -41,6 +45,12 @@ export class UsersPage implements OnInit {
       },
       error: (err) => {
         this.isLoading = false;
+
+        if (err.status === 500) {
+          this.errorMessage = 'Server error. Please try again';
+        } else {
+          this.errorMessage = 'An error occured. Please try again';
+        }
       },
     });
   }
@@ -116,22 +126,30 @@ export class UsersPage implements OnInit {
 
   public onSort(sortOption: string): void {
     switch (sortOption) {
+      case 'all':
+        this.sortLabel = 'Sort by';
+        this.displayedUsers = this.users;
+        break;
       case 'asc-by-first-name':
+        this.sortLabel = 'First Name (A-Z)';
         this.displayedUsers = [...this.displayedUsers].sort((a, b) =>
           a.firstName.toLocaleLowerCase().localeCompare(b.firstName.toLocaleLowerCase()),
         );
         break;
       case 'desc-by-first-name':
+        this.sortLabel = 'First Name (Z-A)';
         this.displayedUsers = [...this.displayedUsers].sort((a, b) =>
           b.firstName.toLocaleLowerCase().localeCompare(a.firstName.toLocaleLowerCase()),
         );
         break;
       case 'asc-by-last-name':
+        this.sortLabel = 'Last Name (A-Z)';
         this.displayedUsers = [...this.displayedUsers].sort((a, b) =>
           a.lastName.toLocaleLowerCase().localeCompare(b.lastName.toLocaleLowerCase()),
         );
         break;
       case 'desc-by-last-name':
+        this.sortLabel = 'Last Name (Z-A)';
         this.displayedUsers = [...this.displayedUsers].sort((a, b) =>
           b.lastName.toLocaleLowerCase().localeCompare(a.lastName.toLocaleLowerCase()),
         );

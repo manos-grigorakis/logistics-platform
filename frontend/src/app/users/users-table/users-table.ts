@@ -14,6 +14,7 @@ export class UsersTable {
   @Input() isLoading?: boolean;
   @Input() users: UserResponse[] = [];
   @Input() selectedUserIds = new Set<number>();
+  @Input() errorMessage?: string;
   @Output() toggleUserSelection = new EventEmitter<number>();
 
   public onRowClick(userId: number): void {

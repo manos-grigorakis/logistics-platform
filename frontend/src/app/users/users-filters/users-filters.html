@@ -28,7 +28,7 @@
     </div>
 
     <!-- Filters -->
-    <app-dropdown-button label="Filter by">
+    <app-dropdown-button [label]="sortLabel">
       <ng-icon name="lucideFilter" size="16" dropdown-left-icon></ng-icon>
       <ng-icon name="lucideChevronDown" size="16" dropdown-right-icon></ng-icon>
 
@@ -36,29 +36,36 @@
       <li dropdown-menu-item>
         <a
           class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
+          (click)="onSortByField('all')"
+          >All</a
+        >
+      </li>
+      <li dropdown-menu-item>
+        <a
+          class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
           (click)="onSortByField('asc-by-first-name')"
-          >Ascending First Name</a
+          >First Name (A-Z)</a
         >
       </li>
       <li dropdown-menu-item>
         <a
           class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
           (click)="onSortByField('desc-by-first-name')"
-          >Descending First Name</a
+          >First Name (Z-A)</a
         >
       </li>
       <li dropdown-menu-item>
         <a
           class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
           (click)="onSortByField('asc-by-last-name')"
-          >Ascending Last Name</a
+          >Last Name (A-Z)</a
         >
       </li>
       <li dropdown-menu-item>
         <a
           class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
           (click)="onSortByField('desc-by-last-name')"
-          >Descending Last Name</a
+          >Last Name (Z-A)</a
         >
       </li>
     </app-dropdown-button>
