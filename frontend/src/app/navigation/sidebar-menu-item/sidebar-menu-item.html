@@ -3,6 +3,7 @@
     [routerLink]="route"
     routerLinkActive="bg-secondary-800 text-white"
     class="text-body text-secondary-400 hover:bg-secondary-800 flex items-center rounded px-2 py-1.5 hover:cursor-pointer hover:text-white"
+    (click)="onClick()"
   >
     <ng-icon [name]="icon"></ng-icon>
     <span class="ms-3 flex-1 whitespace-nowrap">{{ label }}</span>

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { SidebarMenuItem } from '../sidebar-menu-item/sidebar-menu-item';
 
 @Component({
@@ -10,4 +10,9 @@ import { SidebarMenuItem } from '../sidebar-menu-item/sidebar-menu-item';
 export class Sidebar {
   @Input() isOpen?: boolean;
   @Input() isAdmin?: boolean;
+  @Output() onCloseOnMobile = new EventEmitter<void>();
+
+  public closeOnMobile(): void {
+    this.onCloseOnMobile.emit();
+  }
 }

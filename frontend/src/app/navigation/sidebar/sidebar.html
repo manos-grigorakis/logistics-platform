@@ -10,28 +10,33 @@
         route="/dashboard"
         icon="lucidePieChart"
         label="Dashboard"
+        (onItemClick)="closeOnMobile()"
       ></app-sidebar-menu-item>
       @if (isAdmin) {
         <app-sidebar-menu-item
           route="/users"
           icon="lucideUsers"
           label="Users"
+          (onItemClick)="closeOnMobile()"
         ></app-sidebar-menu-item>
         <app-sidebar-menu-item
           route="/roles"
           icon="lucideUserCog"
           label="Roles"
+          (onItemClick)="closeOnMobile()"
         ></app-sidebar-menu-item>
       }
       <app-sidebar-menu-item
         route="/customers"
         icon="lucideBuilding"
         label="Customers"
+        (onItemClick)="closeOnMobile()"
       ></app-sidebar-menu-item>
       <app-sidebar-menu-item
         route="/quotes"
         icon="lucideFileText"
         label="Quotes"
+        (onItemClick)="closeOnMobile()"
       ></app-sidebar-menu-item>
     </ul>
   </div>

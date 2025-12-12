@@ -11,11 +11,16 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './main-layout.css',
 })
 export class MainLayout {
-  authService: AuthService = inject(AuthService);
-
-  isSidebarOpen: boolean = true;
+  public isSidebarOpen: boolean = true;
+  public authService: AuthService = inject(AuthService);
 
   public toggleSidebar(): void {
     this.isSidebarOpen = !this.isSidebarOpen;
+  }
+
+  public closeOnMobile(): void {
+    if (window.innerWidth < 640) {
+      this.isSidebarOpen = false;
+    }
   }
 }
