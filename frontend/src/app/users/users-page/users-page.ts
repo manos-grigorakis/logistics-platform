@@ -32,6 +32,8 @@ export class UsersPage implements OnInit {
 
   public loadUsers(): void {
     this.isLoading = true;
+    this.disableDeleteButton = true;
+
     this.usersService.fetchUsers().subscribe({
       next: (res) => {
         this.isLoading = false;
