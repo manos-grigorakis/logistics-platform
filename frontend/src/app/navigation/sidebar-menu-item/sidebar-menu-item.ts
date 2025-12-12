@@ -1,10 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { NgIcon } from '@ng-icons/core';
 import { RouterLink } from '@angular/router';
+import { RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-sidebar-menu-item',
-  imports: [RouterLink, NgIcon],
+  imports: [RouterLink, NgIcon, RouterLinkActive],
   templateUrl: './sidebar-menu-item.html',
   styleUrl: './sidebar-menu-item.css',
 })
