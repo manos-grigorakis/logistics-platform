@@ -3,13 +3,17 @@ spring:
     name: logistics-platform
 
   datasource:
-    url: jdbc:mysql://${DB_HOST}:3306/${DB_NAME}
+    url: jdbc:mariadb://${DB_HOST}:3306/${DB_NAME}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+    driver-class-name: org.mariadb.jdbc.Driver
 
   jpa:
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MariaDBDialect
 
   security:
     user:

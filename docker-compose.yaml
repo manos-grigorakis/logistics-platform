@@ -4,11 +4,38 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
     ports:
       - "8080:8080"
     env_file:
       - ./backend/.env
+    networks:
+      - app-network
+
+  db:
+    container_name: mariadb
+    image: mariadb:11.4
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "mariadb-admin ping -h localhost -u root -p$MARIADB_ROOT_PASSWORD --silent",
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    networks:
+      - app-network
 
   minio:
     container_name: minio
@@ -23,6 +50,13 @@ services:
     command: server /data --console-address ":9001"
     volumes:
       - minio_data:/data
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
 
 volumes:
+  mariadb_data:
   minio_data:
