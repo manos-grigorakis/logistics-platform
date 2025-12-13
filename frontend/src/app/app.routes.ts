@@ -21,6 +21,7 @@ import { ViewCustomer } from './customers/view-customer/view-customer';
 import { QuotesPage } from './quotes/quotes-page/quotes-page';
 import { CreateQuote } from './quotes/create-quote/create-quote';
 import { EditQuote } from './quotes/edit-quote/edit-quote';
+import { ForbiddenPage } from './forbidden-page/forbidden-page';
 
 export const routes: Routes = [
   {
@@ -88,6 +89,7 @@ export const routes: Routes = [
     component: SetupPasswordForm,
     title: 'Setup Password',
   },
+  { path: 'forbidden', component: ForbiddenPage, title: '403 Forbidden' },
   {
     path: '**',
     component: NotFoundPage,
