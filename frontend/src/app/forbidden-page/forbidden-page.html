@@ -1,0 +1,14 @@
+<section class="flex min-h-screen items-center justify-center px-20 text-center">
+  <div>
+    <h2 class="text-5xl font-bold">403</h2>
+    <h3 class="mt-1 mb-2 text-2xl font-medium">Forbidden Page</h3>
+    <p>You don't have permission to this page</p>
+    <div class="mx-auto mt-6 max-w-xs">
+      @if (!authService.isAuthenticated()) {
+        <app-primary-button value="Back to Login" routerLink="/login"></app-primary-button>
+      } @else {
+        <app-primary-button value="Back to Dashboard" routerLink="/dashboard"></app-primary-button>
+      }
+    </div>
+  </div>
+</section>
