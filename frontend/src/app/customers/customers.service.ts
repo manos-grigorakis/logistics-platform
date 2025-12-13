@@ -2,7 +2,6 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { AuthService } from '../auth/services/auth.service';
 import { FetchCustomersResponse } from './models/fetch-customers-response';
 import { FetchCustomersParameters } from './models/fetch-customers-parameters';
 import { Customer } from './models/customer';
@@ -13,7 +12,6 @@ import { CustomerRequest } from './models/customer-request';
 })
 export class CustomersService {
   private http = inject(HttpClient);
-  private jwtToken?: string | null;
 
   public fetchCustomers(param: FetchCustomersParameters = {}): Observable<FetchCustomersResponse> {
     let params = new HttpParams();
