@@ -1,7 +1,19 @@
 services:
+  frontend:
+    container_name: frontend
+    image: manosgrigorakis/logistics-platform-frontend:latest
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_started
+    ports:
+      - "8000:80"
+    networks:
+      - app-network
+
   backend:
     container_name: backend
-    image: manosgrigorakis/logistics-backend:latest
+    image: manosgrigorakis/logistics-platform-backend:latest
     restart: unless-stopped
     env_file:
       - ./backend/.env.prod
@@ -11,7 +23,7 @@ services:
       minio:
         condition: service_started
     ports:
-      - "8080:8080"
+      - "8080"
     networks:
       - app-network
 
