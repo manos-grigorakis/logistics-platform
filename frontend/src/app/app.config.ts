@@ -6,7 +6,7 @@ import {
 import { provideRouter } from '@angular/router';
 import { provideIcons, provideNgIconsConfig } from '@ng-icons/core';
 import { routes } from './app.routes';
-import { provideHttpClient } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { JWT_OPTIONS, JwtHelperService } from '@auth0/angular-jwt';
 
 // Lucide Icons
@@ -35,13 +35,15 @@ import {
   lucideFileText,
   lucideDownload,
 } from '@ng-icons/lucide';
+import { JwtHeadersInterceptor } from './auth/interceptors/jwt-headers.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideHttpClient(),
+    provideHttpClient(withInterceptorsFromDi()),
+    { provide: HTTP_INTERCEPTORS, useClass: JwtHeadersInterceptor, multi: true },
     { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
     JwtHelperService,
 
