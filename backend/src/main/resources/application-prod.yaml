@@ -1,0 +1,63 @@
+spring:
+  datasource:
+    url: jdbc:mariadb://${DB_HOST}:3306/${DB_NAME}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+  security:
+    user:
+      name: ${SPRING_SECURITY_USERNAME}
+      password: ${SPRING_SECURITY_PASSWORD}
+
+  jwt:
+    secret: ${JWT_SECRET}
+
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          connectiontimeout: 10000
+          timeout: 10000
+          writetimeout: 10000
+
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
+
+swagger:
+  enabled: false
+
+app:
+  frontend:
+    url: ${FRONTEND_URL}
+  setup_password:
+    expires: ${SETUP_PASSWORD_TOKEN_EXPIRATION}
+  reset_password:
+    expires: ${RESET_PASSWORD_TOKEN_EXPIRATION}
+
+  mail:
+    no_reply: ${NO_REPLY_MAIL}
+    support: ${SUPPORT_MAIL}
+    displayName: ${DISPLAY_NAME}
+
+  tax:
+    vat: ${TAX_VAT}
+
+  aws:
+    region: ${AWS_REGION}
+
+  minio:
+    accessKey: ${MINIO_ACCESS_KEY}
+    secretKey: ${MINIO_SECRET_KEY}
+    endpoint: ${MINIO_ENDPOINT}
+    bucketName: ${MINIO_BUCKET_NAME}
