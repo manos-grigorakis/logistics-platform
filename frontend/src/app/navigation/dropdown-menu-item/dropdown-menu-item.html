@@ -1,10 +1,10 @@
 <li>
   <a
     [routerLink]="route"
-    class="inline-flex items-center w-full gap-2 p-2 rounded hover:bg-gray-100 hover:cursor-pointer"
+    class="inline-flex w-full items-center gap-2 rounded px-3 py-2 text-sm font-medium text-gray-800 hover:cursor-pointer hover:bg-gray-100 hover:text-black"
     role="menuitem"
   >
-    <ng-icon [name]="icon"></ng-icon>
+    <ng-icon [name]="icon" [size]="iconSize"></ng-icon>
 
     {{ label }}</a
   >

@@ -1,12 +1,14 @@
-import { Component, EventEmitter, HostListener, inject, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../auth/services/auth.service';
 import { DropdownMenuItem } from '../dropdown-menu-item/dropdown-menu-item';
 import { User } from '../../auth/models/User';
+import { DropdownButton } from '../../shared/ui/dropdown-button/dropdown-button';
+import { NgIcon } from '@ng-icons/core';
 
 @Component({
   selector: 'app-navbar',
-  imports: [RouterLink, DropdownMenuItem],
+  imports: [RouterLink, DropdownMenuItem, DropdownButton, NgIcon],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
@@ -16,7 +18,6 @@ export class Navbar implements OnInit {
   @Output() toggleSidebar = new EventEmitter<void>();
 
   user?: User;
-  isUserDropdownOpen: boolean = false;
   displayName?: string;
 
   ngOnInit(): void {
@@ -34,17 +35,6 @@ export class Navbar implements OnInit {
 
   public onBurgerClick() {
     this.toggleSidebar.emit();
-  }
-
-  // Hide dropdown if user clicks somewhere
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent): void {
-    this.isUserDropdownOpen = false;
-  }
-
-  public toggleUserDropdown(event: MouseEvent): void {
-    event.stopPropagation();
-    this.isUserDropdownOpen = !this.isUserDropdownOpen;
   }
 
   private formatUserName(): string | undefined {
