@@ -1,19 +1,16 @@
 spring:
-  application:
-    name: logistics-platform
+  config:
+    activate:
+      on-profile: prod
 
   datasource:
     url: jdbc:mariadb://${DB_HOST}:3306/${DB_NAME}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
-    driver-class-name: org.mariadb.jdbc.Driver
 
   jpa:
     hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MariaDBDialect
+      ddl-auto: validate
 
   security:
     user:
@@ -31,12 +28,9 @@ spring:
     properties:
       mail:
         smtp:
-          starttls:
-            enable: true
-            required: true
-          connectiontimeout: 5000
-          timeout: 3000
-          writetimeout: 5000
+          connectiontimeout: 10000
+          timeout: 10000
+          writetimeout: 10000
 
 springdoc:
   api-docs:
