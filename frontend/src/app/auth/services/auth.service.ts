@@ -1,4 +1,4 @@
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { LoginResponse } from '../models/login-response';
 import { environment } from '../../../environments/environment';
@@ -12,6 +12,7 @@ import { ValidateResetPasswordTokenResponse } from '../models/validate-reset-pas
 import { ResetPasswordRequest } from '../models/reset-password-request';
 import { ResetPasswordResponse } from '../models/reset-password-response';
 import { SetupPasswordRequest } from '../models/setup-password-request';
+import { SKIP_AUTH } from '../interceptors/auth-http.context';
 
 @Injectable({
   providedIn: 'root',
@@ -28,25 +29,29 @@ export class AuthService {
   }
 
   public authenticateUser(formData: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(environment.apiUrl + '/auth/login', formData).pipe(
-      tap((res) => {
-        if (res.token) {
-          sessionStorage.setItem('jwtToken', res.token);
-          sessionStorage.setItem('user', JSON.stringify(res.user));
-          this.userData = res.user;
+    return this.http
+      .post<LoginResponse>(environment.apiUrl + '/auth/login', formData, {
+        context: new HttpContext().set(SKIP_AUTH, true),
+      })
+      .pipe(
+        tap((res) => {
+          if (res.token) {
+            sessionStorage.setItem('jwtToken', res.token);
+            sessionStorage.setItem('user', JSON.stringify(res.user));
+            this.userData = res.user;
 
-          // Set counter to logout user when token expires
-          this.expirationCounter(res.token);
-        }
-      }),
-    );
+            // Set counter to logout user when token expires
+            this.expirationCounter(res.token);
+          }
+        }),
+      );
   }
 
   public forgotPassword(email: string): Observable<HttpResponse<any>> {
     return this.http.post(
       environment.apiUrl + '/auth/request-reset',
       { email },
-      { observe: 'response' },
+      { observe: 'response', context: new HttpContext().set(SKIP_AUTH, true) },
     );
   }
 
@@ -54,6 +59,9 @@ export class AuthService {
     return this.http
       .get<ValidateResetPasswordTokenResponse>(
         `${environment.apiUrl}/auth/reset-password?token=${token}`,
+        {
+          context: new HttpContext().set(SKIP_AUTH, true),
+        },
       )
       .pipe(
         map((res) => {
@@ -66,11 +74,16 @@ export class AuthService {
     return this.http.post<ResetPasswordResponse>(
       `${environment.apiUrl}/auth/reset-password/confirm`,
       data,
+      {
+        context: new HttpContext().set(SKIP_AUTH, true),
+      },
     );
   }
 
   public setupPassword(data: SetupPasswordRequest): Observable<void> {
-    return this.http.post<void>(`${environment.apiUrl}/auth/setup-password`, data);
+    return this.http.post<void>(`${environment.apiUrl}/auth/setup-password`, data, {
+      context: new HttpContext().set(SKIP_AUTH, true),
+    });
   }
 
   public logout(): void {
