@@ -2,6 +2,7 @@
 <app-sidebar
   [isOpen]="isSidebarOpen"
   [isAdmin]="authService.isAdmin()"
+  [disableSidebarTransition]="disableSidebarTransition"
   (onCloseOnMobile)="closeOnMobile()"
 ></app-sidebar>
 

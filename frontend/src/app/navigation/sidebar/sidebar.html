@@ -1,7 +1,10 @@
 <aside
-  class="bg-secondary-900 fixed left-0 z-40 h-full w-full text-white transition-transform duration-200 sm:w-64"
+  class="bg-secondary-900 fixed left-0 z-40 h-full w-full text-white sm:w-64"
   [class.-translate-x-full]="!isOpen"
   [class.translate-x-0]="isOpen"
+  [class.transition-none]="disableSidebarTransition"
+  [class.transition-transform]="!disableSidebarTransition"
+  [class.duration-200]="!disableSidebarTransition"
   aria-label="Sidebar"
 >
   <div class="h-full overflow-y-auto px-3 py-4">

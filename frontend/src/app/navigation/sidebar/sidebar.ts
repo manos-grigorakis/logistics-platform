@@ -10,6 +10,7 @@ import { SidebarMenuItem } from '../sidebar-menu-item/sidebar-menu-item';
 export class Sidebar {
   @Input() isOpen?: boolean;
   @Input() isAdmin?: boolean;
+  @Input() disableSidebarTransition: boolean = false;
   @Output() onCloseOnMobile = new EventEmitter<void>();
 
   public closeOnMobile(): void {
