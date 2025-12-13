@@ -8,6 +8,8 @@ import { Component, ElementRef, HostListener, inject, Input } from '@angular/cor
 })
 export class DropdownButton {
   @Input() label?: string;
+  @Input() applyBorderButton: boolean = true;
+
   isDropdownOpen: boolean = false;
   private eRef: ElementRef = inject(ElementRef);
 

@@ -12,5 +12,6 @@ import { NgIcon } from '@ng-icons/core';
 export class DropdownMenuItem {
   @Input() route: string | null = null;
   @Input() icon?: string;
+  @Input() iconSize: string = '22';
   @Input() label?: string;
 }

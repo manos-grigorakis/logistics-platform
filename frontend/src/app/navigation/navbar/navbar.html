@@ -1,4 +1,4 @@
-<nav class="fixed top-0 z-50 w-full bg-secondary-900 border-b border-secondary-50">
+<nav class="bg-secondary-900 border-secondary-50 fixed top-0 z-50 w-full border-b">
   <div class="px-3 py-3 lg:px-5 lg:pl-3">
     <div class="flex items-center justify-between">
       <div class="flex items-center justify-start rtl:justify-end">
@@ -7,11 +7,11 @@
           (click)="onBurgerClick()"
           aria-controls="top-bar-sidebar"
           type="button"
-          class="box-border p-2 text-sm font-medium leading-5 bg-transparent border border-transparent hover:cursor-pointer focus:outline-none"
+          class="box-border border border-transparent bg-transparent p-2 text-sm leading-5 font-medium hover:cursor-pointer focus:outline-none"
         >
           <span class="sr-only">Open sidebar</span>
           <svg
-            class="w-6 h-6"
+            class="h-6 w-6"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -27,65 +27,45 @@
             />
           </svg>
         </button>
-        <a routerLink="/dashboard" class="flex ms-2 md:me-24">
+        <a routerLink="/dashboard" class="ms-2 flex md:me-24">
           <!-- <img src="" class="h-6 me-3" alt="Logo" /> -->
-          <span class="self-center text-lg font-semibold text-white whitespace-nowrap"
+          <span class="self-center text-lg font-semibold whitespace-nowrap text-white"
             >Logistics Platform</span
           >
         </a>
       </div>
-      <div class="flex items-center">
-        <div class="relative flex flex-col items-center ms-3">
-          <div>
-            <button
-              type="button"
-              class="flex text-sm rounded-full hover:cursor-pointer"
-              aria-expanded="false"
-              (click)="toggleUserDropdown($event)"
-            >
-              <span class="sr-only">Open user menu</span>
-              <img
-                class="w-8 h-8 rounded-full"
-                src="https://hwchamber.co.uk/wp-content/uploads/2022/04/avatar-placeholder.gif"
-                alt="user avatar"
-              />
-            </button>
-          </div>
 
-          <!-- Dropdown -->
-          <div
-            class="absolute right-0 z-50 mt-10 bg-white rounded-md shadow-lg w-52 transition-opacity duration-200"
-            [class.opacity-0]="!isUserDropdownOpen"
-            [class.opacity-100]="isUserDropdownOpen"
-            [class.pointer-events-none]="!isUserDropdownOpen"
-            (click)="$event.stopPropagation()"
-          >
-            <div class="px-4 py-3 border-b border-secondary-500" role="none">
-              <p class="text-sm font-medium" role="none">{{ displayName }}</p>
-              <p class="text-sm truncate text-body" role="none">{{ user?.email }}</p>
-            </div>
-            <ul class="p-2 text-sm font-medium text-body" role="none">
-              <app-dropdown-menu-item
-                route="#"
-                label="Account"
-                icon="lucideUserCircle"
-              ></app-dropdown-menu-item>
+      <!-- Dropdown -->
+      <app-dropdown-button [label]="''" [applyBorderButton]="false">
+        <ng-icon
+          dropdown-left-icon
+          class="border-0 outline-0"
+          name="lucideUserCircle"
+          color="#ffffff"
+          size="30"
+        />
+        <!-- Items -->
+        <app-dropdown-menu-item
+          dropdown-menu-item
+          route="#"
+          label="Account"
+          icon="lucideUserCircle"
+        ></app-dropdown-menu-item>
 
-              <app-dropdown-menu-item
-                route="#"
-                label="Settings"
-                icon="lucideCog"
-              ></app-dropdown-menu-item>
+        <app-dropdown-menu-item
+          dropdown-menu-item
+          route="#"
+          label="Settings"
+          icon="lucideCog"
+        ></app-dropdown-menu-item>
 
-              <app-dropdown-menu-item
-                (click)="logout()"
-                label="Logout"
-                icon="lucideLogOut"
-              ></app-dropdown-menu-item>
-            </ul>
-          </div>
-        </div>
-      </div>
+        <app-dropdown-menu-item
+          dropdown-menu-item
+          (click)="logout()"
+          label="Logout"
+          icon="lucideLogOut"
+        ></app-dropdown-menu-item>
+      </app-dropdown-button>
     </div>
   </div>
 </nav>

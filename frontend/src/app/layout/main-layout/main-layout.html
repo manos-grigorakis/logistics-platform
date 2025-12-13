@@ -1,5 +1,10 @@
 <app-navbar (toggleSidebar)="toggleSidebar()"></app-navbar>
-<app-sidebar [isOpen]="isSidebarOpen" [isAdmin]="authService.isAdmin()"></app-sidebar>
+<app-sidebar
+  [isOpen]="isSidebarOpen"
+  [isAdmin]="authService.isAdmin()"
+  [disableSidebarTransition]="disableSidebarTransition"
+  (onCloseOnMobile)="closeOnMobile()"
+></app-sidebar>
 
 <main>
   <section

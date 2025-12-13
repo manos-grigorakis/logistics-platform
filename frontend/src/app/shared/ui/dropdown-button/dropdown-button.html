@@ -2,25 +2,26 @@
   <button
     type="button"
     id="dropdown-button"
-    class="focus:ring-primary-200 box-border flex shrink-0 items-center justify-center gap-1 rounded-md border border-gray-400 px-4 py-2 text-xs leading-5 font-medium whitespace-nowrap shadow-xs hover:cursor-pointer hover:text-gray-700 focus:ring focus:outline-none md:text-sm"
+    class="focus:ring-primary-200 box-border flex shrink-0 items-center justify-center gap-1 rounded-md px-4 py-2 text-xs leading-5 font-medium whitespace-nowrap shadow-xs hover:cursor-pointer hover:text-gray-700 md:text-sm"
     [class]="isDropdownOpen ? 'text-gray-700' : 'text-gray-400'"
+    [class.border.border-gray-400]="applyBorderButton"
     (click)="toggleDropdown()"
   >
     <ng-content select="[dropdown-left-icon]"></ng-content>
     {{ label }}
     <ng-content select="[dropdown-right-icon]"></ng-content>
   </button>
-  <div
-    class="absolute right-0 z-10 mt-1 w-52 rounded bg-white shadow-lg transition-opacity duration-200"
-    [class]="isDropdownOpen ? 'opacity-100' : 'opacity-0'"
-    [class.pointer-events-none]="!isDropdownOpen"
-  >
-    <ul
-      aria-labelledby="dropdown-button"
-      class="text-body p-2 font-medium"
-      (click)="onMenuClick($event)"
+  @if (isDropdownOpen) {
+    <div
+      class="absolute right-0 z-10 mt-1 w-52 rounded bg-white shadow-lg transition-opacity duration-200"
     >
-      <ng-content select="[dropdown-menu-item]"></ng-content>
-    </ul>
-  </div>
+      <ul
+        aria-labelledby="dropdown-button"
+        class="text-body p-2 font-medium"
+        (click)="onMenuClick($event)"
+      >
+        <ng-content select="[dropdown-menu-item]"></ng-content>
+      </ul>
+    </div>
+  }
 </div>

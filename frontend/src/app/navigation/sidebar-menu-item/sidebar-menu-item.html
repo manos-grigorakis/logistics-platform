@@ -1,12 +1,14 @@
 <li>
   <a
     [routerLink]="route"
-    class="flex items-center px-2 py-1.5 text-body rounded hover:bg-secondary-800 hover:cursor-pointer"
+    routerLinkActive="bg-secondary-800 text-white"
+    class="text-body text-secondary-400 hover:bg-secondary-800 flex items-center rounded px-2 py-1.5 hover:cursor-pointer hover:text-white"
+    (click)="onClick()"
   >
     <ng-icon [name]="icon"></ng-icon>
-    <span class="flex-1 ms-3 whitespace-nowrap">{{ label }}</span>
+    <span class="ms-3 flex-1 whitespace-nowrap">{{ label }}</span>
     <span
-      class="hidden justify-center w-4.5 h-4.5 ms-2 text-xs font-medium bg-warning-dark border-warning-dark border rounded-full"
+      class="bg-warning-dark border-warning-dark ms-2 hidden h-4.5 w-4.5 justify-center rounded-full border text-xs font-medium"
       [class.inline-flex]="badgeValue"
       >{{ badgeValue }}</span
     >
