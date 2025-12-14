@@ -3,6 +3,9 @@ spring:
     activate:
       on-profile: dev
 
+  jwt:
+    expiration-ms: 86400000 # 24h
+
 springdoc:
   api-docs:
     enabled: true
