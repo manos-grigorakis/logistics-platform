@@ -2,7 +2,7 @@ name: Build & Tests
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main", "ci/backend-build-push"]
   pull_request:
     branches: ["main"]
 
@@ -55,3 +55,10 @@ jobs:
         with:
           commit_message: "Update coverage badges"
           file_pattern: ".github/badges/*.svg"
+
+      - name: Upload Jar artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-jar
+          path: backend/target/*.jar
+          retention-days: 1
