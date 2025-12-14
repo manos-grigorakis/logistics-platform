@@ -20,6 +20,9 @@ public class JwtService {
     @Value("${jwt.secret}")
     public String JWT_SECRET;
 
+    @Value("${spring.jwt.expiration-ms}")
+    private Long JWT_EXPIRATION_MS;
+
     public JwtService() {
     }
 
@@ -32,7 +35,7 @@ public class JwtService {
     }
 
     private String createToken(Map<String, Object> claims, String email) {
-        Date tokenExpiration = new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24); // 24 hours
+        Date tokenExpiration = new Date(System.currentTimeMillis() + JWT_EXPIRATION_MS);
 
         return Jwts.builder()
                 .setClaims(claims)
