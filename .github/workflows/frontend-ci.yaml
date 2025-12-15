@@ -24,7 +24,7 @@ jobs:
           # list of Docker images to use as base name for tags
           images: |
             manosgrigorakis/logistics-platform-frontend
-            ghcr.io/manos-grigorakis/logistics-platform-frontend
+            ghcr.io/manos-grigorakis/logistics-platform/frontend
           # generate Docker tags based on the following events/attributes
           tags: |
             type=semver,pattern={{version}}
