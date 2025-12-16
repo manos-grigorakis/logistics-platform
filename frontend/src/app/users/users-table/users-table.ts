@@ -13,7 +13,8 @@ import { NgClass } from '@angular/common';
 export class UsersTable {
   @Input() isLoading?: boolean;
   @Input() users: UserResponse[] = [];
-  @Input() selectedUserIds = new Set<number>();
+  @Input() selectedUserIds!: Set<number>;
+  @Input() currentUserId?: number;
   @Input() errorMessage?: string;
   @Output() toggleUserSelection = new EventEmitter<number>();
 
@@ -24,5 +25,12 @@ export class UsersTable {
   public onCheckboxClick(event: MouseEvent, userId: number): void {
     event.stopPropagation();
     this.toggleUserSelection.emit(userId);
+  }
+
+  public isCurrentUser(id: number): boolean {
+    if (this.currentUserId !== undefined && id === this.currentUserId) {
+      return true;
+    }
+    return false;
   }
 }

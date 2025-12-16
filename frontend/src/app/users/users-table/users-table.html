@@ -16,23 +16,29 @@
   <tbody>
     @for (user of users; track user.id) {
       <tr
-        [ngClass]="[
-          'hover:bg-secondary-200 hover:cursor-pointer',
-          selectedUserIds.has(user.id) ? 'bg-secondary-200' : 'bg-white',
-        ]"
-        (click)="onRowClick(user.id)"
+        class=""
+        [ngClass]="{
+          'hover:bg-secondary-200 hover:cursor-pointer': !isCurrentUser(user.id),
+          'bg-secondary-200': selectedUserIds.has(user.id),
+        }"
+        (click)="!isCurrentUser(user.id) && onRowClick(user.id)"
       >
         <td class="w-4 p-4">
-          <div class="flex items-center">
-            <input
-              type="checkbox"
-              [checked]="selectedUserIds.has(user.id)"
-              (click)="onCheckboxClick($event, user.id)"
-              class="h-4 w-4 rounded-xs border accent-blue-600"
-            />
-            <label for="table-checkbox-22" class="sr-only">Table checkbox</label>
-          </div>
+          @if (!isCurrentUser(user.id)) {
+            <div class="flex items-center">
+              <input
+                type="checkbox"
+                [checked]="selectedUserIds.has(user.id)"
+                (click)="onCheckboxClick($event, user.id)"
+                class="h-4 w-4 rounded-xs border accent-blue-600"
+              />
+              <label for="table-checkbox-22" class="sr-only">Table checkbox</label>
+            </div>
+          } @else {
+            <span class="text-secondary-500 text-xs">(you)</span>
+          }
         </td>
+
         <td class="px-2 py-4 whitespace-nowrap">{{ user.firstName }}</td>
         <td class="px-2 py-4">{{ user.lastName }}</td>
         <td class="px-2 py-4">{{ user.email }}</td>

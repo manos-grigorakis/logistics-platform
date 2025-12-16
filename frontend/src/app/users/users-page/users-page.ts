@@ -6,6 +6,7 @@ import { UsersFilters } from '../users-filters/users-filters';
 import { toast } from 'ngx-sonner';
 import { forkJoin } from 'rxjs';
 import { Modal } from '../../shared/ui/modal/modal';
+import { AuthService } from '../../auth/services/auth.service';
 
 @Component({
   selector: 'app-users-page',
@@ -25,11 +26,14 @@ export class UsersPage implements OnInit {
   public modalMessage: string = '';
   public searchTerm: string = '';
   public sortLabel: string = 'Sort by';
+  public currentUserId: number | null = null;
 
   private usersService: UsersService = inject(UsersService);
+  private authService: AuthService = inject(AuthService);
 
   ngOnInit(): void {
     this.loadUsers();
+    this.currentUserId = this.authService.getUserId();
   }
 
   public loadUsers(): void {
@@ -55,12 +59,13 @@ export class UsersPage implements OnInit {
     });
   }
 
-  public toggleUserSelection(userId: number): void {
+  public toggleUserSelection(userId: number): void | null {
+    if (this.currentUserId === userId) return null;
+
     if (this.selectedUserIds.has(userId)) {
       this.selectedUserIds.delete(userId);
     } else {
       this.selectedUserIds.add(userId);
-      console.log(userId);
     }
 
     this.disableDeleteButton = this.selectedUserIds.size === 0;
