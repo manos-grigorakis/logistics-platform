@@ -33,4 +33,17 @@ public class UserInfoDetailsService implements UserDetailsService {
         // Convert User to UserInfoDetails
         return new UserInfoDetails(user.get());
     }
+
+
+    public UserInfoDetails loadUserById(Long id) throws UsernameNotFoundException {
+        Optional<User> user = userRepository.findById(id);
+
+        if (user.isEmpty()) {
+            log.warn("Load user failed. User {} not found", id);
+            throw new UsernameNotFoundException("User not found with id: " + id);
+        }
+
+        // Convert User to UserInfoDetails
+        return new UserInfoDetails(user.get());
+    }
 }

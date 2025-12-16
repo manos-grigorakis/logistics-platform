@@ -71,7 +71,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             String roleName = user.getRole().getName();
 
             // Generate JWT
-            String token = jwtService.generateToken(dto.getEmail(), roleName);
+            String token = jwtService.generateToken(user.getId(), roleName);
             log.info("User {} authenticated successfully", dto.getEmail());
 
             UserDetailsDTO userDetailsDTO = new UserDetailsDTO(
