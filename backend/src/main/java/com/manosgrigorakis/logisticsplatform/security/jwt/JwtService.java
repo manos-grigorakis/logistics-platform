@@ -1,12 +1,12 @@
 package com.manosgrigorakis.logisticsplatform.security.jwt;
 
+import com.manosgrigorakis.logisticsplatform.auth.model.UserInfoDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -26,20 +26,19 @@ public class JwtService {
     public JwtService() {
     }
 
-    // Use email as username
-    public String generateToken(String email, String role) {
+    public String generateToken(Long id, String role) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", role);
 
-        return createToken(claims,email);
+        return createToken(claims, id);
     }
 
-    private String createToken(Map<String, Object> claims, String email) {
+    private String createToken(Map<String, Object> claims, Long id) {
         Date tokenExpiration = new Date(System.currentTimeMillis() + JWT_EXPIRATION_MS);
 
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(email)
+                .setSubject(id.toString())
                 .setIssuedAt(new Date())
                 .setExpiration(tokenExpiration)
                 .signWith(getSignKey(), SignatureAlgorithm.HS256)
@@ -52,7 +51,7 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String extractEmail(String token) {
+    public String extractUserId(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -78,9 +77,9 @@ public class JwtService {
         return extractExpiration(token).before(new Date());
     }
 
-    public Boolean validateToken(String token, UserDetails userDetails) {
-        final String email = extractEmail(token);
+    public Boolean validateToken(String token, UserInfoDetails userDetails) {
+        final String userId = extractUserId(token);
 
-        return (email.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        return (userId.equals(userDetails.getUserId().toString()) && !isTokenExpired(token));
     }
 }

@@ -1,13 +1,13 @@
 package com.manosgrigorakis.logisticsplatform.security.jwt;
 
+import com.manosgrigorakis.logisticsplatform.auth.model.UserInfoDetails;
+import com.manosgrigorakis.logisticsplatform.auth.service.UserInfoDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -16,10 +16,10 @@ import java.io.IOException;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
-    private final UserDetailsService userDetailsService;
+    private final UserInfoDetailsService userDetailsService;
     private final JwtService jwtService;
 
-    public JwtAuthFilter(UserDetailsService userDetailsService, JwtService jwtService) {
+    public JwtAuthFilter(UserInfoDetailsService userDetailsService, JwtService jwtService) {
         this.userDetailsService = userDetailsService;
         this.jwtService = jwtService;
     }
@@ -29,17 +29,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
         String token = null;
-        String email = null;
+        String userId = null;
 
         if(authHeader != null && authHeader.startsWith("Bearer ")) {
             // Store the actual token from authHeader
             token = authHeader.substring(7);
-            email = jwtService.extractEmail(token);
+            userId = jwtService.extractUserId(token);
         }
 
-        if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            // Loads user by email
-            UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+        if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            // Loads user by id
+            UserInfoDetails userDetails = userDetailsService.loadUserById(Long.parseLong(userId));
 
             if (jwtService.validateToken(token, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(

@@ -28,6 +28,7 @@
       [users]="displayedUsers"
       [selectedUserIds]="selectedUserIds"
       [errorMessage]="errorMessage"
+      [currentUserId]="currentUserId ?? undefined"
       (toggleUserSelection)="toggleUserSelection($event)"
     ></app-users-table>
   </div>

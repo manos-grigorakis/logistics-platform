@@ -13,6 +13,7 @@ import { ResetPasswordRequest } from '../models/reset-password-request';
 import { ResetPasswordResponse } from '../models/reset-password-response';
 import { SetupPasswordRequest } from '../models/setup-password-request';
 import { SKIP_AUTH } from '../interceptors/auth-http.context';
+import { JwtPayload } from '../models/jwt-payload';
 
 @Injectable({
   providedIn: 'root',
@@ -130,10 +131,17 @@ export class AuthService {
     return false;
   }
 
-  public getUserId(): number | undefined | null {
-    if (!this.loadUserData()) return null;
+  public getUserId(): number | null {
+    const token = this.getJwtToken();
+    if (!token) return null;
 
-    return this.loadUserData()?.id;
+    let decoded: JwtPayload = this.jwtHelper.decodeToken(token) as JwtPayload;
+    const sub = decoded.sub;
+
+    if (!sub) return null;
+
+    const id = parseInt(sub);
+    return isNaN(id) ? null : id;
   }
 
   // Helper methods
