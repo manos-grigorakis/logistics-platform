@@ -22,6 +22,7 @@ import { QuotesPage } from './quotes/quotes-page/quotes-page';
 import { CreateQuote } from './quotes/create-quote/create-quote';
 import { EditQuote } from './quotes/edit-quote/edit-quote';
 import { ForbiddenPage } from './forbidden-page/forbidden-page';
+import { CustomerTabQuotes } from './customers/view-customer/customer-tabs/customer-tab-quotes/customer-tab-quotes';
 
 export const routes: Routes = [
   {
@@ -56,9 +57,15 @@ export const routes: Routes = [
           { path: '', component: CustomersPage, title: 'Customers' },
           { path: 'create-customer', component: CreateCustomer, title: 'Create Customer' },
           { path: 'edit-customer/:id', component: EditCustomer, title: 'Edit Customer' },
-          { path: 'view-customer/:id', component: ViewCustomer, title: 'View Customer' },
+          {
+            path: 'view-customer/:id',
+            component: ViewCustomer,
+            title: 'View Customer',
+            children: [{ path: 'tab-quotes', component: CustomerTabQuotes }],
+          },
         ],
       },
+
       {
         path: 'quotes',
         children: [
