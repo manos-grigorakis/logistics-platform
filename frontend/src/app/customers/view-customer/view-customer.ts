@@ -37,6 +37,14 @@ export class ViewCustomer implements OnInit {
     this.fetchCustomerById(this.id);
   }
 
+  public handleTabClick(tab: string): void {
+    switch (tab) {
+      case 'quotes':
+        this.router.navigate(['customers', 'view-customer', this.id, 'tab-quotes']);
+        break;
+    }
+  }
+
   // Helper
   private fetchCustomerById(id: number): void {
     this.isLoading = true;
@@ -46,6 +54,7 @@ export class ViewCustomer implements OnInit {
       next: (res) => {
         this.isLoading = false;
         this.customer = res;
+        this.customersService.setSelectedCustomer(this.customer);
       },
       error: (err) => {
         this.isLoading = false;
