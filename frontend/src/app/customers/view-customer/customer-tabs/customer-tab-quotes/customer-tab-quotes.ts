@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { NgClass, CurrencyPipe, DatePipe, TitleCasePipe } from '@angular/common';
 import { ModalFile } from '../../../../shared/ui/modal-file/modal-file';
 import { QuotesService } from '../../../../quotes/quotes.service';
+import { quoteStatusBadgeColor } from '../../../../quotes/utils/quotes-status-badge-color';
 
 @Component({
   selector: 'app-customer-tab-quotes',
@@ -64,18 +65,7 @@ export class CustomerTabQuotes implements OnInit, OnDestroy {
   }
 
   public quoteStatusBadgeColor(status: string): string {
-    switch (status) {
-      case 'DRAFT':
-        return 'bg-secondary-100 text-secondary-800';
-      case 'SENT':
-        return 'bg-primary-100 text-primary-800';
-      case 'ACCEPTED':
-        return 'bg-success-light text-success-dark';
-      case 'EXPIRED':
-        return 'bg-warning-light text-warning-dark';
-      default:
-        return 'bg-slate-200 text-slate-700';
-    }
+    return quoteStatusBadgeColor(status);
   }
 
   private fetchQuote(id: number): void {
