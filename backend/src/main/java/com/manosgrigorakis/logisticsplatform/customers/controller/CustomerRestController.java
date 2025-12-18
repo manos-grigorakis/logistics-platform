@@ -1,9 +1,6 @@
 package com.manosgrigorakis.logisticsplatform.customers.controller;
 
-import com.manosgrigorakis.logisticsplatform.customers.dto.CustomerRequestDTO;
-import com.manosgrigorakis.logisticsplatform.customers.dto.CustomerResponseDTO;
-import com.manosgrigorakis.logisticsplatform.customers.dto.UpdateCustomerRequestDTO;
-import com.manosgrigorakis.logisticsplatform.customers.dto.CustomerFilterRequest;
+import com.manosgrigorakis.logisticsplatform.customers.dto.*;
 import com.manosgrigorakis.logisticsplatform.common.dto.PageFilterRequest;
 import com.manosgrigorakis.logisticsplatform.common.dto.SortFilterRequest;
 import com.manosgrigorakis.logisticsplatform.customers.service.CustomerService;
@@ -17,6 +14,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/customers")
@@ -81,5 +80,14 @@ public class CustomerRestController {
         customerService.deleteCustomerById(id);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "Get Quotes Per Customer", description = "Get all quotes per customer")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Founded quotes for customer"),
+    })
+    @GetMapping("/{id}/quotes")
+    public List<QuoteSummaryDTO> getCustomerQuotes(@PathVariable Long id) {
+        return customerService.quotesPerCustomer(id);
     }
 }

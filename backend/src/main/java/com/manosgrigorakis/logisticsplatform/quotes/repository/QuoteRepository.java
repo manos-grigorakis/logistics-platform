@@ -23,4 +23,6 @@ public interface QuoteRepository extends JpaRepository<Quote, Long>, JpaSpecific
         "AND q.quoteStatus IN :statuses"
     )
     List<Quote> findExpiredQuotes(@Param("statuses")List<QuoteStatus> statuses);
+
+    List<Quote> findByCustomerId(Long id);
 }
