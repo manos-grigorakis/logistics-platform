@@ -109,9 +109,17 @@ export class QuotesPage implements OnInit {
         this.activeFilterLabel = 'Accepted';
         this.fetchQuotes({ page: 0, quoteStatus: 'ACCEPTED' });
         break;
+      case 'filter-by-quote-status-rejected':
+        this.activeFilterLabel = 'Rejected';
+        this.fetchQuotes({ page: 0, quoteStatus: 'REJECTED' });
+        break;
       case 'filter-by-quote-status-expired':
         this.activeFilterLabel = 'Expired';
         this.fetchQuotes({ page: 0, quoteStatus: 'EXPIRED' });
+        break;
+      case 'filter-by-quote-status-cancelled':
+        this.activeFilterLabel = 'Cancelled';
+        this.fetchQuotes({ page: 0, quoteStatus: 'CANCELLED' });
         break;
     }
   }

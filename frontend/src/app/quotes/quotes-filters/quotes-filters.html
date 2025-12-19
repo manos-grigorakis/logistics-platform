@@ -105,9 +105,25 @@
       <li dropdown-menu-item>
         <a
           class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
+          (click)="onFilterByFieldClick('filter-by-quote-status-rejected')"
+        >
+          Rejected
+        </a>
+      </li>
+      <li dropdown-menu-item>
+        <a
+          class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
           (click)="onFilterByFieldClick('filter-by-quote-status-expired')"
         >
           Expired
+        </a>
+      </li>
+      <li dropdown-menu-item>
+        <a
+          class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
+          (click)="onFilterByFieldClick('filter-by-quote-status-cancelled')"
+        >
+          Cancelled
         </a>
       </li>
     </app-dropdown-button>
