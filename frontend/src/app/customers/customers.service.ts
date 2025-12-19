@@ -1,17 +1,25 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { FetchCustomersResponse } from './models/fetch-customers-response';
 import { FetchCustomersParameters } from './models/fetch-customers-parameters';
 import { Customer } from './models/customer';
 import { CustomerRequest } from './models/customer-request';
+import { QuotePerCustomerResponse } from './models/quote-per-customer-response';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CustomersService {
+  private selectedCustomer = new BehaviorSubject<Customer | null>(null);
+  public selectedCustomer$ = this.selectedCustomer.asObservable();
+
   private http = inject(HttpClient);
+
+  setSelectedCustomer(c: Customer | null) {
+    this.selectedCustomer.next(c);
+  }
 
   public fetchCustomers(param: FetchCustomersParameters = {}): Observable<FetchCustomersResponse> {
     let params = new HttpParams();
@@ -42,6 +50,21 @@ export class CustomersService {
 
   public deleteCustomer(id: number): Observable<void> {
     return this.http.delete<void>(`${environment.apiUrl}/customers/${id}`);
+  }
+
+  public quotesPerCustomer(
+    id: number,
+    page?: number,
+    size?: number,
+  ): Observable<QuotePerCustomerResponse> {
+    let params = new HttpParams();
+
+    params = this.addParam(params, 'page', page);
+    params = this.addParam(params, 'size', size);
+
+    return this.http.get<QuotePerCustomerResponse>(`${environment.apiUrl}/customers/${id}/quotes`, {
+      params,
+    });
   }
 
   // Helper method that creates param

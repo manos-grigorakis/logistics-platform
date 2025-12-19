@@ -1,17 +1,16 @@
 package com.manosgrigorakis.logisticsplatform.customers.service;
 
-import com.manosgrigorakis.logisticsplatform.customers.dto.CustomerRequestDTO;
-import com.manosgrigorakis.logisticsplatform.customers.dto.CustomerResponseDTO;
-import com.manosgrigorakis.logisticsplatform.customers.dto.UpdateCustomerRequestDTO;
+import com.manosgrigorakis.logisticsplatform.customers.dto.*;
 import com.manosgrigorakis.logisticsplatform.common.exception.DuplicateEntryException;
 import com.manosgrigorakis.logisticsplatform.common.exception.ResourceNotFoundException;
-import com.manosgrigorakis.logisticsplatform.customers.dto.CustomerFilterRequest;
 import com.manosgrigorakis.logisticsplatform.common.dto.PageFilterRequest;
 import com.manosgrigorakis.logisticsplatform.common.dto.SortFilterRequest;
 import com.manosgrigorakis.logisticsplatform.customers.mapper.CustomerMapper;
 import com.manosgrigorakis.logisticsplatform.customers.model.Customer;
 import com.manosgrigorakis.logisticsplatform.customers.repository.CustomerRepository;
 import com.manosgrigorakis.logisticsplatform.customers.specs.CustomerSpecs;
+import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
+import com.manosgrigorakis.logisticsplatform.quotes.repository.QuoteRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -20,15 +19,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
+    private final QuoteRepository quoteRepository;
+
     private final Logger log = LoggerFactory.getLogger(CustomerServiceImpl.class);
 
-    public CustomerServiceImpl(CustomerRepository customerRepository) {
+    public CustomerServiceImpl(CustomerRepository customerRepository, QuoteRepository quoteRepository) {
         this.customerRepository = customerRepository;
+        this.quoteRepository = quoteRepository;
     }
 
     @Override
@@ -129,5 +132,21 @@ public class CustomerServiceImpl implements CustomerService {
 
         customerRepository.deleteById(id);
         log.info("Customer deleted: {}", id);
+    }
+
+    @Override
+    public Page<QuoteSummaryDTO> quotesPerCustomer(PageFilterRequest page, Long id) {
+        Pageable pageable = PageRequest.of(page.getPage(), page.getSize());
+
+        Page<Quote> quotesPage = quoteRepository.findByCustomerId(id, pageable);
+
+        return quotesPage.map(quote ->
+                new QuoteSummaryDTO(
+                        quote.getId(),
+                        quote.getNumber(),
+                        quote.getGrossPrice(),
+                        quote.getQuoteStatus(),
+                        quote.getIssueDate())
+        );
     }
 }

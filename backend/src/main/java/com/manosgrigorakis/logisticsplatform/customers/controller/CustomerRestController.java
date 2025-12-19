@@ -1,13 +1,11 @@
 package com.manosgrigorakis.logisticsplatform.customers.controller;
 
-import com.manosgrigorakis.logisticsplatform.customers.dto.CustomerRequestDTO;
-import com.manosgrigorakis.logisticsplatform.customers.dto.CustomerResponseDTO;
-import com.manosgrigorakis.logisticsplatform.customers.dto.UpdateCustomerRequestDTO;
-import com.manosgrigorakis.logisticsplatform.customers.dto.CustomerFilterRequest;
+import com.manosgrigorakis.logisticsplatform.customers.dto.*;
 import com.manosgrigorakis.logisticsplatform.common.dto.PageFilterRequest;
 import com.manosgrigorakis.logisticsplatform.common.dto.SortFilterRequest;
 import com.manosgrigorakis.logisticsplatform.customers.service.CustomerService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,6 +15,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/customers")
@@ -81,5 +81,14 @@ public class CustomerRestController {
         customerService.deleteCustomerById(id);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "Get Quotes Per Customer", description = "Get all quotes per customer with pagination")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Founded quotes for customer"),
+    })
+    @GetMapping("/{id}/quotes")
+    public Page<QuoteSummaryDTO> getCustomerQuotes(@Parameter @Valid PageFilterRequest pageFilterRequest, @PathVariable Long id) {
+        return customerService.quotesPerCustomer(pageFilterRequest, id);
     }
 }
