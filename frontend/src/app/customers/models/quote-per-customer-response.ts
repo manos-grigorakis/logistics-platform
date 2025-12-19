@@ -1,7 +1,13 @@
+import { QuotePerCustomer } from './quotes-per-customer';
+
 export interface QuotePerCustomerResponse {
-  id: number;
-  number: string;
-  grossPrice: number;
-  status: string;
-  issueDate: string;
+  content: QuotePerCustomer[];
+  last: boolean;
+  totalPages: number;
+  totalElements: number;
+  first: boolean;
+  size: number;
+  number: number;
+  numberOfElements: number;
+  empty: boolean;
 }

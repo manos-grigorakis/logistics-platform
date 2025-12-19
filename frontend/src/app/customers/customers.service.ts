@@ -52,10 +52,19 @@ export class CustomersService {
     return this.http.delete<void>(`${environment.apiUrl}/customers/${id}`);
   }
 
-  public quotesPerCustomer(id: number): Observable<QuotePerCustomerResponse[]> {
-    return this.http.get<QuotePerCustomerResponse[]>(
-      `${environment.apiUrl}/customers/${id}/quotes`,
-    );
+  public quotesPerCustomer(
+    id: number,
+    page?: number,
+    size?: number,
+  ): Observable<QuotePerCustomerResponse> {
+    let params = new HttpParams();
+
+    params = this.addParam(params, 'page', page);
+    params = this.addParam(params, 'size', size);
+
+    return this.http.get<QuotePerCustomerResponse>(`${environment.apiUrl}/customers/${id}/quotes`, {
+      params,
+    });
   }
 
   // Helper method that creates param
