@@ -1,17 +1,32 @@
 package com.manosgrigorakis.logisticsplatform.quotes.enums;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public enum QuoteStatus {
+    @JsonProperty("draft")
     DRAFT,
+
+    @JsonProperty("sent")
     SENT,
+
+    @JsonProperty("accepted")
     ACCEPTED,
+
+    @JsonProperty("rejected")
+    REJECTED,
+
+    @JsonProperty("cancelled")
+    CANCELLED,
+
+    @JsonProperty("expired")
     EXPIRED;
 
     /**
-     * Returns {@code true} if the quote status is SENT, ACCEPTED, EXPIRED
+     * Returns {@code true} if the quote status is ACCEPTED, REJECTED, CANCELLED, EXPIRED
      * otherwise returns {@code false}
      */
     public boolean isFinal() {
-        return this == ACCEPTED || this == EXPIRED;
+        return this == ACCEPTED || this == REJECTED || this == CANCELLED || this == EXPIRED;
     }
 
     /**
