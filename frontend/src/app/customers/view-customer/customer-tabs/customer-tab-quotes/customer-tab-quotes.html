@@ -1,5 +1,19 @@
+<!-- Modals -->
 <app-modal-file [isEnabled]="isModalOpen" [pdfUrl]="pdfUrl" (closeModal)="closeQuote()" />
+<app-modal
+  icon="lucideAlertTriangle"
+  color="warning"
+  [isEnabled]="isQuotesStatusModalEnabled"
+  [header]="quoteStatusModalHeader"
+  [message]="quoteStatusModalMessage"
+  (confirmClick)="onQuotesStatusModalConfirmClick()"
+  (cancelClick)="onQuotesStatusModalCancelClick()"
+  (closeModalClick)="onQuotesStatusModalCancelClick()"
+/>
+
+<!-- Main content -->
 <div class="flex min-h-[630px] flex-col">
+  <!-- Errors -->
   @if (errorMessage) {
     <span>{{ errorMessage }}</span>
   }
@@ -10,46 +24,70 @@
     }}</span>
   }
 
+  <!-- Cards -->
   @if (!isQuotesLoading && !errorMessage && quotes.length === 0) {
     <div class="text-secondary-500 p-6 text-center">No quotes yet</div>
   } @else {
     <div class="flex flex-1 flex-col gap-4 px-2">
-      <div class="flex flex-1 flex-col gap-4 px-2">
-        @for (quote of quotes; track quote.id) {
-          <div class="border-secondary-200 bg-secondary-100 rounded border px-2 py-4">
-            <div class="flex justify-between">
-              <div class="flex gap-4">
-                <h2
-                  (click)="openQuote(quote.id)"
-                  class="cursor-pointer text-lg font-semibold hover:underline"
-                >
-                  {{ quote.number }}
-                </h2>
-                <span class="rounded border px-2" [ngClass]="quoteStatusBadgeColor(quote.status)">
-                  {{ quote.status | titlecase }}
-                </span>
-              </div>
-              <span class="font-medium">{{ quote.grossPrice | currency: 'EUR' }}</span>
-            </div>
-            <div class="mt-2">
-              <span class="text-secondary-500 font-light"
-                >Issue Date: {{ quote.issueDate | date }}</span
+      @for (quote of quotes; track quote.id) {
+        <div class="border-secondary-200 bg-secondary-100 rounded border px-2 py-4">
+          <div class="flex justify-between">
+            <div class="flex gap-4">
+              <h2
+                (click)="openQuote(quote.id)"
+                class="cursor-pointer text-lg font-semibold hover:underline"
               >
-            </div>
-          </div>
-        }
-      </div>
+                {{ quote.number }}
+              </h2>
 
-      <!-- Pagination -->
-      <div class="mt-auto">
-        <app-pagination
-          [currentPage]="currentPage"
-          [totalPages]="totalPages"
-          [totalElements]="totalElements"
-          [pageSize]="pageSize"
-          (pageChanged)="onPageChange($event)"
-        />
-      </div>
+              <!-- Quote status badge -->
+              <div>
+                @if (finalizedStatuses.includes(quote.status)) {
+                  <span
+                    class="rounded border px-2 capitalize"
+                    [ngClass]="quoteStatusBadgeColor(quote.status)"
+                  >
+                    {{ quote.status }}
+                  </span>
+                } @else {
+                  <select
+                    class="rounded border px-2"
+                    [ngClass]="quoteStatusBadgeColor(quote.status)"
+                    [ngModel]="editingQuoteId === quote.id ? pendingStatus : quote.status"
+                    (ngModelChange)="handleQuotesStatusModal(quote, $event)"
+                  >
+                    <option [value]="quote.status" selected disabled>
+                      {{ quote.status | titlecase }}
+                    </option>
+                    @for (status of quotesStatuses; track $index) {
+                      @if (status.toLowerCase() !== quote.status.toLowerCase()) {
+                        <option [value]="status">{{ status | titlecase }}</option>
+                      }
+                    }
+                  </select>
+                }
+              </div>
+            </div>
+            <span class="font-medium">{{ quote.grossPrice | currency: 'EUR' }}</span>
+          </div>
+          <div class="mt-2">
+            <span class="text-secondary-500 font-light"
+              >Issue Date: {{ quote.issueDate | date }}</span
+            >
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Pagination -->
+    <div class="mt-auto">
+      <app-pagination
+        [currentPage]="currentPage"
+        [totalPages]="totalPages"
+        [totalElements]="totalElements"
+        [pageSize]="pageSize"
+        (pageChanged)="onPageChange($event)"
+      />
     </div>
   }
 </div>

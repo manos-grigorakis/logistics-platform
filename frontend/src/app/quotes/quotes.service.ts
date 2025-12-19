@@ -41,6 +41,10 @@ export class QuotesService {
     return this.http.put<CreatedQuoteResponse>(`${environment.apiUrl}/quotes/${id}`, data);
   }
 
+  public updateQuoteStatus(id: number, quoteStatus: string): Observable<void> {
+    return this.http.patch<void>(`${environment.apiUrl}/quotes/${id}/status`, { quoteStatus });
+  }
+
   // Helper method that creates param
   private addParam(param: HttpParams, key: string, value: any): HttpParams {
     if (value === undefined) return param;
