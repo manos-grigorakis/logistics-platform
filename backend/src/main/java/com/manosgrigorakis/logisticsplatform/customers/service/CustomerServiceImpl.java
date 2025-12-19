@@ -135,16 +135,18 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<QuoteSummaryDTO> quotesPerCustomer(Long id) {
-        List<Quote> quotes = quoteRepository.findByCustomerId(id);
+    public Page<QuoteSummaryDTO> quotesPerCustomer(PageFilterRequest page, Long id) {
+        Pageable pageable = PageRequest.of(page.getPage(), page.getSize());
 
-        return quotes.stream().map(quote ->
+        Page<Quote> quotesPage = quoteRepository.findByCustomerId(id, pageable);
+
+        return quotesPage.map(quote ->
                 new QuoteSummaryDTO(
                         quote.getId(),
                         quote.getNumber(),
                         quote.getGrossPrice(),
                         quote.getQuoteStatus(),
                         quote.getIssueDate())
-        ).toList();
+        );
     }
 }

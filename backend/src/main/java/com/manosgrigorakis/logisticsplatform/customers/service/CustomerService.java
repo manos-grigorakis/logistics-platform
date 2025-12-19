@@ -19,5 +19,5 @@ public interface CustomerService {
 
     void deleteCustomerById(Long id);
 
-    List<QuoteSummaryDTO> quotesPerCustomer(Long id);
+    Page<QuoteSummaryDTO> quotesPerCustomer(PageFilterRequest page, Long id);
 }

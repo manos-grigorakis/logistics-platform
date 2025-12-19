@@ -5,6 +5,7 @@ import com.manosgrigorakis.logisticsplatform.common.dto.PageFilterRequest;
 import com.manosgrigorakis.logisticsplatform.common.dto.SortFilterRequest;
 import com.manosgrigorakis.logisticsplatform.customers.service.CustomerService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -82,12 +83,12 @@ public class CustomerRestController {
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(summary = "Get Quotes Per Customer", description = "Get all quotes per customer")
+    @Operation(summary = "Get Quotes Per Customer", description = "Get all quotes per customer with pagination")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Founded quotes for customer"),
     })
     @GetMapping("/{id}/quotes")
-    public List<QuoteSummaryDTO> getCustomerQuotes(@PathVariable Long id) {
-        return customerService.quotesPerCustomer(id);
+    public Page<QuoteSummaryDTO> getCustomerQuotes(@Parameter @Valid PageFilterRequest pageFilterRequest, @PathVariable Long id) {
+        return customerService.quotesPerCustomer(pageFilterRequest, id);
     }
 }

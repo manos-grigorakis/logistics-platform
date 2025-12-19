@@ -2,11 +2,13 @@ package com.manosgrigorakis.logisticsplatform.quotes.repository;
 
 import com.manosgrigorakis.logisticsplatform.quotes.enums.QuoteStatus;
 import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,5 +26,5 @@ public interface QuoteRepository extends JpaRepository<Quote, Long>, JpaSpecific
     )
     List<Quote> findExpiredQuotes(@Param("statuses")List<QuoteStatus> statuses);
 
-    List<Quote> findByCustomerId(Long id);
+    Page<Quote> findByCustomerId(Long id, Pageable pageable);
 }
