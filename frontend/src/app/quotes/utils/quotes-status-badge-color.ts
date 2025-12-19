@@ -8,6 +8,10 @@ export function quoteStatusBadgeColor(status: string): string {
       return 'bg-success-light text-success-dark';
     case 'expired':
       return 'bg-warning-light text-warning-dark';
+    case 'rejected':
+      return 'bg-danger-light text-danger-dark';
+    case 'cancelled':
+      return 'bg-secondary-200 text-secondary-700';
     default:
       return 'bg-slate-200 text-slate-700';
   }
