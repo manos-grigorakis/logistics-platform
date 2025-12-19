@@ -80,4 +80,17 @@ public class QuoteRestController {
     public QuoteResponseDTO updateQuoteById(@PathVariable Long id, @RequestBody @Valid QuoteUpdateRequestDTO dto) {
         return quoteService.updateQuote(id, dto);
     }
+
+    @Operation(summary = "Update Quote Status by Id", description = "Update a quote status by id")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Updated quote"),
+            @ApiResponse(responseCode = "404", description = "Quote doesn't exist"),
+            @ApiResponse(responseCode = "409", description = "Quote is not editable due to status"),
+
+    })
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<Void> updateQuoteStatus(@PathVariable Long id, @RequestBody @Valid UpdateQuoteStatusRequestDTO dto) {
+        quoteService.updateQuoteStatus(id, dto);
+        return ResponseEntity.noContent().build();
+    }
 }

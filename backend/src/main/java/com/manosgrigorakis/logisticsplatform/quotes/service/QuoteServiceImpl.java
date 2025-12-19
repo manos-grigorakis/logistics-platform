@@ -212,4 +212,25 @@ public class QuoteServiceImpl implements QuoteService {
         response.setPdfUrl(presignedUrl);
         return response;
     }
+
+    @Override
+    public void updateQuoteStatus(Long id, UpdateQuoteStatusRequestDTO dto) {
+        Quote quote = quoteRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.warn("Quote not found with id: {}", id);
+                    return new ResourceNotFoundException("Quote not found with id: " + id);
+                });
+
+        try {
+            quote.changeStatusTo(dto.getQuoteStatus());
+        } catch (IllegalStateException e) {
+            throw new ConflictException(
+                    e.getMessage(),
+                    Map.of("currentStatus", quote.getQuoteStatus(), "desiredStatus", dto.getQuoteStatus())
+            );
+        }
+
+        quote.setQuoteStatus(dto.getQuoteStatus());
+        quoteRepository.save(quote);
+    }
 }
