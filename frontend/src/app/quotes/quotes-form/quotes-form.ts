@@ -29,6 +29,7 @@ import { toDoc } from 'ngx-editor';
 import { Quote } from '../models/quote';
 import { QuoteItems } from '../models/quote-items';
 import { QuoteFormPayload } from '../models/quote-form-payload';
+import { ErrorAlert } from '../../shared/ui/error-alert/error-alert';
 
 @Component({
   selector: 'app-quotes-form',
@@ -39,6 +40,7 @@ import { QuoteFormPayload } from '../models/quote-form-payload';
     AdditionalInformation,
     BasicInformation,
     ServicesAndItems,
+    ErrorAlert,
   ],
   templateUrl: './quotes-form.html',
   styleUrl: './quotes-form.css',

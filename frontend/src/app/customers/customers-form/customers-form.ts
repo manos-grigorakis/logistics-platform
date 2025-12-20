@@ -6,10 +6,11 @@ import { CustomerRequest } from '../models/customer-request';
 import { PrimaryButton } from '../../shared/ui/primary-button/primary-button';
 import { MetadataService } from '../../metadata/metadata.service';
 import { Customer } from '../models/customer';
+import { ErrorAlert } from '../../shared/ui/error-alert/error-alert';
 
 @Component({
   selector: 'app-customers-form',
-  imports: [LoadingSpinner, MainInput, ReactiveFormsModule, PrimaryButton],
+  imports: [LoadingSpinner, MainInput, ReactiveFormsModule, PrimaryButton, ErrorAlert],
   templateUrl: './customers-form.html',
   styleUrl: './customers-form.css',
 })

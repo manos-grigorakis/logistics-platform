@@ -13,23 +13,17 @@
 
   <div class="mb-5">
     @if (errorMessage) {
-      <span class="text-danger bg-danger-light block w-full rounded-md p-1.5 text-center">{{
-        errorMessage
-      }}</span>
+      <app-error-alert [errorMessage]="errorMessage" />
     }
   </div>
   <div class="mb-5">
     @if (itemsErrorMessage) {
-      <span class="text-danger bg-danger-light block w-full rounded-md p-1.5 text-center">{{
-        itemsErrorMessage
-      }}</span>
+      <app-error-alert [errorMessage]="itemsErrorMessage" />
     }
   </div>
   <div class="mb-5">
     @if (customerErrorMessage) {
-      <span class="text-danger bg-danger-light block w-full rounded-md p-1.5 text-center">{{
-        customerErrorMessage
-      }}</span>
+      <app-error-alert [errorMessage]="customerErrorMessage" />
     }
   </div>
 

@@ -5,10 +5,11 @@ import { AuthService } from '../services/auth.service';
 import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
 import { RouterLink } from '@angular/router';
 import { MainInput } from '../../shared/forms/main-input/main-input';
+import { ErrorAlert } from '../../shared/ui/error-alert/error-alert';
 
 @Component({
   selector: 'app-forgot-password-form',
-  imports: [PrimaryButton, ReactiveFormsModule, LoadingSpinner, RouterLink, MainInput],
+  imports: [PrimaryButton, ReactiveFormsModule, LoadingSpinner, RouterLink, MainInput, ErrorAlert],
   templateUrl: './forgot-password-form.html',
   styleUrl: './forgot-password-form.css',
 })

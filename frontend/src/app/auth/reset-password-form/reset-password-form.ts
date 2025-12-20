@@ -7,10 +7,11 @@ import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner'
 import { ResetPasswordRequest } from '../models/reset-password-request';
 import { toast } from 'ngx-sonner';
 import { MainInput } from '../../shared/forms/main-input/main-input';
+import { ErrorAlert } from '../../shared/ui/error-alert/error-alert';
 
 @Component({
   selector: 'app-reset-password-form',
-  imports: [PrimaryButton, LoadingSpinner, ReactiveFormsModule, MainInput],
+  imports: [PrimaryButton, LoadingSpinner, ReactiveFormsModule, MainInput, ErrorAlert],
   templateUrl: './reset-password-form.html',
   styleUrl: './reset-password-form.css',
 })

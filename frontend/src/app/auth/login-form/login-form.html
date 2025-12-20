@@ -6,9 +6,7 @@
     <h2 class="mb-4 text-center text-3xl font-semibold">Login</h2>
     <div class="mb-5">
       @if (loginFailed) {
-        <span class="text-danger bg-danger-light block w-full rounded-md p-1.5 text-center">{{
-          errorMessage
-        }}</span>
+        <app-error-alert [errorMessage]="errorMessage" />
       }
     </div>
 
