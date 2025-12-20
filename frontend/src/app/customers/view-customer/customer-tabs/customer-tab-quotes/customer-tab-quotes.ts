@@ -1,10 +1,9 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { CustomersService } from '../../../customers.service';
 import { debounceTime, distinctUntilChanged, filter, map, Subject, Subscription } from 'rxjs';
-import { NgClass, CurrencyPipe, DatePipe, TitleCasePipe } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { ModalFile } from '../../../../shared/ui/modal-file/modal-file';
 import { QuotesService } from '../../../../quotes/quotes.service';
-import { quoteStatusBadgeColor } from '../../../../quotes/utils/quotes-status-badge-color';
 import { QuotePerCustomer } from '../../../models/quotes-per-customer';
 import { Pagination } from '../../../../shared/ui/pagination/pagination';
 import { MetadataService } from '../../../../metadata/metadata.service';
@@ -15,14 +14,12 @@ import { QuotesFilters } from '../../../../quotes/quotes-filters/quotes-filters'
 import { LoadingSpinner } from '../../../../shared/ui/loading-spinner/loading-spinner';
 import { QuotesPerCustomerParameters } from '../../../models/quotes-per-customer-parameters';
 import { ErrorAlert } from '../../../../shared/ui/error-alert/error-alert';
+import { QuoteCard } from '../quote-card/quote-card';
 
 @Component({
   selector: 'app-customer-tab-quotes',
   imports: [
     NgClass,
-    CurrencyPipe,
-    DatePipe,
-    TitleCasePipe,
     ModalFile,
     Pagination,
     FormsModule,
@@ -30,6 +27,7 @@ import { ErrorAlert } from '../../../../shared/ui/error-alert/error-alert';
     QuotesFilters,
     LoadingSpinner,
     ErrorAlert,
+    QuoteCard,
   ],
   templateUrl: './customer-tab-quotes.html',
   styleUrl: './customer-tab-quotes.css',
@@ -125,15 +123,6 @@ export class CustomerTabQuotes implements OnInit, OnDestroy {
 
     this.currentPage = page;
     this.fetchQuotesPerCustomer({ page: page, size: this.quotesToShow });
-  }
-
-  /**
-   * Applies CSS badge for quote status based on the status
-   * @param status quote status
-   * @returns applies CSS badge style for status
-   */
-  public quoteStatusBadgeColor(status: string): string {
-    return quoteStatusBadgeColor(status);
   }
 
   /**

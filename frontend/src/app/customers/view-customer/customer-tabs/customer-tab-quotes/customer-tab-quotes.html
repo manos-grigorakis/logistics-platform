@@ -46,52 +46,15 @@
   } @else {
     <div class="flex flex-1 flex-col gap-4 px-2">
       @for (quote of quotes; track quote.id) {
-        <div class="border-secondary-200 bg-secondary-100 rounded border px-2 py-4">
-          <div class="flex justify-between">
-            <div class="flex gap-4">
-              <h2
-                (click)="openQuote(quote.id)"
-                class="cursor-pointer text-lg font-semibold hover:underline"
-              >
-                {{ quote.number }}
-              </h2>
-
-              <!-- Quote status badge -->
-              <div>
-                @if (finalizedStatuses.includes(quote.status)) {
-                  <span
-                    class="rounded border px-2 capitalize"
-                    [ngClass]="quoteStatusBadgeColor(quote.status)"
-                  >
-                    {{ quote.status }}
-                  </span>
-                } @else {
-                  <select
-                    class="rounded border px-2"
-                    [ngClass]="quoteStatusBadgeColor(quote.status)"
-                    [ngModel]="editingQuoteId === quote.id ? pendingStatus : quote.status"
-                    (ngModelChange)="handleQuotesStatusModal(quote, $event)"
-                  >
-                    <option [value]="quote.status" selected disabled hidden>
-                      {{ quote.status | titlecase }}
-                    </option>
-                    @for (status of quotesStatuses; track $index) {
-                      @if (status.toLowerCase() !== quote.status.toLowerCase()) {
-                        <option [value]="status">{{ status | titlecase }}</option>
-                      }
-                    }
-                  </select>
-                }
-              </div>
-            </div>
-            <span class="font-medium">{{ quote.grossPrice | currency: 'EUR' }}</span>
-          </div>
-          <div class="mt-2">
-            <span class="text-secondary-500 font-light"
-              >Issue Date: {{ quote.issueDate | date }}</span
-            >
-          </div>
-        </div>
+        <app-quote-card
+          [quote]="quote"
+          [finalizedQuotesStatuses]="finalizedStatuses"
+          [pendingStatus]="pendingStatus"
+          [editingQuoteId]="editingQuoteId"
+          [quotesStatuses]="quotesStatuses"
+          (onViewQuote)="openQuote(quote.id)"
+          (onStatus)="handleQuotesStatusModal($event.quote, $event.newStatus)"
+        />
       }
     </div>
 
