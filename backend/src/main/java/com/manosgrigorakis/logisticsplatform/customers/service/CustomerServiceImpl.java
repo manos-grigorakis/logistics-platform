@@ -11,6 +11,7 @@ import com.manosgrigorakis.logisticsplatform.customers.repository.CustomerReposi
 import com.manosgrigorakis.logisticsplatform.customers.specs.CustomerSpecs;
 import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
 import com.manosgrigorakis.logisticsplatform.quotes.repository.QuoteRepository;
+import com.manosgrigorakis.logisticsplatform.quotes.specs.QuotesSpecs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -19,7 +20,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -135,10 +135,24 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Page<QuoteSummaryDTO> quotesPerCustomer(PageFilterRequest page, Long id) {
-        Pageable pageable = PageRequest.of(page.getPage(), page.getSize());
+    public Page<QuoteSummaryDTO> quotesPerCustomer(
+            Long id,
+            PageFilterRequest page,
+            SortFilterRequest sortFilterRequest,
+            QuotesPerCustomerFilterRequest filterRequest
+            ) {
+        Specification<Quote> spec = QuotesSpecs.hasCustomerId(id);
 
-        Page<Quote> quotesPage = quoteRepository.findByCustomerId(id, pageable);
+        if(filterRequest.getNumber() != null) {
+            spec = spec.and(QuotesSpecs.likeNumber(filterRequest.getNumber()));
+        }
+
+        if(filterRequest.getQuoteStatus() != null) {
+            spec = spec.and(QuotesSpecs.equalQuoteStatus(filterRequest.getQuoteStatus()));
+        }
+
+        Pageable pageable = PageRequest.of(page.getPage(), page.getSize(), sortFilterRequest.createSort());
+        Page<Quote> quotesPage = quoteRepository.findAll(spec, pageable);
 
         return quotesPage.map(quote ->
                 new QuoteSummaryDTO(

@@ -1,18 +1,20 @@
 <div class="flex items-center justify-between space-x-4 p-4">
   <app-search-bar
-    placeholder="Search by Number or Company Name"
+    [placeholder]="searchPlaceholder"
     [value]="searchTerm"
     (valueChange)="onSearchChange($event)"
   ></app-search-bar>
 
   <div class="flex items-center gap-6">
     <div class="flex items-center gap-4">
-      <!-- Add -->
-      <app-rounded-icon-button
-        (clicked)="onCreateQuoteClick()"
-        icon="lucidePlus"
-        color="success"
-      ></app-rounded-icon-button>
+      @if (createButton) {
+        <!-- Add -->
+        <app-rounded-icon-button
+          (clicked)="onCreateQuoteClick()"
+          icon="lucidePlus"
+          color="success"
+        ></app-rounded-icon-button>
+      }
 
       <!-- Refresh -->
       <app-rounded-icon-button
@@ -105,9 +107,25 @@
       <li dropdown-menu-item>
         <a
           class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
+          (click)="onFilterByFieldClick('filter-by-quote-status-rejected')"
+        >
+          Rejected
+        </a>
+      </li>
+      <li dropdown-menu-item>
+        <a
+          class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
           (click)="onFilterByFieldClick('filter-by-quote-status-expired')"
         >
           Expired
+        </a>
+      </li>
+      <li dropdown-menu-item>
+        <a
+          class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
+          (click)="onFilterByFieldClick('filter-by-quote-status-cancelled')"
+        >
+          Cancelled
         </a>
       </li>
     </app-dropdown-button>

@@ -5,7 +5,6 @@ import com.manosgrigorakis.logisticsplatform.common.dto.PageFilterRequest;
 import com.manosgrigorakis.logisticsplatform.common.dto.SortFilterRequest;
 import com.manosgrigorakis.logisticsplatform.customers.service.CustomerService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,8 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/customers")
@@ -83,12 +80,17 @@ public class CustomerRestController {
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(summary = "Get Quotes Per Customer", description = "Get all quotes per customer with pagination")
+    @Operation(summary = "Get Quotes Per Customer", description = "Get all quotes per customer with pagination and filters")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Founded quotes for customer"),
     })
     @GetMapping("/{id}/quotes")
-    public Page<QuoteSummaryDTO> getCustomerQuotes(@Parameter @Valid PageFilterRequest pageFilterRequest, @PathVariable Long id) {
-        return customerService.quotesPerCustomer(pageFilterRequest, id);
+    public Page<QuoteSummaryDTO> getCustomerQuotes(
+            @PathVariable Long id,
+            @ParameterObject @ModelAttribute @Valid PageFilterRequest pageFilterRequest,
+            @ParameterObject @ModelAttribute SortFilterRequest sortFilterRequest,
+            @ParameterObject @ModelAttribute @Valid QuotesPerCustomerFilterRequest filterRequest
+            ) {
+        return customerService.quotesPerCustomer(id, pageFilterRequest, sortFilterRequest, filterRequest);
     }
 }

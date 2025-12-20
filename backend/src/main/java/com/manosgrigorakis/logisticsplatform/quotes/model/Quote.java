@@ -152,4 +152,45 @@ public class Quote {
     public boolean isExpired() {
         return this.quoteStatus.isExpired();
     }
+
+    /**
+     * Checks whenever the quote status can change from its current value,
+     * to the given according to rules. </br>
+     * Rules: </br>
+     *  Not Allowed: </br>
+     *      - Finalized statuses cannot be changed </br>
+     *      - Expired statuses cannot be changed (handled by scheduled job) </br>
+     *  Allowed: </br>
+     *      - {@code DRAFT -> SENT, CANCELLED} </br>
+     *      - {@code SENT -> ACCEPTED, REJECTED, CANCELLED} </br>
+     * @param status of the target
+     * @return {@code true} if status can be changed, otherwise {@code false}
+     */
+    public boolean canChangeStatusTo(QuoteStatus status) {
+        QuoteStatus currentStatus = this.quoteStatus;
+
+        if(status == QuoteStatus.EXPIRED) return false;
+        if(currentStatus.isFinal()) return false;
+
+        return switch (currentStatus) {
+            case DRAFT -> status == QuoteStatus.SENT || status == QuoteStatus.CANCELLED;
+            case SENT -> status == QuoteStatus.ACCEPTED || status == QuoteStatus.REJECTED || status == QuoteStatus.CANCELLED;
+            default -> false;
+        };
+    }
+
+    /**
+     * Change the quote status to the given target status applying rules.
+     * Uses {@link #canChangeStatusTo(QuoteStatus)} to apply rules
+     * @param status of the target
+     */
+    public void changeStatusTo(QuoteStatus status) {
+        if(!canChangeStatusTo(status)) {
+            throw new IllegalStateException(
+                    "Invalid status transition: " + this.quoteStatus + " -> " + status
+            );
+        }
+
+        this.quoteStatus = status;
+    }
 }

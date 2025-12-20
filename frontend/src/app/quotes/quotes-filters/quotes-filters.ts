@@ -20,6 +20,8 @@ export class QuotesFilters {
   @Input() isLoading: boolean = false;
   @Input() sortLabel?: string;
   @Input() filterLabel?: string;
+  @Input() searchPlaceholder: string = 'Search by Number or Company Name';
+  @Input() createButton: boolean = true;
 
   public searchTerm: string = '';
 

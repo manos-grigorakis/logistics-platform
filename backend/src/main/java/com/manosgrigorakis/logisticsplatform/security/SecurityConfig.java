@@ -57,6 +57,8 @@ public class SecurityConfig {
             }
 
             configurer
+                    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
                     // Public endpoints
                     .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/auth/request-reset").permitAll()
@@ -93,6 +95,7 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.GET, "/api/quotes/**").hasAnyAuthority("ADMIN", "MANAGER")
                     .requestMatchers(HttpMethod.POST, "/api/quotes").hasAnyAuthority("ADMIN", "MANAGER")
                     .requestMatchers(HttpMethod.PUT, "/api/quotes/**").hasAnyAuthority("ADMIN", "MANAGER")
+                    .requestMatchers(HttpMethod.PATCH, "/api/quotes/**").hasAnyAuthority("ADMIN", "MANAGER")
 
                     // All other endpoints require authentication
                     .anyRequest().authenticated();
@@ -145,7 +148,7 @@ public class SecurityConfig {
     UrlBasedCorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(frontendUrl));
-        configuration.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "DELETE"));
+        configuration.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
 

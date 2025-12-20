@@ -14,4 +14,6 @@ public interface QuoteService {
     QuoteCreatedResponseDTO createQuote(QuoteRequestDTO dto);
 
     QuoteResponseDTO updateQuote(Long id, QuoteUpdateRequestDTO dto);
+
+    void updateQuoteStatus(Long id, UpdateQuoteStatusRequestDTO dto);
 }

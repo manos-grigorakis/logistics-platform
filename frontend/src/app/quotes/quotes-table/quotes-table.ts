@@ -3,12 +3,12 @@ import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner'
 import { CurrencyPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { QuotesListItem } from '../models/quotes-list-item';
-import { NgClass, DatePipe, TitleCasePipe } from '@angular/common';
+import { NgClass, DatePipe } from '@angular/common';
 import { quoteStatusBadgeColor } from '../utils/quotes-status-badge-color';
 
 @Component({
   selector: 'app-quotes-table',
-  imports: [LoadingSpinner, CurrencyPipe, RouterLink, DatePipe, TitleCasePipe, NgClass],
+  imports: [LoadingSpinner, CurrencyPipe, RouterLink, DatePipe, NgClass],
   templateUrl: './quotes-table.html',
   styleUrl: './quotes-table.css',
 })
