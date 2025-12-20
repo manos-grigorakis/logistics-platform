@@ -97,6 +97,14 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.PUT, "/api/quotes/**").hasAnyAuthority("ADMIN", "MANAGER")
                     .requestMatchers(HttpMethod.PATCH, "/api/quotes/**").hasAnyAuthority("ADMIN", "MANAGER")
 
+                    // Vehicles
+                    // Quotes
+                    .requestMatchers(HttpMethod.GET, "/api/vehicles").hasAnyAuthority("ADMIN", "MANAGER")
+                    .requestMatchers(HttpMethod.GET, "/api/vehicles/**").hasAnyAuthority("ADMIN", "MANAGER")
+                    .requestMatchers(HttpMethod.POST, "/api/vehicles").hasAnyAuthority("ADMIN", "MANAGER")
+                    .requestMatchers(HttpMethod.PUT, "/xapi/vehicles/**").hasAnyAuthority("ADMIN", "MANAGER")
+                    .requestMatchers(HttpMethod.DELETE, "/api/vehicles/**").hasAnyAuthority("ADMIN", "MANAGER")
+
                     // All other endpoints require authentication
                     .anyRequest().authenticated();
         });
