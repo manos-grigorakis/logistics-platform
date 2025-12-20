@@ -14,6 +14,7 @@ import { Modal } from '../../../../shared/ui/modal/modal';
 import { QuotesFilters } from '../../../../quotes/quotes-filters/quotes-filters';
 import { LoadingSpinner } from '../../../../shared/ui/loading-spinner/loading-spinner';
 import { QuotesPerCustomerParameters } from '../../../models/quotes-per-customer-parameters';
+import { ErrorAlert } from '../../../../shared/ui/error-alert/error-alert';
 
 @Component({
   selector: 'app-customer-tab-quotes',
@@ -28,6 +29,7 @@ import { QuotesPerCustomerParameters } from '../../../models/quotes-per-customer
     Modal,
     QuotesFilters,
     LoadingSpinner,
+    ErrorAlert,
   ],
   templateUrl: './customer-tab-quotes.html',
   styleUrl: './customer-tab-quotes.css',
