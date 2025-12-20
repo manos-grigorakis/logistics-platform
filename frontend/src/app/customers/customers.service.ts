@@ -7,6 +7,7 @@ import { FetchCustomersParameters } from './models/fetch-customers-parameters';
 import { Customer } from './models/customer';
 import { CustomerRequest } from './models/customer-request';
 import { QuotePerCustomerResponse } from './models/quote-per-customer-response';
+import { QuotesPerCustomerParameters } from './models/quotes-per-customer-parameters';
 
 @Injectable({
   providedIn: 'root',
@@ -54,13 +55,16 @@ export class CustomersService {
 
   public quotesPerCustomer(
     id: number,
-    page?: number,
-    size?: number,
+    param: QuotesPerCustomerParameters = {},
   ): Observable<QuotePerCustomerResponse> {
     let params = new HttpParams();
 
-    params = this.addParam(params, 'page', page);
-    params = this.addParam(params, 'size', size);
+    params = this.addParam(params, 'page', param.page);
+    params = this.addParam(params, 'size', param.size);
+    params = this.addParam(params, 'sortBy', param.sortBy);
+    params = this.addParam(params, 'sortDirection', param.sortDirection);
+    params = this.addParam(params, 'number', param.number);
+    params = this.addParam(params, 'quoteStatus', param.quoteStatus);
 
     return this.http.get<QuotePerCustomerResponse>(`${environment.apiUrl}/customers/${id}/quotes`, {
       params,
