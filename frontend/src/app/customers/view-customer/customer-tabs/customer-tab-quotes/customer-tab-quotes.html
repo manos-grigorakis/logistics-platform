@@ -12,7 +12,7 @@
 />
 
 <!-- Main content -->
-<div class="flex min-h-[630px] flex-col">
+<div class="flex flex-col" [ngClass]="{ 'min-h-[630px]': quotes.length > 0 }">
   <!-- Errors -->
   @if (errorMessage) {
     <span>{{ errorMessage }}</span>
