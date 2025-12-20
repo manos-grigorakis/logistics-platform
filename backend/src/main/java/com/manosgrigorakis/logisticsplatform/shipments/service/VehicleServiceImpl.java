@@ -68,6 +68,11 @@ public class VehicleServiceImpl implements VehicleService{
                     return new ResourceNotFoundException("Vehicle not found with id: " + id);
                 });
 
+        if(vehicleRepository.existsVehicleByPlate(dto.getPlate())) {
+            log.warn("Vehicle already exists with plate {}", dto.getPlate());
+            throw new DuplicateEntryException("plate", dto.getPlate());
+        }
+
         vehicle.setBrand(dto.getBrand());
         vehicle.setPlate(dto.getPlate());
         vehicle.setType(dto.getType());
