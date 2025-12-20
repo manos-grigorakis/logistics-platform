@@ -55,7 +55,7 @@ public class VehicleRestController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @Operation(summary = "Update a Vehicle by Id", description = "Update a role by id")
+    @Operation(summary = "Update a Vehicle by Id", description = "Update a vehicle by id")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Vehicle updated successfully"),
             @ApiResponse(responseCode = "404", description = "Vehicle doesn't exist"),
