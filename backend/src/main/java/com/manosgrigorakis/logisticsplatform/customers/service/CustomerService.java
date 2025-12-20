@@ -6,10 +6,12 @@ import com.manosgrigorakis.logisticsplatform.common.dto.PageFilterRequest;
 import com.manosgrigorakis.logisticsplatform.common.dto.SortFilterRequest;
 import org.springframework.data.domain.Page;
 
-import java.util.List;
-
 public interface CustomerService {
-    Page<CustomerResponseDTO> getAllCustomers(CustomerFilterRequest customerFilter, PageFilterRequest page, SortFilterRequest sort);
+    Page<CustomerResponseDTO> getAllCustomers(
+            CustomerFilterRequest customerFilter,
+            PageFilterRequest page,
+            SortFilterRequest sort
+    );
 
     CustomerResponseDTO getCustomerById(Long id);
 
@@ -19,5 +21,10 @@ public interface CustomerService {
 
     void deleteCustomerById(Long id);
 
-    Page<QuoteSummaryDTO> quotesPerCustomer(PageFilterRequest page, Long id);
+    Page<QuoteSummaryDTO> quotesPerCustomer(
+            Long id,
+            PageFilterRequest page,
+            SortFilterRequest sortFilterRequest,
+            QuotesPerCustomerFilterRequest filterRequest
+    );
 }

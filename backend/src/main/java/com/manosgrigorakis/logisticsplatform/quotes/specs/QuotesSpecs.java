@@ -24,4 +24,9 @@ public class QuotesSpecs {
         return (root, query, criteriaBuilder) ->
                 criteriaBuilder.equal(root.get("quoteStatus"), quoteStatus);
     }
+
+    public static Specification<Quote> hasCustomerId(Long customerId) {
+        return ((root, query, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get("customer").get("id"), customerId));
+    }
 }
