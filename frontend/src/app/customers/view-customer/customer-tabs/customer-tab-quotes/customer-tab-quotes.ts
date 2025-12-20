@@ -1,6 +1,6 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { CustomersService } from '../../../customers.service';
-import { filter, map, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map, Subject, Subscription } from 'rxjs';
 import { NgClass, CurrencyPipe, DatePipe, TitleCasePipe } from '@angular/common';
 import { ModalFile } from '../../../../shared/ui/modal-file/modal-file';
 import { QuotesService } from '../../../../quotes/quotes.service';
@@ -11,6 +11,9 @@ import { MetadataService } from '../../../../metadata/metadata.service';
 import { FormsModule } from '@angular/forms';
 import { toast } from 'ngx-sonner';
 import { Modal } from '../../../../shared/ui/modal/modal';
+import { QuotesFilters } from '../../../../quotes/quotes-filters/quotes-filters';
+import { LoadingSpinner } from '../../../../shared/ui/loading-spinner/loading-spinner';
+import { QuotesPerCustomerParameters } from '../../../models/quotes-per-customer-parameters';
 
 @Component({
   selector: 'app-customer-tab-quotes',
@@ -23,6 +26,8 @@ import { Modal } from '../../../../shared/ui/modal/modal';
     Pagination,
     FormsModule,
     Modal,
+    QuotesFilters,
+    LoadingSpinner,
   ],
   templateUrl: './customer-tab-quotes.html',
   styleUrl: './customer-tab-quotes.css',
@@ -45,13 +50,22 @@ export class CustomerTabQuotes implements OnInit, OnDestroy {
   public totalPages: number = 0;
   public totalElements: number = 0;
   public isFirstPage: boolean = false;
-  public pageSize: number = 0;
   private quotesToShow: number = 5;
+  public pageSize: number = this.quotesToShow;
 
   // Quotes Status Modal
   public isQuotesStatusModalEnabled: boolean = false;
   public quoteStatusModalHeader?: string = undefined;
   public quoteStatusModalMessage?: string = undefined;
+
+  // Filters
+  public activeSortLabel: string = 'Sort by';
+  public activeFilterLabel: string = 'Filter by';
+  private searchChanged$ = new Subject<string>();
+  private subSearch$?: Subscription;
+  private currentParams: QuotesPerCustomerParameters = {
+    page: 0,
+  };
 
   private customersService = inject(CustomersService);
   private quotesService = inject(QuotesService);
@@ -59,6 +73,7 @@ export class CustomerTabQuotes implements OnInit, OnDestroy {
 
   private sub$?: Subscription;
   private quotesStatuses$?: Subscription;
+  private quotesReqSub$?: Subscription;
 
   public editingQuoteId?: number;
   public pendingStatus?: string;
@@ -66,14 +81,25 @@ export class CustomerTabQuotes implements OnInit, OnDestroy {
   private desiredQuoteStatus?: string = undefined;
 
   ngOnInit(): void {
-    this.fetchQuotesPerCustomer(undefined, this.quotesToShow);
+    this.fetchQuotesPerCustomer({ size: this.quotesToShow });
     this.metadataService.fetchQuotesStatuses();
     this.subscribeToQuotesStatuses();
+
+    // Debouncer on search
+    this.subSearch$ = this.searchChanged$
+      .pipe(debounceTime(400), distinctUntilChanged())
+      .subscribe((value) => this.onSearch(value));
   }
 
   ngOnDestroy(): void {
     this.sub$?.unsubscribe();
     this.quotesStatuses$?.unsubscribe();
+    this.subSearch$?.unsubscribe();
+    this.quotesReqSub$?.unsubscribe();
+  }
+
+  public onSearchChanged(value: string): void {
+    this.searchChanged$.next(value);
   }
 
   public openQuote(id: number): void {
@@ -89,7 +115,7 @@ export class CustomerTabQuotes implements OnInit, OnDestroy {
     if (page === this.currentPage) return;
 
     this.currentPage = page;
-    this.fetchQuotesPerCustomer(page, this.quotesToShow);
+    this.fetchQuotesPerCustomer({ page: page, size: this.quotesToShow });
   }
 
   public quoteStatusBadgeColor(status: string): string {
@@ -143,11 +169,15 @@ export class CustomerTabQuotes implements OnInit, OnDestroy {
 
     this.quotesService.updateQuoteStatus(quote.id, normalized).subscribe({
       next: () => {
+        this.editingQuoteId = undefined;
+        this.pendingStatus = undefined;
         toast.success('Quote status updated successfully');
       },
       error: (err) => {
         // Reset to previous value
         quote.status = oldStatus;
+        this.editingQuoteId = undefined;
+        this.pendingStatus = undefined;
 
         let errorMessage = err.error;
         let currentStatus = errorMessage?.details?.currentStatus;
@@ -171,15 +201,90 @@ export class CustomerTabQuotes implements OnInit, OnDestroy {
     });
   }
 
-  private fetchQuotesPerCustomer(page?: number, size?: number): void {
+  public onRefresh(): void {
+    this.fetchQuotesPerCustomer({ size: this.quotesToShow });
+  }
+
+  public onSort(query: string) {
+    if (!query) return;
+
+    switch (query) {
+      case 'sort-all':
+        this.activeSortLabel = 'Sort by';
+        this.fetchQuotesPerCustomer({ page: 0, sortBy: undefined, sortDirection: undefined });
+        break;
+      case 'sort-asc-by-number':
+        this.activeSortLabel = 'Number 0 → 9';
+        this.fetchQuotesPerCustomer({ page: 0, sortBy: 'number', sortDirection: 'asc' });
+        break;
+      case 'sort-desc-by-number':
+        this.activeSortLabel = 'Number 9 → 0';
+        this.fetchQuotesPerCustomer({ page: 0, sortBy: 'number', sortDirection: 'desc' });
+        break;
+      case 'sort-asc-by-issue-date':
+        this.activeSortLabel = 'Date 0 → 9';
+        this.fetchQuotesPerCustomer({ page: 0, sortBy: 'issueDate', sortDirection: 'asc' });
+        break;
+      case 'sort-desc-by-issue-date':
+        this.activeSortLabel = 'Date 9 → 0';
+        this.fetchQuotesPerCustomer({ page: 0, sortBy: 'issueDate', sortDirection: 'desc' });
+        break;
+    }
+  }
+
+  public onFilter(query: string) {
+    if (!query) return;
+
+    switch (query) {
+      case 'filter-by-all':
+        this.activeFilterLabel = 'Filter by';
+        this.fetchQuotesPerCustomer({ page: 0, quoteStatus: undefined, sortDirection: undefined });
+        break;
+      case 'filter-by-quote-status-draft':
+        this.activeFilterLabel = 'Draft';
+        this.fetchQuotesPerCustomer({ page: 0, quoteStatus: 'DRAFT' });
+        break;
+      case 'filter-by-quote-status-sent':
+        this.activeFilterLabel = 'Sent';
+        this.fetchQuotesPerCustomer({ page: 0, quoteStatus: 'SENT' });
+        break;
+      case 'filter-by-quote-status-accepted':
+        this.activeFilterLabel = 'Accepted';
+        this.fetchQuotesPerCustomer({ page: 0, quoteStatus: 'ACCEPTED' });
+        break;
+      case 'filter-by-quote-status-rejected':
+        this.activeFilterLabel = 'Rejected';
+        this.fetchQuotesPerCustomer({ page: 0, quoteStatus: 'REJECTED' });
+        break;
+      case 'filter-by-quote-status-expired':
+        this.activeFilterLabel = 'Expired';
+        this.fetchQuotesPerCustomer({ page: 0, quoteStatus: 'EXPIRED' });
+        break;
+      case 'filter-by-quote-status-cancelled':
+        this.activeFilterLabel = 'Cancelled';
+        this.fetchQuotesPerCustomer({ page: 0, quoteStatus: 'CANCELLED' });
+        break;
+    }
+  }
+
+  private fetchQuotesPerCustomer(params?: QuotesPerCustomerParameters): void {
     this.sub$?.unsubscribe();
+
+    const finalParams: QuotesPerCustomerParameters = {
+      ...this.currentParams,
+      ...params,
+    };
+
+    // Saved for future requests
+    this.currentParams = finalParams;
 
     this.sub$ = this.customersService.selectedCustomer$.subscribe((c) => {
       if (!c) return;
       this.isQuotesLoading = true;
       this.errorMessage = undefined;
+      this.quotesReqSub$?.unsubscribe();
 
-      this.customersService.quotesPerCustomer(c.id, page, size).subscribe({
+      this.quotesReqSub$ = this.customersService.quotesPerCustomer(c.id, finalParams).subscribe({
         next: (res) => {
           this.isQuotesLoading = false;
           this.quotes = res.content;
@@ -187,7 +292,6 @@ export class CustomerTabQuotes implements OnInit, OnDestroy {
           this.currentPage = res.number;
           this.totalPages = res.totalPages;
           this.totalElements = res.totalElements;
-          this.pageSize = res.size;
         },
         error: (err) => {
           this.isQuotesLoading = false;
@@ -239,5 +343,18 @@ export class CustomerTabQuotes implements OnInit, OnDestroy {
     this.desiredQuoteStatus = undefined;
     this.editingQuoteId = undefined;
     this.pendingStatus = undefined;
+  }
+
+  private onSearch(value: string): void {
+    let param = value.trim();
+
+    if (param.length === 0) {
+      this.fetchQuotesPerCustomer({ page: 0, size: this.quotesToShow, number: undefined });
+      return;
+    }
+
+    this.activeFilterLabel = 'Filter by';
+    this.activeSortLabel = 'Sort by';
+    this.fetchQuotesPerCustomer({ size: this.quotesToShow, number: param });
   }
 }

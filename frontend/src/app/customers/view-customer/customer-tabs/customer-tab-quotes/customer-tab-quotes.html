@@ -1,3 +1,9 @@
+<div>
+  @if (isQuotesLoading) {
+    <app-loading-spinner />
+  }
+</div>
+
 <!-- Modals -->
 <app-modal-file [isEnabled]="isModalOpen" [pdfUrl]="pdfUrl" (closeModal)="closeQuote()" />
 <app-modal
@@ -10,7 +16,19 @@
   (cancelClick)="onQuotesStatusModalCancelClick()"
   (closeModalClick)="onQuotesStatusModalCancelClick()"
 />
-
+<!-- Filters -->
+<div>
+  <app-quotes-filters
+    searchPlaceholder="Search by Number"
+    [createButton]="false"
+    [sortLabel]="activeSortLabel"
+    [filterLabel]="activeFilterLabel"
+    (searchChanged)="onSearchChanged($event)"
+    (refresh)="onRefresh()"
+    (sortBy)="onSort($event)"
+    (filterBy)="onFilter($event)"
+  />
+</div>
 <!-- Main content -->
 <div class="flex flex-col" [ngClass]="{ 'min-h-[630px]': quotes.length > 0 }">
   <!-- Errors -->
