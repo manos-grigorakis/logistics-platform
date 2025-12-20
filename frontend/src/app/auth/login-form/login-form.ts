@@ -6,10 +6,11 @@ import { LoginRequest } from '../models/login-request';
 import { Router, RouterLink } from '@angular/router';
 import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
 import { MainInput } from '../../shared/forms/main-input/main-input';
+import { ErrorAlert } from '../../shared/ui/error-alert/error-alert';
 
 @Component({
   selector: 'app-login-form',
-  imports: [PrimaryButton, ReactiveFormsModule, LoadingSpinner, RouterLink, MainInput],
+  imports: [PrimaryButton, ReactiveFormsModule, LoadingSpinner, RouterLink, MainInput, ErrorAlert],
   templateUrl: './login-form.html',
   styleUrl: './login-form.css',
 })

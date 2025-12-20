@@ -7,10 +7,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SetupPasswordRequest } from '../models/setup-password-request';
 import { toast } from 'ngx-sonner';
 import { MainInput } from '../../shared/forms/main-input/main-input';
+import { ErrorAlert } from '../../shared/ui/error-alert/error-alert';
 
 @Component({
   selector: 'app-setup-password-form',
-  imports: [PrimaryButton, LoadingSpinner, ReactiveFormsModule, MainInput],
+  imports: [PrimaryButton, LoadingSpinner, ReactiveFormsModule, MainInput, ErrorAlert],
   templateUrl: './setup-password-form.html',
   styleUrl: './setup-password-form.css',
 })
