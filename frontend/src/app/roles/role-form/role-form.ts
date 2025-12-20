@@ -5,10 +5,11 @@ import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner'
 import { RoleRequest } from '../models/role-request';
 import { ReactiveFormsModule, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Role } from '../models/role';
+import { ErrorAlert } from '../../shared/ui/error-alert/error-alert';
 
 @Component({
   selector: 'app-role-form',
-  imports: [ReactiveFormsModule, PrimaryButton, MainInput, LoadingSpinner],
+  imports: [ReactiveFormsModule, PrimaryButton, MainInput, LoadingSpinner, ErrorAlert],
   templateUrl: './role-form.html',
   styleUrl: './role-form.css',
 })

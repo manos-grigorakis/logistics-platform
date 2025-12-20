@@ -7,10 +7,11 @@ import { RolesService } from '../../roles/roles.service';
 import { Role } from '../../roles/models/role';
 import { UserResponse } from '../models/user-response';
 import { UserRequest } from '../models/user-request';
+import { ErrorAlert } from '../../shared/ui/error-alert/error-alert';
 
 @Component({
   selector: 'app-user-form',
-  imports: [ReactiveFormsModule, PrimaryButton, LoadingSpinner, MainInput],
+  imports: [ReactiveFormsModule, PrimaryButton, LoadingSpinner, MainInput, ErrorAlert],
   templateUrl: './user-form.html',
   styleUrl: './user-form.css',
 })
