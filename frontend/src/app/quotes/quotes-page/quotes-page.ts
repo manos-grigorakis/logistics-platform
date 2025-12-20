@@ -30,7 +30,6 @@ export class QuotesPage implements OnInit {
 
   // Filters
   public activeSortLabel: string = 'Sort by';
-
   public activeFilterLabel: string = 'Filter by';
 
   // Pagination
