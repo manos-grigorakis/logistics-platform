@@ -56,7 +56,7 @@
                     [ngModel]="editingQuoteId === quote.id ? pendingStatus : quote.status"
                     (ngModelChange)="handleQuotesStatusModal(quote, $event)"
                   >
-                    <option [value]="quote.status" selected disabled>
+                    <option [value]="quote.status" selected disabled hidden>
                       {{ quote.status | titlecase }}
                     </option>
                     @for (status of quotesStatuses; track $index) {
