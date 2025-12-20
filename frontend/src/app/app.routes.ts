@@ -23,6 +23,7 @@ import { CreateQuote } from './quotes/create-quote/create-quote';
 import { EditQuote } from './quotes/edit-quote/edit-quote';
 import { ForbiddenPage } from './forbidden-page/forbidden-page';
 import { CustomerTabQuotes } from './customers/view-customer/customer-tabs/customer-tab-quotes/customer-tab-quotes';
+import { VehiclesPage } from './vehicles/vehicles-page/vehicles-page';
 
 export const routes: Routes = [
   {
@@ -65,7 +66,6 @@ export const routes: Routes = [
           },
         ],
       },
-
       {
         path: 'quotes',
         children: [
@@ -73,6 +73,10 @@ export const routes: Routes = [
           { path: 'create-quote', component: CreateQuote, title: 'Create Quote' },
           { path: 'edit-quote/:id', component: EditQuote, title: 'Quotes' },
         ],
+      },
+      {
+        path: 'vehicles',
+        children: [{ path: '', component: VehiclesPage, title: 'Vehicles' }],
       },
     ],
   },
