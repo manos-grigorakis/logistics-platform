@@ -1,0 +1,17 @@
+package com.manosgrigorakis.logisticsplatform.shipments.service;
+
+import com.manosgrigorakis.logisticsplatform.common.dto.PageFilterRequest;
+import com.manosgrigorakis.logisticsplatform.common.dto.SortFilterRequest;
+import com.manosgrigorakis.logisticsplatform.shipments.dto.ShipmentRequestDTO;
+import com.manosgrigorakis.logisticsplatform.shipments.dto.ShipmentResponseDTO;
+import org.springframework.data.domain.Page;
+
+public interface ShipmentService {
+    Page<ShipmentResponseDTO> getAllShipments(PageFilterRequest page, SortFilterRequest sort);
+
+    ShipmentResponseDTO getShipmentById(Long id);
+
+    ShipmentResponseDTO createShipment(ShipmentRequestDTO dto);
+
+    ShipmentResponseDTO updateShipment(Long id, ShipmentRequestDTO dto);
+}
