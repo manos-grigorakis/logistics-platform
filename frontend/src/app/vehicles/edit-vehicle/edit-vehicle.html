@@ -1,1 +1,7 @@
-<p>edit-vehicle works!</p>
+<app-vehicle-form
+  formUsage="update"
+  [isLoading]="isLoading"
+  [vehicleData]="vehicle"
+  [errorMessage]="errorMessage"
+  (onSubmit)="onSubmitForm($event)"
+/>
