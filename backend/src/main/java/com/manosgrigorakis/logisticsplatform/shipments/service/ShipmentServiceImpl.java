@@ -11,6 +11,7 @@ import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
 import com.manosgrigorakis.logisticsplatform.quotes.repository.QuoteRepository;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.ShipmentRequestDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.ShipmentResponseDTO;
+import com.manosgrigorakis.logisticsplatform.shipments.dto.UpdateShipmentRequestDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.mapper.ShipmentMapper;
 import com.manosgrigorakis.logisticsplatform.shipments.model.Shipment;
 import com.manosgrigorakis.logisticsplatform.shipments.model.Vehicle;
@@ -122,8 +123,28 @@ public class ShipmentServiceImpl implements ShipmentService {
     }
 
     @Override
-    public ShipmentResponseDTO updateShipment(Long id, ShipmentRequestDTO dto) {
-        return null;
+    public ShipmentResponseDTO updateShipmentById(Long id, UpdateShipmentRequestDTO dto) {
+        Shipment shipment = findByIdOrThrow(id, shipmentRepository::findById, "Shipment");
+
+        if(shipment.isFinalized()) {
+            log.warn("Attempted to update finalized shipment with id {} status {}", shipment.getId(), shipment.getStatus());
+            throw new ConflictException("Attempted to update finalized shipment",
+                    Map.of("shipmentId", shipment.getId(), "status", shipment.getStatus())
+            );
+        }
+
+        User driver = findByIdOrNull(dto.getDriverId(), userRepository::findById, "Driver");
+        Vehicle truck = findByIdOrNull(dto.getTruckId(), vehicleRepository::findById, "Truck");
+        Vehicle trailer = findByIdOrNull(dto.getTrailerId(), vehicleRepository::findById, "Trailer");
+
+        shipment.setDriver(driver);
+        shipment.setTruck(truck);
+        shipment.setTrailer(trailer);
+        shipment.setPickup(dto.getPickup());
+        shipment.setNotes(dto.getNotes());
+        Shipment savedShipment = shipmentRepository.save(shipment);
+
+        return ShipmentMapper.toResponse(savedShipment);
     }
 
     /**

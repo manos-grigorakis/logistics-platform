@@ -2,6 +2,7 @@ package com.manosgrigorakis.logisticsplatform.shipments.controller;
 
 import com.manosgrigorakis.logisticsplatform.shipments.dto.ShipmentRequestDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.ShipmentResponseDTO;
+import com.manosgrigorakis.logisticsplatform.shipments.dto.UpdateShipmentRequestDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.service.ShipmentService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -27,5 +28,10 @@ public class ShipmentRestController {
         ShipmentResponseDTO response = shipmentService.createShipment(dto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PutMapping("/{id}")
+    public ShipmentResponseDTO updateShipmentById(@PathVariable Long id, @RequestBody @Valid UpdateShipmentRequestDTO dto) {
+        return shipmentService.updateShipmentById(id, dto);
     }
 }

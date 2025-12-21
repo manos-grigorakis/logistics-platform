@@ -10,5 +10,9 @@ public enum ShipmentStatus {
     DISPATCHED,
 
     @JsonProperty("delivered")
-    DELIVERED
+    DELIVERED;
+
+    public boolean isFinal() {
+        return this == DISPATCHED || this == DELIVERED;
+    }
 }

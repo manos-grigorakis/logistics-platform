@@ -96,6 +96,10 @@ public class Shipment {
         this.updatedAt = LocalDateTime.now();
     }
 
+    public boolean isFinalized() {
+        return this.status.isFinal();
+    }
+
     public boolean hasDriverRole() {
         return driver != null
                 && driver.getRole() != null
