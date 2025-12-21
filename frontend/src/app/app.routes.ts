@@ -24,6 +24,8 @@ import { EditQuote } from './quotes/edit-quote/edit-quote';
 import { ForbiddenPage } from './forbidden-page/forbidden-page';
 import { CustomerTabQuotes } from './customers/view-customer/customer-tabs/customer-tab-quotes/customer-tab-quotes';
 import { VehiclesPage } from './vehicles/vehicles-page/vehicles-page';
+import { CreateVehicle } from './vehicles/create-vehicle/create-vehicle';
+import { EditVehicle } from './vehicles/edit-vehicle/edit-vehicle';
 
 export const routes: Routes = [
   {
@@ -76,7 +78,11 @@ export const routes: Routes = [
       },
       {
         path: 'vehicles',
-        children: [{ path: '', component: VehiclesPage, title: 'Vehicles' }],
+        children: [
+          { path: '', component: VehiclesPage, title: 'Vehicles' },
+          { path: 'create-vehicle', component: CreateVehicle, title: 'Create Vehicle' },
+          { path: 'edit-vehicle/:id', component: EditVehicle, title: 'Edit Vehicle' },
+        ],
       },
     ],
   },

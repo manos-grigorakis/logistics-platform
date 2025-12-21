@@ -4,10 +4,12 @@ import { VehicleResponse } from '../models/vehicle-response';
 import { VehiclesTable } from '../vehicles-table/vehicles-table';
 import { toast } from 'ngx-sonner';
 import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
+import { RoundedIconButton } from '../../shared/forms/rounded-icon-button/rounded-icon-button';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-vehicles-page',
-  imports: [VehiclesTable, LoadingSpinner],
+  imports: [VehiclesTable, LoadingSpinner, RoundedIconButton, RouterLink],
   templateUrl: './vehicles-page.html',
   styleUrl: './vehicles-page.css',
 })
@@ -48,6 +50,10 @@ export class VehiclesPage implements OnInit {
         }
       },
     });
+  }
+
+  public onRefreshVehicleClick(): void {
+    this.fetchVehicles();
   }
 
   private fetchVehicles(): void {
