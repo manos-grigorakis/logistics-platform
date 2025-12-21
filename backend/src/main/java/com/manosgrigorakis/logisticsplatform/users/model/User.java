@@ -75,4 +75,8 @@ public class User {
     public void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
+
+    public String fullName() {
+        return firstName + " " + lastName;
+    }
 }
