@@ -68,6 +68,7 @@ public class Shipment {
     @Builder
     public Shipment(
             String number,
+            String notes,
             LocalDateTime pickup,
             Quote quote,
             User driver,
@@ -76,6 +77,7 @@ public class Shipment {
             Vehicle trailer)
     {
         this.number = number;
+        this.notes = notes;
         this.pickup = pickup;
         this.quote = quote;
         this.driver = driver;
