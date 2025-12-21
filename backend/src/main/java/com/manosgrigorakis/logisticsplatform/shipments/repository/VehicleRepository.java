@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
      boolean existsVehicleByPlate(String plate);
+
+     boolean existsByPlateAndIdNot(String plate, Long id);
 }
