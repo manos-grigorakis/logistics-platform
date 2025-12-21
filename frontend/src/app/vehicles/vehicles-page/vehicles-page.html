@@ -1,0 +1,23 @@
+@if (isVehicleDeleted) {
+  <app-loading-spinner />
+}
+
+<div class="border-primary-500 mb-8 rounded border-b-5 shadow-md">
+  <div class="flex justify-end gap-4 p-4">
+    <app-rounded-icon-button icon="lucidePlus" color="success" routerLink="create-vehicle" />
+    <app-rounded-icon-button
+      icon="lucideRefreshCcw"
+      color="info"
+      (clicked)="onRefreshVehicleClick()"
+    />
+  </div>
+</div>
+
+<div class="relative overflow-x-auto rounded-lg bg-white shadow-md">
+  <app-vehicles-table
+    [isLoading]="isLoading"
+    [vehicles]="vehicles"
+    [errorMessage]="errorMessage"
+    (onDeleteVehicle)="onDeleteVehicleClick($event)"
+  />
+</div>

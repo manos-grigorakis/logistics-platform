@@ -1,0 +1,88 @@
+<div class="mx-auto mt-6 max-w-xl rounded-lg bg-white p-6 shadow-lg shadow-black/10">
+  <h2 class="mb-4 text-center text-3xl font-semibold">
+    @if (formUsage === 'create') {
+      Create a Vehicle
+    } @else {
+      Update Vehicle
+    }
+  </h2>
+
+  @if (isLoading) {
+    <app-loading-spinner />
+  }
+
+  <div class="mb-5">
+    @if (errorMessage) {
+      <app-error-alert [errorMessage]="errorMessage" />
+    }
+  </div>
+
+  <form [formGroup]="vehicleForm" (ngSubmit)="onSubmitClick()">
+    <div class="mb-6">
+      <app-main-input
+        formControlName="brand"
+        label="Brand"
+        placeholder="Brand"
+        type="text"
+        [showRequiredStar]="true"
+      />
+    </div>
+    <div class="mb-6">
+      <app-main-input
+        formControlName="plate"
+        label="Plate"
+        placeholder="Plate"
+        type="text"
+        patternErrorMessage="must be 8 characters long"
+        [showRequiredStar]="true"
+      />
+    </div>
+    <div class="mb-6">
+      <p class="mb-1 block"><span class="text-danger mr-1 text-sm">*</span>Choose vehicle type:</p>
+
+      <div class="flex items-center gap-4">
+        <!-- Truck -->
+        <div class="flex items-center">
+          <input
+            id="radio-type-truck"
+            type="radio"
+            formControlName="type"
+            name="type"
+            value="truck"
+            class="h-4 w-4 rounded-full focus:outline-none"
+          />
+          <label for="radio-type-truck" class="ms-2 text-sm font-medium select-none">Truck</label>
+        </div>
+
+        <!-- Trailer -->
+        <div class="flex items-center">
+          <input
+            checked
+            id="radio-type-trailer"
+            type="radio"
+            name="type"
+            value="trailer"
+            formControlName="type"
+            class="h-4 w-4 rounded-full focus:outline-none"
+          />
+          <label for="radio-type-trailer" class="ms-2 text-sm font-medium select-none"
+            >Trailer</label
+          >
+        </div>
+      </div>
+      @if (type.invalid && (type.dirty || type.touched)) {
+        <div>
+          @if (type.hasError('required')) {
+            <span class="text-danger ml-1 text-sm">Type is required</span>
+          }
+        </div>
+      }
+    </div>
+
+    @if (formUsage === 'create') {
+      <app-primary-button value="Create Vehicle" [isDisabled]="isLoading" />
+    } @else {
+      <app-primary-button value="Update Vehicle" [isDisabled]="isLoading" />
+    }
+  </form>
+</div>
