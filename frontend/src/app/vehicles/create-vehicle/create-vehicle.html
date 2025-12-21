@@ -1,1 +1,6 @@
-<p>create-vehicle works!</p>
+<app-vehicle-form
+  formUsage="create"
+  [isLoading]="isLoading"
+  [errorMessage]="errorMessage"
+  (onSubmit)="onSubmit($event)"
+/>
