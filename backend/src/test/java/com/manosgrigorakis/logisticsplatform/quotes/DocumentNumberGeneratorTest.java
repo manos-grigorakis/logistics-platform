@@ -1,12 +1,12 @@
 package com.manosgrigorakis.logisticsplatform.quotes;
 
-import com.manosgrigorakis.logisticsplatform.quotes.service.QuoteNumberGenerator;
+import com.manosgrigorakis.logisticsplatform.common.generators.DocumentNumberGenerator;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
 
-public class QuoteNumberGeneratorTest {
+public class DocumentNumberGeneratorTest {
     @Test
     void quoteNumberGeneratorTests_shouldReturnCorrectNumber() {
         // Arrange
@@ -14,8 +14,8 @@ public class QuoteNumberGeneratorTest {
         String lastNumber = "Q-" + currentYear + "-0005";
 
         // Act
-        QuoteNumberGenerator quoteNumberGenerator = new QuoteNumberGenerator();
-        String result = quoteNumberGenerator.generateNextQuoteNumber(lastNumber);
+        DocumentNumberGenerator documentNumberGenerator = new DocumentNumberGenerator();
+        String result = documentNumberGenerator.generateNextSequentialNumber("Q", lastNumber);
 
         // Assert
         assertEquals("Q-" + currentYear + "-0006", result);

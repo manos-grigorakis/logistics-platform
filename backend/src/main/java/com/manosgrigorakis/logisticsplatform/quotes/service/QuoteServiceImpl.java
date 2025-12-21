@@ -1,5 +1,6 @@
 package com.manosgrigorakis.logisticsplatform.quotes.service;
 
+import com.manosgrigorakis.logisticsplatform.common.generators.DocumentNumberGenerator;
 import com.manosgrigorakis.logisticsplatform.quotes.dto.quoteItem.QuoteItemRequestDTO;
 import com.manosgrigorakis.logisticsplatform.quotes.dto.quote.*;
 import com.manosgrigorakis.logisticsplatform.quotes.enums.QuoteStatus;
@@ -47,7 +48,7 @@ public class QuoteServiceImpl implements QuoteService {
     private final FileStorageService fileStorageService;
 
     private final QuoteCalculator quoteCalculator;
-    private final QuoteNumberGenerator quoteNumberGenerator;
+    private final DocumentNumberGenerator documentNumberGenerator;
 
     private final Logger log = LoggerFactory.getLogger(QuoteServiceImpl.class);
 
@@ -61,7 +62,7 @@ public class QuoteServiceImpl implements QuoteService {
             PdfService pdfService,
             FileStorageService fileStorageService,
             QuoteCalculator quoteCalculator,
-            QuoteNumberGenerator quoteNumberGenerator
+            DocumentNumberGenerator documentNumberGenerator
             )
     {
         this.quoteRepository = quoteRepository;
@@ -70,7 +71,7 @@ public class QuoteServiceImpl implements QuoteService {
         this.pdfService = pdfService;
         this.fileStorageService = fileStorageService;
         this.quoteCalculator = quoteCalculator;
-        this.quoteNumberGenerator = quoteNumberGenerator;
+        this.documentNumberGenerator = documentNumberGenerator;
     }
 
     @Override
@@ -126,7 +127,7 @@ public class QuoteServiceImpl implements QuoteService {
         String lastNumber = quoteRepository.findLastQuoteNumberByYear(currentYear)
                 .orElse("Q-" + currentYear + "-0000");
 
-        String newNumber = quoteNumberGenerator.generateNextQuoteNumber(lastNumber);
+        String newNumber = documentNumberGenerator.generateNextSequentialNumber("Q", lastNumber);
         quote.setNumber(newNumber);
 
         BigDecimal netTotal = quoteCalculator.calculateNetTotal(quote);
