@@ -96,7 +96,7 @@ public class Shipment {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public boolean hasDriver() {
+    public boolean hasDriverRole() {
         return driver != null
                 && driver.getRole() != null
                 && "DRIVER".equals(driver.getRole().getName());

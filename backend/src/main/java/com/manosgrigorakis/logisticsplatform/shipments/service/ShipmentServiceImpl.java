@@ -97,7 +97,7 @@ public class ShipmentServiceImpl implements ShipmentService {
             throw new DuplicateEntryException("quoteId", quote.getId().toString());
         }
 
-        if(shipment.getDriver() != null && !shipment.hasDriver()) {
+        if(shipment.getDriver() != null && !shipment.hasDriverRole()) {
             log.warn("Attempted to create shipment with non driver user");
             throw new ConflictException(
                     "Attempted to create shipment with non driver user",
