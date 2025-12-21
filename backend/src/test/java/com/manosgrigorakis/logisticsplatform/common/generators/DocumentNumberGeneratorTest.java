@@ -1,6 +1,5 @@
-package com.manosgrigorakis.logisticsplatform.quotes;
+package com.manosgrigorakis.logisticsplatform.common.generators;
 
-import com.manosgrigorakis.logisticsplatform.common.generators.DocumentNumberGenerator;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -8,7 +7,7 @@ import java.time.LocalDate;
 
 public class DocumentNumberGeneratorTest {
     @Test
-    void quoteNumberGeneratorTests_shouldReturnCorrectNumber() {
+    void DocumentNumberGeneratorTests_shouldReturnCorrectNumber() {
         // Arrange
         int currentYear = LocalDate.now().getYear();
         String lastNumber = "Q-" + currentYear + "-0005";
