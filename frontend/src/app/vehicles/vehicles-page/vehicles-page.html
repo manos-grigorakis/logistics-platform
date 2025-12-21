@@ -1,3 +1,12 @@
+@if (isVehicleDeleted) {
+  <app-loading-spinner />
+}
+
 <div class="relative overflow-x-auto rounded-lg bg-white shadow-md">
-  <app-vehicles-table [isLoading]="isLoading" [vehicles]="vehicles" [errorMessage]="errorMessage" />
+  <app-vehicles-table
+    [isLoading]="isLoading"
+    [vehicles]="vehicles"
+    [errorMessage]="errorMessage"
+    (onDeleteVehicle)="onDeleteVehicleClick($event)"
+  />
 </div>
