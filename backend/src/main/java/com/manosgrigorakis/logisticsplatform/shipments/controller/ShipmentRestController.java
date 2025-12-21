@@ -1,10 +1,15 @@
 package com.manosgrigorakis.logisticsplatform.shipments.controller;
 
+import com.manosgrigorakis.logisticsplatform.common.dto.PageFilterRequest;
+import com.manosgrigorakis.logisticsplatform.common.dto.SortFilterRequest;
+import com.manosgrigorakis.logisticsplatform.shipments.dto.ShipmentFilterRequest;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.ShipmentRequestDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.ShipmentResponseDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.UpdateShipmentRequestDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.service.ShipmentService;
 import jakarta.validation.Valid;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +21,16 @@ public class ShipmentRestController {
 
     public ShipmentRestController(ShipmentService shipmentService) {
         this.shipmentService = shipmentService;
+    }
+
+    @GetMapping()
+    public Page<ShipmentResponseDTO> getAllShipments(
+            @ParameterObject @ModelAttribute @Valid PageFilterRequest pageFilter,
+            @ParameterObject @ModelAttribute SortFilterRequest sortFilter,
+            @ParameterObject @ModelAttribute @Valid ShipmentFilterRequest shipmentFilter
+            )
+    {
+        return shipmentService.getAllShipments(pageFilter, sortFilter, shipmentFilter);
     }
 
     @GetMapping("/{id}")

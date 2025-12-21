@@ -2,6 +2,7 @@ package com.manosgrigorakis.logisticsplatform.shipments.service;
 
 import com.manosgrigorakis.logisticsplatform.common.dto.PageFilterRequest;
 import com.manosgrigorakis.logisticsplatform.common.dto.SortFilterRequest;
+import com.manosgrigorakis.logisticsplatform.common.exception.BadRequestException;
 import com.manosgrigorakis.logisticsplatform.common.exception.ConflictException;
 import com.manosgrigorakis.logisticsplatform.common.exception.DuplicateEntryException;
 import com.manosgrigorakis.logisticsplatform.common.exception.ResourceNotFoundException;
@@ -9,6 +10,7 @@ import com.manosgrigorakis.logisticsplatform.common.generators.DocumentNumberGen
 import com.manosgrigorakis.logisticsplatform.quotes.enums.QuoteStatus;
 import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
 import com.manosgrigorakis.logisticsplatform.quotes.repository.QuoteRepository;
+import com.manosgrigorakis.logisticsplatform.shipments.dto.ShipmentFilterRequest;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.ShipmentRequestDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.ShipmentResponseDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.UpdateShipmentRequestDTO;
@@ -17,17 +19,23 @@ import com.manosgrigorakis.logisticsplatform.shipments.model.Shipment;
 import com.manosgrigorakis.logisticsplatform.shipments.model.Vehicle;
 import com.manosgrigorakis.logisticsplatform.shipments.repository.ShipmentRepository;
 import com.manosgrigorakis.logisticsplatform.shipments.repository.VehicleRepository;
+import com.manosgrigorakis.logisticsplatform.shipments.specs.ShipmentSpecs;
 import com.manosgrigorakis.logisticsplatform.users.model.User;
 import com.manosgrigorakis.logisticsplatform.users.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
+
+import static com.manosgrigorakis.logisticsplatform.common.utils.SpecsUtils.andIf;
 
 @Service
 public class ShipmentServiceImpl implements ShipmentService {
@@ -57,8 +65,31 @@ public class ShipmentServiceImpl implements ShipmentService {
     }
 
     @Override
-    public Page<ShipmentResponseDTO> getAllShipments(PageFilterRequest page, SortFilterRequest sort) {
-        return null;
+    public Page<ShipmentResponseDTO> getAllShipments(PageFilterRequest page, SortFilterRequest sort, ShipmentFilterRequest filterRequest) {
+        Specification<Shipment> spec = Specification.allOf();
+
+        spec = andIf(spec, filterRequest.getNumber(), ShipmentSpecs::likeNumber);
+        spec = andIf(spec, filterRequest.getStatus(), ShipmentSpecs::equalStatus);
+
+        if (filterRequest.getPickupFrom() != null && filterRequest.getPickupTo() != null &&
+                filterRequest.getPickupFrom().isAfter(filterRequest.getPickupTo()))
+        {
+            throw new BadRequestException("pickupFrom must be before pickupTo",
+                        Map.of("pickupFrom", filterRequest.getPickupFrom(), "pickupTo", filterRequest.getPickupTo())
+                    );
+        }
+
+
+        if(filterRequest.getPickupFrom() != null || filterRequest.getPickupTo() != null) {
+            spec = spec.and(ShipmentSpecs.pickupBetween(
+                    filterRequest.getPickupFrom(), filterRequest.getPickupTo())
+            );
+        }
+
+        Pageable pageable = PageRequest.of(page.getPage(), page.getSize(), sort.createSort());
+        Page<Shipment> shipmentPage = shipmentRepository.findAll(spec, pageable);
+
+        return shipmentPage.map(ShipmentMapper::toResponse);
     }
 
     @Override
