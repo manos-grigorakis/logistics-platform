@@ -1,6 +1,5 @@
-package com.manosgrigorakis.logisticsplatform.utils;
+package com.manosgrigorakis.logisticsplatform.common.utils;
 
-import com.manosgrigorakis.logisticsplatform.common.utils.FinancialCalculator;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

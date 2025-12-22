@@ -1,4 +1,4 @@
-package com.manosgrigorakis.logisticsplatform.common.utils;
+package com.manosgrigorakis.logisticsplatform.common.generators;
 
 import java.security.SecureRandom;
 import java.util.Base64;
