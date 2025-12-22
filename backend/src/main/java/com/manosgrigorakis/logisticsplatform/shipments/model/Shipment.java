@@ -110,11 +110,11 @@ public class Shipment {
                 && "DRIVER".equals(driver.getRole().getName());
     }
 
-    public boolean hasTruck() {
+    public boolean hasTruckType() {
         return truck != null && truck.getType() == VehicleType.TRUCK;
     }
 
-    public boolean hasTrailer() {
+    public boolean hasTrailerType() {
         return trailer != null && trailer.getType() == VehicleType.TRAILER;
     }
 }

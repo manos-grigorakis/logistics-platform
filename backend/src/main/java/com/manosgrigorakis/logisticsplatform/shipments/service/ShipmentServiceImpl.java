@@ -130,13 +130,7 @@ public class ShipmentServiceImpl implements ShipmentService {
             throw new DuplicateEntryException("quoteId", quote.getId().toString());
         }
 
-        if(shipment.getDriver() != null && !shipment.hasDriverRole()) {
-            log.warn("Attempted to create shipment with non driver user");
-            throw new ConflictException(
-                    "Attempted to create shipment with non driver user",
-                    Map.of("driverRole", shipment.getDriver().getRole().getName())
-            );
-        }
+        validators(shipment);
 
         // Find previous shipment number
         int currentYear = LocalDate.now().getYear();
@@ -174,6 +168,8 @@ public class ShipmentServiceImpl implements ShipmentService {
         shipment.setTrailer(trailer);
         shipment.setPickup(dto.getPickup());
         shipment.setNotes(dto.getNotes());
+
+        validators(shipment);
         Shipment savedShipment = shipmentRepository.save(shipment);
 
         return ShipmentMapper.toResponse(savedShipment);
@@ -216,5 +212,50 @@ public class ShipmentServiceImpl implements ShipmentService {
     private <T> T findByIdOrNull(Long id, Function<Long, Optional<T>> finder, String modelName) {
         if (id == null) return null;
         return findByIdOrThrow(id, finder, modelName);
+    }
+
+    /**
+     * Validates shipment before proceeding
+     * @param shipment the shipment to validate
+     * @throws ConflictException if:
+     * <ul>
+     *   <li>Driver is set but does not have DRIVER role</li>
+     *   <li>Truck is set but vehicle type is not TRUCK</li>
+     *   <li>Trailer is set but vehicle type is not TRAILER</li>
+     * </ul>
+     */
+    private void validators(Shipment shipment) {
+        if(shipment.getDriver() != null && !shipment.hasDriverRole()) {
+            log.warn("Attempted to save shipment with non-driver user");
+            throw new ConflictException(
+                    "Shipment driver must have DRIVER role",
+                    Map.of(
+                            "driverId", shipment.getDriver().getId(),
+                            "driverRole", shipment.getDriver().getRole().getName()
+                    )
+            );
+        }
+
+        if(shipment.getTruck() != null && !shipment.hasTruckType()) {
+            log.warn("Invalid truck assigned to shipment");
+            throw new ConflictException(
+                    "Invalid truck assigned to shipment",
+                    Map.of(
+                            "vehicleId", shipment.getTruck().getId(),
+                            "type", shipment.getTruck().getType(),
+                            "plate", shipment.getTruck().getPlate())
+            );
+        }
+
+        if(shipment.getTrailer() != null && !shipment.hasTrailerType()) {
+            log.warn("Invalid trailer assigned to shipment");
+            throw new ConflictException(
+                    "Invalid trailer assigned to shipment",
+                    Map.of(
+                            "vehicleId", shipment.getTrailer().getId(),
+                            "type", shipment.getTrailer().getType(),
+                            "plate", shipment.getTrailer().getPlate())
+            );
+        }
     }
 }

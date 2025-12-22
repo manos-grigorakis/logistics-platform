@@ -72,7 +72,9 @@ public class ShipmentRestController {
                     Conflict. Possible causes:
                     - Quote has no accepted status\s
                     - Shipment for that quote already exist\s
-                    - Driver doesn't have DRIVER role assigned\s
+                    - Driver doesn't have DRIVER role assigned (If provided)\s
+                    - Truck doesn't have TRUCK type (If provided)\s
+                    - Trailer doesn't have TRAILER type (If provided)\s
                     """
             ),
     })
@@ -88,7 +90,14 @@ public class ShipmentRestController {
             @ApiResponse(responseCode = "200", description = "Shipment updated"),
             @ApiResponse(responseCode = "400", description = "Validation Error"),
             @ApiResponse(responseCode = "404", description = "Shipment doesn't exists"),
-            @ApiResponse(responseCode = "409", description = "Shipment cannot be updated due to status"),
+            @ApiResponse(responseCode = "409", description = """
+                    Conflict. Possible causes:
+                    - Shipment cannot be updated due to status\s
+                    - Driver doesn't have DRIVER role assigned (If provided)\s
+                    - Truck doesn't have TRUCK type (If provided)\s
+                    - Trailer doesn't have TRAILER type (If provided)\s
+                    """
+            )
     })
     @PutMapping("/{id}")
     public ShipmentResponseDTO updateShipmentById(@PathVariable Long id, @RequestBody @Valid UpdateShipmentRequestDTO dto) {
