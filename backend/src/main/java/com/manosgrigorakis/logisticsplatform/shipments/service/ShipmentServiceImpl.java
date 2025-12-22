@@ -70,6 +70,7 @@ public class ShipmentServiceImpl implements ShipmentService {
 
         spec = andIf(spec, filterRequest.getNumber(), ShipmentSpecs::likeNumber);
         spec = andIf(spec, filterRequest.getStatus(), ShipmentSpecs::equalStatus);
+        spec = andIf(spec, filterRequest.getDriverId(), ShipmentSpecs::equalByDriverId);
 
         if (filterRequest.getPickupFrom() != null && filterRequest.getPickupTo() != null &&
                 filterRequest.getPickupFrom().isAfter(filterRequest.getPickupTo()))

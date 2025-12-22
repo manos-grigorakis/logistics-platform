@@ -21,4 +21,7 @@ public class ShipmentFilterRequest {
 
     @Schema(title = "Pickup date to", example = "2025-01-15T23:59:59")
     private LocalDateTime pickupTo;
+
+    @Schema(title = "Driver's id", example = "1")
+    private Long driverId;
 }

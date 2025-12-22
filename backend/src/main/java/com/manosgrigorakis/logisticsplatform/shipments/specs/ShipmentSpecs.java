@@ -2,6 +2,8 @@ package com.manosgrigorakis.logisticsplatform.shipments.specs;
 
 import com.manosgrigorakis.logisticsplatform.shipments.enums.ShipmentStatus;
 import com.manosgrigorakis.logisticsplatform.shipments.model.Shipment;
+import com.manosgrigorakis.logisticsplatform.users.model.User;
+import jakarta.persistence.criteria.Join;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDateTime;
@@ -34,6 +36,13 @@ public class ShipmentSpecs {
 
             // No filter
             return criteriaBuilder.conjunction();
+        };
+    }
+
+    public static Specification<Shipment> equalByDriverId(Long id) {
+        return (root, query, criteriaBuilder) -> {
+            Join<Shipment, User> joinDriver = root.join("driver");
+            return criteriaBuilder.equal(joinDriver.get("id"), id);
         };
     }
 }
