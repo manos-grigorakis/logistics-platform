@@ -1,18 +1,26 @@
 package com.manosgrigorakis.logisticsplatform.shipments.enums;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 
+@Getter
 public enum ShipmentStatus {
     @JsonProperty("pending")
-    PENDING,
+    PENDING("pending", true, false),
 
     @JsonProperty("dispatched")
-    DISPATCHED,
+    DISPATCHED("dispatched", false, false),
 
     @JsonProperty("delivered")
-    DELIVERED;
+    DELIVERED("delivered", false, true);
 
-    public boolean isFinal() {
-        return this == DISPATCHED || this == DELIVERED;
+    private final String label;
+    private final boolean editable;
+    private final boolean finalized;
+
+    ShipmentStatus(String label, boolean editable, boolean finalized) {
+        this.label = label;
+        this.editable = editable;
+        this.finalized = finalized;
     }
 }

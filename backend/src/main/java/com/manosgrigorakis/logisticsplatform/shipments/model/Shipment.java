@@ -96,8 +96,12 @@ public class Shipment {
         this.updatedAt = LocalDateTime.now();
     }
 
+    public boolean isEditable() {
+        return this.status.isEditable();
+    }
+
     public boolean isFinalized() {
-        return this.status.isFinal();
+        return this.status.isFinalized();
     }
 
     public boolean hasDriverRole() {

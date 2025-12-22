@@ -88,7 +88,7 @@ public class ShipmentRestController {
             @ApiResponse(responseCode = "200", description = "Shipment updated"),
             @ApiResponse(responseCode = "400", description = "Validation Error"),
             @ApiResponse(responseCode = "404", description = "Shipment doesn't exists"),
-            @ApiResponse(responseCode = "409", description = "Shipment is finalized and cannot be updated"),
+            @ApiResponse(responseCode = "409", description = "Shipment cannot be updated due to status"),
     })
     @PutMapping("/{id}")
     public ShipmentResponseDTO updateShipmentById(@PathVariable Long id, @RequestBody @Valid UpdateShipmentRequestDTO dto) {

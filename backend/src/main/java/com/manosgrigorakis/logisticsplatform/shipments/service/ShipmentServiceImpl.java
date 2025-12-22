@@ -158,9 +158,9 @@ public class ShipmentServiceImpl implements ShipmentService {
     public ShipmentResponseDTO updateShipmentById(Long id, UpdateShipmentRequestDTO dto) {
         Shipment shipment = findByIdOrThrow(id, shipmentRepository::findById, "Shipment");
 
-        if(shipment.isFinalized()) {
-            log.warn("Attempted to update finalized shipment with id {} status {}", shipment.getId(), shipment.getStatus());
-            throw new ConflictException("Attempted to update finalized shipment",
+        if(!shipment.isEditable()) {
+            log.warn("Attempted to update non editable shipment with id {} status {}", shipment.getId(), shipment.getStatus());
+            throw new ConflictException("Shipment cannot be updated due to status",
                     Map.of("shipmentId", shipment.getId(), "status", shipment.getStatus())
             );
         }
