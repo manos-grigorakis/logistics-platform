@@ -1,5 +1,6 @@
 package com.manosgrigorakis.logisticsplatform.shipments.controller;
 
+import com.manosgrigorakis.logisticsplatform.auth.model.UserInfoDetails;
 import com.manosgrigorakis.logisticsplatform.common.dto.PageFilterRequest;
 import com.manosgrigorakis.logisticsplatform.common.dto.SortFilterRequest;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.ShipmentFilterRequest;
@@ -12,6 +13,8 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -48,5 +51,18 @@ public class ShipmentRestController {
     @PutMapping("/{id}")
     public ShipmentResponseDTO updateShipmentById(@PathVariable Long id, @RequestBody @Valid UpdateShipmentRequestDTO dto) {
         return shipmentService.updateShipmentById(id, dto);
+    }
+
+    @GetMapping("/driver")
+    public Page<ShipmentResponseDTO> getShipmentsByDriver(
+            @AuthenticationPrincipal UserInfoDetails userInfoDetails,
+            @ParameterObject @ModelAttribute @Valid PageFilterRequest pageFilter,
+            @ParameterObject @ModelAttribute SortFilterRequest sortFilter
+    )
+    {
+        // Get driver's id from JWT
+        Long driverId = userInfoDetails.getUserId();
+
+        return shipmentService.getShipmentsByDriver(driverId, pageFilter, sortFilter);
     }
 }

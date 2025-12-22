@@ -16,4 +16,6 @@ public interface ShipmentService {
     ShipmentResponseDTO createShipment(ShipmentRequestDTO dto);
 
     ShipmentResponseDTO updateShipmentById(Long id, UpdateShipmentRequestDTO dto);
+
+    Page<ShipmentResponseDTO> getShipmentsByDriver(Long driverId, PageFilterRequest pageFilter, SortFilterRequest sortFilter);
 }

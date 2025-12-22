@@ -101,14 +101,15 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.GET, "/api/vehicles").hasAnyAuthority("ADMIN", "MANAGER")
                     .requestMatchers(HttpMethod.GET, "/api/vehicles/**").hasAnyAuthority("ADMIN", "MANAGER")
                     .requestMatchers(HttpMethod.POST, "/api/vehicles").hasAnyAuthority("ADMIN", "MANAGER")
-                    .requestMatchers(HttpMethod.PUT, "/xapi/vehicles/**").hasAnyAuthority("ADMIN", "MANAGER")
+                    .requestMatchers(HttpMethod.PUT, "/api/vehicles/**").hasAnyAuthority("ADMIN", "MANAGER")
                     .requestMatchers(HttpMethod.DELETE, "/api/vehicles/**").hasAnyAuthority("ADMIN", "MANAGER")
 
                     // Shipments
                     .requestMatchers(HttpMethod.GET, "/api/shipments").hasAnyAuthority("ADMIN", "MANAGER")
+                    .requestMatchers(HttpMethod.GET, "/api/shipments/driver").hasAnyAuthority("ADMIN", "DRIVER")
                     .requestMatchers(HttpMethod.GET, "/api/shipments/**").hasAnyAuthority("ADMIN", "MANAGER")
                     .requestMatchers(HttpMethod.POST, "/api/shipments").hasAnyAuthority("ADMIN", "MANAGER")
-                    .requestMatchers(HttpMethod.PUT, "/xapi/shipments/**").hasAnyAuthority("ADMIN", "MANAGER")
+                    .requestMatchers(HttpMethod.PUT, "/api/shipments/**").hasAnyAuthority("ADMIN", "MANAGER")
 
                     // All other endpoints require authentication
                     .anyRequest().authenticated();

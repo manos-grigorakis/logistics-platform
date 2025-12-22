@@ -179,6 +179,15 @@ public class ShipmentServiceImpl implements ShipmentService {
         return ShipmentMapper.toResponse(savedShipment);
     }
 
+    @Override
+    public Page<ShipmentResponseDTO> getShipmentsByDriver(Long driverId, PageFilterRequest pageFilter, SortFilterRequest sortFilter) {
+        Pageable pageable = PageRequest.of(pageFilter.getPage(), pageFilter.getSize(), sortFilter.createSort());
+
+        Page<Shipment> shipmentPage = shipmentRepository.findShipmentByDriverId(driverId, pageable);
+
+        return shipmentPage.map(ShipmentMapper::toResponse);
+    };
+
     /**
      * Finds an entity by its id, using the provider finder function
      * @param id The id of the entity

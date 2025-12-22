@@ -1,6 +1,8 @@
 package com.manosgrigorakis.logisticsplatform.shipments.repository;
 
 import com.manosgrigorakis.logisticsplatform.shipments.model.Shipment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -17,4 +19,6 @@ public interface ShipmentRepository extends JpaRepository<Shipment, Long>, JpaSp
     Optional<String> findLastShipmentNumberByYear(@Param("year") int year);
 
     boolean existsByQuoteId(Long id);
+
+    Page<Shipment> findShipmentByDriverId(Long driverId, Pageable pageable);
 }
