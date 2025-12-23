@@ -1,7 +1,7 @@
 ---
 name: Feature issue
 about: New feature
-title: "[Feature]"
+title: "[Domain]:"
 labels: feature
 assignees: manos-grigorakis
 
