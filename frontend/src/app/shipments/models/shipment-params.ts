@@ -3,7 +3,7 @@ import { ShipmentStatus } from './shipment-status';
 
 export interface ShipmentParams extends FilterParams {
   number?: string;
-  status?: ShipmentStatus;
+  status?: string;
   pickupFrom?: string;
   pickupTo?: string;
   driverId?: number;
