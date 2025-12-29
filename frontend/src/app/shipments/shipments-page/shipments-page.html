@@ -4,6 +4,7 @@
       [shipmentStatuses]="statuses"
       [filterLabel]="filterLabel"
       [sortLabel]="sortLabel"
+      (searchChanged)="onSearchChanged($event)"
       (refresh)="onRefresh()"
       (sortBy)="onSort($event)"
       (filterBy)="onFilter($event)"

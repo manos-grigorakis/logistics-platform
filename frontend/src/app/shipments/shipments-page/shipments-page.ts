@@ -7,7 +7,7 @@ import { ShipmentParams } from '../models/shipment-params';
 import { FiltersWrapper } from '../../shared/ui/filters-wrapper/filters-wrapper';
 import { ShipmentsFilters } from '../shipments-filters/shipments-filters';
 import { MetadataService } from '../../metadata/metadata.service';
-import { Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Subject, Subscription } from 'rxjs';
 import { ShipmentStatus } from '../models/shipment-status';
 
 @Component({
@@ -36,6 +36,9 @@ export class ShipmentsPage implements OnInit, OnDestroy {
   public filterLabel: string = 'Filter by';
   public sortLabel: string = 'Sort by';
 
+  // Search
+  private searchChanged$ = new Subject<string>();
+
   // Services
   private shipmentsService = inject(ShipmentsService);
   private metadataService = inject(MetadataService);
@@ -49,6 +52,11 @@ export class ShipmentsPage implements OnInit, OnDestroy {
     this.metadataService.fetchShipmentsStatuses();
 
     this.statusesSub = this.fetchShipmentsStatuses();
+
+    // Debouncer
+    this.searchChanged$
+      .pipe(debounceTime(400), distinctUntilChanged())
+      .subscribe((value) => this.onSearch(value));
   }
 
   ngOnDestroy(): void {
@@ -60,6 +68,37 @@ export class ShipmentsPage implements OnInit, OnDestroy {
 
     this.currentPage = page;
     this.fetchShipments({ page: page });
+  }
+
+  public onSearchChanged(value: string): void {
+    this.searchChanged$.next(value);
+  }
+
+  public onSearch(value: string): void {
+    let param = value.trim();
+
+    if (param.length === 0) {
+      this.fetchShipments({
+        page: 0,
+        number: undefined,
+        sortBy: undefined,
+        sortDirection: undefined,
+        status: undefined,
+      });
+    }
+
+    const minSearchByNumber = 6;
+    const normalized = param.toUpperCase();
+
+    if (normalized && param.length < minSearchByNumber) return;
+
+    this.fetchShipments({
+      page: 0,
+      number: normalized,
+      sortBy: undefined,
+      sortDirection: undefined,
+      status: undefined,
+    });
   }
 
   public onRefresh(): void {

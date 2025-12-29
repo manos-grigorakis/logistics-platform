@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { SearchBar } from '../../shared/forms/search-bar/search-bar';
 import { RoundedIconButton } from '../../shared/forms/rounded-icon-button/rounded-icon-button';
 import { NgIcon } from '@ng-icons/core';
@@ -18,7 +18,6 @@ export class ShipmentsFilters {
   @Input() sortLabel?: string;
   @Input() shipmentStatuses: ShipmentStatus[] = [];
   @Output() refresh = new EventEmitter<void>();
-  @Output() deleteClick = new EventEmitter<void>();
   @Output() searchChanged = new EventEmitter<string>();
   @Output() sortBy = new EventEmitter<string>();
   @Output() filterBy = new EventEmitter<string>();
