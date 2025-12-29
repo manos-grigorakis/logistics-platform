@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 public class ShipmentSpecs {
     public static Specification<Shipment> likeNumber(String number) {
         return (root, query, criteriaBuilder) ->
-                criteriaBuilder.like(root.get("number"), number);
+                criteriaBuilder.like(root.get("number"), "%" + number + "%");
     }
 
     public static Specification<Shipment> equalStatus(ShipmentStatus status) {
