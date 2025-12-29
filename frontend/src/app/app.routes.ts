@@ -26,6 +26,7 @@ import { CustomerTabQuotes } from './customers/view-customer/customer-tabs/custo
 import { VehiclesPage } from './vehicles/vehicles-page/vehicles-page';
 import { CreateVehicle } from './vehicles/create-vehicle/create-vehicle';
 import { EditVehicle } from './vehicles/edit-vehicle/edit-vehicle';
+import { ShipmentsPage } from './shipments/shipments-page/shipments-page';
 
 export const routes: Routes = [
   {
@@ -83,6 +84,10 @@ export const routes: Routes = [
           { path: 'create-vehicle', component: CreateVehicle, title: 'Create Vehicle' },
           { path: 'edit-vehicle/:id', component: EditVehicle, title: 'Edit Vehicle' },
         ],
+      },
+      {
+        path: 'shipments',
+        children: [{ path: '', component: ShipmentsPage, title: 'Shipments' }],
       },
     ],
   },
