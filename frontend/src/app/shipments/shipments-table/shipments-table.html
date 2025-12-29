@@ -1,0 +1,61 @@
+<table class="text-body w-full text-left text-sm whitespace-nowrap rtl:text-right">
+  @if (isLoading) {
+    <app-loading-spinner />
+  }
+  <thead class="text-body bg-secondary-700 text-sm text-white">
+    <tr>
+      <th scope="col" class="px-2 py-3 font-medium">Number</th>
+      <th scope="col" class="px-2 py-3 font-medium">Pickup</th>
+      <th scope="col" class="px-2 py-3 font-medium">Status</th>
+      <th scope="col" class="px-2 py-3 font-medium">Quote</th>
+      <th scope="col" class="px-2 py-3 font-medium">Driver</th>
+      <th scope="col" class="px-2 py-3 font-medium">Truck</th>
+      <th scope="col" class="px-2 py-3 font-medium">Trailer</th>
+      <th scope="col" class="px-2 py-3 font-medium">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (shipment of shipments; track shipment.id) {
+      <tr>
+        <td class="px-2 py-4">
+          <a class="hover:underline" [routerLink]="['view-shipment', shipment.id]">{{
+            shipment.number
+          }}</a>
+        </td>
+
+        <td class="px-2 py-4">{{ shipment.pickup | date: 'medium' }}</td>
+        <td class="px-2 py-4">
+          <span
+            class="rounded border px-2 capitalize"
+            [ngClass]="shipmentStatusBadgeColor(shipment.status)"
+            >{{ shipment.status }}</span
+          >
+        </td>
+        <td class="px-2 py-4">{{ shipment.quote.number }}</td>
+        <td class="px-2 py-4">{{ shipment.driver?.fullName || '-' }}</td>
+        <td class="px-2 py-4">{{ shipment.truck?.plate || '-' }}</td>
+        <td class="px-2 py-4">{{ shipment.trailer?.plate || '-' }}</td>
+
+        <td class="flex gap-2 px-2 py-4">
+          <a
+            [routerLink]="['edit-shipment', shipment.id]"
+            class="text-fg-brand font-medium hover:underline"
+            >Edit</a
+          >
+        </td>
+      </tr>
+    } @empty {
+      <tr>
+        <td class="w-full py-4 text-center text-lg" colspan="7">
+          @if (errorMessage) {
+            <span class="bg-danger-light text-danger-dark border-danger rounded border px-2">{{
+              errorMessage
+            }}</span>
+          } @else {
+            There are no shipments
+          }
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
