@@ -5,10 +5,11 @@ import { NgIcon } from '@ng-icons/core';
 import { RouterLink } from '@angular/router';
 import { DropdownButton } from '../../shared/ui/dropdown-button/dropdown-button';
 import { ShipmentStatus } from '../models/shipment-status';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-shipments-filters',
-  imports: [SearchBar, RoundedIconButton, DropdownButton, NgIcon, RouterLink],
+  imports: [SearchBar, RoundedIconButton, DropdownButton, NgIcon, RouterLink, FormsModule],
   templateUrl: './shipments-filters.html',
   styleUrl: './shipments-filters.css',
 })
@@ -21,8 +22,12 @@ export class ShipmentsFilters {
   @Output() searchChanged = new EventEmitter<string>();
   @Output() sortBy = new EventEmitter<string>();
   @Output() filterBy = new EventEmitter<string>();
+  @Output() onPickupFrom = new EventEmitter<string>();
+  @Output() onPickupTo = new EventEmitter<string>();
 
   public searchTerm: string = '';
+  public pickupFrom: string = '';
+  public pickupTo: string = '';
 
   public loadShipments(): void {
     this.refresh.emit();
@@ -39,5 +44,13 @@ export class ShipmentsFilters {
 
   public onFilterByFieldClick(filterOption: string): void {
     this.filterBy.emit(filterOption);
+  }
+
+  public onPickupFromChange(value: string) {
+    this.onPickupFrom.emit(value);
+  }
+
+  public onPickupToChange(value: string) {
+    this.onPickupTo.emit(value);
   }
 }

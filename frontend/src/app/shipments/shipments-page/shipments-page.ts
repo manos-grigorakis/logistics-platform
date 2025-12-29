@@ -9,6 +9,7 @@ import { ShipmentsFilters } from '../shipments-filters/shipments-filters';
 import { MetadataService } from '../../metadata/metadata.service';
 import { debounceTime, distinctUntilChanged, Subject, Subscription } from 'rxjs';
 import { ShipmentStatus } from '../models/shipment-status';
+import { toast } from 'ngx-sonner';
 
 @Component({
   selector: 'app-shipments-page',
@@ -35,6 +36,10 @@ export class ShipmentsPage implements OnInit, OnDestroy {
   // Filtering & Sorting
   public filterLabel: string = 'Filter by';
   public sortLabel: string = 'Sort by';
+
+  // Dates
+  private pickupTo?: string;
+  private pickupFrom?: string;
 
   // Search
   private searchChanged$ = new Subject<string>();
@@ -144,6 +149,37 @@ export class ShipmentsPage implements OnInit, OnDestroy {
       this.filterLabel = status.charAt(0).toUpperCase() + status.slice(1);
       this.fetchShipments({ status: status.toUpperCase() });
     }
+  }
+
+  public onPickupFrom(value: string): void {
+    this.pickupFrom = value || undefined;
+    this.handleDatesSorting();
+  }
+
+  public onPickupTo(value: string): void {
+    this.pickupTo = value || undefined;
+    this.handleDatesSorting();
+  }
+
+  public handleDatesSorting(): void {
+    const from = this.pickupFrom;
+    const to = this.pickupTo;
+
+    if (from && to) {
+      const fromDate = new Date(from);
+      const toDate = new Date(to);
+
+      if (fromDate > toDate) {
+        toast.error('From must be before To');
+        return;
+      }
+    }
+
+    this.fetchShipments({
+      page: 0,
+      pickupFrom: this.pickupFrom || undefined,
+      pickupTo: this.pickupTo || undefined,
+    });
   }
 
   private fetchShipments(params?: ShipmentParams): void {
