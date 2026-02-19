@@ -31,7 +31,7 @@ export class MainInput implements ControlValueAccessor, Validator {
   public readonly showRequiredStar = input<boolean>(false);
   public readonly label = input<string>('');
   public readonly placeholder = input<string>('');
-  public readonly type = input<'text' | 'number' | 'email' | 'password'>('text');
+  public readonly type = input<'text' | 'number' | 'email' | 'password' | 'date'>('text');
 
   public readonly value = signal('');
   public readonly disabled = signal(false);
