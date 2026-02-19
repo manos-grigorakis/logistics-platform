@@ -12,6 +12,8 @@ export function quoteStatusBadgeColor(status: string): string {
       return 'bg-danger-light text-danger-dark';
     case 'cancelled':
       return 'bg-secondary-200 text-secondary-700';
+    case 'converted':
+      return 'bg-info-light text-info-dark';
     default:
       return 'bg-slate-200 text-slate-700';
   }

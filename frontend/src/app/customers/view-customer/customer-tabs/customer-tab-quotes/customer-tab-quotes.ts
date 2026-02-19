@@ -38,7 +38,13 @@ export class CustomerTabQuotes implements OnInit, OnDestroy {
   public quotes: QuotePerCustomer[] = [];
   public errorMessage?: string = undefined;
   public quotesStatuses: string[] = [];
-  public finalizedStatuses: string[] = ['accepted', 'rejected', 'cancelled', 'expired'];
+  public finalizedStatuses: string[] = [
+    'accepted',
+    'rejected',
+    'cancelled',
+    'expired',
+    'converted',
+  ];
 
   // PDF Modal
   public isModalOpen: boolean = false;
