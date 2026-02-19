@@ -45,6 +45,9 @@ export class ShipmentsForm implements OnInit {
   private vehiclesService = inject(VehiclesService);
   private authService = inject(AuthService);
 
+  // UI
+  public uiErrorMessage?: string = undefined;
+
   // Quotes
   public quotesLoading: boolean = false;
   public quoteSearch$ = new Subject<string>();
@@ -122,7 +125,6 @@ export class ShipmentsForm implements OnInit {
       return;
     }
 
-    // TODO: Add Business Logic...
     const raw = this.shipmentForm.getRawValue();
 
     if (raw.quoteId === null) return;
@@ -136,7 +138,6 @@ export class ShipmentsForm implements OnInit {
       trailerId: raw.trailerId ? raw.trailerId : null,
       notes: raw.notes ? raw.notes : null,
     };
-    console.log(payload);
 
     this.onSubmit.emit(payload);
   }
@@ -160,6 +161,7 @@ export class ShipmentsForm implements OnInit {
 
   private fetchQuotes(): void {
     this.quotesLoading = true;
+    this.uiErrorMessage = undefined;
 
     this.quotesService.fetchQuotes({ quoteStatus: 'ACCEPTED' }).subscribe({
       next: (res) => {
@@ -173,18 +175,22 @@ export class ShipmentsForm implements OnInit {
       error: (err) => {
         this.quotesLoading = false;
 
-        // TODO: Add error handling for quotes
-        console.error('Something went wrong!!', err.headers);
+        if (err.status === 500) {
+          this.uiErrorMessage = 'Server error. Please try again';
+        } else {
+          this.uiErrorMessage = 'An error occurred. Please try again';
+        }
       },
     });
   }
 
-  // TODO: Update to check if role is driver and not based on the ID
   private fetchDrivers(): void {
     this.driverLoading = true;
+    this.uiErrorMessage = undefined;
 
     this.usersService
       .fetchUsers()
+      // TODO: Update to check if role is driver and not based on the ID
       .pipe(map((users) => users.filter((u) => u.roleId === 2)))
       .subscribe({
         next: (res) => {
@@ -198,8 +204,11 @@ export class ShipmentsForm implements OnInit {
         error: (err) => {
           this.driverLoading = false;
 
-          // TODO: Add error handling for drivers
-          console.error(err);
+          if (err.status === 500) {
+            this.uiErrorMessage = 'Server error. Please try again';
+          } else {
+            this.uiErrorMessage = 'An error occurred. Please try again';
+          }
         },
       });
   }
@@ -207,6 +216,7 @@ export class ShipmentsForm implements OnInit {
   private fetchVehicles(): void {
     this.truckLoading = true;
     this.trailerLoading = true;
+    this.uiErrorMessage = undefined;
 
     this.vehiclesService
       .fetchAllVehicles()
@@ -227,8 +237,11 @@ export class ShipmentsForm implements OnInit {
           this.truckLoading = false;
           this.trailerLoading = false;
 
-          // TODO: Add error handling for vehicles
-          console.error(err);
+          if (err.status === 500) {
+            this.uiErrorMessage = 'Server error. Please try again';
+          } else {
+            this.uiErrorMessage = 'An error occurred. Please try again';
+          }
         },
       });
   }

@@ -17,6 +17,12 @@
     }
   </div>
 
+  <div class="mb-5">
+    @if (uiErrorMessage) {
+      <app-error-alert [errorMessage]="uiErrorMessage" />
+    }
+  </div>
+
   <form [formGroup]="shipmentForm" (ngSubmit)="onSubmitClick()">
     <div class="mb-6">
       <label for="quoteId" (click)="onClickFocusQuoteIdSelect()" class="mb-1 block">
@@ -114,7 +120,7 @@
     </div>
 
     <!-- TODO: Add Status fields -->
-    <!-- Status should be only disabled on update * -->
+    <!-- Status should be only visible on update * -->
 
     <div class="mb-6">
       <label for="notes" class="mb-1 block">Notes</label>
