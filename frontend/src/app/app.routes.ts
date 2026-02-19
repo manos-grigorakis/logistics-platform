@@ -27,6 +27,8 @@ import { VehiclesPage } from './vehicles/vehicles-page/vehicles-page';
 import { CreateVehicle } from './vehicles/create-vehicle/create-vehicle';
 import { EditVehicle } from './vehicles/edit-vehicle/edit-vehicle';
 import { ShipmentsPage } from './shipments/shipments-page/shipments-page';
+import { CreateShipment } from './shipments/create-shipment/create-shipment';
+import { EditShipment } from './shipments/edit-shipment/edit-shipment';
 
 export const routes: Routes = [
   {
@@ -87,7 +89,11 @@ export const routes: Routes = [
       },
       {
         path: 'shipments',
-        children: [{ path: '', component: ShipmentsPage, title: 'Shipments' }],
+        children: [
+          { path: '', component: ShipmentsPage, title: 'Shipments' },
+          { path: 'create-shipment', component: CreateShipment, title: 'Create Shipment' },
+          { path: 'edit-shipment/:id', component: EditShipment, title: 'Edit Shipment' },
+        ],
       },
     ],
   },
