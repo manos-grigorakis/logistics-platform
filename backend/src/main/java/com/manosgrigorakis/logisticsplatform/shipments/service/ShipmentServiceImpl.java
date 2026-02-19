@@ -22,6 +22,7 @@ import com.manosgrigorakis.logisticsplatform.shipments.repository.VehicleReposit
 import com.manosgrigorakis.logisticsplatform.shipments.specs.ShipmentSpecs;
 import com.manosgrigorakis.logisticsplatform.users.model.User;
 import com.manosgrigorakis.logisticsplatform.users.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -101,6 +102,7 @@ public class ShipmentServiceImpl implements ShipmentService {
     }
 
     @Override
+    @Transactional
     public ShipmentResponseDTO createShipment(ShipmentRequestDTO dto) {
         // Required
         Quote quote = findByIdOrThrow(dto.getQuoteId(), quoteRepository::findById, "Quote");
@@ -143,6 +145,7 @@ public class ShipmentServiceImpl implements ShipmentService {
 
         // Save shipment
         Shipment savedShipment = shipmentRepository.save(shipment);
+        quote.setQuoteStatus(QuoteStatus.CONVERTED);
         log.info("Shipment created with number: {}", savedShipment.getNumber());
 
         return ShipmentMapper.toResponse(savedShipment);
