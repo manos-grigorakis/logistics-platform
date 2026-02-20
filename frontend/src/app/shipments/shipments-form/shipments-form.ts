@@ -190,8 +190,7 @@ export class ShipmentsForm implements OnInit {
 
     this.usersService
       .fetchUsers()
-      // TODO: Update to check if role is driver and not based on the ID
-      .pipe(map((users) => users.filter((u) => u.roleId === 2)))
+      .pipe(map((users) => users.filter((u) => u.roleName === 'DRIVER')))
       .subscribe({
         next: (res) => {
           this.driverLoading = false;
