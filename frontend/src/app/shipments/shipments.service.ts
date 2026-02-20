@@ -6,6 +6,7 @@ import { environment } from '../../environments/environment';
 import { ShipmentParams } from './models/shipment-params';
 import { addHttpParam } from '../shared/utils/add-http-params.util';
 import { ShipmentPayload } from './models/shipment-payload';
+import { Shipment } from './models/shipment';
 
 @Injectable({
   providedIn: 'root',
@@ -33,7 +34,15 @@ export class ShipmentsService {
     return this.http.get<ShipmentsResponse>(`${environment.apiUrl}/shipments`, { params });
   }
 
+  public getShipment(id: number): Observable<Shipment> {
+    return this.http.get<Shipment>(`${environment.apiUrl}/shipments/${id}`);
+  }
+
   public createShipment(payload: ShipmentPayload): Observable<ShipmentsResponse> {
     return this.http.post<ShipmentsResponse>(`${environment.apiUrl}/shipments`, payload);
+  }
+
+  public updateShipment(id: number, payload: ShipmentPayload): Observable<ShipmentsResponse> {
+    return this.http.put<ShipmentsResponse>(`${environment.apiUrl}/shipments/${id}`, payload);
   }
 }

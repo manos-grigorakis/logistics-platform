@@ -1,1 +1,4 @@
-<app-shipments-form formUsage="edit" />
+@if (isLoading) {
+  <app-loading-spinner />
+}
+<app-shipments-form formUsage="edit" (onSubmit)="onSubmit($event)" [shipmentsData]="shipment" />

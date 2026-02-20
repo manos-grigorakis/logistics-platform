@@ -14,6 +14,7 @@ import { PrimaryButton } from '../../shared/ui/primary-button/primary-button';
 import { MainInput } from '../../shared/forms/main-input/main-input';
 import { ShipmentPayload } from '../models/shipment-payload';
 import { AuthService } from '../../auth/services/auth.service';
+import { Shipment } from '../models/shipment';
 
 @Component({
   selector: 'app-shipments-form',
@@ -81,7 +82,24 @@ export class ShipmentsForm implements OnInit {
     notes: new FormControl<string>(''),
   });
 
+  @Input() set shipmentsData(value: Shipment | undefined) {
+    if (!value) return;
+    this.shipmentForm.patchValue({
+      quoteId: value.quote.id,
+      driverId: value.driver?.id,
+      truckId: value.truck?.id,
+      trailerId: value.trailer?.id,
+      pickup: value.pickup.slice(0, 10), // DD/MM/YYYY
+      notes: value.notes,
+    });
+
+    // Update dropdown for quote
+    this.quotesList = [value.quote, ...this.quotesList];
+  }
+
   ngOnInit(): void {
+    if (this.formUsage === 'edit') this.quoteId.disable();
+
     this.fetchQuotes();
     this.fetchDrivers();
     this.fetchVehicles();

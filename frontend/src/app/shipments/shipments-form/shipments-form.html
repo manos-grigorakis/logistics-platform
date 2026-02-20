@@ -59,7 +59,7 @@
         Driver
       </label>
       <ng-select
-        #quoteIdSelect
+        #driverIdSelect
         class="tw-select"
         placeholder="Search a Driver"
         bindLabel="fullName"
@@ -77,11 +77,11 @@
 
     <div class="mb-6 flex flex-col gap-6 sm:flex-row sm:gap-4">
       <div class="flex-1">
-        <label for="truckId" (click)="onClickFocusDriverIdSelect()" class="mb-1 block">
+        <label for="truckId" (click)="onClickFocusTruckIdSelect()" class="mb-1 block">
           Truck
         </label>
         <ng-select
-          #quoteIdSelect
+          #truckIdSelect
           class="tw-select"
           placeholder="Search a Truck"
           bindLabel="plate"
@@ -98,11 +98,11 @@
       </div>
 
       <div class="flex-1">
-        <label for="trailerId" (click)="onClickFocusDriverIdSelect()" class="mb-1 block">
+        <label for="trailerId" (click)="onClickFocusTrailerIdSelect()" class="mb-1 block">
           Trailer
         </label>
         <ng-select
-          #quoteIdSelect
+          #trailerIdSelect
           class="tw-select"
           placeholder="Search a Trailer"
           bindLabel="plate"
