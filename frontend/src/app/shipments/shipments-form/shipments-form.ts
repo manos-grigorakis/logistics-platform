@@ -78,7 +78,13 @@ export class ShipmentsForm implements OnInit {
     truckId: new FormControl<number | null>(null),
     trailerId: new FormControl<number | null>(null),
     status: new FormControl<string>(''),
-    pickup: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
+    pickup: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [
+        Validators.required,
+        Validators.pattern(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/), // yyyy-MM-ddTHH:mm
+      ],
+    }),
     notes: new FormControl<string>(''),
   });
 
@@ -89,7 +95,7 @@ export class ShipmentsForm implements OnInit {
       driverId: value.driver?.id,
       truckId: value.truck?.id,
       trailerId: value.trailer?.id,
-      pickup: value.pickup.slice(0, 10), // DD/MM/YYYY
+      pickup: value.pickup.slice(0, 16), // yyyy-MM-ddTHH:mm
       notes: value.notes,
     });
 
@@ -150,7 +156,7 @@ export class ShipmentsForm implements OnInit {
     const payload: ShipmentPayload = {
       quoteId: raw.quoteId,
       createdByUserId: this.authService.getUserId()!,
-      pickup: new Date(raw.pickup),
+      pickup: `${raw.pickup}:00`,
       driverId: raw.driverId,
       truckId: raw.truckId ? raw.truckId : null,
       trailerId: raw.trailerId ? raw.trailerId : null,

@@ -4,6 +4,6 @@ export interface ShipmentPayload {
   createdByUserId: number;
   truckId: number | null;
   trailerId: number | null;
-  pickup: Date;
+  pickup: string;
   notes: string | null;
 }
