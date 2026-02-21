@@ -7,12 +7,14 @@
 
   <div class="flex items-center gap-6">
     <div class="flex items-center gap-4">
-      <!-- Add -->
-      <app-rounded-icon-button
-        routerLink="create-shipment"
-        icon="lucidePlus"
-        color="success"
-      ></app-rounded-icon-button>
+      @if (showCreateButton) {
+        <!-- Add -->
+        <app-rounded-icon-button
+          routerLink="create-shipment"
+          icon="lucidePlus"
+          color="success"
+        ></app-rounded-icon-button>
+      }
 
       <!-- Refresh -->
       <app-rounded-icon-button
@@ -89,28 +91,30 @@
       }
     </app-dropdown-button>
 
-    <!-- Date Pickers -->
-    <div class="flex gap-4">
-      <div class="flex items-center gap-2">
-        <label for="pickup-from">From</label>
-        <input
-          id="pickup-from"
-          type="datetime-local"
-          class="focus:ring-primary-200 rounded-md border px-4 py-2 text-xs font-medium text-gray-400 shadow-xs hover:cursor-pointer hover:text-gray-700 md:text-sm"
-          [(ngModel)]="pickupFrom"
-          (ngModelChange)="onPickupFromChange($event)"
-        />
+    @if (showDatesFilters) {
+      <!-- Date Pickers -->
+      <div class="flex gap-4">
+        <div class="flex items-center gap-2">
+          <label for="pickup-from">From</label>
+          <input
+            id="pickup-from"
+            type="datetime-local"
+            class="focus:ring-primary-200 rounded-md border px-4 py-2 text-xs font-medium text-gray-400 shadow-xs hover:cursor-pointer hover:text-gray-700 md:text-sm"
+            [(ngModel)]="pickupFrom"
+            (ngModelChange)="onPickupFromChange($event)"
+          />
+        </div>
+        <div class="flex items-center gap-2">
+          <label for="pickup-to">To</label>
+          <input
+            id="pickup-to"
+            type="datetime-local"
+            class="focus:ring-primary-200 rounded-md border px-4 py-2 text-xs font-medium text-gray-400 shadow-xs hover:cursor-pointer hover:text-gray-700 md:text-sm"
+            [(ngModel)]="pickupTo"
+            (ngModelChange)="onPickupToChange($event)"
+          />
+        </div>
       </div>
-      <div class="flex items-center gap-2">
-        <label for="pickup-to">To</label>
-        <input
-          id="pickup-to"
-          type="datetime-local"
-          class="focus:ring-primary-200 rounded-md border px-4 py-2 text-xs font-medium text-gray-400 shadow-xs hover:cursor-pointer hover:text-gray-700 md:text-sm"
-          [(ngModel)]="pickupTo"
-          (ngModelChange)="onPickupToChange($event)"
-        />
-      </div>
-    </div>
+    }
   </div>
 </div>

@@ -14,6 +14,8 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './shipments-filters.css',
 })
 export class ShipmentsFilters {
+  @Input() showCreateButton: boolean = true;
+  @Input() showDatesFilters: boolean = true;
   @Input() isLoading: boolean = false;
   @Input() filterLabel?: string;
   @Input() sortLabel?: string;

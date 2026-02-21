@@ -30,6 +30,7 @@ import { ShipmentsPage } from './shipments/shipments-page/shipments-page';
 import { CreateShipment } from './shipments/create-shipment/create-shipment';
 import { EditShipment } from './shipments/edit-shipment/edit-shipment';
 import { ViewShipment } from './shipments/view-shipment/view-shipment';
+import { CustomerTabShipments } from './customers/view-customer/customer-tabs/customer-tab-shipments/customer-tab-shipments';
 
 export const routes: Routes = [
   {
@@ -68,7 +69,11 @@ export const routes: Routes = [
             path: 'view-customer/:id',
             component: ViewCustomer,
             title: 'View Customer',
-            children: [{ path: 'tab-quotes', component: CustomerTabQuotes }],
+            children: [
+              { path: '', pathMatch: 'full', redirectTo: 'tab-quotes' },
+              { path: 'tab-quotes', component: CustomerTabQuotes },
+              { path: 'tab-shipments', component: CustomerTabShipments },
+            ],
           },
         ],
       },

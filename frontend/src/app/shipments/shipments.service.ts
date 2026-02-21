@@ -28,7 +28,11 @@ export class ShipmentsService {
     params = addHttpParam(params, 'pickupTo', param.pickupTo);
 
     if (param.driverId !== undefined) {
-      params.set('driverId', param.driverId);
+      params = params.set('driverId', param.driverId);
+    }
+
+    if (param.customerId !== undefined) {
+      params = params.set('customerId', param.customerId.toString());
     }
 
     return this.http.get<ShipmentsResponse>(`${environment.apiUrl}/shipments`, { params });

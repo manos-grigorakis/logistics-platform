@@ -7,4 +7,5 @@ export interface ShipmentParams extends FilterParams {
   pickupFrom?: string;
   pickupTo?: string;
   driverId?: number;
+  customerId?: number;
 }
