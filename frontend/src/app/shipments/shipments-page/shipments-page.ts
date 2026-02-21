@@ -90,6 +90,7 @@ export class ShipmentsPage implements OnInit, OnDestroy {
         sortDirection: undefined,
         status: undefined,
       });
+      return;
     }
 
     const minSearchByNumber = 6;
