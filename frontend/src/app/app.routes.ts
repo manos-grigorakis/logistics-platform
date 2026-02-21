@@ -29,6 +29,7 @@ import { EditVehicle } from './vehicles/edit-vehicle/edit-vehicle';
 import { ShipmentsPage } from './shipments/shipments-page/shipments-page';
 import { CreateShipment } from './shipments/create-shipment/create-shipment';
 import { EditShipment } from './shipments/edit-shipment/edit-shipment';
+import { ViewShipment } from './shipments/view-shipment/view-shipment';
 
 export const routes: Routes = [
   {
@@ -91,6 +92,7 @@ export const routes: Routes = [
         path: 'shipments',
         children: [
           { path: '', component: ShipmentsPage, title: 'Shipments' },
+          { path: 'view-shipment/:id', component: ViewShipment, title: 'View Shipment' },
           { path: 'create-shipment', component: CreateShipment, title: 'Create Shipment' },
           { path: 'edit-shipment/:id', component: EditShipment, title: 'Edit Shipment' },
         ],
