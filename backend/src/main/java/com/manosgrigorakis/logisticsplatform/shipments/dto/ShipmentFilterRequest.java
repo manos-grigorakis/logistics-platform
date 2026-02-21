@@ -24,4 +24,7 @@ public class ShipmentFilterRequest {
 
     @Schema(title = "Driver's id", example = "1")
     private Long driverId;
+
+    @Schema(title = "Customer's id", example = "1")
+    private Long customerId;
 }
