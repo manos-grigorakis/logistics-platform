@@ -43,6 +43,14 @@
         [searchable]="true"
         [clearable]="true"
       />
+
+      @if (quoteId.invalid && (quoteId.dirty || quoteId.touched)) {
+        <div>
+          @if (quoteId.hasError('required')) {
+            <span class="text-danger mt-1 ml-1 text-sm">Quote is required</span>
+          }
+        </div>
+      }
     </div>
 
     <div class="mb-6">
