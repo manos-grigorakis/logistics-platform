@@ -170,6 +170,7 @@ public class Quote {
         QuoteStatus currentStatus = this.quoteStatus;
 
         if(status == QuoteStatus.EXPIRED) return false;
+        if(status == QuoteStatus.CONVERTED) return false;
         if(currentStatus.isFinal()) return false;
 
         return switch (currentStatus) {

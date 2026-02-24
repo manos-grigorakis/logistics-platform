@@ -19,14 +19,17 @@ public enum QuoteStatus {
     CANCELLED,
 
     @JsonProperty("expired")
-    EXPIRED;
+    EXPIRED,
+
+    @JsonProperty("converted")
+    CONVERTED;
 
     /**
      * Returns {@code true} if the quote status is ACCEPTED, REJECTED, CANCELLED, EXPIRED
      * otherwise returns {@code false}
      */
     public boolean isFinal() {
-        return this == ACCEPTED || this == REJECTED || this == CANCELLED || this == EXPIRED;
+        return this == ACCEPTED || this == REJECTED || this == CANCELLED || this == EXPIRED || this == CONVERTED;
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.manosgrigorakis.logisticsplatform.shipments.specs;
 
+import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
 import com.manosgrigorakis.logisticsplatform.shipments.enums.ShipmentStatus;
 import com.manosgrigorakis.logisticsplatform.shipments.model.Shipment;
 import com.manosgrigorakis.logisticsplatform.users.model.User;
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 public class ShipmentSpecs {
     public static Specification<Shipment> likeNumber(String number) {
         return (root, query, criteriaBuilder) ->
-                criteriaBuilder.like(root.get("number"), number);
+                criteriaBuilder.like(root.get("number"), "%" + number + "%");
     }
 
     public static Specification<Shipment> equalStatus(ShipmentStatus status) {
@@ -43,6 +44,13 @@ public class ShipmentSpecs {
         return (root, query, criteriaBuilder) -> {
             Join<Shipment, User> joinDriver = root.join("driver");
             return criteriaBuilder.equal(joinDriver.get("id"), id);
+        };
+    }
+
+    public static Specification<Shipment> equalByCustomerId(Long customerId) {
+        return (root, query, criteriaBuilder) -> {
+            Join<Shipment, Quote> joinQuote = root.join("quote");
+            return criteriaBuilder.equal(joinQuote.get("customer").get("id"), customerId);
         };
     }
 }

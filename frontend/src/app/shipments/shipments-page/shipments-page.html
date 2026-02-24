@@ -1,0 +1,32 @@
+<div>
+  <app-filters-wrapper>
+    <app-shipments-filters
+      [shipmentStatuses]="statuses"
+      [filterLabel]="filterLabel"
+      [sortLabel]="sortLabel"
+      (searchChanged)="onSearchChanged($event)"
+      (refresh)="onRefresh()"
+      (sortBy)="onSort($event)"
+      (filterBy)="onFilter($event)"
+      (onPickupFrom)="onPickupFrom($event)"
+      (onPickupTo)="onPickupTo($event)"
+    />
+  </app-filters-wrapper>
+
+  <div class="relative overflow-x-auto rounded-lg bg-white shadow-md">
+    <app-shipments-table
+      [isLoading]="isLoading"
+      [shipments]="shipments"
+      [errorMessage]="errorMessage"
+    />
+  </div>
+  <div class="mt-8">
+    <app-pagination
+      [currentPage]="currentPage"
+      [totalElements]="totalElements"
+      [totalPages]="totalPages"
+      [pageSize]="pageSize"
+      (pageChanged)="onPageChange($event)"
+    />
+  </div>
+</div>

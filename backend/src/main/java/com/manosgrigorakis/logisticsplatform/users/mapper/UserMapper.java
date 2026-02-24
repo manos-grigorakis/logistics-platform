@@ -42,6 +42,7 @@ public class UserMapper {
 
         if (user.getRole() != null) {
             dto.setRoleId(user.getRole().getId());
+            dto.setRoleName(user.getRole().getName());
         }
 
         return dto;

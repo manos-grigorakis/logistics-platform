@@ -1,0 +1,148 @@
+<div class="mx-auto mt-6 max-w-xl rounded-lg bg-white p-6 shadow-lg shadow-black/10">
+  <h2 class="mb-4 text-center text-3xl font-semibold">
+    @if (formUsage === 'create') {
+      Create a Shipment
+    } @else {
+      Update Shipment
+    }
+  </h2>
+
+  @if (isLoading) {
+    <app-loading-spinner />
+  }
+
+  <div class="mb-5">
+    @if (errorMessage) {
+      <app-error-alert [errorMessage]="errorMessage" />
+    }
+  </div>
+
+  <div class="mb-5">
+    @if (uiErrorMessage) {
+      <app-error-alert [errorMessage]="uiErrorMessage" />
+    }
+  </div>
+
+  <form [formGroup]="shipmentForm" (ngSubmit)="onSubmitClick()">
+    <div class="mb-6">
+      <label for="quoteId" (click)="onClickFocusQuoteIdSelect()" class="mb-1 block">
+        <span class="text-danger mr-1 text-sm">*</span>Quote
+      </label>
+      <ng-select
+        #quoteIdSelect
+        class="tw-select"
+        placeholder="Search a Shipment"
+        bindLabel="number"
+        bindValue="id"
+        formControlName="quoteId"
+        loadingText="Loading Quotes..."
+        notFoundText="No results"
+        [items]="quotesList"
+        [loading]="quotesLoading"
+        [typeahead]="quoteSearch$"
+        [searchable]="true"
+        [clearable]="true"
+      />
+
+      @if (quoteId.invalid && (quoteId.dirty || quoteId.touched)) {
+        <div>
+          @if (quoteId.hasError('required')) {
+            <span class="text-danger mt-1 ml-1 text-sm">Quote is required</span>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="mb-6">
+      <app-main-input
+        type="datetime-local"
+        formControlName="pickup"
+        label="Pickup"
+        [showRequiredStar]="true"
+      />
+    </div>
+
+    <div class="mb-6">
+      <label for="driverId" (click)="onClickFocusDriverIdSelect()" class="mb-1 block">
+        Driver
+      </label>
+      <ng-select
+        #driverIdSelect
+        class="tw-select"
+        placeholder="Search a Driver"
+        bindLabel="fullName"
+        bindValue="id"
+        formControlName="driverId"
+        loadingText="Loading Drivers..."
+        notFoundText="No results"
+        [items]="driversList"
+        [loading]="driverLoading"
+        [typeahead]="driverSearch$"
+        [searchable]="true"
+        [clearable]="true"
+      />
+    </div>
+
+    <div class="mb-6 flex flex-col gap-6 sm:flex-row sm:gap-4">
+      <div class="flex-1">
+        <label for="truckId" (click)="onClickFocusTruckIdSelect()" class="mb-1 block">
+          Truck
+        </label>
+        <ng-select
+          #truckIdSelect
+          class="tw-select"
+          placeholder="Search a Truck"
+          bindLabel="plate"
+          bindValue="id"
+          formControlName="truckId"
+          loadingText="Loading Trucks..."
+          notFoundText="No results"
+          [items]="truckList"
+          [loading]="truckLoading"
+          [typeahead]="truckSearch$"
+          [searchable]="true"
+          [clearable]="true"
+        />
+      </div>
+
+      <div class="flex-1">
+        <label for="trailerId" (click)="onClickFocusTrailerIdSelect()" class="mb-1 block">
+          Trailer
+        </label>
+        <ng-select
+          #trailerIdSelect
+          class="tw-select"
+          placeholder="Search a Trailer"
+          bindLabel="plate"
+          bindValue="id"
+          formControlName="trailerId"
+          loadingText="Loading Trailer..."
+          notFoundText="No results"
+          [items]="trailerList"
+          [loading]="trailerLoading"
+          [typeahead]="trailerSearch$"
+          [searchable]="true"
+          [clearable]="true"
+        />
+      </div>
+    </div>
+
+    <div class="mb-6">
+      <label for="notes" class="mb-1 block">Notes</label>
+      <textarea
+        formControlName="notes"
+        id="notes"
+        cols="30"
+        rows="10"
+        class="focus:ring-primary-200 placeholder:text-body w-full resize-none rounded border border-gray-300 px-4 py-2 text-gray-700 focus:ring focus:outline-none"
+      ></textarea>
+    </div>
+
+    <!-- Button -->
+    @if (formUsage === 'create') {
+      <app-primary-button value="Create Quote" />
+    } @else {
+      <app-primary-button value="Update Quote" />
+    }
+  </form>
+</div>

@@ -1,0 +1,42 @@
+<app-shipments-filters
+  [shipmentStatuses]="statuses"
+  [sortLabel]="sortLabel"
+  [filterLabel]="filterLabel"
+  [showCreateButton]="false"
+  [showDatesFilters]="false"
+  (searchChanged)="onSearchChanged($event)"
+  (refresh)="onRefreshClick()"
+  (sortBy)="onSort($event)"
+  (filterBy)="onFilter($event)"
+/>
+
+@if (isLoading) {
+  <app-loading-spinner />
+}
+
+<div class="flex flex-col" [ngClass]="{ 'min-h-[630px]': shipments.length > 0 }">
+  @if (errorMessage) {
+    <app-error-alert [errorMessage]="errorMessage" />
+  }
+
+  @if (!isLoading && !errorMessage && shipments.length === 0) {
+    <div class="text-secondary-500 p-6 text-center">No shipments yet</div>
+  } @else {
+    <div class="flex flex-1 flex-col gap-4 px-2">
+      @for (shipment of shipments; track shipment.id) {
+        <app-shipments-card [shipment]="shipment" />
+      }
+    </div>
+
+    <!-- Pagination -->
+    <div class="mt-8">
+      <app-pagination
+        [currentPage]="currentPage"
+        [totalPages]="totalPages"
+        [totalElements]="totalElements"
+        [pageSize]="pageSize"
+        (pageChanged)="onPageChange($event)"
+      />
+    </div>
+  }
+</div>

@@ -1,0 +1,37 @@
+<div class="border-secondary-200 bg-secondary-100 rounded border px-2 py-4">
+  <div class="flex justify-between">
+    <h2 class="text-lg font-semibold">
+      {{ shipment.number }}
+    </h2>
+
+    <!-- Shipment status badge -->
+    <span
+      class="block rounded border px-2 capitalize"
+      [ngClass]="shipmentStatusBadgeColor(shipment.status)"
+    >
+      {{ shipment.status }}
+    </span>
+  </div>
+  <!-- Pickup -->
+  <div>
+    <p class="mt-2 text-sm">
+      <span class="text-zinc-500">Pickup -- </span>
+      {{ shipment.pickup | date: 'EEEE, MMM d, y · h:mm a' }}
+    </p>
+    <div class="rounde mt-1 h-px w-full bg-zinc-300"></div>
+  </div>
+
+  <!-- Extra Details -->
+  <div class="mt-2 grid grid-cols-1 gap-1 sm:grid-cols-3">
+    <p class="text-sm">
+      <span class="text-zinc-500">Driver: </span>{{ shipment.driver?.fullName || 'Unassigned' }}
+    </p>
+    <p class="text-sm">
+      <span class="text-zinc-500">Truck Plate: </span>{{ shipment.truck?.plate || 'Unassigned' }}
+    </p>
+    <p class="text-sm">
+      <span class="text-zinc-500">Trailer Plate: </span
+      >{{ shipment.trailer?.plate || 'Unassigned' }}
+    </p>
+  </div>
+</div>
