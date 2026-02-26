@@ -6,6 +6,10 @@ spring:
   jwt:
     expiration-ms: 86400000 # 24h
 
+  flyway:
+    user: ${FLYWAY_USER}
+    password: ${FLYWAY_PASSWORD}
+
 springdoc:
   api-docs:
     enabled: true
