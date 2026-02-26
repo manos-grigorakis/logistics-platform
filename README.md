@@ -11,7 +11,7 @@
 
 - Java 17+
 - Maven/Gradle
-- MySQL
+- MariaDB 11.4
 
 **Frontend**
 
