@@ -10,10 +10,14 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MariaDBDialect
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
 
   security:
     user:

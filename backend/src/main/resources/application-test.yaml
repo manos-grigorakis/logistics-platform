@@ -26,6 +26,9 @@ spring:
         hbm2ddl:
           auto: create-drop
 
+  flyway:
+    enabled: false
+
   mail:
     host: localhost
     port: 1025
