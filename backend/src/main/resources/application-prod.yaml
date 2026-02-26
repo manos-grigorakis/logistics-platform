@@ -12,6 +12,10 @@ spring:
     hibernate:
       ddl-auto: validate
 
+  flyway:
+    user: ${FLYWAY_USER}
+    password: ${FLYWAY_PASSWORD}
+
   security:
     user:
       name: ${SPRING_SECURITY_USERNAME}
