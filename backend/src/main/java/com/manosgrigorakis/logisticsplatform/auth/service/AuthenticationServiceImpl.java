@@ -1,5 +1,6 @@
 package com.manosgrigorakis.logisticsplatform.auth.service;
 
+import com.manosgrigorakis.logisticsplatform.audit.service.AuditService;
 import com.manosgrigorakis.logisticsplatform.auth.dto.*;
 import com.manosgrigorakis.logisticsplatform.auth.enums.TokenType;
 import com.manosgrigorakis.logisticsplatform.infrastructure.mail.MailService;
@@ -32,6 +33,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final MailService mailService;
     private final UserTokensServiceImpl userTokensService;
+    private final AuditService auditService;
 
     private final Logger log = LoggerFactory.getLogger(AuthenticationServiceImpl.class);
 
@@ -42,7 +44,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             JwtService jwtService, AuthenticationManager authenticationManager,
             UserRepository userRepository, UserTokensRepository userTokensRepository,
             PasswordEncoder passwordEncoder, MailService mailService,
-            UserTokensServiceImpl userTokensService) {
+            UserTokensServiceImpl userTokensService, AuditService auditService) {
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
@@ -50,6 +52,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         this.passwordEncoder = passwordEncoder;
         this.mailService = mailService;
         this.userTokensService = userTokensService;
+        this.auditService = auditService;
     }
 
     @Override
@@ -85,12 +88,36 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             return new JwtResponseDTO("Bearer",token, userDetailsDTO);
         } catch (BadCredentialsException e) {
             log.error("Authentication error for user {}: bad credentials", dto.getEmail());
+
+            try {
+                // TODO: Remove hardcoded ip
+                this.auditService.logLoginFailed("BAD_CREDENTIALS", dto.getEmail(), "50.xxx.xx.xx");
+            } catch (Exception ex) {
+                log.warn("Audit logging failed", ex);
+            }
+
             throw e;
         } catch (DisabledException e) {
             log.error("Authentication error for user {}: account disabled", dto.getEmail());
+
+            try {
+                // TODO: Remove hardcoded ip
+                this.auditService.logLoginFailed("DISABLED_ACCOUNT", dto.getEmail(), "50.xxx.xx.xx");
+            } catch (Exception ex) {
+                log.warn("Audit logging failed", ex);
+            }
+
             throw e;
         } catch (LockedException e) {
             log.error("Authentication error for user {}: account locked", dto.getEmail());
+
+            try {
+                // TODO: Remove hardcoded ip
+                this.auditService.logLoginFailed("LOCKED_ACCOUNT", dto.getEmail(), "50.xxx.xx.xx");
+            } catch (Exception ex) {
+                log.warn("Audit logging failed", ex);
+            }
+
             throw e;
         }
     }
@@ -152,6 +179,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User user = userTokens.getUser();
         user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
         userRepository.save(user);
+
+        try {
+            this.auditService.logPasswordReset(user.getId(), "50.xxx.xx.xx");
+        } catch (Exception e) {
+            log.warn("Audit logging failed", e);
+        }
 
         // Delete token (one time use)
         userTokensRepository.delete(userTokens);
