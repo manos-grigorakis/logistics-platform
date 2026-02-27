@@ -40,6 +40,9 @@ public class AuditLog {
     @Column(name = "ip_address", length = 45)
     private String ipAddress;
 
+    @Column(name = "user_agent", columnDefinition = "TEXT")
+    private String userAgent;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
@@ -53,7 +56,8 @@ public class AuditLog {
     @Builder
     public AuditLog(
             String entityType, Long entityId, AuditAction action,
-            String changes, String notes, String ipAddress, User user
+            String changes, String notes, String ipAddress,
+            String userAgent, User user
     ) {
         this.entityType = entityType;
         this.entityId = entityId;
@@ -61,6 +65,7 @@ public class AuditLog {
         this.changes = changes;
         this.notes = notes;
         this.ipAddress = ipAddress;
+        this.userAgent = userAgent;
         this.user = user;
     }
 

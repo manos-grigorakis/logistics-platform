@@ -7,6 +7,7 @@ CREATE TABLE `audit_logs` (
     notes TEXT,
     user_id BIGINT,
     ip_address VARCHAR(45),
+    user_agent TEXT,
     created_at DATETIME NOT NULL,
     PRIMARY KEY (`id`),
     KEY `idx_audit_logs_entity` (`entity_type`, `entity_id`),
