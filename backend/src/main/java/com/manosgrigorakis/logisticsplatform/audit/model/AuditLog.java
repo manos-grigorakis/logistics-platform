@@ -7,8 +7,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Entity
 @Table(name = "audit_logs")
@@ -31,8 +34,9 @@ public class AuditLog {
     @Column(name = "action", length = 50, nullable = false)
     private AuditAction action;
 
-    @Column(name = "changes", columnDefinition = "JSON")
-    private String changes;
+    @Column(name = "changes", columnDefinition = "longtext")
+    @JdbcTypeCode(SqlTypes.JSON)
+    private Map<String, Object> changes;
 
     @Column(name = "notes", columnDefinition = "TEXT")
     private String notes;
@@ -56,7 +60,7 @@ public class AuditLog {
     @Builder
     public AuditLog(
             String entityType, Long entityId, AuditAction action,
-            String changes, String notes, String ipAddress,
+            Map<String, Object> changes, String notes, String ipAddress,
             String userAgent
     ) {
         this.entityType = entityType;
