@@ -39,13 +39,25 @@ public class Role {
     private LocalDateTime updatedAt;
 
     public Role() {
-
     }
 
     @Builder
     public Role(String name, String description) {
         this.name = name;
         this.description = description;
+    }
+
+    // Constructor overloading for using Copy Constructor
+    public Role(Long id, String name, String description) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.isEditable = isEditable;
+    }
+
+    // Copy Constructor
+    public Role(Role another) {
+        this(another.id, another.name, another.description);
     }
 
     @PrePersist
