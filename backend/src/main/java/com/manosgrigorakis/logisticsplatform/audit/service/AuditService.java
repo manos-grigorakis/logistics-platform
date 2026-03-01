@@ -1,7 +1,7 @@
 package com.manosgrigorakis.logisticsplatform.audit.service;
 
-public interface AuditService {
-    void logLoginFailed(String reason, String email, String ipAddress);
+import com.manosgrigorakis.logisticsplatform.audit.dto.AuditEventDTO;
 
-    void logPasswordReset(Long userId, String ipAddress);
+public interface AuditService {
+    void log(AuditEventDTO event);
 }

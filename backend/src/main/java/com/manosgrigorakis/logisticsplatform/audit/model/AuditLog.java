@@ -57,7 +57,7 @@ public class AuditLog {
     public AuditLog(
             String entityType, Long entityId, AuditAction action,
             String changes, String notes, String ipAddress,
-            String userAgent, User user
+            String userAgent
     ) {
         this.entityType = entityType;
         this.entityId = entityId;
@@ -66,7 +66,6 @@ public class AuditLog {
         this.notes = notes;
         this.ipAddress = ipAddress;
         this.userAgent = userAgent;
-        this.user = user;
     }
 
     @PrePersist

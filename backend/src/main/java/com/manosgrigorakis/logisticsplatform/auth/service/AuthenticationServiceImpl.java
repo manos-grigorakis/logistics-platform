@@ -1,5 +1,7 @@
 package com.manosgrigorakis.logisticsplatform.auth.service;
 
+import com.manosgrigorakis.logisticsplatform.audit.dto.AuditEventDTO;
+import com.manosgrigorakis.logisticsplatform.audit.enums.AuditAction;
 import com.manosgrigorakis.logisticsplatform.audit.service.AuditService;
 import com.manosgrigorakis.logisticsplatform.auth.dto.*;
 import com.manosgrigorakis.logisticsplatform.auth.enums.TokenType;
@@ -88,36 +90,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             return new JwtResponseDTO("Bearer",token, userDetailsDTO);
         } catch (BadCredentialsException e) {
             log.error("Authentication error for user {}: bad credentials", dto.getEmail());
-
-            try {
-                // TODO: Remove hardcoded ip
-                this.auditService.logLoginFailed("BAD_CREDENTIALS", dto.getEmail(), "50.xxx.xx.xx");
-            } catch (Exception ex) {
-                log.warn("Audit logging failed", ex);
-            }
-
+            this.logLoginFailed("BAD_CREDENTIALS", dto.getEmail());
             throw e;
         } catch (DisabledException e) {
             log.error("Authentication error for user {}: account disabled", dto.getEmail());
-
-            try {
-                // TODO: Remove hardcoded ip
-                this.auditService.logLoginFailed("DISABLED_ACCOUNT", dto.getEmail(), "50.xxx.xx.xx");
-            } catch (Exception ex) {
-                log.warn("Audit logging failed", ex);
-            }
-
+            this.logLoginFailed("DISABLED_ACCOUNT", dto.getEmail());
             throw e;
         } catch (LockedException e) {
             log.error("Authentication error for user {}: account locked", dto.getEmail());
-
-            try {
-                // TODO: Remove hardcoded ip
-                this.auditService.logLoginFailed("LOCKED_ACCOUNT", dto.getEmail(), "50.xxx.xx.xx");
-            } catch (Exception ex) {
-                log.warn("Audit logging failed", ex);
-            }
-
+            this.logLoginFailed("LOCKED_ACCOUNT", dto.getEmail());
             throw e;
         }
     }
@@ -162,6 +143,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         mailService.sendResetPasswordEmail(user.getFirstName(),user.getEmail(), userTokens.getToken());
         log.info("Reset password email sent for user {}", user.getEmail());
+
+        this.logPassword(user.getId(), AuditAction.PASSWORD_CHANGED, user.getEmail());
+
     }
 
     @Override
@@ -180,11 +164,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
         userRepository.save(user);
 
-        try {
-            this.auditService.logPasswordReset(user.getId(), "50.xxx.xx.xx");
-        } catch (Exception e) {
-            log.warn("Audit logging failed", e);
-        }
+        this.logPassword(user.getId(), AuditAction.PASSWORD_RESET, user.getEmail());
 
         // Delete token (one time use)
         userTokensRepository.delete(userTokens);
@@ -205,5 +185,37 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
 
         return userTokens;
+    }
+
+    /**
+     * Logs a failed login attempt
+     * @param reason The reason that login failed (e.g. BAD_CREDENTIALS, LOCKED_ACCOUNT)
+     * @param email User's email
+     */
+    private void logLoginFailed(String reason, String email) {
+        this.auditService.log(
+                AuditEventDTO.builder()
+                        .entityType("User")
+                        .action(AuditAction.LOGIN_FAILED)
+                        .notes("Reason: " + reason + " | Email: " + email)
+                        .build()
+        );
+    }
+
+    /**
+     * Logs a password request or reset attempt
+     * @param userId The user's ID
+     * @param action The audit action {@link  AuditAction}
+     * @param email The user's email
+     */
+    private void logPassword(Long userId, AuditAction action, String email) {
+        this.auditService.log(
+                AuditEventDTO.builder()
+                        .entityType("User")
+                        .entityId(userId)
+                        .action(action)
+                        .notes("Email: " + email)
+                        .build()
+        );
     }
 }
