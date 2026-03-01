@@ -144,7 +144,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         mailService.sendResetPasswordEmail(user.getFirstName(),user.getEmail(), userTokens.getToken());
         log.info("Reset password email sent for user {}", user.getEmail());
 
-        this.logPassword(user.getId(), AuditAction.PASSWORD_RESET, user.getEmail());
+        this.logPassword(user, AuditAction.PASSWORD_RESET);
 
     }
 
@@ -164,7 +164,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
         userRepository.save(user);
 
-        this.logPassword(user.getId(), AuditAction.PASSWORD_CHANGED, user.getEmail());
+        this.logPassword(user, AuditAction.PASSWORD_CHANGED);
 
         // Delete token (one time use)
         userTokensRepository.delete(userTokens);
@@ -204,17 +204,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     /**
      * Logs a password request or reset attempt
-     * @param userId The user's ID
+     * @param user The user
      * @param action The audit action {@link  AuditAction}
-     * @param email The user's email
      */
-    private void logPassword(Long userId, AuditAction action, String email) {
+    private void logPassword(User user, AuditAction action) {
         this.auditService.log(
                 AuditEventDTO.builder()
                         .entityType("User")
-                        .entityId(userId)
+                        .entityId(user.getId())
                         .action(action)
-                        .notes("Email: " + email)
+                        .user(user)
+                        .notes("Email: " + user.getEmail())
                         .build()
         );
     }

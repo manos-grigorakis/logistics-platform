@@ -32,6 +32,8 @@ public class AuditServiceImpl implements AuditService {
                     .userAgent(this.clientInfo.getUserAgent())
                     .build();
 
+            auditLog.setUser(event.user());
+
             this.auditRepository.save(auditLog);
         } catch (Exception e) {
             log.warn("Audit logging failed", e);
