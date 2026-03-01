@@ -213,7 +213,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                         .entityType("User")
                         .entityId(user.getId())
                         .action(action)
-                        .user(user)
                         .notes("Email: " + user.getEmail())
                         .build()
         );
