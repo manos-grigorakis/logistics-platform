@@ -144,7 +144,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         mailService.sendResetPasswordEmail(user.getFirstName(),user.getEmail(), userTokens.getToken());
         log.info("Reset password email sent for user {}", user.getEmail());
 
-        this.logPassword(user.getId(), AuditAction.PASSWORD_CHANGED, user.getEmail());
+        this.logPassword(user.getId(), AuditAction.PASSWORD_RESET, user.getEmail());
 
     }
 
@@ -164,7 +164,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
         userRepository.save(user);
 
-        this.logPassword(user.getId(), AuditAction.PASSWORD_RESET, user.getEmail());
+        this.logPassword(user.getId(), AuditAction.PASSWORD_CHANGED, user.getEmail());
 
         // Delete token (one time use)
         userTokensRepository.delete(userTokens);
