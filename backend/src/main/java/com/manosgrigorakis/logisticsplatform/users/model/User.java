@@ -66,6 +66,21 @@ public class User {
         this.status = status;
     }
 
+    // Constructor overloading for Copy Constructor
+    public User(Long id, String firstName, String lastName, String email, String phone, Role role) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phone = phone;
+        this.role = role;
+    }
+
+    // Copy Constructor
+    public User(User another) {
+        this(another.id, another.firstName, another.lastName, another.email, another.phone, another.role);
+    }
+
     @PrePersist
     public void onCreate() {
         this.createdAt = LocalDateTime.now();
