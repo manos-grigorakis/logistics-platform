@@ -1,5 +1,9 @@
 package com.manosgrigorakis.logisticsplatform.customers.service;
 
+import com.manosgrigorakis.logisticsplatform.audit.dto.AuditEventDTO;
+import com.manosgrigorakis.logisticsplatform.audit.enums.AuditAction;
+import com.manosgrigorakis.logisticsplatform.audit.service.AuditService;
+import com.manosgrigorakis.logisticsplatform.common.utils.EntityChangeTracker;
 import com.manosgrigorakis.logisticsplatform.customers.dto.*;
 import com.manosgrigorakis.logisticsplatform.common.exception.DuplicateEntryException;
 import com.manosgrigorakis.logisticsplatform.common.exception.ResourceNotFoundException;
@@ -20,18 +24,25 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
     private final QuoteRepository quoteRepository;
+    private final AuditService auditService;
 
     private final Logger log = LoggerFactory.getLogger(CustomerServiceImpl.class);
 
-    public CustomerServiceImpl(CustomerRepository customerRepository, QuoteRepository quoteRepository) {
+    public CustomerServiceImpl(
+            CustomerRepository customerRepository,
+            QuoteRepository quoteRepository,
+            AuditService auditService) {
         this.customerRepository = customerRepository;
         this.quoteRepository = quoteRepository;
+        this.auditService = auditService;
     }
 
     @Override
@@ -88,7 +99,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         Customer savedCustomer = customerRepository.save(customer);
         log.info("Customer created with company name: {}", dto.getCompanyName());
-
+        this.logCustomer(customer, AuditAction.CREATE);
         return CustomerMapper.toResponse(savedCustomer);
     }
 
@@ -100,6 +111,7 @@ public class CustomerServiceImpl implements CustomerService {
                     return new ResourceNotFoundException("Customer not found with id: " + id);
                 });
 
+        Customer oldCustomer = new Customer(customer);
         Optional<Customer> existingCustomerCompanyName = customerRepository.findByCompanyName(dto.getCompanyName());
         Optional<Customer> existing = customerRepository.findByCompanyName(dto.getCompanyName());
 
@@ -119,19 +131,21 @@ public class CustomerServiceImpl implements CustomerService {
 
         Customer updatedCustomer = customerRepository.save(customer);
         log.info("Customer updated: {}", dto.getCompanyName());
-
+        this.logUpdatedCustomer(oldCustomer, updatedCustomer);
         return CustomerMapper.toResponse(updatedCustomer);
     }
 
     @Override
     public void deleteCustomerById(Long id) {
-        if(!customerRepository.existsById(id)) {
-            log.error("Delete failed. Customer not found with id: {}", id);
-            throw new ResourceNotFoundException("Customer not found with id: " + id);
-        }
+        Customer customer = this.customerRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.error("Delete failed. Customer not found with id: {}", id);
+                    return new ResourceNotFoundException("Customer not found with id: " + id);
+                });
 
         customerRepository.deleteById(id);
         log.info("Customer deleted: {}", id);
+        this.logCustomer(customer, AuditAction.DELETE);
     }
 
     @Override
@@ -161,6 +175,70 @@ public class CustomerServiceImpl implements CustomerService {
                         quote.getGrossPrice(),
                         quote.getQuoteStatus(),
                         quote.getIssueDate())
+        );
+    }
+
+    /**
+     * Logs customer in the audit system
+     * @param customer The actual customer
+     * @param action The action taken {@link AuditAction}
+     */
+    private void logCustomer(Customer customer, AuditAction action) {
+        this.auditService.log(
+                AuditEventDTO.builder()
+                        .entityType("Customer")
+                        .entityId(customer.getId())
+                        .notes(
+                                "TIN: " + customer.getTin()
+                                        + " | Company Name: " + customer.getCompanyName()
+                        )
+                        .action(action)
+                        .build()
+        );
+    }
+
+    /**
+     * Logs customer in the audit system with the updated fields changed only
+     * @param oldCustomer The customer entity before update
+     * @param updatedCustomer The updated customer entity
+     */
+    private void logUpdatedCustomer(Customer oldCustomer, Customer updatedCustomer) {
+        Map<String, Object> changes = new HashMap<>();
+
+        EntityChangeTracker.trackFieldChange(changes, "companyName", Customer::getCompanyName,
+                oldCustomer, updatedCustomer);
+
+        EntityChangeTracker.trackFieldChange(changes, "customerType", Customer::getCustomerType,
+                oldCustomer, updatedCustomer);
+
+        EntityChangeTracker.trackFieldChange(changes, "firstName", Customer::getFirstName,
+                oldCustomer, updatedCustomer);
+
+        EntityChangeTracker.trackFieldChange(changes, "lastName", Customer::getLastName,
+                oldCustomer, updatedCustomer);
+
+        EntityChangeTracker.trackFieldChange(changes, "email", Customer::getEmail,
+                oldCustomer, updatedCustomer);
+
+        EntityChangeTracker.trackFieldChange(changes, "location", Customer::getLocation,
+                oldCustomer, updatedCustomer);
+
+        EntityChangeTracker.trackFieldChange(changes, "phone", Customer::getPhone,
+                oldCustomer, updatedCustomer);
+
+        if(changes.isEmpty()) return;
+
+        this.auditService.log(
+                AuditEventDTO.builder()
+                        .entityType("Customer")
+                        .entityId(updatedCustomer.getId())
+                        .notes(
+                                "TIN: " + updatedCustomer.getTin()
+                                        + " | Company Name: " + updatedCustomer.getCompanyName()
+                        )
+                        .changes(changes)
+                        .action(AuditAction.UPDATE)
+                        .build()
         );
     }
 }

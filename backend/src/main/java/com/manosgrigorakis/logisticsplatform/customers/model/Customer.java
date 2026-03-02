@@ -56,12 +56,18 @@ public class Customer {
     @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
     private List<Quote> quotes;
 
-    public Customer() {
-    }
+    public Customer() {}
 
     @Builder
-    public Customer(String tin, String companyName, String firstName, String lastName, String email,
-                    CustomerType customerType, String location, String phone) {
+    public Customer(
+            String tin,
+            String companyName,
+            String firstName,
+            String lastName,
+            String email,
+            CustomerType customerType,
+            String location,
+            String phone) {
         this.tin = tin;
         this.companyName = companyName;
         this.firstName = firstName;
@@ -70,6 +76,40 @@ public class Customer {
         this.customerType = customerType;
         this.location = location;
         this.phone = phone;
+    }
+
+    // Constructor overloading for Copy Constructor
+    public Customer(
+            Long id,
+            String companyName,
+            String firstName,
+            String lastName,
+            String email,
+            CustomerType customerType,
+            String location,
+            String phone) {
+        this.id = id;
+        this.companyName = companyName;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.customerType = customerType;
+        this.location = location;
+        this.phone = phone;
+    }
+
+    // Copy Constructor
+    public Customer(Customer another) {
+        this(
+                another.id,
+                another.companyName,
+                another.firstName,
+                another.lastName,
+                another.email,
+                another.customerType,
+                another.location,
+                another.phone
+        );
     }
 
     @PrePersist
