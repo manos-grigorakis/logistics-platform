@@ -1,6 +1,10 @@
 package com.manosgrigorakis.logisticsplatform.quotes.service;
 
+import com.manosgrigorakis.logisticsplatform.audit.dto.AuditEventDTO;
+import com.manosgrigorakis.logisticsplatform.audit.enums.AuditAction;
+import com.manosgrigorakis.logisticsplatform.audit.service.AuditService;
 import com.manosgrigorakis.logisticsplatform.common.generators.DocumentNumberGenerator;
+import com.manosgrigorakis.logisticsplatform.common.utils.EntityChangeTracker;
 import com.manosgrigorakis.logisticsplatform.quotes.dto.quoteItem.QuoteItemRequestDTO;
 import com.manosgrigorakis.logisticsplatform.quotes.dto.quote.*;
 import com.manosgrigorakis.logisticsplatform.quotes.enums.QuoteStatus;
@@ -34,7 +38,8 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.manosgrigorakis.logisticsplatform.common.utils.SpecsUtils.andIf;
 
@@ -46,6 +51,7 @@ public class QuoteServiceImpl implements QuoteService {
 
     private final PdfService pdfService;
     private final FileStorageService fileStorageService;
+    private final AuditService auditService;
 
     private final QuoteCalculator quoteCalculator;
     private final DocumentNumberGenerator documentNumberGenerator;
@@ -61,15 +67,15 @@ public class QuoteServiceImpl implements QuoteService {
             CustomerRepository customerRepository,
             PdfService pdfService,
             FileStorageService fileStorageService,
+            AuditService auditService,
             QuoteCalculator quoteCalculator,
-            DocumentNumberGenerator documentNumberGenerator
-            )
-    {
+            DocumentNumberGenerator documentNumberGenerator) {
         this.quoteRepository = quoteRepository;
         this.userRepository = userRepository;
         this.customerRepository = customerRepository;
         this.pdfService = pdfService;
         this.fileStorageService = fileStorageService;
+        this.auditService = auditService;
         this.quoteCalculator = quoteCalculator;
         this.documentNumberGenerator = documentNumberGenerator;
     }
@@ -149,6 +155,7 @@ public class QuoteServiceImpl implements QuoteService {
         response.setPdfUrl(presignedUrl);
 
         log.info("Quote created with number {}", quote.getNumber());
+        this.logCreatedQuote(quote);
         return response;
     }
 
@@ -159,6 +166,8 @@ public class QuoteServiceImpl implements QuoteService {
                     log.warn("Update failed. Quote not found with id: {}", id);
                     return new ResourceNotFoundException("Quote not found with id: " + id);
                 });
+
+        Quote oldQuote = new Quote(quote);
 
         Customer customer = customerRepository.findById(dto.getCustomerId())
                 .orElseThrow(() -> {
@@ -204,6 +213,7 @@ public class QuoteServiceImpl implements QuoteService {
         fileStorageService.store(savedQuote.getNumber(), quotePdf, "application/pdf");
 
         log.info("Quote updated with number: {}", savedQuote.getNumber());
+        this.logUpdatedQuote(oldQuote, quote);
 
         // Create presigned url
         String presignedUrl = fileStorageService.createPresignedUrl(savedQuote.getNumber());
@@ -222,6 +232,8 @@ public class QuoteServiceImpl implements QuoteService {
                     return new ResourceNotFoundException("Quote not found with id: " + id);
                 });
 
+        Quote oldQuote = new Quote(quote);
+
         try {
             quote.changeStatusTo(dto.getQuoteStatus());
         } catch (IllegalStateException e) {
@@ -233,5 +245,88 @@ public class QuoteServiceImpl implements QuoteService {
 
         quote.setQuoteStatus(dto.getQuoteStatus());
         quoteRepository.save(quote);
+        this.logUpdatedQuoteStatus(quote, oldQuote.getQuoteStatus(), quote.getQuoteStatus());
+    }
+
+    /**
+     * Logs the quote in the audit system
+     * @param quote The actual quote
+     */
+    private void logCreatedQuote(Quote quote) {
+        this.auditService.log(
+                AuditEventDTO.builder()
+                        .entityType("Quote")
+                        .entityId(quote.getId())
+                        .notes(
+                                "Quote Number: " + quote.getNumber() +
+                                        " | Customer: " + quote.getCustomer().getFullName()
+                        )
+                        .action(AuditAction.CREATE)
+                        .build()
+        );
+    }
+
+    /**
+     * Logs updated quote in the audit system
+     * @param oldQuote The quote entity before update
+     * @param updatedQuote The updated quote entity
+     */
+    private void logUpdatedQuote(Quote oldQuote, Quote updatedQuote) {
+        Map<String, Object> changes = new HashMap<>();
+
+        EntityChangeTracker.trackFieldChange(changes, "customer",
+                quote -> quote.getCustomer() != null ? quote.getCustomer().getFullName() : null,
+                oldQuote, updatedQuote);
+
+        EntityChangeTracker.trackFieldChange(changes, "origin", Quote::getOrigin ,oldQuote, updatedQuote);
+        EntityChangeTracker.trackFieldChange(changes, "destination", Quote::getDestination ,oldQuote, updatedQuote);
+        EntityChangeTracker.trackFieldChange(changes, "validityDays", Quote::getValidityDays ,oldQuote, updatedQuote);
+        EntityChangeTracker.trackFieldChange(changes, "notes", Quote::getNotes ,oldQuote, updatedQuote);
+        EntityChangeTracker.trackFieldChange(changes, "specialTerms", Quote::getSpecialTerms ,oldQuote, updatedQuote);
+
+        if(changes.isEmpty()) return;
+
+        this.auditService.log(
+                AuditEventDTO.builder()
+                        .entityType("Quote")
+                        .entityId(updatedQuote.getId())
+                        .changes(changes)
+                        .notes(
+                                "Quote Number: " + updatedQuote.getNumber()
+                                + " | Customer: " + updatedQuote.getCustomer().getFullName()
+                        )
+                        .action(AuditAction.UPDATE)
+                        .build()
+        );
+
+    }
+
+    /**
+     * Logs the update quote status action in the audit system
+     * @param quote The quote that status changed
+     * @param oldStatus The quote status before update
+     * @param updatedStatus The updated quote status
+     */
+    private void logUpdatedQuoteStatus(Quote quote, QuoteStatus oldStatus, QuoteStatus updatedStatus) {
+        if(Objects.equals(oldStatus, updatedStatus)) return;
+
+        Map<String, Object> changes = new HashMap<>();
+        changes.put("status", Map.of(
+                "old", oldStatus,
+                "updated", updatedStatus
+        ));
+
+        this.auditService.log(
+                AuditEventDTO.builder()
+                        .entityType("Quote")
+                        .entityId(quote.getId())
+                        .notes(
+                                "Quote Number: " + quote.getNumber() +
+                                        " | Customer: " + quote.getCustomer().getFullName()
+                        )
+                        .changes(changes)
+                        .action(AuditAction.UPDATE)
+                        .build()
+        );
     }
 }
