@@ -1,5 +1,9 @@
 package com.manosgrigorakis.logisticsplatform.users.service;
 
+import com.manosgrigorakis.logisticsplatform.audit.dto.AuditEventDTO;
+import com.manosgrigorakis.logisticsplatform.audit.enums.AuditAction;
+import com.manosgrigorakis.logisticsplatform.audit.service.AuditService;
+import com.manosgrigorakis.logisticsplatform.common.utils.EntityChangeTracker;
 import com.manosgrigorakis.logisticsplatform.users.dto.RoleRequestDTO;
 import com.manosgrigorakis.logisticsplatform.users.dto.RoleResponseDTO;
 import com.manosgrigorakis.logisticsplatform.common.exception.DeleteConflictException;
@@ -14,18 +18,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class RoleServiceImpl implements RoleService {
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
+    private final AuditService auditService;
     private final Logger log = LoggerFactory.getLogger(RoleServiceImpl.class);
 
-    public RoleServiceImpl(RoleRepository roleRepository, UserRepository userRepository) {
+    public RoleServiceImpl(RoleRepository roleRepository, UserRepository userRepository, AuditService auditService) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
+        this.auditService = auditService;
     }
 
     @Override
@@ -61,7 +66,7 @@ public class RoleServiceImpl implements RoleService {
 
         roleRepository.save(role);
         log.info("Role created: {}", dto.getName());
-
+        this.logRole(role, AuditAction.CREATE);
         return RoleMapper.toResponse(role);
     }
 
@@ -72,6 +77,8 @@ public class RoleServiceImpl implements RoleService {
                     log.error("Update failed. Role not found: {}", id);
                     return new ResourceNotFoundException("Role not found with id: " + id);
                 });
+
+        Role oldRole = new Role(role);
 
         if(!role.isEditable()) {
             log.warn("Update failed. Attempt to edit non-editable role: {}", dto.getName());
@@ -88,16 +95,17 @@ public class RoleServiceImpl implements RoleService {
 
         Role updatedRole = roleRepository.save(role);
         log.info("Role updated: {}", dto.getName());
-
+        this.logUpdatedRole(oldRole, updatedRole);
         return RoleMapper.toResponse(updatedRole);
     }
 
     @Override
     public void deleteRoleById(Long id) {
-        if (!roleRepository.existsById(id)) {
-            log.error("Delete failed. Role not found with id: {}", id);
-            throw new ResourceNotFoundException("Role not found with id: " + id);
-        }
+        Role role = this.roleRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.error("Delete failed. Role not found with id: {}", id);
+                    return  new ResourceNotFoundException("Role not found with id: " + id);
+                });
 
         long usersCount = userRepository.countByRoleId(id);
 
@@ -108,5 +116,46 @@ public class RoleServiceImpl implements RoleService {
 
         roleRepository.deleteById(id);
         log.info("Role deleted: {}", id);
+        this.logRole(role, AuditAction.DELETE);
+
+    }
+
+    /**
+     * Logs role in the audit system
+     * @param role The role
+     * @param action The action taken {@link AuditAction}
+     */
+    private void logRole(Role role, AuditAction action) {
+        this.auditService.log(
+                AuditEventDTO.builder()
+                        .entityType("Role")
+                        .entityId(role.getId())
+                        .action(action)
+                        .notes("Name: " + role.getName())
+                        .build()
+        );
+    }
+
+    /**
+     * Logs the updated role in the audit system, with only the updated changes
+     * @param oldRole Old values of role before updating
+     * @param updatedRole New values of role after updating
+     */
+    private void logUpdatedRole(Role oldRole, Role updatedRole) {
+        Map<String, Object> changes =  new HashMap<>();
+
+        EntityChangeTracker.trackFieldChange(changes, "name", Role::getName, oldRole, updatedRole);
+        EntityChangeTracker.trackFieldChange(changes, "description", Role::getDescription, oldRole, updatedRole);
+
+        if(changes.isEmpty()) return;
+
+        this.auditService.log(
+                AuditEventDTO.builder()
+                        .entityType("Role")
+                        .entityId(updatedRole.getId())
+                        .changes(changes)
+                        .action(AuditAction.UPDATE)
+                        .build()
+        );
     }
 }

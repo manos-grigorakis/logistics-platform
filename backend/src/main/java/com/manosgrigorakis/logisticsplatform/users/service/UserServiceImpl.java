@@ -1,5 +1,9 @@
 package com.manosgrigorakis.logisticsplatform.users.service;
 
+import com.manosgrigorakis.logisticsplatform.audit.dto.AuditEventDTO;
+import com.manosgrigorakis.logisticsplatform.audit.enums.AuditAction;
+import com.manosgrigorakis.logisticsplatform.audit.service.AuditService;
+import com.manosgrigorakis.logisticsplatform.common.utils.EntityChangeTracker;
 import com.manosgrigorakis.logisticsplatform.infrastructure.mail.MailService;
 import com.manosgrigorakis.logisticsplatform.auth.service.UserTokensServiceImpl;
 import com.manosgrigorakis.logisticsplatform.users.dto.UserRequestDTO;
@@ -20,7 +24,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -29,17 +35,19 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final UserTokensServiceImpl userTokensService;
     private final MailService mailService;
+    private final AuditService auditService;
     private final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Value("${app.setup_password.expires:48h}")
     private Duration setupPasswordTokenExpirationTime;
 
     public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
-                           UserTokensServiceImpl userTokensService, MailService mailService) {
+                           UserTokensServiceImpl userTokensService, MailService mailService, AuditService auditService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.userTokensService = userTokensService;
         this.mailService = mailService;
+        this.auditService = auditService;
     }
 
     @Override
@@ -79,6 +87,7 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(user);
         log.info("User created: {}", user.getEmail());
+        this.logUser(user, AuditAction.CREATE);
 
         // Generate token
         UserTokens userTokens = userTokensService.generateUserTokens(
@@ -101,6 +110,8 @@ public class UserServiceImpl implements UserService {
                         return new ResourceNotFoundException("User not found with id: " + id);
                 });
 
+        User oldUser = new User(user);
+
         Role role = roleRepository.findById(dto.getRoleId())
                 .orElseThrow(() -> {
                     log.error("Updated failed. Role not found with id: {}", dto.getRoleId());
@@ -121,18 +132,64 @@ public class UserServiceImpl implements UserService {
         user.setRole(role);
         userRepository.save(user);
         log.info("User updated: {}", dto.getEmail());
-
+        this.logUpdatedUser(oldUser, user);
         return UserMapper.toResponse(user);
     }
 
     @Override
     public void deleteUserById(Long id) {
-        if (!userRepository.existsById(id)) {
-            log.error("Delete failed. User not found with id: {}", id);
-            throw new ResourceNotFoundException("User not found with id: " + id);
-        }
+        User user = this.userRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.error("Delete failed. User not found with id: {}", id);
+                    return new ResourceNotFoundException("User not found with id: " + id);
+                });
 
         userRepository.deleteById(id);
         log.info("User deleted: {}", id);
+        this.logUser(user, AuditAction.DELETE);
+    }
+
+    /**
+     * Logs user in the audit system
+     * @param user The actual user
+     * @param action The action take {@link AuditAction}
+     */
+    private void logUser(User user, AuditAction action) {
+        this.auditService.log(
+                AuditEventDTO.builder()
+                        .entityType("User")
+                        .entityId(user.getId())
+                        .action(action)
+                        .notes("Email: " + user.getEmail())
+                        .build()
+        );
+    }
+
+    /**
+     * Logs updated user in the audit system with the changed fields only
+     * @param oldUser The user before update
+     * @param updatedUser The updated user
+     */
+    private void logUpdatedUser(User oldUser, User updatedUser) {
+        Map<String, Object> changes = new HashMap<>();
+
+        EntityChangeTracker.trackFieldChange(changes, "firstName", User::getFirstName, oldUser, updatedUser);
+        EntityChangeTracker.trackFieldChange(changes, "lastName", User::getLastName, oldUser, updatedUser);
+        EntityChangeTracker.trackFieldChange(changes, "email", User::getEmail, oldUser, updatedUser);
+        EntityChangeTracker.trackFieldChange(changes, "phone", User::getPhone, oldUser, updatedUser);
+        EntityChangeTracker.trackFieldChange(changes, "role",
+                user -> user.getRole() != null ? user.getRole().getName() : null
+                , oldUser, updatedUser);
+
+        if(changes.isEmpty()) return;
+
+        this.auditService.log(
+                AuditEventDTO.builder()
+                        .entityType("User")
+                        .entityId(updatedUser.getId())
+                        .changes(changes)
+                        .action(AuditAction.UPDATE)
+                        .build()
+        );
     }
 }

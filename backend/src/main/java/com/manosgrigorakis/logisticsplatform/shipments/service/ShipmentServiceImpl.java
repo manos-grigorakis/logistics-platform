@@ -1,5 +1,8 @@
 package com.manosgrigorakis.logisticsplatform.shipments.service;
 
+import com.manosgrigorakis.logisticsplatform.audit.dto.AuditEventDTO;
+import com.manosgrigorakis.logisticsplatform.audit.enums.AuditAction;
+import com.manosgrigorakis.logisticsplatform.audit.service.AuditService;
 import com.manosgrigorakis.logisticsplatform.common.dto.PageFilterRequest;
 import com.manosgrigorakis.logisticsplatform.common.dto.SortFilterRequest;
 import com.manosgrigorakis.logisticsplatform.common.exception.BadRequestException;
@@ -7,6 +10,7 @@ import com.manosgrigorakis.logisticsplatform.common.exception.ConflictException;
 import com.manosgrigorakis.logisticsplatform.common.exception.DuplicateEntryException;
 import com.manosgrigorakis.logisticsplatform.common.exception.ResourceNotFoundException;
 import com.manosgrigorakis.logisticsplatform.common.generators.DocumentNumberGenerator;
+import com.manosgrigorakis.logisticsplatform.common.utils.EntityChangeTracker;
 import com.manosgrigorakis.logisticsplatform.quotes.enums.QuoteStatus;
 import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
 import com.manosgrigorakis.logisticsplatform.quotes.repository.QuoteRepository;
@@ -32,6 +36,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
@@ -44,6 +49,7 @@ public class ShipmentServiceImpl implements ShipmentService {
     private final QuoteRepository quoteRepository;
     private final UserRepository userRepository;
     private final VehicleRepository vehicleRepository;
+    private final AuditService auditService;
 
     private final DocumentNumberGenerator documentNumberGenerator;
 
@@ -54,15 +60,16 @@ public class ShipmentServiceImpl implements ShipmentService {
             QuoteRepository quoteRepository,
             UserRepository userRepository,
             VehicleRepository vehicleRepository,
-            DocumentNumberGenerator documentNumberGenerator
+            DocumentNumberGenerator documentNumberGenerator,
+            AuditService auditService
     )
     {
         this.shipmentRepository = shipmentRepository;
         this.quoteRepository = quoteRepository;
         this.userRepository = userRepository;
         this.vehicleRepository = vehicleRepository;
-
         this.documentNumberGenerator = documentNumberGenerator;
+        this.auditService = auditService;
     }
 
     @Override
@@ -148,13 +155,15 @@ public class ShipmentServiceImpl implements ShipmentService {
         Shipment savedShipment = shipmentRepository.save(shipment);
         quote.setQuoteStatus(QuoteStatus.CONVERTED);
         log.info("Shipment created with number: {}", savedShipment.getNumber());
-
+        this.logShipment(shipment);
         return ShipmentMapper.toResponse(savedShipment);
     }
 
     @Override
     public ShipmentResponseDTO updateShipmentById(Long id, UpdateShipmentRequestDTO dto) {
         Shipment shipment = findByIdOrThrow(id, shipmentRepository::findById, "Shipment");
+
+        Shipment oldShipment = new Shipment(shipment);
 
         if(!shipment.isEditable()) {
             log.warn("Attempted to update non editable shipment with id {} status {}", shipment.getId(), shipment.getStatus());
@@ -175,7 +184,7 @@ public class ShipmentServiceImpl implements ShipmentService {
 
         validators(shipment);
         Shipment savedShipment = shipmentRepository.save(shipment);
-
+        this.logUpdatedShipment(oldShipment, shipment);
         return ShipmentMapper.toResponse(savedShipment);
     }
 
@@ -261,5 +270,55 @@ public class ShipmentServiceImpl implements ShipmentService {
                             "plate", shipment.getTrailer().getPlate())
             );
         }
+    }
+
+    /**
+     * Logs shipment to the audit system
+     * @param shipment The actual shipment to be logged
+     */
+    private void logShipment(Shipment shipment) {
+        this.auditService.log(
+                AuditEventDTO.builder()
+                        .entityType("Shipment")
+                        .entityId(shipment.getId())
+                        .notes("Number: " + shipment.getNumber())
+                        .action(AuditAction.CREATE)
+                        .build()
+        );
+    }
+
+    /**
+     * Logs the updated shipment in the audit system with the changes been made
+     * @param oldShipment The old shipment instance
+     * @param updatedShipment The updated shipment instance
+     */
+    private void logUpdatedShipment(Shipment oldShipment, Shipment updatedShipment) {
+        Map<String, Object> changes = new HashMap<>();
+
+        EntityChangeTracker.trackFieldChange(changes, "pickup", Shipment::getPickup, oldShipment, updatedShipment);
+        EntityChangeTracker.trackFieldChange(changes, "notes", Shipment::getNotes, oldShipment, updatedShipment);
+
+        EntityChangeTracker.trackFieldChange(changes, "driver",
+                shipment -> shipment.getDriver() != null ? shipment.getDriver().fullName() : null,
+                oldShipment, updatedShipment);
+
+        EntityChangeTracker.trackFieldChange(changes, "truck",
+                shipment -> shipment.getTruck() != null ? shipment.getTruck().getPlate() : null,
+                oldShipment, updatedShipment);
+
+        EntityChangeTracker.trackFieldChange(changes, "trailer",
+                shipment -> shipment.getTrailer() != null ? shipment.getTrailer().getPlate() : null,
+                oldShipment, updatedShipment);
+
+        if (changes.isEmpty()) return;
+
+        this.auditService.log(
+                AuditEventDTO.builder()
+                        .entityType("Shipment")
+                        .entityId(updatedShipment.getId())
+                        .changes(changes)
+                        .action(AuditAction.UPDATE)
+                        .build()
+        );
     }
 }

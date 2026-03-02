@@ -83,13 +83,21 @@ public class Quote {
     @OneToMany(mappedBy = "quote", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<QuoteItem> quoteItems = new ArrayList<>();
 
-    public Quote() {
-    }
+    public Quote() {}
 
     @Builder
-    public Quote(String number, Integer validityDays, String origin, String destination, BigDecimal price, String notes,
-                 String specialTerms, QuoteStatus quoteStatus, User user, Customer customer,
-                 List<QuoteItem> quoteItems) {
+    public Quote(
+            String number,
+            Integer validityDays,
+            String origin,
+            String destination,
+            BigDecimal price,
+            String notes,
+            String specialTerms,
+            QuoteStatus quoteStatus,
+            User user,
+            Customer customer,
+            List<QuoteItem> quoteItems) {
         this.number = number;
         this.validityDays = validityDays;
         this.origin = origin;
@@ -103,6 +111,43 @@ public class Quote {
         if(quoteItems != null) {
             this.quoteItems = quoteItems;
         }
+    }
+
+    // Constructor overloading for Copy Constructor
+    public Quote(
+            Long id,
+            String number,
+            Integer validityDays,
+            Customer customer,
+            String origin,
+            String destination,
+            String notes,
+            String specialTerms,
+            QuoteStatus quoteStatus) {
+        this.id = id;
+        this.number = number;
+        this.validityDays = validityDays;
+        this.customer = customer;
+        this.origin = origin;
+        this.destination = destination;
+        this.notes = notes;
+        this.specialTerms = specialTerms;
+        this.quoteStatus = quoteStatus;
+    }
+
+    // Copy Constructor
+    public Quote(Quote another) {
+        this(
+                another.id,
+                another.number,
+                another.validityDays,
+                another.customer,
+                another.origin,
+                another.destination,
+                another.notes,
+                another.specialTerms,
+                another.quoteStatus
+        );
     }
 
     @PrePersist()

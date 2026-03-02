@@ -46,6 +46,19 @@ public class Vehicle {
         this.type = type;
     }
 
+    // Constructor Overloading for Copy Constructor
+    public Vehicle(Long id, String brand, String plate, VehicleType type) {
+        this.id = id;
+        this.brand = brand;
+        this.plate = plate;
+        this.type = type;
+    }
+
+    // Copy Constructor
+    public Vehicle(Vehicle another) {
+        this(another.id ,another.brand, another.plate, another.type);
+    }
+
     @PrePersist()
     public void onCreate() {
         this.createdAt = LocalDateTime.now();

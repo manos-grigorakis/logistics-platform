@@ -86,6 +86,28 @@ public class Shipment {
         this.trailer = trailer;
     }
 
+    // Constructor overloading for Copy Constructor
+    public Shipment(
+            Long id, String number, LocalDateTime pickup, String notes, User driver, Vehicle truck, Vehicle trailer
+    ) {
+        this.id = id;
+        this.number = number;
+        this.pickup = pickup;
+        this.notes = notes;
+        this.driver = driver;
+        this.truck = truck;
+        this.trailer = trailer;
+    }
+
+    // Copy Constructor
+    public Shipment(Shipment another) {
+        this(
+                another.id, another.number, another.pickup,
+                another.notes, another.driver, another.truck,
+                another.trailer
+        );
+    }
+
     @PrePersist()
     public void onCreate() {
         this.createdAt = LocalDateTime.now();
