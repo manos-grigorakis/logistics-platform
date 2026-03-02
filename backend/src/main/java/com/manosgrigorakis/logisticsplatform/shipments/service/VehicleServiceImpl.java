@@ -5,6 +5,7 @@ import com.manosgrigorakis.logisticsplatform.audit.enums.AuditAction;
 import com.manosgrigorakis.logisticsplatform.audit.service.AuditService;
 import com.manosgrigorakis.logisticsplatform.common.exception.DuplicateEntryException;
 import com.manosgrigorakis.logisticsplatform.common.exception.ResourceNotFoundException;
+import com.manosgrigorakis.logisticsplatform.common.utils.EntityChangeTracker;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.VehicleRequestDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.VehicleResponseDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.mapper.VehicleMapper;
@@ -126,31 +127,14 @@ public class VehicleServiceImpl implements VehicleService{
     /**
      * Logs the updated vehicle with the changed values only in the audit system
      * @param oldVehicle Old values of vehicle before updating
-     * @param newVehicle New values of vehicle after updating
+     * @param updatedVehicle Updated values of vehicle
      */
-    private void logUpdatedVehicle(Vehicle oldVehicle, Vehicle newVehicle) {
+    private void logUpdatedVehicle(Vehicle oldVehicle, Vehicle updatedVehicle) {
         Map<String, Object> changes = new HashMap<>();
 
-        if(!Objects.equals(oldVehicle.getBrand(), newVehicle.getBrand())) {
-            changes.put("brand", Map.of(
-                    "old", oldVehicle.getBrand(),
-                    "new", newVehicle.getBrand()
-            ));
-        }
-
-        if(!Objects.equals(oldVehicle.getPlate(), newVehicle.getPlate())) {
-            changes.put("plate", Map.of(
-                    "old", oldVehicle.getPlate(),
-                    "new", newVehicle.getPlate()
-            ));
-        }
-
-        if(!Objects.equals(oldVehicle.getType(), newVehicle.getType())) {
-            changes.put("type", Map.of(
-                    "old", oldVehicle.getType(),
-                    "new", newVehicle.getType()
-            ));
-        }
+        EntityChangeTracker.trackFieldChange(changes, "brand", Vehicle::getBrand, oldVehicle, updatedVehicle);
+        EntityChangeTracker.trackFieldChange(changes, "plate", Vehicle::getPlate, oldVehicle, updatedVehicle);
+        EntityChangeTracker.trackFieldChange(changes, "type", Vehicle::getType, oldVehicle, updatedVehicle);
 
         if(changes.isEmpty()) return;
 

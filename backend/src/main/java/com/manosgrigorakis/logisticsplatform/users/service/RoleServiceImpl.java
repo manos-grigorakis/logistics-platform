@@ -3,6 +3,7 @@ package com.manosgrigorakis.logisticsplatform.users.service;
 import com.manosgrigorakis.logisticsplatform.audit.dto.AuditEventDTO;
 import com.manosgrigorakis.logisticsplatform.audit.enums.AuditAction;
 import com.manosgrigorakis.logisticsplatform.audit.service.AuditService;
+import com.manosgrigorakis.logisticsplatform.common.utils.EntityChangeTracker;
 import com.manosgrigorakis.logisticsplatform.users.dto.RoleRequestDTO;
 import com.manosgrigorakis.logisticsplatform.users.dto.RoleResponseDTO;
 import com.manosgrigorakis.logisticsplatform.common.exception.DeleteConflictException;
@@ -143,19 +144,8 @@ public class RoleServiceImpl implements RoleService {
     private void logUpdatedRole(Role oldRole, Role updatedRole) {
         Map<String, Object> changes =  new HashMap<>();
 
-        if(!Objects.equals(oldRole.getName(), updatedRole.getName())) {
-            changes.put("name", Map.of(
-                    "old:" + oldRole.getName(),
-                    "new:" + updatedRole.getName()
-            ));
-        }
-
-        if(!Objects.equals(oldRole.getDescription(), updatedRole.getDescription())) {
-            changes.put("description", Map.of(
-                    "old:" + oldRole.getDescription(),
-                    "new:" + updatedRole.getDescription()
-            ));
-        }
+        EntityChangeTracker.trackFieldChange(changes, "name", Role::getName, oldRole, updatedRole);
+        EntityChangeTracker.trackFieldChange(changes, "description", Role::getDescription, oldRole, updatedRole);
 
         if(changes.isEmpty()) return;
 
