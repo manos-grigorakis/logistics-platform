@@ -25,6 +25,31 @@ import java.time.format.DateTimeFormatter;
 public class PdfService {
     @Value("classpath:templates/quotes/greek/index.html")
     private Resource greekQuoteHtmlTemplate;
+
+    @Value("${app.company.name}")
+    private String companyName;
+
+    @Value("${app.company.slogan}")
+    private String companySlogan;
+
+    @Value("${app.company.location}")
+    private String companyLocation;
+
+    @Value("${app.company.phones}")
+    private String companyPhones;
+
+    @Value("${app.company.mail}")
+    private String companyMail;
+
+    @Value("${app.company.website_url}")
+    private String companyWebsiteUrl;
+
+    @Value("${app.company.representative}")
+    private String companyRepresentative;
+
+    @Value("${app.company.representative_title}")
+    private String companyRepresentativeTitle;
+
     private final Logger log = LoggerFactory.getLogger(PdfService.class);
 
     /**
@@ -76,7 +101,7 @@ public class PdfService {
      * @return htmlTemplate The formated HTML template
      * @throws IOException If the template cannot be read or opened
      */
-    private static String formatTemplate(Resource templateFile, Quote quote) throws IOException {
+    private String formatTemplate(Resource templateFile, Quote quote) throws IOException {
         // Format template
         String htmlTemplate = new String(
                 templateFile.getInputStream().readAllBytes(), StandardCharsets.UTF_8
@@ -91,6 +116,14 @@ public class PdfService {
         String formatedDate = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(quote.getIssueDate());
 
         htmlTemplate = htmlTemplate
+                .replace("${companyName}", this.companyName)
+                .replace("${companySlogan}", this.companySlogan)
+                .replace("${companyLocation}", this.companyLocation)
+                .replace("${companyPhones}", this.companyPhones)
+                .replace("${companyMail}", this.companyMail)
+                .replace("${companyWebsiteUrl}", this.companyWebsiteUrl)
+                .replace("${companyRepresentative}", this.companyRepresentative)
+                .replace("${companyRepresentativeTitle}", this.companyRepresentativeTitle)
                 .replace("${quoteNumber}", quote.getNumber())
                 .replace("${issueDate}", formatedDate)
                 .replace("${company}", quote.getCustomer().getCompanyName())
