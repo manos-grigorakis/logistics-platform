@@ -66,6 +66,16 @@ app:
     support: "support@exampe.com"
     displayName: "Logistics Platform"
 
+  company:
+    name: Test Company
+    slogan: Test
+    location: Test
+    phones: Test
+    mail: test@domain.com
+    website_url: test.domain.com
+    representative: Test
+    representative_title: Test
+
   aws:
     region: "eu-central-1"
 
