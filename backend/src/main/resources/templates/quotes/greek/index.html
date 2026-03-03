@@ -304,13 +304,12 @@
 <div class="container">
     <!-- Header -->
     <div class="header">
-        <div class="company-name">ΕΤΑΙΡΙΑ ΕΘΝΙΚΩΝ ΜΕΤΑΦΟΡΩΝ ΓΡΗΓΟΡΑΚΗΣ</div>
-        <div class="company-tagline">Αξιοπιστία & Ασφάλεια στις Μεταφορές</div>
-
-        <div class="contact-item">Άγιος Νικόλαος, Κρήτη</div>
-        <div class="contact-item">+30 28410 83055, 22512</div>
-        <div class="contact-item">grigorakis.ioannis@gmail.com</div>
-        <div class="contact-item link">www.grigorakis-transport.gr</div>
+        <div class="company-name">${companyName}</div>
+        <div class="company-tagline">${companySlogan}</div>
+        <div class="contact-item">${companyLocation}</div>
+        <div class="contact-item">${companyPhones}</div>
+        <div class="contact-item">${companyMail}</div>
+        <div class="contact-item link">${companyWebsiteUrl}</div>
     </div>
 
     <!-- Content -->
@@ -428,8 +427,8 @@
 
     <!-- Footer -->
     <div class="footer">
-        <div class="signature">Με εκτίμηση,<br/>Ιωάννης Γρηγοράκης</div>
-        <div class="representative">Νόμιμος Εκπρόσωπος</div>
+        <div class="signature">Με εκτίμηση,<br/>${companyRepresentative}</div>
+        <div class="representative">${companyRepresentativeTitle}</div>
     </div>
 </div>
 </body>

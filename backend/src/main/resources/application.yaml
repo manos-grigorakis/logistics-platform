@@ -65,6 +65,16 @@ app:
     support: ${SUPPORT_MAIL}
     displayName: ${DISPLAY_NAME}
 
+  company:
+    name: ${COMPANY_NAME}
+    slogan: ${COMPANY_SLOGAN}
+    location: ${COMPANY_LOCATION}
+    phones: ${COMPANY_PHONES}
+    mail: ${COMPANY_MAIL}
+    website_url: ${COMPANY_WEBSITE_URL}
+    representative: ${COMPANY_REPRESENTATIVE}
+    representative_title: ${COMPANY_REPRESENTATIVE_TITLE}
+
   tax:
     vat: ${TAX_VAT}
 
