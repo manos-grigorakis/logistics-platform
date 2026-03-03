@@ -4,6 +4,7 @@
 ![Build & Tests](https://github.com/manos-grigorakis/logistics-platform/actions/workflows/build-and-test.yaml/badge.svg)
 ![Coverage](https://github.com/manos-grigorakis/logistics-platform/blob/main/.github/badges/jacoco.svg?raw=true)
 ![Branches Coverage](https://github.com/manos-grigorakis/logistics-platform/blob/main/.github/badges/branches.svg?raw=true)
+![Latest Release](https://img.shields.io/github/v/release/manos-grigorakis/logistics-platform)
 
 ## Prerequisites
 
