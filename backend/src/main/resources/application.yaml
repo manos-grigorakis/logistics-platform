@@ -52,6 +52,20 @@ springdoc:
 swagger:
   enabled: false
 
+management:
+  server:
+    port: 9090
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
 app:
   frontend:
     url: ${FRONTEND_URL}

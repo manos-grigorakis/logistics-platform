@@ -2,8 +2,10 @@ package com.manosgrigorakis.logisticsplatform.security;
 
 import com.manosgrigorakis.logisticsplatform.security.jwt.JwtAuthFilter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -41,7 +43,26 @@ public class SecurityConfig {
         this.userDetailsService = userDetailsService;
     }
 
+    /**
+     * Enables Actuator endpoints
+     */
     @Bean
+    @Order(1)
+    public SecurityFilterChain actuatorSecurityFilterChain(HttpSecurity http) throws Exception {
+        http.securityMatcher(EndpointRequest.toAnyEndpoint())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(EndpointRequest.to("health", "prometheus")).permitAll()
+                        .anyRequest().hasAnyAuthority("ADMIN")
+                );
+
+        // Disable CSRF
+        http.csrf(csrf -> csrf.disable());
+
+        return http.build();
+    }
+
+    @Bean
+    @Order(2)
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // Permissions for each role based on API endpoints
         http.authorizeHttpRequests(configurer -> {
