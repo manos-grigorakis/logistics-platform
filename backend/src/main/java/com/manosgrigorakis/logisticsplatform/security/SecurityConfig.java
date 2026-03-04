@@ -2,8 +2,10 @@ package com.manosgrigorakis.logisticsplatform.security;
 
 import com.manosgrigorakis.logisticsplatform.security.jwt.JwtAuthFilter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -127,6 +129,23 @@ public class SecurityConfig {
 
         // Enables CORS
         http.cors(Customizer.withDefaults());
+
+        // Disable CSRF
+        http.csrf(csrf -> csrf.disable());
+
+        return http.build();
+    }
+
+    /**
+     * Enables all actuator endpoints without authorization
+     */
+    @Bean
+    @Order(1)
+    public SecurityFilterChain actuatorSecurityFilterChain(HttpSecurity http) throws Exception {
+        http.securityMatcher(EndpointRequest.toAnyEndpoint())
+                .authorizeHttpRequests(auth -> auth
+                        .anyRequest().permitAll()
+        );
 
         // Disable CSRF
         http.csrf(csrf -> csrf.disable());
