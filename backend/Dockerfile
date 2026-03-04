@@ -11,11 +11,11 @@ ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} /app/app.jar
 
 # Expose ports
-# Tomcat Server
-EXPOSE 8080
-
 # Actuator
 EXPOSE 9090
+
+# Tomcat Server
+EXPOSE 8080
 
 # Run application
 CMD ["java", "-jar", "/app/app.jar"]

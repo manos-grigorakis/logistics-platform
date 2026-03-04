@@ -2,7 +2,7 @@ name: logistics-platform-dev
 
 services:
   db:
-    container_name: mariadb
+    container_name: mariadb-dev
     image: mariadb:11.4
     restart: unless-stopped
     env_file:
@@ -24,7 +24,7 @@ services:
       - app-network
 
   minio:
-    container_name: minio
+    container_name: minio-dev
     image: minio/minio:RELEASE.2025-09-07T16-13-09Z
     restart: unless-stopped
     env_file:
