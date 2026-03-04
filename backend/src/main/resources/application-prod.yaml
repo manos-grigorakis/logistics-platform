@@ -46,6 +46,25 @@ springdoc:
 swagger:
   enabled: false
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - prometheus
+        exclude:
+          - env
+          - beans
+          - mappings
+          - configprops
+          - threaddump
+          - heapdump
+          - flyway
+  endpoint:
+    health:
+      show-details: never
+
 app:
   frontend:
     url: ${FRONTEND_URL}
