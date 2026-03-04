@@ -10,8 +10,12 @@ ARG JAR_FILE=target/*.jar
 # Copy Spring Boot jar into container
 COPY ${JAR_FILE} /app/app.jar
 
-# Expose port
+# Expose ports
+# Tomcat Server
 EXPOSE 8080
+
+# Actuator
+EXPOSE 9090
 
 # Run application
 CMD ["java", "-jar", "/app/app.jar"]

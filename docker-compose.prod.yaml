@@ -24,6 +24,7 @@ services:
         condition: service_started
     ports:
       - "8080"
+      - "9090:9090"
     networks:
       - app-network
 
