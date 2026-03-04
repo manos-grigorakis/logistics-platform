@@ -53,6 +53,15 @@ jwt:
 swagger:
   enabled: false
 
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: false
+  health:
+    defaults:
+      enabled: false
+
 app:
   frontend:
     url: "http://localhost:4200"
