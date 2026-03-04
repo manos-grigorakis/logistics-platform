@@ -1,3 +1,5 @@
+name: logistics-platform-prod
+
 services:
   frontend:
     container_name: frontend

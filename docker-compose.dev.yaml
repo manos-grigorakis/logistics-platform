@@ -1,3 +1,5 @@
+name: logistics-platform-dev
+
 services:
   db:
     container_name: mariadb
