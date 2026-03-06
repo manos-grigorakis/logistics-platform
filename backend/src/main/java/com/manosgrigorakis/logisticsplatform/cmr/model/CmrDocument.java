@@ -3,6 +3,7 @@ package com.manosgrigorakis.logisticsplatform.cmr.model;
 import com.manosgrigorakis.logisticsplatform.cmr.enums.CmrStatus;
 import com.manosgrigorakis.logisticsplatform.shipments.model.Shipment;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -25,7 +26,7 @@ public class CmrDocument {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private CmrStatus status = CmrStatus.GENERATED;
+    private CmrStatus status;
 
     @Column(name = "file_url", length = 500, nullable = false)
     private String fileUrl;
@@ -49,16 +50,19 @@ public class CmrDocument {
     public CmrDocument() {
     }
 
+    @Builder
     public CmrDocument(
             String number,
             CmrStatus status,
             String fileUrl,
+            Shipment shipment,
             LocalDateTime signedAt,
             String signedBy
     ) {
         this.number = number;
         this.status = status;
         this.fileUrl = fileUrl;
+        this.shipment = shipment;
         this.signedAt = signedAt;
         this.signedBy = signedBy;
     }
