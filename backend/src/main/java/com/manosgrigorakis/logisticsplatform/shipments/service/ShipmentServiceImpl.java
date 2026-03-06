@@ -3,6 +3,7 @@ package com.manosgrigorakis.logisticsplatform.shipments.service;
 import com.manosgrigorakis.logisticsplatform.audit.dto.AuditEventDTO;
 import com.manosgrigorakis.logisticsplatform.audit.enums.AuditAction;
 import com.manosgrigorakis.logisticsplatform.audit.service.AuditService;
+import com.manosgrigorakis.logisticsplatform.cmr.service.CmrDocumentService;
 import com.manosgrigorakis.logisticsplatform.common.dto.PageFilterRequest;
 import com.manosgrigorakis.logisticsplatform.common.dto.SortFilterRequest;
 import com.manosgrigorakis.logisticsplatform.common.exception.BadRequestException;
@@ -50,6 +51,7 @@ public class ShipmentServiceImpl implements ShipmentService {
     private final UserRepository userRepository;
     private final VehicleRepository vehicleRepository;
     private final AuditService auditService;
+    private final CmrDocumentService cmrDocumentService;
 
     private final DocumentNumberGenerator documentNumberGenerator;
 
@@ -61,8 +63,8 @@ public class ShipmentServiceImpl implements ShipmentService {
             UserRepository userRepository,
             VehicleRepository vehicleRepository,
             DocumentNumberGenerator documentNumberGenerator,
-            AuditService auditService
-    )
+            AuditService auditService,
+            CmrDocumentService cmrDocumentService)
     {
         this.shipmentRepository = shipmentRepository;
         this.quoteRepository = quoteRepository;
@@ -70,6 +72,7 @@ public class ShipmentServiceImpl implements ShipmentService {
         this.vehicleRepository = vehicleRepository;
         this.documentNumberGenerator = documentNumberGenerator;
         this.auditService = auditService;
+        this.cmrDocumentService = cmrDocumentService;
     }
 
     @Override
@@ -156,6 +159,15 @@ public class ShipmentServiceImpl implements ShipmentService {
         quote.setQuoteStatus(QuoteStatus.CONVERTED);
         log.info("Shipment created with number: {}", savedShipment.getNumber());
         this.logShipment(shipment);
+
+        // Create CMR document
+        try {
+            cmrDocumentService.createCmrDocument(quote, shipment);
+        } catch (Exception e) {
+            log.error("Failed to generate CMR Document {}", e);
+            throw new RuntimeException(e);
+        }
+
         return ShipmentMapper.toResponse(savedShipment);
     }
 

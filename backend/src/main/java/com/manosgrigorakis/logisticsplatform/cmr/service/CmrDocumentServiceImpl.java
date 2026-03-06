@@ -12,7 +12,9 @@ import com.manosgrigorakis.logisticsplatform.common.dto.SortFilterRequest;
 import com.manosgrigorakis.logisticsplatform.common.exception.ResourceNotFoundException;
 import com.manosgrigorakis.logisticsplatform.common.generators.DocumentNumberGenerator;
 import com.manosgrigorakis.logisticsplatform.common.utils.SpecsUtils;
+import com.manosgrigorakis.logisticsplatform.infrastructure.document.PdfCmrDocumentService;
 import com.manosgrigorakis.logisticsplatform.infrastructure.storage.FileStorageService;
+import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
 import com.manosgrigorakis.logisticsplatform.shipments.model.Shipment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,11 +33,13 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
     private static final Logger log = LoggerFactory.getLogger(CmrDocumentServiceImpl.class);
     private final DocumentNumberGenerator documentNumberGenerator;
     private final FileStorageService fileStorageService;
+    private final PdfCmrDocumentService pdfCmrDocumentService;
 
-    public CmrDocumentServiceImpl(CmrDocumentRepository cmrDocumentRepository, DocumentNumberGenerator documentNumberGenerator, FileStorageService fileStorageService) {
+    public CmrDocumentServiceImpl(CmrDocumentRepository cmrDocumentRepository, DocumentNumberGenerator documentNumberGenerator, FileStorageService fileStorageService, PdfCmrDocumentService pdfCmrDocumentService) {
         this.cmrDocumentRepository = cmrDocumentRepository;
         this.documentNumberGenerator = documentNumberGenerator;
         this.fileStorageService = fileStorageService;
+        this.pdfCmrDocumentService = pdfCmrDocumentService;
     }
 
     @Override
@@ -68,7 +72,7 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
     }
 
     @Override
-    public void createCmrDocument(Shipment shipment) {
+    public void createCmrDocument(Quote quote, Shipment shipment) {
         int currentYear = LocalDate.now().getYear();
         String lastNumber = this.cmrDocumentRepository.findLastCmrDocumentNumberByYear(currentYear)
                 .orElse("CMR-" + currentYear + "-0000");
@@ -88,6 +92,10 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
         log.info("CMR Document saved with number {}", cmrDocument.getNumber());
 
         // TODO: Generate PDF and upload it to MinIO
+        byte[] cmrDocumentPdf = pdfCmrDocumentService.generateCmrDocumentPdf(quote, shipment, cmrDocument);
+
+        // Refactor to store it in separate bucket in MinIO
+        fileStorageService.store(cmrDocument.getNumber(), cmrDocumentPdf, "application/pdf");
     }
 
     @Override
