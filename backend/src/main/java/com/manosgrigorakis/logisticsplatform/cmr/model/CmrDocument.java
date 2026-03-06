@@ -101,4 +101,36 @@ public class CmrDocument {
     private void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
+
+    /**
+     * Checks whenever the CMR status can change from its current value
+     * Rules: </br>
+     *  Not Allowed:
+     *      - Finalized statuses cannot be changed </br>
+     *  Allowed:
+     *      - {@code GENERATED -> SIGNED}
+     *      - {@code GENERATED -> CANCELLED}
+     * @param status of the target
+     * @return {@code true} if status can be changed, otherwise {@code false}
+     */
+    public Boolean canChangeStatusTo(CmrStatus status) {
+        if (this.status.isFinal()) return false;
+        return status.isFinal();
+    }
+
+    /**
+     * Change the CMR status to the given target status applying business rules.
+     * Uses {@link #canChangeStatusTo(CmrStatus)} to apply business rules
+     * @param status The status of the target
+     * @throws IllegalStateException If business rules of status doesn't allow this action
+     */
+    public void changeStatusTo(CmrStatus status) throws IllegalStateException {
+        if (!canChangeStatusTo(status)) {
+            throw new IllegalStateException(
+                    "Invalid status transition: " + this.status + " -> " + status
+                    );
+        }
+
+        this.status = status;
+    }
 }
