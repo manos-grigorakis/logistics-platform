@@ -3,13 +3,17 @@ package com.manosgrigorakis.logisticsplatform.cmr.controller;
 import com.manosgrigorakis.logisticsplatform.cmr.dto.CmrDocumentFilterRequest;
 import com.manosgrigorakis.logisticsplatform.cmr.dto.CmrDocumentResponseDTO;
 import com.manosgrigorakis.logisticsplatform.cmr.dto.UpdateCmrDocumentStatusRequestDTO;
+import com.manosgrigorakis.logisticsplatform.cmr.dto.UploadCmrDocumentRequestDTO;
 import com.manosgrigorakis.logisticsplatform.cmr.service.CmrDocumentService;
 import com.manosgrigorakis.logisticsplatform.common.dto.PageFilterRequest;
 import com.manosgrigorakis.logisticsplatform.common.dto.SortFilterRequest;
 import jakarta.validation.Valid;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/cmr-documents")
@@ -44,8 +48,14 @@ public class CmrDocumentRestController {
         this.cmrDocumentService.updateCmrDocumentStatus(id, dto);
     }
 
-    @PatchMapping("/{id}/signed-copy")
-    public CmrDocumentResponseDTO uploadSignedCmrDocument(@PathVariable Long id) {
-        return null;
+    @PostMapping("/{id}/signed-copy")
+    public ResponseEntity<Void> uploadSignedCmrDocument(
+            @PathVariable Long id,
+            @RequestParam("file") MultipartFile file,
+            @ModelAttribute @Valid UploadCmrDocumentRequestDTO dto
+    ) {
+        this.cmrDocumentService.uploadSignedCmrDocument(id, file, dto);
+
+        return ResponseEntity.noContent().build();
     }
 }

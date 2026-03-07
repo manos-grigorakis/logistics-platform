@@ -3,6 +3,7 @@ package com.manosgrigorakis.logisticsplatform.cmr.service;
 import com.manosgrigorakis.logisticsplatform.cmr.dto.CmrDocumentFilterRequest;
 import com.manosgrigorakis.logisticsplatform.cmr.dto.CmrDocumentResponseDTO;
 import com.manosgrigorakis.logisticsplatform.cmr.dto.UpdateCmrDocumentStatusRequestDTO;
+import com.manosgrigorakis.logisticsplatform.cmr.dto.UploadCmrDocumentRequestDTO;
 import com.manosgrigorakis.logisticsplatform.cmr.enums.CmrStatus;
 import com.manosgrigorakis.logisticsplatform.cmr.mapper.CmrDocumentMapper;
 import com.manosgrigorakis.logisticsplatform.cmr.model.CmrDocument;
@@ -26,8 +27,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @Service
@@ -132,7 +136,48 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
     }
 
     @Override
-    public CmrDocumentResponseDTO uploadSignedCmrDocument(Long id) {
-        return null;
+    public void uploadSignedCmrDocument(Long id, MultipartFile file, UploadCmrDocumentRequestDTO dto) {
+        CmrDocument cmrDocument = this.cmrDocumentRepository.findById(id)
+                .orElseThrow(() -> {
+                            log.warn("CMR Document not found with id {}", id);
+                            return new ResourceNotFoundException("CMR Document not found with id: " + id);
+                        }
+                );
+
+        if (!cmrDocument.canChangeStatusTo(CmrStatus.SIGNED)) {
+            throw new ConflictException(
+                    "CMR document with number " + cmrDocument.getNumber() + " is already signed",
+                    Map.of("currentStatus", cmrDocument.getStatus())
+            );
+        }
+
+        byte[] fileInBytes = convertFileToBytesArray(file);
+
+        // Upload signed CMR file to S3
+        fileStorageService.store(
+                this.bucketPathCmr + cmrDocument.getNumber() + "-SIGNED",
+                fileInBytes,
+                "application/pdf"
+        );
+
+        cmrDocument.setStatus(CmrStatus.SIGNED);
+        cmrDocument.setSignedBy(dto.getSignedBy());
+        cmrDocument.setSignedAt(LocalDateTime.now());
+        this.cmrDocumentRepository.save(cmrDocument);
+        log.info("Signed CMR PDF successfully updated and stored");
+    }
+
+    /**
+     * Converts a file to a bytes array
+     * @param file The file to be converted
+     * @return The converted file in a bytes array
+     */
+    private byte[] convertFileToBytesArray(MultipartFile file) {
+        try {
+            return file.getBytes();
+        } catch (IOException e) {
+            log.warn("Failed to read signed CMR file bytes");
+            throw new RuntimeException(e);
+        }
     }
 }
