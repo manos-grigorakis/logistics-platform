@@ -160,14 +160,6 @@ public class ShipmentServiceImpl implements ShipmentService {
         log.info("Shipment created with number: {}", savedShipment.getNumber());
         this.logShipment(shipment);
 
-        // Create CMR document
-        try {
-            cmrDocumentService.createCmrDocument(quote, shipment);
-        } catch (Exception e) {
-            log.error("Failed to generate CMR Document {}", e);
-            throw new RuntimeException(e);
-        }
-
         return ShipmentMapper.toResponse(savedShipment);
     }
 
