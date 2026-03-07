@@ -107,7 +107,7 @@ public class QuoteServiceImpl implements QuoteService {
                     return new ResourceNotFoundException("Quote not found with id: " + id);
                 });
 
-        String presignedUrl = fileStorageService.createPresignedUrl(quote.getNumber());
+        String presignedUrl = fileStorageService.createPresignedUrl(this.bucketPathQuotes + quote.getNumber());
 
         QuoteResponseDTO response = QuoteMapper.toResponse(quote);
         response.setPdfUrl(presignedUrl);
@@ -218,7 +218,7 @@ public class QuoteServiceImpl implements QuoteService {
         this.logUpdatedQuote(oldQuote, quote);
 
         // Create presigned url
-        String presignedUrl = fileStorageService.createPresignedUrl(savedQuote.getNumber());
+        String presignedUrl = fileStorageService.createPresignedUrl(this.bucketPathQuotes + savedQuote.getNumber());
 
         // Set response
         QuoteResponseDTO response = QuoteMapper.toResponse(savedQuote);
