@@ -41,6 +41,13 @@ public class PdfCmrDocumentService {
     @Value("${app.company.mail}")
     private String companyMail;
 
+    /**
+     * Generate a PDF file for the CMR document using the HTML template
+     * @param quote The related quote for the CMR
+     * @param shipment The related shipment with the CMR
+     * @param cmrDocument The actual CMR document model
+     * @return The generated PDF in {@link bytes[]}
+     */
     public byte[] generateCmrDocumentPdf(Quote quote, Shipment shipment, CmrDocument cmrDocument) {
         try {
             String htmlTemplate = formatTemplate(cmrHtmlTemplate, quote, shipment, cmrDocument);
@@ -74,6 +81,15 @@ public class PdfCmrDocumentService {
         }
     }
 
+    /**
+     * Formats the HTML template with the data from the provided models
+     * @param templateFile The actual HTML template
+     * @param quote The quote with the data that will be passed to the HTML template
+     * @param shipment The shipment with the data that will be passed to the HTML template
+     * @param cmrDocument The CMR document with the data that will be passed to the HTML template
+     * @return htmlTemplate The formatted HTML template
+     * @throws IOException If the template cannot be read or opened
+     */
     private String formatTemplate(Resource templateFile, Quote quote, Shipment shipment, CmrDocument cmrDocument)
             throws IOException {
         // Format template
@@ -111,8 +127,6 @@ public class PdfCmrDocumentService {
         String formattedPickupDate = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(pickupDate);
         String formattedIssuedDate = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(issuedDate);
 
-        // TODO: cargoRows variable
-
         htmlTemplate = htmlTemplate
                 .replace("${companyName}", this.companyName)
                 .replace("${companySlogan}", this.companySlogan)
@@ -132,7 +146,7 @@ public class PdfCmrDocumentService {
                 .replace("${truckBrand}", truckBrand)
                 .replace("${trailerPlate}", trailerPlate)
                 .replace("${trailerBrand}", trailerBrand)
-                .replace("${shipmentNotes}", shipmentNotes)
+                .replace("${notes}", shipmentNotes)
                 .replace("${issueDate}", formattedIssuedDate)
                 .replace("${cmrNumber}", cmrNumber)
                 .replace("${cmrStatus}", cmrStatus.toString());
@@ -140,6 +154,12 @@ public class PdfCmrDocumentService {
         return htmlTemplate;
     }
 
+    /**
+     * Handles null fields by replacing null with a '-',
+     * preventing for Null Pointer Exception
+     * @param field The actual field to be checked for null
+     * @return The actual field if not null, otherwise '-'
+     */
     private String handleNullFields(String field) {
         return field != null ? field : "-";
     }
