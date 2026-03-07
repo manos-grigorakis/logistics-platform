@@ -40,12 +40,13 @@ public class CmrDocumentRestController {
     }
 
     @PatchMapping("/{id}/status")
-    public void updateCmrDocumentStatus(
+    public ResponseEntity<Void> updateCmrDocumentStatus(
             @PathVariable Long id,
             @RequestBody @Valid UpdateCmrDocumentStatusRequestDTO dto
             )
     {
         this.cmrDocumentService.updateCmrDocumentStatus(id, dto);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/{id}/signed-copy")

@@ -123,7 +123,7 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
                 );
 
         try {
-            cmrDocument.canChangeStatusTo(dto.getStatus());
+            cmrDocument.changeStatusTo(dto.getStatus());
         } catch (IllegalStateException e) {
             throw new ConflictException(
                     e.getMessage(),
