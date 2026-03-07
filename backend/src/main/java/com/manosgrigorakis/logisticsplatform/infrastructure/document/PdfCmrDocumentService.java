@@ -8,6 +8,8 @@ import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
 import com.manosgrigorakis.logisticsplatform.shipments.model.Shipment;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
@@ -40,6 +42,8 @@ public class PdfCmrDocumentService {
 
     @Value("${app.company.mail}")
     private String companyMail;
+
+    private final Logger log = LoggerFactory.getLogger(PdfCmrDocumentService.class);
 
     /**
      * Generate a PDF file for the CMR document using the HTML template
@@ -74,9 +78,11 @@ public class PdfCmrDocumentService {
             try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
                 // Render the final PDF
                 renderer.createPDF(byteArrayOutputStream);
+                log.info("CMR PDF file created with number {}", cmrDocument.getNumber());
                 return byteArrayOutputStream.toByteArray();
             }
         } catch (IOException e) {
+            log.error("Failed to generate CMR PDF file with number {}", cmrDocument.getNumber());
             throw new RuntimeException("Failed generate PDF file", e);
         }
     }
