@@ -60,6 +60,9 @@ public class QuoteServiceImpl implements QuoteService {
     @Value("${tax.vat}")
     private Integer vatPercent;
 
+    @Value("${app.minio.bucketPathQuotes}")
+    private String bucketPathQuotes;
+
     public QuoteServiceImpl(
             QuoteRepository quoteRepository,
             UserRepository userRepository,
@@ -147,7 +150,7 @@ public class QuoteServiceImpl implements QuoteService {
 
         // Generate PDF and store / upload it
         byte[] quotePdf = pdfService.generateQuotePdf(quote);
-        fileStorageService.store(quote.getNumber(), quotePdf, "application/pdf");
+        fileStorageService.store(this.bucketPathQuotes + savedQuote.getNumber(), quotePdf, "application/pdf");
 
         String presignedUrl = fileStorageService.createPresignedUrl(quote.getNumber());
         QuoteCreatedResponseDTO response = QuoteMapper.toCreatedResponse(savedQuote);
@@ -209,7 +212,7 @@ public class QuoteServiceImpl implements QuoteService {
 
         // Re-generate PDF and store / upload it
         byte[] quotePdf = pdfService.generateQuotePdf(savedQuote);
-        fileStorageService.store(savedQuote.getNumber(), quotePdf, "application/pdf");
+        fileStorageService.store(this.bucketPathQuotes + savedQuote.getNumber(), quotePdf, "application/pdf");
 
         log.info("Quote updated with number: {}", savedQuote.getNumber());
         this.logUpdatedQuote(oldQuote, quote);

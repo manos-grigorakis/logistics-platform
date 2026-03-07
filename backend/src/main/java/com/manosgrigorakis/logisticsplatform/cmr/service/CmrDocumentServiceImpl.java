@@ -18,6 +18,7 @@ import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
 import com.manosgrigorakis.logisticsplatform.shipments.model.Shipment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -34,6 +35,9 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
     private final DocumentNumberGenerator documentNumberGenerator;
     private final FileStorageService fileStorageService;
     private final PdfCmrDocumentService pdfCmrDocumentService;
+
+    @Value("${app.minio.bucketPathCmr}")
+    private String bucketPathCmr;
 
     public CmrDocumentServiceImpl(CmrDocumentRepository cmrDocumentRepository, DocumentNumberGenerator documentNumberGenerator, FileStorageService fileStorageService, PdfCmrDocumentService pdfCmrDocumentService) {
         this.cmrDocumentRepository = cmrDocumentRepository;
@@ -95,7 +99,11 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
         byte[] cmrDocumentPdf = pdfCmrDocumentService.generateCmrDocumentPdf(quote, shipment, cmrDocument);
 
         // Refactor to store it in separate bucket in MinIO
-        fileStorageService.store(cmrDocument.getNumber(), cmrDocumentPdf, "application/pdf");
+        fileStorageService.store(
+                this.bucketPathCmr + cmrDocument.getNumber(),
+                cmrDocumentPdf,
+                "application/pdf"
+        );
     }
 
     @Override

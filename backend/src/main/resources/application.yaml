@@ -100,3 +100,5 @@ app:
     secretKey: ${MINIO_SECRET_KEY}
     endpoint: ${MINIO_ENDPOINT}
     bucketName: ${MINIO_BUCKET_NAME}
+    bucketPathQuotes: ${MINIO_BUCKET_PATH_QUOTES}
+    bucketPathCmr: ${MINIO_BUCKET_PATH_CMR}
