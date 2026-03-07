@@ -51,7 +51,6 @@ public class ShipmentServiceImpl implements ShipmentService {
     private final UserRepository userRepository;
     private final VehicleRepository vehicleRepository;
     private final AuditService auditService;
-    private final CmrDocumentService cmrDocumentService;
 
     private final DocumentNumberGenerator documentNumberGenerator;
 
@@ -72,7 +71,6 @@ public class ShipmentServiceImpl implements ShipmentService {
         this.vehicleRepository = vehicleRepository;
         this.documentNumberGenerator = documentNumberGenerator;
         this.auditService = auditService;
-        this.cmrDocumentService = cmrDocumentService;
     }
 
     @Override
