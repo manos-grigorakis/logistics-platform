@@ -1,5 +1,8 @@
 package com.manosgrigorakis.logisticsplatform.cmr.service;
 
+import com.manosgrigorakis.logisticsplatform.audit.dto.AuditEventDTO;
+import com.manosgrigorakis.logisticsplatform.audit.enums.AuditAction;
+import com.manosgrigorakis.logisticsplatform.audit.service.AuditService;
 import com.manosgrigorakis.logisticsplatform.cmr.dto.CmrDocumentFilterRequest;
 import com.manosgrigorakis.logisticsplatform.cmr.dto.CmrDocumentResponseDTO;
 import com.manosgrigorakis.logisticsplatform.cmr.dto.UpdateCmrDocumentStatusRequestDTO;
@@ -32,7 +35,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class CmrDocumentServiceImpl implements CmrDocumentService {
@@ -42,15 +47,17 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
     private final DocumentNumberGenerator documentNumberGenerator;
     private final FileStorageService fileStorageService;
     private final PdfCmrDocumentService pdfCmrDocumentService;
+    private final AuditService auditService;
 
     @Value("${app.minio.bucketPathCmr}")
     private String bucketPathCmr;
 
-    public CmrDocumentServiceImpl(CmrDocumentRepository cmrDocumentRepository, DocumentNumberGenerator documentNumberGenerator, FileStorageService fileStorageService, PdfCmrDocumentService pdfCmrDocumentService) {
+    public CmrDocumentServiceImpl(CmrDocumentRepository cmrDocumentRepository, DocumentNumberGenerator documentNumberGenerator, FileStorageService fileStorageService, PdfCmrDocumentService pdfCmrDocumentService, AuditService auditService) {
         this.cmrDocumentRepository = cmrDocumentRepository;
         this.documentNumberGenerator = documentNumberGenerator;
         this.fileStorageService = fileStorageService;
         this.pdfCmrDocumentService = pdfCmrDocumentService;
+        this.auditService = auditService;
     }
 
     @Override
@@ -103,6 +110,7 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
 
         this.cmrDocumentRepository.save(cmrDocument);
         log.info("CMR Document saved with number {}", cmrDocument.getNumber());
+        logCmrDocument(cmrDocument);
 
         // Generate PDF
         byte[] cmrDocumentPdf = pdfCmrDocumentService.generateCmrDocumentPdf(quote, shipment, cmrDocument);
@@ -124,6 +132,8 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
                         }
                 );
 
+        CmrDocument oldCmrDocument = new CmrDocument(cmrDocument);
+
         try {
             cmrDocument.changeStatusTo(dto.getStatus());
         } catch (IllegalStateException e) {
@@ -135,6 +145,8 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
 
         cmrDocument.setStatus(dto.getStatus());
         this.cmrDocumentRepository.save(cmrDocument);
+        log.info("CMR Document successfully updated with number: {}", cmrDocument.getNumber());
+        this.logCmrDocumentStatusUpdate(cmrDocument, oldCmrDocument.getStatus(), cmrDocument.getStatus());
     }
 
     @Override
@@ -167,6 +179,7 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
         cmrDocument.setSignedAt(LocalDateTime.now());
         this.cmrDocumentRepository.save(cmrDocument);
         log.info("Signed CMR PDF successfully updated and stored");
+        logSignedCmrDocument(cmrDocument);
     }
 
     /**
@@ -181,5 +194,63 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
             log.warn("Failed to read signed CMR file bytes");
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Logs the created CMR document to the audit log system
+     * @param cmrDocument The CMR document that is being created
+     */
+    private void logCmrDocument(CmrDocument cmrDocument) {
+        this.auditService.log(
+                AuditEventDTO.builder()
+                        .entityType("CMR Document")
+                        .entityId(cmrDocument.getId())
+                        .notes("CMR Document Number: " + cmrDocument.getNumber())
+                        .action(AuditAction.CREATE)
+                        .build()
+        );
+    }
+
+    /**
+     * Logs the updated status of the CMR document in the audit log system
+     * @param cmrDocument The CMR document which is being updated
+     * @param oldStatus The old status of the CMR document
+     * @param updatedStatus The updated status of the CMR document
+     */
+    private void logCmrDocumentStatusUpdate(CmrDocument cmrDocument, CmrStatus oldStatus, CmrStatus updatedStatus) {
+        Map<String, Object> changes = new HashMap<>();
+        changes.put("status", Map.of(
+                "old", oldStatus,
+                "updated", updatedStatus
+        ));
+
+        this.auditService.log(
+                AuditEventDTO.builder()
+                        .entityType("CMR Document")
+                        .entityId(cmrDocument.getId())
+                        .action(AuditAction.UPDATE)
+                        .notes("CMR Document Number: " + cmrDocument.getNumber())
+                        .changes(changes)
+                        .build()
+        );
+    }
+
+    /**
+     * Logs the operation of uploading signed CMR document in the audit log system
+     * @param cmrDocument The CMR document uploaded
+     */
+    private void logSignedCmrDocument(CmrDocument cmrDocument) {
+        Map<String, Object> changes = new HashMap<>();
+        changes.put("signedBy", cmrDocument.getSignedBy());
+
+        this.auditService.log(
+                AuditEventDTO.builder()
+                        .entityType("CMR Document")
+                        .entityId(cmrDocument.getId())
+                        .notes("CMR Document Number: " + cmrDocument.getNumber())
+                        .action(AuditAction.UPDATE)
+                        .changes(changes)
+                        .build()
+        );
     }
 }
