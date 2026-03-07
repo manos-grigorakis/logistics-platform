@@ -78,7 +78,9 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
                         }
                 );
 
+        String presignedUrl = fileStorageService.createPresignedUrl(this.bucketPathCmr + cmrDocument.getNumber());
         CmrDocumentResponseDTO response = CmrDocumentMapper.toResponse(cmrDocument);
+        response.setFileUrl(presignedUrl);
         return response;
     }
 
@@ -96,7 +98,7 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
                 .status(CmrStatus.GENERATED)
                 .build();
 
-        String presignedUrl = fileStorageService.createPresignedUrl(cmrDocument.getNumber());
+        String presignedUrl = fileStorageService.createPresignedUrl(this.bucketPathCmr + cmrDocument.getNumber());
         cmrDocument.setFileUrl(presignedUrl);
 
         this.cmrDocumentRepository.save(cmrDocument);
