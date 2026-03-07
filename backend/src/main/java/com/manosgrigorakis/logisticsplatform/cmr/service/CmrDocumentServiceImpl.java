@@ -143,7 +143,6 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
             );
         }
 
-        cmrDocument.setStatus(dto.getStatus());
         this.cmrDocumentRepository.save(cmrDocument);
         log.info("CMR Document successfully updated with number: {}", cmrDocument.getNumber());
         this.logCmrDocumentStatusUpdate(cmrDocument, oldCmrDocument.getStatus(), cmrDocument.getStatus());
