@@ -95,10 +95,10 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
         this.cmrDocumentRepository.save(cmrDocument);
         log.info("CMR Document saved with number {}", cmrDocument.getNumber());
 
-        // TODO: Generate PDF and upload it to MinIO
+        // Generate PDF
         byte[] cmrDocumentPdf = pdfCmrDocumentService.generateCmrDocumentPdf(quote, shipment, cmrDocument);
 
-        // Refactor to store it in separate bucket in MinIO
+        // Upload the generated PDF to S3
         fileStorageService.store(
                 this.bucketPathCmr + cmrDocument.getNumber(),
                 cmrDocumentPdf,
