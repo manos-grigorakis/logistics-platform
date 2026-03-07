@@ -149,7 +149,7 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
     }
 
     @Override
-    public void uploadSignedCmrDocument(Long id, MultipartFile file, UploadCmrDocumentRequestDTO dto) {
+    public void uploadSignedCmrDocument(Long id, UploadCmrDocumentRequestDTO dto) {
         CmrDocument cmrDocument = this.cmrDocumentRepository.findById(id)
                 .orElseThrow(() -> {
                             log.warn("CMR Document not found with id {}", id);
@@ -164,7 +164,7 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
             );
         }
 
-        byte[] fileInBytes = convertFileToBytesArray(file);
+        byte[] fileInBytes = convertFileToBytesArray(dto.getFile());
 
         // Upload signed CMR file to S3
         fileStorageService.store(

@@ -24,5 +24,5 @@ public interface CmrDocumentService {
 
     void updateCmrDocumentStatus(Long id, UpdateCmrDocumentStatusRequestDTO dto);
 
-    void uploadSignedCmrDocument(Long id, MultipartFile file, UploadCmrDocumentRequestDTO dto);
+    void uploadSignedCmrDocument(Long id, UploadCmrDocumentRequestDTO dto);
 }
