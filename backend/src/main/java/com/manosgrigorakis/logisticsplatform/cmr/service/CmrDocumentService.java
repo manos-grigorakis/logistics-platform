@@ -2,6 +2,7 @@ package com.manosgrigorakis.logisticsplatform.cmr.service;
 
 import com.manosgrigorakis.logisticsplatform.cmr.dto.CmrDocumentFilterRequest;
 import com.manosgrigorakis.logisticsplatform.cmr.dto.CmrDocumentResponseDTO;
+import com.manosgrigorakis.logisticsplatform.cmr.dto.UpdateCmrDocumentStatusRequestDTO;
 import com.manosgrigorakis.logisticsplatform.common.dto.PageFilterRequest;
 import com.manosgrigorakis.logisticsplatform.common.dto.SortFilterRequest;
 import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
@@ -19,7 +20,7 @@ public interface CmrDocumentService {
 
     void createCmrDocument(Quote quote, Shipment shipment);
 
-    CmrDocumentResponseDTO updateCmrDocumentStatus(Long id);
+    void updateCmrDocumentStatus(Long id, UpdateCmrDocumentStatusRequestDTO dto);
 
     CmrDocumentResponseDTO uploadSignedCmrDocument(Long id);
 }

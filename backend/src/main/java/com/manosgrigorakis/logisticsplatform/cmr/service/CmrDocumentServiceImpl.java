@@ -2,6 +2,7 @@ package com.manosgrigorakis.logisticsplatform.cmr.service;
 
 import com.manosgrigorakis.logisticsplatform.cmr.dto.CmrDocumentFilterRequest;
 import com.manosgrigorakis.logisticsplatform.cmr.dto.CmrDocumentResponseDTO;
+import com.manosgrigorakis.logisticsplatform.cmr.dto.UpdateCmrDocumentStatusRequestDTO;
 import com.manosgrigorakis.logisticsplatform.cmr.enums.CmrStatus;
 import com.manosgrigorakis.logisticsplatform.cmr.mapper.CmrDocumentMapper;
 import com.manosgrigorakis.logisticsplatform.cmr.model.CmrDocument;
@@ -9,6 +10,7 @@ import com.manosgrigorakis.logisticsplatform.cmr.repository.CmrDocumentRepositor
 import com.manosgrigorakis.logisticsplatform.cmr.specs.CmrDocumentSpecs;
 import com.manosgrigorakis.logisticsplatform.common.dto.PageFilterRequest;
 import com.manosgrigorakis.logisticsplatform.common.dto.SortFilterRequest;
+import com.manosgrigorakis.logisticsplatform.common.exception.ConflictException;
 import com.manosgrigorakis.logisticsplatform.common.exception.ResourceNotFoundException;
 import com.manosgrigorakis.logisticsplatform.common.generators.DocumentNumberGenerator;
 import com.manosgrigorakis.logisticsplatform.common.utils.SpecsUtils;
@@ -26,6 +28,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Map;
 
 @Service
 public class CmrDocumentServiceImpl implements CmrDocumentService {
@@ -107,8 +110,25 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
     }
 
     @Override
-    public CmrDocumentResponseDTO updateCmrDocumentStatus(Long id) {
-        return null;
+    public void updateCmrDocumentStatus(Long id, UpdateCmrDocumentStatusRequestDTO dto) {
+        CmrDocument cmrDocument = this.cmrDocumentRepository.findById(id)
+                .orElseThrow(() -> {
+                            log.warn("CMR Document not found with id {}", id);
+                            return new ResourceNotFoundException("CMR Document not found with id: " + id);
+                        }
+                );
+
+        try {
+            cmrDocument.canChangeStatusTo(dto.getStatus());
+        } catch (IllegalStateException e) {
+            throw new ConflictException(
+                    e.getMessage(),
+                    Map.of("currentStatus", cmrDocument.getStatus(), "desiredStatus", dto.getStatus())
+            );
+        }
+
+        cmrDocument.setStatus(dto.getStatus());
+        this.cmrDocumentRepository.save(cmrDocument);
     }
 
     @Override

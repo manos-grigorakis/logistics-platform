@@ -2,6 +2,7 @@ package com.manosgrigorakis.logisticsplatform.cmr.controller;
 
 import com.manosgrigorakis.logisticsplatform.cmr.dto.CmrDocumentFilterRequest;
 import com.manosgrigorakis.logisticsplatform.cmr.dto.CmrDocumentResponseDTO;
+import com.manosgrigorakis.logisticsplatform.cmr.dto.UpdateCmrDocumentStatusRequestDTO;
 import com.manosgrigorakis.logisticsplatform.cmr.service.CmrDocumentService;
 import com.manosgrigorakis.logisticsplatform.common.dto.PageFilterRequest;
 import com.manosgrigorakis.logisticsplatform.common.dto.SortFilterRequest;
@@ -35,8 +36,12 @@ public class CmrDocumentRestController {
     }
 
     @PatchMapping("/{id}/status")
-    public CmrDocumentResponseDTO updateCmrDocumentStatus(@PathVariable Long id) {
-        return null;
+    public void updateCmrDocumentStatus(
+            @PathVariable Long id,
+            @RequestBody @Valid UpdateCmrDocumentStatusRequestDTO dto
+            )
+    {
+        this.cmrDocumentService.updateCmrDocumentStatus(id, dto);
     }
 
     @PatchMapping("/{id}/signed-copy")
