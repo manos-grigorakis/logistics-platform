@@ -139,6 +139,6 @@ Interactive API documentation available at:
 
 ![Shipments Table](/docs/screenshots/shipments-table.png)
 
-## Shipment View
+### Shipment View
 
 ![Shipment View](/docs/screenshots/shipment-view.png)
