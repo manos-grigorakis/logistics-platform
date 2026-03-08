@@ -6,6 +6,33 @@
 ![Branches Coverage](https://github.com/manos-grigorakis/logistics-platform/blob/main/.github/badges/branches.svg?raw=true)
 ![Latest Release](https://img.shields.io/github/v/release/manos-grigorakis/logistics-platform)
 
+## Overview
+
+Logistics Platform is a management platform for small to medium businesses aiming to simplify daily management tasks such as generating quotes for customers, shipments and fleet management, and generating CMR documents. The application follows a monolithic architecture with Domain-Driven Design (DDD) structure.
+
+### Core Features
+
+- User Authentication
+- Fleet Management
+- Quote Generation
+- Shipment Management
+- CMR Document Generation
+- Audit Logging
+- Metrics & Observability
+
+## Tech Stack
+
+| **Technology**          | **Usage**                  |
+| ----------------------- | -------------------------- |
+| Angular                 | Frontend SPA               |
+| Tailwind CSS            | UI Styling                 |
+| Spring Boot             | Backend REST API           |
+| Swagger / OpenAPI       | API Documentation          |
+| Flyway                  | Database Migration         |
+| MariaDB                 | Relational Database        |
+| MinIO                   | S3-compatible File Storage |
+| Docker / Docker Compose | Containerization           |
+
 ## Prerequisites
 
 **Backend**
@@ -101,3 +128,17 @@
 
 Interactive API documentation available at:
 `http://localhost:8080/swagger-ui.html`
+
+## Screenshots
+
+### Customer Profile
+
+![Customer Profile](/docs/screenshots/customer-profile.png)
+
+### Shipments Table
+
+![Shipments Table](/docs/screenshots/shipments-table.png)
+
+## Shipment View
+
+![Shipment View](/docs/screenshots/shipment-view.png)
