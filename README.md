@@ -128,3 +128,17 @@ Logistics Platform is a management platform for small to medium businesses aimin
 
 Interactive API documentation available at:
 `http://localhost:8080/swagger-ui.html`
+
+## Screenshots
+
+### Customer Profile
+
+![Customer Profile](/docs/screenshots/customer-profile.png)
+
+### Shipments Table
+
+![Shipments Table](/docs/screenshots/shipments-table.png)
+
+## Shipment View
+
+![Shipment View](/docs/screenshots/shipment-view.png)
