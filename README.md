@@ -14,9 +14,9 @@ Logistics Platform is a management platform for small to medium businesses aimin
 
 - User Authentication
 - Fleet Management
-- Quotes Generation
+- Quote Generation
 - Shipment Management
-- CMR Documents Generation
+- CMR Document Generation
 - Audit Logging
 - Metrics & Observability
 
