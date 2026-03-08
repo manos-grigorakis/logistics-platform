@@ -1,48 +1,19 @@
-package com.manosgrigorakis.logisticsplatform.infrastructure.document;
+package com.manosgrigorakis.logisticsplatform.infrastructure.document.generators;
 
-import com.lowagie.text.pdf.BaseFont;
+import com.manosgrigorakis.logisticsplatform.infrastructure.document.dto.QuotePdfRequestDTO;
 import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
 import com.manosgrigorakis.logisticsplatform.quotes.model.QuoteItem;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
-import org.springframework.stereotype.Service;
-import org.xhtmlrenderer.pdf.ITextFontResolver;
-import org.xhtmlrenderer.pdf.ITextRenderer;
+import org.springframework.stereotype.Component;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.time.format.DateTimeFormatter;
 
-@Service
-public class PdfService {
+@Component
+public final class QuotePdfGenerator extends BasePdfGenerator<QuotePdfRequestDTO> {
     @Value("classpath:templates/quotes/greek/index.html")
     private Resource greekQuoteHtmlTemplate;
-
-    @Value("${app.company.name}")
-    private String companyName;
-
-    @Value("${app.company.slogan}")
-    private String companySlogan;
-
-    @Value("${app.company.location}")
-    private String companyLocation;
-
-    @Value("${app.company.phones}")
-    private String companyPhones;
-
-    @Value("${app.company.mail}")
-    private String companyMail;
-
-    @Value("${app.company.website_url}")
-    private String companyWebsiteUrl;
 
     @Value("${app.company.representative}")
     private String companyRepresentative;
@@ -50,58 +21,10 @@ public class PdfService {
     @Value("${app.company.representative_title}")
     private String companyRepresentativeTitle;
 
-    private final Logger log = LoggerFactory.getLogger(PdfService.class);
+    @Override
+    protected String formatTemplate(Resource templateFile, QuotePdfRequestDTO request) throws IOException {
+        Quote quote = request.quote();
 
-    /**
-     * Generate a PDF file for the given Quote using an HTML template
-     *
-     * @param quote The quote that injects data to the HTML template
-     * @return The generated PDF in bytes
-     */
-    public byte[] generateQuotePdf(Quote quote) {
-        try {
-            String htmlTemplate = formatTemplate(greekQuoteHtmlTemplate, quote);
-
-            final Document document = Jsoup.parse(htmlTemplate);
-            document.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
-
-            ITextRenderer renderer = new ITextRenderer();
-            ITextFontResolver fontResolver = renderer.getFontResolver();
-
-            // Add font
-            URL fontUrl = getClass().getClassLoader().getResource("fonts/NotoSans-Regular.ttf");
-            if (fontUrl == null) {
-                throw new IllegalStateException("Font file not found in classpath: fonts/NotoSans-Regular.ttf");
-            }
-
-            fontResolver.addFont(fontUrl.toExternalForm(), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-
-            // HTML -> PDF
-            renderer.setDocumentFromString(document.html());
-            renderer.layout();
-
-            // Create the PDF file
-            try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
-                // Render the final PDF
-                renderer.createPDF(byteArrayOutputStream);
-                log.info("Quote PDF file created with number {}", quote.getNumber());
-                return byteArrayOutputStream.toByteArray();
-            }
-        } catch (IOException e) {
-            log.error("Failed to generate quote PDF file with number {}", quote.getNumber());
-            throw new RuntimeException("Failed generate PDF file", e);
-        }
-    }
-
-    /**
-     * Formats an HTML template with the data from the provided Quote
-     *
-     * @param templateFile The actual HTML template
-     * @param quote        The Quote that contains the data to build the HTML template
-     * @return htmlTemplate The formated HTML template
-     * @throws IOException If the template cannot be read or opened
-     */
-    private String formatTemplate(Resource templateFile, Quote quote) throws IOException {
         // Format template
         String htmlTemplate = new String(
                 templateFile.getInputStream().readAllBytes(), StandardCharsets.UTF_8
@@ -113,7 +36,7 @@ public class PdfService {
         String notes = buildNotes(quote);
 
         // Format issueDate
-        String formatedDate = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(quote.getIssueDate());
+        String formatedDate = formatDate(quote.getIssueDate());
 
         htmlTemplate = htmlTemplate
                 .replace("${companyName}", this.companyName)
@@ -142,6 +65,11 @@ public class PdfService {
         return htmlTemplate;
     }
 
+    @Override
+    protected Resource getTemplate() {
+        return this.greekQuoteHtmlTemplate;
+    }
+
     /**
      * Builds the HTML table rows for each quote item row
      *
@@ -168,39 +96,6 @@ public class PdfService {
         }
 
         return rows.toString();
-    }
-
-    /**
-     * Escapes HTML sensitive characters to prevent breaking the HTML structure
-     *
-     * @param input The raw text
-     * @return input Escaped input suitable for the HTML structure
-     */
-    private static String escapeHtml(String input) {
-        if (input == null) {
-            return "";
-        }
-        return input
-                .replace("&", "&amp;")
-                .replace("<", "&lt;")
-                .replace(">", "&gt;");
-    }
-
-    /**
-     * Format the amount to Greek format
-     * and adding the currency
-     *
-     * @param amount An amount (e.g. 50.00)
-     * @return amount Formated amount as a string with currency (e.g. 50,00 €)
-     */
-    private static String formatMoney(BigDecimal amount) {
-        if (amount == null) {
-            return "";
-        }
-
-        BigDecimal normalized = amount.setScale(2, RoundingMode.HALF_UP);
-        String value = normalized.toPlainString().replace(".", ",");
-        return value + " €";
     }
 
     /**
