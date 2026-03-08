@@ -5,6 +5,8 @@ import com.manosgrigorakis.logisticsplatform.audit.enums.AuditAction;
 import com.manosgrigorakis.logisticsplatform.audit.service.AuditService;
 import com.manosgrigorakis.logisticsplatform.common.generators.DocumentNumberGenerator;
 import com.manosgrigorakis.logisticsplatform.common.utils.EntityChangeTracker;
+import com.manosgrigorakis.logisticsplatform.infrastructure.document.QuotePdfGenerator;
+import com.manosgrigorakis.logisticsplatform.infrastructure.document.dto.QuotePdfRequestDTO;
 import com.manosgrigorakis.logisticsplatform.quotes.dto.quoteItem.QuoteItemRequestDTO;
 import com.manosgrigorakis.logisticsplatform.quotes.dto.quote.*;
 import com.manosgrigorakis.logisticsplatform.quotes.enums.QuoteStatus;
@@ -18,7 +20,6 @@ import com.manosgrigorakis.logisticsplatform.quotes.mapper.QuoteMapper;
 import com.manosgrigorakis.logisticsplatform.customers.model.Customer;
 import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
 import com.manosgrigorakis.logisticsplatform.quotes.model.QuoteItem;
-import com.manosgrigorakis.logisticsplatform.infrastructure.document.PdfService;
 import com.manosgrigorakis.logisticsplatform.users.model.User;
 import com.manosgrigorakis.logisticsplatform.customers.repository.CustomerRepository;
 import com.manosgrigorakis.logisticsplatform.quotes.repository.QuoteRepository;
@@ -48,12 +49,12 @@ public class QuoteServiceImpl implements QuoteService {
     private final UserRepository userRepository;
     private final CustomerRepository customerRepository;
 
-    private final PdfService pdfService;
     private final FileStorageService fileStorageService;
     private final AuditService auditService;
 
     private final QuoteCalculator quoteCalculator;
     private final DocumentNumberGenerator documentNumberGenerator;
+    private final QuotePdfGenerator quotePdfGenerator;
 
     private final Logger log = LoggerFactory.getLogger(QuoteServiceImpl.class);
 
@@ -67,7 +68,7 @@ public class QuoteServiceImpl implements QuoteService {
             QuoteRepository quoteRepository,
             UserRepository userRepository,
             CustomerRepository customerRepository,
-            PdfService pdfService,
+            QuotePdfGenerator quotePdfGenerator,
             FileStorageService fileStorageService,
             AuditService auditService,
             QuoteCalculator quoteCalculator,
@@ -75,7 +76,7 @@ public class QuoteServiceImpl implements QuoteService {
         this.quoteRepository = quoteRepository;
         this.userRepository = userRepository;
         this.customerRepository = customerRepository;
-        this.pdfService = pdfService;
+        this.quotePdfGenerator = quotePdfGenerator;
         this.fileStorageService = fileStorageService;
         this.auditService = auditService;
         this.quoteCalculator = quoteCalculator;
@@ -149,7 +150,7 @@ public class QuoteServiceImpl implements QuoteService {
         Quote savedQuote = quoteRepository.save(quote);
 
         // Generate PDF and store / upload it
-        byte[] quotePdf = pdfService.generateQuotePdf(quote);
+        byte[] quotePdf = quotePdfGenerator.generatePdf(new QuotePdfRequestDTO(quote));
         fileStorageService.store(this.bucketPathQuotes + savedQuote.getNumber(), quotePdf, "application/pdf");
 
         String presignedUrl = fileStorageService.createPresignedUrl(quote.getNumber());
@@ -211,7 +212,7 @@ public class QuoteServiceImpl implements QuoteService {
         Quote savedQuote = quoteRepository.save(quote);
 
         // Re-generate PDF and store / upload it
-        byte[] quotePdf = pdfService.generateQuotePdf(savedQuote);
+        byte[] quotePdf = quotePdfGenerator.generatePdf(new QuotePdfRequestDTO(quote));
         fileStorageService.store(this.bucketPathQuotes + savedQuote.getNumber(), quotePdf, "application/pdf");
 
         log.info("Quote updated with number: {}", savedQuote.getNumber());
