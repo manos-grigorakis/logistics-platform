@@ -3,10 +3,7 @@ package com.manosgrigorakis.logisticsplatform.cmr.service;
 import com.manosgrigorakis.logisticsplatform.audit.dto.AuditEventDTO;
 import com.manosgrigorakis.logisticsplatform.audit.enums.AuditAction;
 import com.manosgrigorakis.logisticsplatform.audit.service.AuditService;
-import com.manosgrigorakis.logisticsplatform.cmr.dto.CmrDocumentFilterRequest;
-import com.manosgrigorakis.logisticsplatform.cmr.dto.CmrDocumentResponseDTO;
-import com.manosgrigorakis.logisticsplatform.cmr.dto.UpdateCmrDocumentStatusRequestDTO;
-import com.manosgrigorakis.logisticsplatform.cmr.dto.UploadCmrDocumentRequestDTO;
+import com.manosgrigorakis.logisticsplatform.cmr.dto.*;
 import com.manosgrigorakis.logisticsplatform.cmr.enums.CmrStatus;
 import com.manosgrigorakis.logisticsplatform.cmr.mapper.CmrDocumentMapper;
 import com.manosgrigorakis.logisticsplatform.cmr.model.CmrDocument;
@@ -37,7 +34,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 @Service
 public class CmrDocumentServiceImpl implements CmrDocumentService {
@@ -61,7 +57,7 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
     }
 
     @Override
-    public Page<CmrDocumentResponseDTO> getAllCmrDocuments(
+    public Page<CmrDocumentListResponseDTO> getAllCmrDocuments(
             CmrDocumentFilterRequest filterRequest,
             PageFilterRequest page,
             SortFilterRequest sort
@@ -73,7 +69,7 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
         Pageable pageable = PageRequest.of(page.getPage(), page.getSize(), sort.createSort());
         Page<CmrDocument> cmrDocumentPage = this.cmrDocumentRepository.findAll(spec, pageable);
 
-        return cmrDocumentPage.map(CmrDocumentMapper::toResponse);
+        return cmrDocumentPage.map(CmrDocumentMapper::toResponseList);
     }
 
     @Override

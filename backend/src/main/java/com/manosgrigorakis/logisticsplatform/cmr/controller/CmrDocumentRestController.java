@@ -1,9 +1,6 @@
 package com.manosgrigorakis.logisticsplatform.cmr.controller;
 
-import com.manosgrigorakis.logisticsplatform.cmr.dto.CmrDocumentFilterRequest;
-import com.manosgrigorakis.logisticsplatform.cmr.dto.CmrDocumentResponseDTO;
-import com.manosgrigorakis.logisticsplatform.cmr.dto.UpdateCmrDocumentStatusRequestDTO;
-import com.manosgrigorakis.logisticsplatform.cmr.dto.UploadCmrDocumentRequestDTO;
+import com.manosgrigorakis.logisticsplatform.cmr.dto.*;
 import com.manosgrigorakis.logisticsplatform.cmr.service.CmrDocumentService;
 import com.manosgrigorakis.logisticsplatform.common.dto.PageFilterRequest;
 import com.manosgrigorakis.logisticsplatform.common.dto.SortFilterRequest;
@@ -34,7 +31,7 @@ public class CmrDocumentRestController {
     )
     @ApiResponse(responseCode = "200", description = "Founded CMR documents")
     @GetMapping
-    public Page<CmrDocumentResponseDTO> getAllCmrDocuments(
+    public Page<CmrDocumentListResponseDTO> getAllCmrDocuments(
             @ParameterObject @ModelAttribute @Valid CmrDocumentFilterRequest filterRequest,
             @ParameterObject @ModelAttribute @Valid PageFilterRequest page,
             @ParameterObject @ModelAttribute SortFilterRequest sort
