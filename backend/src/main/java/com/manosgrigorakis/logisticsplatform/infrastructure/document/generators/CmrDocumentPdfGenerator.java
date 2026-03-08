@@ -15,7 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 
 @Component
-public class CmrDocumentPdfGenerator extends BasePdfGenerator<CmrDocumentPdfRequestDTO> {
+public final class CmrDocumentPdfGenerator extends BasePdfGenerator<CmrDocumentPdfRequestDTO> {
     @Value("classpath:templates/cmr/index.html")
     private Resource cmrHtmlTemplate;
 
