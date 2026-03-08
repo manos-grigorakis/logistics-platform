@@ -173,4 +173,14 @@ public abstract class BasePdfGenerator<T extends PdfRequest> {
         if (date == null) return "-";
         return DateTimeFormatter.ofPattern("dd/MM/yyyy").format(date);
     }
+
+    /**
+     * Handles null fields by replacing null with a {@code -},
+     * preventing for Null Pointer Exception
+     * @param field The actual field to be checked for null
+     * @return The actual field if not null, otherwise {@code -}
+     */
+    protected String handleNullFields(String field) {
+        return field != null ? field : "-";
+    }
 }

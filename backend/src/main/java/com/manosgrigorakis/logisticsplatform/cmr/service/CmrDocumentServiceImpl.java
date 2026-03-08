@@ -15,7 +15,8 @@ import com.manosgrigorakis.logisticsplatform.common.exception.ConflictException;
 import com.manosgrigorakis.logisticsplatform.common.exception.ResourceNotFoundException;
 import com.manosgrigorakis.logisticsplatform.common.generators.DocumentNumberGenerator;
 import com.manosgrigorakis.logisticsplatform.common.utils.SpecsUtils;
-import com.manosgrigorakis.logisticsplatform.infrastructure.document.PdfCmrDocumentService;
+import com.manosgrigorakis.logisticsplatform.infrastructure.document.CmrDocumentPdfGenerator;
+import com.manosgrigorakis.logisticsplatform.infrastructure.document.dto.CmrDocumentPdfRequestDTO;
 import com.manosgrigorakis.logisticsplatform.infrastructure.storage.FileStorageService;
 import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
 import com.manosgrigorakis.logisticsplatform.shipments.model.Shipment;
@@ -42,17 +43,17 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
     private static final Logger log = LoggerFactory.getLogger(CmrDocumentServiceImpl.class);
     private final DocumentNumberGenerator documentNumberGenerator;
     private final FileStorageService fileStorageService;
-    private final PdfCmrDocumentService pdfCmrDocumentService;
+    private final CmrDocumentPdfGenerator cmrDocumentPdfGenerator;
     private final AuditService auditService;
 
     @Value("${app.minio.bucketPathCmr}")
     private String bucketPathCmr;
 
-    public CmrDocumentServiceImpl(CmrDocumentRepository cmrDocumentRepository, DocumentNumberGenerator documentNumberGenerator, FileStorageService fileStorageService, PdfCmrDocumentService pdfCmrDocumentService, AuditService auditService) {
+    public CmrDocumentServiceImpl(CmrDocumentRepository cmrDocumentRepository, DocumentNumberGenerator documentNumberGenerator, FileStorageService fileStorageService, CmrDocumentPdfGenerator cmrDocumentPdfGenerator, AuditService auditService) {
         this.cmrDocumentRepository = cmrDocumentRepository;
         this.documentNumberGenerator = documentNumberGenerator;
         this.fileStorageService = fileStorageService;
-        this.pdfCmrDocumentService = pdfCmrDocumentService;
+        this.cmrDocumentPdfGenerator = cmrDocumentPdfGenerator;
         this.auditService = auditService;
     }
 
@@ -109,7 +110,9 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
         logCmrDocument(cmrDocument);
 
         // Generate PDF
-        byte[] cmrDocumentPdf = pdfCmrDocumentService.generateCmrDocumentPdf(quote, shipment, cmrDocument);
+        byte[] cmrDocumentPdf = cmrDocumentPdfGenerator.generatePdf(
+                new CmrDocumentPdfRequestDTO(quote, shipment, cmrDocument)
+        );
 
         // Upload the generated PDF to S3
         fileStorageService.store(
