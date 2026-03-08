@@ -93,6 +93,8 @@ app:
     secretKey: admin
     endpoint: "http://localhost:9001"
     bucketName: "my_bucket"
+    bucketPathQuotes: "quotes/"
+    bucketPathCmr: "cmr/"
 
 tax:
   vat: 24

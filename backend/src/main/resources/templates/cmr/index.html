@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8"/>
+  <title>CMR - Δελτίο Αποστολής</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 12mm;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Noto Sans", sans-serif;
+      font-size: 11px;
+      color: #1a1a1a;
+      background: #ffffff;
+    }
+
+    .container {
+      width: 100%;
+      background: #ffffff;
+    }
+
+    /* ─── HEADER ─── */
+    .header {
+      background: #1e3c72;
+      color: #ffffff;
+      padding: 14px 18px;
+      margin-bottom: 0;
+    }
+
+    .header-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .company-name {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .company-tagline {
+      font-size: 10px;
+      opacity: 0.85;
+      margin-top: 2px;
+    }
+
+    .cmr-title-cell {
+      text-align: right;
+    }
+
+    .cmr-big-title {
+      font-size: 28px;
+      font-weight: bold;
+      letter-spacing: 4px;
+    }
+
+    .cmr-subtitle {
+      font-size: 8px;
+      opacity: 0.75;
+      margin-top: 2px;
+    }
+
+    /* ─── META BAR ─── */
+    .meta-bar {
+      background: #2a5298;
+      color: #ffffff;
+      padding: 6px 18px;
+    }
+
+    .meta-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .meta-label {
+      font-size: 8px;
+      text-transform: uppercase;
+      opacity: 0.7;
+      margin-bottom: 1px;
+    }
+
+    .meta-value {
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    /* ─── SECTIONS GRID ─── */
+    .sections-table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1.5px solid #1e3c72;
+      margin-top: 10px;
+    }
+
+    .sections-table td {
+      border: 1px solid #c5d0e8;
+      padding: 8px 10px;
+      vertical-align: top;
+    }
+
+    .sec-number {
+      font-size: 7px;
+      font-weight: bold;
+      color: #2a5298;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 1px;
+    }
+
+    .sec-title {
+      font-size: 8px;
+      color: #666666;
+      margin-bottom: 5px;
+      font-style: italic;
+    }
+
+    .sec-value {
+      font-size: 11px;
+      font-weight: bold;
+      color: #1a1a1a;
+      line-height: 1.5;
+    }
+
+    .sec-sub {
+      font-size: 9px;
+      color: #555555;
+      margin-top: 2px;
+      line-height: 1.4;
+    }
+
+    /* ─── SECTION HEADER ROW ─── */
+    .sec-header-row td {
+      background: #e7eefc;
+      font-size: 8px;
+      font-weight: bold;
+      color: #1e3c72;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 5px 10px;
+      border: 1px solid #c5d0e8;
+    }
+
+    /* ─── CARGO TABLE ─── */
+    .cargo-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 4px;
+    }
+
+    .cargo-table th {
+      background: #1e3c72;
+      color: #ffffff;
+      font-size: 8px;
+      text-transform: uppercase;
+      padding: 5px 6px;
+      text-align: left;
+    }
+
+    .cargo-table td {
+      font-size: 10px;
+      padding: 5px 6px;
+      border-bottom: 1px solid #e8edf5;
+      vertical-align: top;
+    }
+
+    .cargo-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* ─── PLATE ─── */
+    .plate {
+      display: inline-block;
+      background: #f0f4fb;
+      border: 1.5px solid #1e3c72;
+      font-size: 12px;
+      font-weight: bold;
+      padding: 3px 10px;
+      letter-spacing: 0.08em;
+      margin-top: 3px;
+    }
+
+    /* ─── SIGNATURES ─── */
+    .sig-table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1.5px solid #1e3c72;
+      margin-top: 10px;
+    }
+
+    .sig-table td {
+      border: 1px solid #c5d0e8;
+      padding: 8px 10px;
+      width: 33.33%;
+      vertical-align: top;
+    }
+
+    .sig-area {
+      height: 48px;
+      border-bottom: 1px solid #aaaaaa;
+      margin: 12px 0 4px 0;
+    }
+
+    .sig-label {
+      font-size: 8px;
+      color: #aaaaaa;
+    }
+
+    /* ─── COPIES FOOTER ─── */
+    .copies-bar {
+      background: #1e3c72;
+      color: #ffffff;
+      padding: 8px 18px;
+      margin-top: 10px;
+    }
+
+    .copies-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .copy-cell {
+      text-align: center;
+      font-size: 8px;
+      padding: 3px 6px;
+      border: 1px solid #3a5fa8;
+    }
+
+    .copy-cell.active {
+      background: #ffffff;
+      color: #1e3c72;
+      font-weight: bold;
+    }
+
+    .copies-label {
+      font-size: 8px;
+      opacity: 0.7;
+      margin-bottom: 4px;
+    }
+
+    /* ─── NOTES BOX ─── */
+    .notes-box {
+      background: #f8f9fc;
+      border: 1px dashed #aab6d0;
+      padding: 7px 10px;
+      font-size: 10px;
+      color: #555555;
+      min-height: 32px;
+      margin-top: 4px;
+      line-height: 1.5;
+    }
+
+    /* ─── STATUS BADGE ─── */
+    .status-badge {
+      display: inline-block;
+      background: #e7f7ee;
+      color: #1a7a3f;
+      border: 1px solid #1a7a3f;
+      font-size: 8px;
+      font-weight: bold;
+      padding: 2px 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .text-right { text-align: right; }
+    .text-center { text-align: center; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- ─── HEADER ─── -->
+  <div class="header">
+    <table class="header-table">
+      <tr>
+        <td width="60%">
+          <div class="company-name">${companyName}</div>
+          <div class="company-tagline">${companySlogan}</div>
+        </td>
+        <td width="40%" class="cmr-title-cell">
+          <div class="cmr-big-title">CMR</div>
+          <div class="cmr-subtitle">Δελτίο Αποστολής / Consignment Note</div>
+          <div class="cmr-subtitle">Convention on the Contract for International Carriage of Goods by Road</div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ─── META BAR ─── -->
+  <div class="meta-bar">
+    <table class="meta-table">
+      <tr>
+        <td width="30%">
+          <div class="meta-label">Αρ. CMR / CMR No.</div>
+          <div class="meta-value">${cmrNumber}</div>
+        </td>
+        <td width="30%">
+          <div class="meta-label">Αρ. Αποστολής / Shipment No.</div>
+          <div class="meta-value">${shipmentNumber}</div>
+        </td>
+        <td width="25%">
+          <div class="meta-label">Ημερομηνία / Date</div>
+          <div class="meta-value">${issueDate}</div>
+        </td>
+        <td width="15%" class="text-right">
+          <div class="status-badge">${cmrStatus}</div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ─── MAIN SECTIONS ─── -->
+  <table class="sections-table">
+
+    <!-- ROW 1: Sender + Consignee -->
+    <tr>
+      <td width="50%">
+        <div class="sec-number">01 — Αποστολέας / Sender</div>
+        <div class="sec-title">Επωνυμία, διεύθυνση, χώρα · Company, address, country</div>
+        <div class="sec-value">${companyName}</div>
+        <div class="sec-sub">${companyLocation}</div>
+        <div class="sec-sub">${companyPhones} · ${companyMail}</div>
+      </td>
+      <td width="50%">
+        <div class="sec-number">02 — Παραλήπτης / Consignee</div>
+        <div class="sec-title">Επωνυμία, διεύθυνση, χώρα · Company, address, country</div>
+        <div class="sec-value">${consigneeName}</div>
+        <div class="sec-sub">${consigneeLocation}</div>
+        <div class="sec-sub">${consigneeContact}</div>
+      </td>
+    </tr>
+
+    <!-- ROW 2: Origin + Destination -->
+    <tr>
+      <td width="50%">
+        <div class="sec-number">03 — Τόπος Φόρτωσης / Place of Loading</div>
+        <div class="sec-title">Τόπος, ημερομηνία παραλαβής · Place, date of taking over</div>
+        <div class="sec-value">${origin}</div>
+        <div class="sec-sub">${pickupDate}</div>
+      </td>
+      <td width="50%">
+        <div class="sec-number">04 — Τόπος Παράδοσης / Place of Delivery</div>
+        <div class="sec-title">Προορισμός · Destination</div>
+        <div class="sec-value">${destination}</div>
+      </td>
+    </tr>
+
+    <!-- ROW 3: References -->
+    <tr>
+      <td width="50%">
+        <div class="sec-number">05 — Αναφορά Προσφοράς / Quote Reference</div>
+        <div class="sec-title">Αρ. Προσφοράς · Quote number</div>
+        <div class="sec-value">${quoteNumber}</div>
+      </td>
+      <td width="50%">
+        <div class="sec-number">06 — Οδηγός / Driver</div>
+        <div class="sec-title">Ονοματεπώνυμο · Full name</div>
+        <div class="sec-value">${driverName}</div>
+      </td>
+    </tr>
+
+    <!-- ROW 4: Cargo header -->
+    <tr class="sec-header-row">
+      <td colspan="2">07 — Περιγραφή Φορτίου / Cargo Description</td>
+    </tr>
+
+    <!-- ROW 5: Vehicles -->
+    <tr class="sec-header-row">
+      <td colspan="2">08 — Στοιχεία Οχήματος / Vehicle Details</td>
+    </tr>
+    <tr>
+      <td width="50%">
+        <div class="sec-number">Φορτηγό / Truck</div>
+        <div class="sec-sub">${truckBrand}</div>
+        <div class="plate">${truckPlate}</div>
+      </td>
+      <td width="50%">
+        <div class="sec-number">Ρυμουλκούμενο / Trailer</div>
+        <div class="sec-sub">${trailerBrand}</div>
+        <div class="plate">${trailerPlate}</div>
+      </td>
+    </tr>
+
+    <!-- ROW 6: Special instructions -->
+    <tr class="sec-header-row">
+      <td colspan="2">09 — Ειδικές Οδηγίες / Special Instructions</td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <div class="notes-box">${notes}</div>
+      </td>
+    </tr>
+
+  </table>
+
+  <!-- ─── SIGNATURES ─── -->
+  <table class="sig-table">
+    <tr>
+      <td>
+        <div class="sec-number">10 — Αποστολέας / Sender</div>
+        <div class="sec-title">Υπογραφή &amp; σφραγίδα · Signature &amp; stamp</div>
+        <div class="sig-area"></div>
+        <div class="sig-label">Τόπος &amp; ημερομηνία · Place &amp; date</div>
+      </td>
+      <td>
+        <div class="sec-number">11 — Μεταφορέας / Carrier</div>
+        <div class="sec-title">Υπογραφή &amp; σφραγίδα · Signature &amp; stamp</div>
+        <div class="sig-area"></div>
+        <div class="sig-label">Τόπος &amp; ημερομηνία · Place &amp; date</div>
+      </td>
+      <td>
+        <div class="sec-number">12 — Παραλήπτης / Consignee</div>
+        <div class="sec-title">Υπογραφή παραλαβής · Signature on delivery</div>
+        <div class="sig-area"></div>
+        <div class="sig-label">Τόπος &amp; ημερομηνία · Place &amp; date: __________</div>
+      </td>
+    </tr>
+  </table>
+
+  <!-- ─── COPIES FOOTER ─── -->
+  <div class="copies-bar">
+    <div class="copies-label">Αντίγραφα / Copies</div>
+    <table class="copies-table">
+      <tr>
+        <td class="copy-cell active">ΑΝΤΙΓΡΑΦΟ 1 · COPY 1<br/>Αποστολέας / Sender</td>
+        <td class="copy-cell">ΑΝΤΙΓΡΑΦΟ 2 · COPY 2<br/>Οδηγός / Driver</td>
+        <td class="copy-cell">ΑΝΤΙΓΡΑΦΟ 3 · COPY 3<br/>Παραλήπτης / Consignee</td>
+        <td class="copy-cell">ΑΝΤΙΓΡΑΦΟ 4 · COPY 4<br/>Αρχείο / Archive</td>
+      </tr>
+    </table>
+  </div>
+
+</div>
+</body>
+</html>
