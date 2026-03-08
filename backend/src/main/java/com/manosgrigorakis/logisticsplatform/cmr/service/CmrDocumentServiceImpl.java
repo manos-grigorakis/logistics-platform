@@ -15,7 +15,7 @@ import com.manosgrigorakis.logisticsplatform.common.exception.ConflictException;
 import com.manosgrigorakis.logisticsplatform.common.exception.ResourceNotFoundException;
 import com.manosgrigorakis.logisticsplatform.common.generators.DocumentNumberGenerator;
 import com.manosgrigorakis.logisticsplatform.common.utils.SpecsUtils;
-import com.manosgrigorakis.logisticsplatform.infrastructure.document.CmrDocumentPdfGenerator;
+import com.manosgrigorakis.logisticsplatform.infrastructure.document.generators.CmrDocumentPdfGenerator;
 import com.manosgrigorakis.logisticsplatform.infrastructure.document.dto.CmrDocumentPdfRequestDTO;
 import com.manosgrigorakis.logisticsplatform.infrastructure.storage.FileStorageService;
 import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;

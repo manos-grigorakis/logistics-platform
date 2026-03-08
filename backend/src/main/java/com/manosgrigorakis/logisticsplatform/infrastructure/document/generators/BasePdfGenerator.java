@@ -1,6 +1,7 @@
-package com.manosgrigorakis.logisticsplatform.infrastructure.document;
+package com.manosgrigorakis.logisticsplatform.infrastructure.document.generators;
 
 import com.lowagie.text.pdf.BaseFont;
+import com.manosgrigorakis.logisticsplatform.infrastructure.document.PdfRequest;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.slf4j.Logger;

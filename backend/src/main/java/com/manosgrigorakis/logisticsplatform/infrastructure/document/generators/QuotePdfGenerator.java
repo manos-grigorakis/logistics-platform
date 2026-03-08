@@ -1,4 +1,4 @@
-package com.manosgrigorakis.logisticsplatform.infrastructure.document;
+package com.manosgrigorakis.logisticsplatform.infrastructure.document.generators;
 
 import com.manosgrigorakis.logisticsplatform.infrastructure.document.dto.QuotePdfRequestDTO;
 import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 @Component
-public final class QuotePdfGenerator extends BasePdfGenerator<QuotePdfRequestDTO>  {
+public final class QuotePdfGenerator extends BasePdfGenerator<QuotePdfRequestDTO> {
     @Value("classpath:templates/quotes/greek/index.html")
     private Resource greekQuoteHtmlTemplate;
 

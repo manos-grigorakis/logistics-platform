@@ -5,7 +5,7 @@ import com.manosgrigorakis.logisticsplatform.audit.enums.AuditAction;
 import com.manosgrigorakis.logisticsplatform.audit.service.AuditService;
 import com.manosgrigorakis.logisticsplatform.common.generators.DocumentNumberGenerator;
 import com.manosgrigorakis.logisticsplatform.common.utils.EntityChangeTracker;
-import com.manosgrigorakis.logisticsplatform.infrastructure.document.QuotePdfGenerator;
+import com.manosgrigorakis.logisticsplatform.infrastructure.document.generators.QuotePdfGenerator;
 import com.manosgrigorakis.logisticsplatform.infrastructure.document.dto.QuotePdfRequestDTO;
 import com.manosgrigorakis.logisticsplatform.quotes.dto.quoteItem.QuoteItemRequestDTO;
 import com.manosgrigorakis.logisticsplatform.quotes.dto.quote.*;

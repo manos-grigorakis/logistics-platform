@@ -1,4 +1,4 @@
-package com.manosgrigorakis.logisticsplatform.infrastructure.document;
+package com.manosgrigorakis.logisticsplatform.infrastructure.document.generators;
 
 import com.manosgrigorakis.logisticsplatform.cmr.enums.CmrStatus;
 import com.manosgrigorakis.logisticsplatform.cmr.model.CmrDocument;
