@@ -50,6 +50,46 @@
       </div>
     </div>
 
+    <!-- Cargo Items -->
+    <div class="mt-4">
+      <div class="mb-3 flex items-center gap-4">
+        <h3 class="text-zinc-500 uppercase">Cargo Items</h3>
+        <div class="bg-primary-500 h-0.5 w-1/2 sm:w-1/4"></div>
+      </div>
+
+      <div class="overflow-hidden rounded border border-zinc-300">
+        <table class="w-full text-sm">
+          <thead class="bg-zinc-50 text-xs text-zinc-500 uppercase">
+            <tr>
+              <th class="px-4 py-3 text-left">#</th>
+              <th class="px-4 py-3 text-left">Description</th>
+              <th class="px-4 py-3 text-left">Unit</th>
+              <th class="px-4 py-3 text-left">Quantity</th>
+              <th class="px-4 py-3 text-left">Weight (KG)</th>
+              <th class="px-4 py-3 text-left">Volume (m³)</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-zinc-200">
+            @for (item of shipment.cargoItems; track item; let i = $index) {
+              <tr class="transition-colors hover:bg-zinc-50">
+                <td class="px-4 py-3 text-zinc-400">{{ i + 1 }}</td>
+                <td class="px-4 py-3 font-medium">{{ item.description }}</td>
+                <td class="px-4 py-3 capitalize">{{ item.unit }}</td>
+                <td class="px-4 py-3">{{ item.quantity }}</td>
+                <td class="px-4 py-3">{{ item.weightKg }}</td>
+                <td class="px-4 py-3">{{ item.volumeM3 || '—' }}</td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="6" class="px-4 py-6 text-center text-zinc-400">No cargo items</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Notes -->
     <div class="mt-4">
       <div class="mb-1 flex items-center gap-4">
         <h3 class="text-zinc-500 uppercase">Notes</h3>
