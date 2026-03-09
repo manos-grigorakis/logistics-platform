@@ -11,12 +11,14 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "shipments")
 @Getter
 @Setter
-@ToString(exclude = {"quote", "driver", "createdByUser", "truck", "trailer"})
+@ToString(exclude = {"quote", "driver", "createdByUser", "truck", "trailer", "shipmentCargos"})
 public class Shipment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,6 +63,9 @@ public class Shipment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trailer_id")
     private Vehicle trailer;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ShipmentCargo> shipmentCargos = new ArrayList<>();
 
     public Shipment() {
     }
@@ -108,13 +113,13 @@ public class Shipment {
         );
     }
 
-    @PrePersist()
-    public void onCreate() {
+    @PrePersist
+    private void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
 
-    @PreUpdate()
-    public void onUpdate() {
+    @PreUpdate
+    private void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
 
@@ -138,5 +143,10 @@ public class Shipment {
 
     public boolean hasTrailerType() {
         return trailer != null && trailer.getType() == VehicleType.TRAILER;
+    }
+
+    public void addShipmentCargoItem(ShipmentCargo cargoItem) {
+        this.shipmentCargos.add(cargoItem);
+        cargoItem.setShipment(this);
     }
 }

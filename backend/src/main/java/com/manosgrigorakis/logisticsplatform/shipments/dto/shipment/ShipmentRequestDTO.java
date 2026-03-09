@@ -1,5 +1,6 @@
 package com.manosgrigorakis.logisticsplatform.shipments.dto.shipment;
 
+import com.manosgrigorakis.logisticsplatform.shipments.dto.shipmentCargo.ShipmentCargoRequestDTO;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -7,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -33,4 +35,6 @@ public class ShipmentRequestDTO {
 
     @Nullable
     private String notes;
+
+    private List<ShipmentCargoRequestDTO> shipmentCargo;
 }
