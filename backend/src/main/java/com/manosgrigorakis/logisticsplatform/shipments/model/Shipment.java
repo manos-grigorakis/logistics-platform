@@ -64,7 +64,7 @@ public class Shipment {
     @JoinColumn(name = "trailer_id")
     private Vehicle trailer;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "shipment", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ShipmentCargo> shipmentCargos = new ArrayList<>();
 
     public Shipment() {
