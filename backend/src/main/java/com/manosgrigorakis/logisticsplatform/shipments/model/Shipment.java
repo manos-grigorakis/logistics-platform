@@ -155,7 +155,7 @@ public class Shipment {
      * to the given according to the business rules. </br>
      * Rules: </br>
      *  Allowed: </br>
-     *      - {@code PENDING -> DISPATCHED} Only if there are cargo items
+     *      - {@code PENDING -> DISPATCHED} Only if there are cargo items, driver, truck & trailer
      *      - {@code DISPATCHED -> DELIVERED}
      *  Not Allowed: </br>
      *      - Finalized statuses cannot be changed
@@ -168,7 +168,11 @@ public class Shipment {
         if (currentStatus.isFinalized()) return false;
 
         return switch (currentStatus) {
-            case PENDING -> status == ShipmentStatus.DISPATCHED && !this.shipmentCargos.isEmpty();
+            case PENDING -> status == ShipmentStatus.DISPATCHED
+                    && !this.shipmentCargos.isEmpty()
+                    && this.driver != null
+                    && this.truck != null
+                    && this.trailer != null;
             case DISPATCHED -> status == ShipmentStatus.DELIVERED;
             default -> false;
         };
@@ -185,8 +189,22 @@ public class Shipment {
             throw new IllegalStateException("Shipment status is finalized and cannot be changed");
         }
 
-        if (status == ShipmentStatus.DISPATCHED && this.shipmentCargos.isEmpty()) {
-            throw new IllegalStateException("Shipment status cannot be dispatched without cargo items");
+        if (status == ShipmentStatus.DISPATCHED) {
+            if (this.shipmentCargos.isEmpty()) {
+                throw new IllegalStateException("Shipment status cannot be dispatched without cargo items");
+            }
+
+            if (this.driver == null) {
+                throw new IllegalStateException("Shipment status cannot be dispatched without assigned driver");
+            }
+
+            if (this.truck == null) {
+                throw new IllegalStateException("Shipment status cannot be dispatched without assigned truck");
+            }
+
+            if (this.trailer == null) {
+                throw new IllegalStateException("Shipment status cannot be dispatched without assigned trailer");
+            }
         }
 
         if(!canChangeStatusTo(status)) {
