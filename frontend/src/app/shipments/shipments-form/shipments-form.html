@@ -169,13 +169,13 @@
             </div>
           }
 
-          <div class="rounded border border-zinc-300">
-            <table class="w-full">
+          <div class="overflow-hidden rounded border border-zinc-300">
+            <table class="w-full text-sm">
               <!-- Table Headers -->
-              <thead class="bg-zinc-50 text-sm text-zinc-600">
+              <thead class="bg-zinc-50 text-xs text-zinc-500 uppercase">
                 <tr>
                   <th class="w-20 py-2">#</th>
-                  <th class="py-2"><span class="text-danger mr-1 text-sm">*</span>Description</th>
+                  <th class="px-4"><span class="text-danger mr-1 text-sm">*</span>Description</th>
                   <th class="w-40 py-2"><span class="text-danger mr-1 text-sm">*</span>Unit</th>
                   <th class="w-32 py-2"><span class="text-danger mr-1 text-sm">*</span>Quantity</th>
                   <th class="w-40 py-2">
@@ -191,7 +191,7 @@
                 @for (item of cargoItems.controls; track item; let i = $index) {
                   <tr class="border-t border-zinc-200" [formGroupName]="i">
                     <!-- Index -->
-                    <td class="px-3 py-2 text-center">{{ i + 1 }}</td>
+                    <td class="px-3 py-2 text-center text-zinc-400">{{ i + 1 }}</td>
 
                     <!-- Description -->
                     <td class="px-3 py-2 text-center">

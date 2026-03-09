@@ -2,14 +2,14 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ShipmentsService } from '../shipments.service';
 import { Shipment } from '../models/shipment';
-import { DatePipe, NgClass } from '@angular/common';
+import { DatePipe, NgClass, DecimalPipe } from '@angular/common';
 import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
 import { shipmentStatusBadgeColor } from '../utils/shipment-status-badge-color.utils';
 import { ErrorAlert } from '../../shared/ui/error-alert/error-alert';
 
 @Component({
   selector: 'app-view-shipment',
-  imports: [LoadingSpinner, DatePipe, NgClass, ErrorAlert],
+  imports: [LoadingSpinner, DatePipe, NgClass, ErrorAlert, DecimalPipe],
   templateUrl: './view-shipment.html',
   styleUrl: './view-shipment.css',
 })

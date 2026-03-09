@@ -71,13 +71,13 @@
           </thead>
           <tbody class="divide-y divide-zinc-200">
             @for (item of shipment.cargoItems; track item; let i = $index) {
-              <tr class="transition-colors hover:bg-zinc-50">
+              <tr>
                 <td class="px-4 py-3 text-zinc-400">{{ i + 1 }}</td>
                 <td class="px-4 py-3 font-medium">{{ item.description }}</td>
                 <td class="px-4 py-3 capitalize">{{ item.unit }}</td>
                 <td class="px-4 py-3">{{ item.quantity }}</td>
-                <td class="px-4 py-3">{{ item.weightKg }}</td>
-                <td class="px-4 py-3">{{ item.volumeM3 || '—' }}</td>
+                <td class="px-4 py-3">{{ item.weightKg | number: '1.2-2' }}</td>
+                <td class="px-4 py-3">{{ (item.volumeM3 | number: '1.2-2') || '—' }}</td>
               </tr>
             } @empty {
               <tr>
