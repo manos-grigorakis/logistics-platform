@@ -15,6 +15,7 @@ import com.manosgrigorakis.logisticsplatform.common.utils.EntityChangeTracker;
 import com.manosgrigorakis.logisticsplatform.quotes.enums.QuoteStatus;
 import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
 import com.manosgrigorakis.logisticsplatform.quotes.repository.QuoteRepository;
+import com.manosgrigorakis.logisticsplatform.shipments.ShipmentStatusException;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.ShipmentFilterRequest;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.ShipmentRequestDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.ShipmentResponseDTO;
@@ -209,14 +210,17 @@ public class ShipmentServiceImpl implements ShipmentService {
 
         try {
             shipment.changeStatusTo(dto.status());
-        } catch (IllegalStateException e) {
+        } catch (ShipmentStatusException e) {
             log.warn("Failed to update Shipment status with number {} from {} to {}",
                     shipment.getNumber(), oldShipment.getStatus(), shipment.getStatus()
             );
-            throw new ConflictException(e.getMessage(), Map.of(
-                    "currentStatus", shipment.getStatus(),
-                    "desiredStatus", dto.status())
-            );
+            throw new ConflictException(
+                    e.getMessage(),
+                    e.getErrorCode(),
+                    Map.of(
+                            "currentStatus", shipment.getStatus(),
+                            "desiredStatus", dto.status()
+                    ));
         }
 
         this.shipmentRepository.save(shipment);

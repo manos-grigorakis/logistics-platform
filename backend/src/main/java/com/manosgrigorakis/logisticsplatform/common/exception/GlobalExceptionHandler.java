@@ -163,6 +163,7 @@ public class GlobalExceptionHandler {
                 HttpStatus.CONFLICT.value(),
                 exc.getMessage(),
                 System.currentTimeMillis(),
+                exc.getErrorCode(),
                 exc.getDetails()
         );
 

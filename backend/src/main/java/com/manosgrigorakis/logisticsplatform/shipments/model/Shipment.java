@@ -1,6 +1,7 @@
 package com.manosgrigorakis.logisticsplatform.shipments.model;
 
 import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
+import com.manosgrigorakis.logisticsplatform.shipments.ShipmentStatusException;
 import com.manosgrigorakis.logisticsplatform.shipments.enums.ShipmentStatus;
 import com.manosgrigorakis.logisticsplatform.shipments.enums.VehicleType;
 import com.manosgrigorakis.logisticsplatform.users.model.User;
@@ -182,33 +183,43 @@ public class Shipment {
      * Change the {@link Shipment} status to the given target applying business rules.
      * Use {@link #canChangeStatusTo(ShipmentStatus)} to apply the rules.
      * @param status The desired status of the target.
-     * @throws IllegalStateException If the transition is not allowed due to the business rules.
+     * @throws ShipmentStatusException If the transition is not allowed due to the business rules.
      */
-    public void changeStatusTo(ShipmentStatus status) throws IllegalStateException {
+    public void changeStatusTo(ShipmentStatus status) throws ShipmentStatusException {
         if (this.status.isFinalized()) {
-            throw new IllegalStateException("Shipment status is finalized and cannot be changed");
+            throw new ShipmentStatusException("Shipment status is finalized and cannot be changed", "FINALIZED_STATUS");
         }
 
         if (status == ShipmentStatus.DISPATCHED) {
             if (this.shipmentCargos.isEmpty()) {
-                throw new IllegalStateException("Shipment status cannot be dispatched without cargo items");
+                throw new ShipmentStatusException(
+                        "Shipment status cannot be dispatched without cargo items", "SHIPMENT_CARGOS_REQUIRED"
+                );
             }
 
             if (this.driver == null) {
-                throw new IllegalStateException("Shipment status cannot be dispatched without assigned driver");
+                throw new ShipmentStatusException(
+                        "Shipment status cannot be dispatched without assigned driver", "DRIVER_REQUIRED"
+                );
             }
 
             if (this.truck == null) {
-                throw new IllegalStateException("Shipment status cannot be dispatched without assigned truck");
+                throw new ShipmentStatusException(
+                        "Shipment status cannot be dispatched without assigned truck", "TRUCK_REQUIRED"
+                );
             }
 
             if (this.trailer == null) {
-                throw new IllegalStateException("Shipment status cannot be dispatched without assigned trailer");
+                throw new ShipmentStatusException(
+                        "Shipment status cannot be dispatched without assigned trailer", "TRAILER_REQUIRED"
+                );
             }
         }
 
         if(!canChangeStatusTo(status)) {
-            throw new IllegalStateException("Invalid status transition: " + this.status + " -> " + status);
+            throw new ShipmentStatusException(
+                    "Invalid status transition: " + this.status + " -> " + status, "INVALID_TRANSITION"
+                    );
         }
 
         this.status = status;
