@@ -1,3 +1,5 @@
+import { CargoItems } from './cargo-items';
+
 export interface Shipment {
   id: number;
   number: string;
@@ -28,4 +30,5 @@ export interface Shipment {
     plate: string;
     type: string;
   };
+  cargoItems?: CargoItems[];
 }
