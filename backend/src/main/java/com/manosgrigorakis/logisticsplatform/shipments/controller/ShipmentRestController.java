@@ -105,6 +105,13 @@ public class ShipmentRestController {
         return shipmentService.updateShipmentById(id, dto);
     }
 
+    @Operation(summary = "Update Shipment Status", description = "Updates shipment status by id")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Shipment status updated"),
+            @ApiResponse(responseCode = "400", description = "Validation Error"),
+            @ApiResponse(responseCode = "404", description = "Shipment doesn't exists"),
+            @ApiResponse(responseCode = "409", description = "Business rules doesn't allow this status transition")
+    })
     @PatchMapping("/{id}/status")
     public ResponseEntity<Void> updateShipmentStatus(
             @PathVariable Long id,
