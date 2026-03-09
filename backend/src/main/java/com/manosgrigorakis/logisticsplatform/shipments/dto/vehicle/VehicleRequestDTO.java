@@ -1,4 +1,4 @@
-package com.manosgrigorakis.logisticsplatform.shipments.dto;
+package com.manosgrigorakis.logisticsplatform.shipments.dto.vehicle;
 
 import com.manosgrigorakis.logisticsplatform.shipments.enums.VehicleType;
 import jakarta.validation.constraints.NotNull;

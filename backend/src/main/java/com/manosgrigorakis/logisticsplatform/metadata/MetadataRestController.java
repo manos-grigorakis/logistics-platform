@@ -3,7 +3,7 @@ package com.manosgrigorakis.logisticsplatform.metadata;
 import com.manosgrigorakis.logisticsplatform.customers.enums.CustomerType;
 import com.manosgrigorakis.logisticsplatform.quotes.enums.QuoteItemUnit;
 import com.manosgrigorakis.logisticsplatform.quotes.enums.QuoteStatus;
-import com.manosgrigorakis.logisticsplatform.shipments.dto.ShipmentStatusResponse;
+import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.ShipmentStatusResponse;
 import com.manosgrigorakis.logisticsplatform.shipments.enums.ShipmentStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

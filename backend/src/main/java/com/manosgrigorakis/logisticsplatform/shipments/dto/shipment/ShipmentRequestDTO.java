@@ -1,4 +1,4 @@
-package com.manosgrigorakis.logisticsplatform.shipments.dto;
+package com.manosgrigorakis.logisticsplatform.shipments.dto.shipment;
 
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotNull;

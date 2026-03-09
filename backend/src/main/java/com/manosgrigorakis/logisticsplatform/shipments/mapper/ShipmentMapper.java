@@ -1,8 +1,8 @@
 package com.manosgrigorakis.logisticsplatform.shipments.mapper;
 
 import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
-import com.manosgrigorakis.logisticsplatform.shipments.dto.ShipmentRequestDTO;
-import com.manosgrigorakis.logisticsplatform.shipments.dto.ShipmentResponseDTO;
+import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.ShipmentRequestDTO;
+import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.ShipmentResponseDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.summary.QuoteSummaryDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.summary.UserSummaryDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.summary.VehicleSummaryDTO;

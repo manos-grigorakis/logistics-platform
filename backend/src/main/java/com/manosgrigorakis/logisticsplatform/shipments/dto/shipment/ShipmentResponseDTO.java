@@ -1,4 +1,4 @@
-package com.manosgrigorakis.logisticsplatform.shipments.dto;
+package com.manosgrigorakis.logisticsplatform.shipments.dto.shipment;
 
 import com.manosgrigorakis.logisticsplatform.shipments.dto.summary.QuoteSummaryDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.summary.UserSummaryDTO;
