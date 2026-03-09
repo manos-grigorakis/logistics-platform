@@ -192,7 +192,7 @@ public class ShipmentServiceImpl implements ShipmentService {
         shipment.getShipmentCargos().clear();
 
         // Add updated shipments cargos
-        dto.getShipmentCargo().forEach(item ->
+        dto.getCargoItems().forEach(item ->
                 shipment.addShipmentCargoItem(ShipmentCargoMapper.toEntity(item))
         );
 

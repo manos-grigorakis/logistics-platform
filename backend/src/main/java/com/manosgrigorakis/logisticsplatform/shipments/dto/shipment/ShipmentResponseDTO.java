@@ -22,6 +22,6 @@ public record ShipmentResponseDTO(
         UserSummaryDTO createdByUser,
         VehicleSummaryDTO truck,
         VehicleSummaryDTO trailer,
-        List<ShipmentCargoResponseDTO> shipmentCargos
+        List<ShipmentCargoResponseDTO> cargoItems
 )
 { }

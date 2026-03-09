@@ -3,7 +3,6 @@ package com.manosgrigorakis.logisticsplatform.shipments.mapper;
 import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.ShipmentRequestDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.ShipmentResponseDTO;
-import com.manosgrigorakis.logisticsplatform.shipments.dto.shipmentCargo.ShipmentCargoRequestDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.shipmentCargo.ShipmentCargoResponseDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.summary.QuoteSummaryDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.summary.UserSummaryDTO;
@@ -36,7 +35,7 @@ public class ShipmentMapper {
                 .trailer(trailer)
                 .build();
 
-        dto.getShipmentCargo().forEach(item ->
+        dto.getCargoItems().forEach(item ->
                 shipment.addShipmentCargoItem(ShipmentCargoMapper.toEntity(item))
         );
 
