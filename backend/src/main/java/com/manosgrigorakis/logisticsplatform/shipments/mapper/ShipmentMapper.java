@@ -35,9 +35,11 @@ public class ShipmentMapper {
                 .trailer(trailer)
                 .build();
 
-        dto.getCargoItems().forEach(item ->
-                shipment.addShipmentCargoItem(ShipmentCargoMapper.toEntity(item))
-        );
+        if(dto.getCargoItems() != null) {
+            dto.getCargoItems().forEach(item ->
+                    shipment.addShipmentCargoItem(ShipmentCargoMapper.toEntity(item))
+            );
+        }
 
         return  shipment;
     }

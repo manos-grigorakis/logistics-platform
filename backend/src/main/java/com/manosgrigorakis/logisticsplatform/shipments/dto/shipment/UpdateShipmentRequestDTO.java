@@ -30,6 +30,5 @@ public class UpdateShipmentRequestDTO {
     private String notes;
 
     @Valid
-    @NotEmpty(message = "Shipment must have at least one cargo item")
     private List<ShipmentCargoRequestDTO> cargoItems;
 }
