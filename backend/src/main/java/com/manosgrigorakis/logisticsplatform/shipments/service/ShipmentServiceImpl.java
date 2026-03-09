@@ -19,6 +19,7 @@ import com.manosgrigorakis.logisticsplatform.shipments.dto.ShipmentFilterRequest
 import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.ShipmentRequestDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.ShipmentResponseDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.UpdateShipmentRequestDTO;
+import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.UpdateShipmentStatusRequestDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.mapper.ShipmentMapper;
 import com.manosgrigorakis.logisticsplatform.shipments.model.Shipment;
 import com.manosgrigorakis.logisticsplatform.shipments.model.Vehicle;
@@ -188,6 +189,22 @@ public class ShipmentServiceImpl implements ShipmentService {
         Shipment savedShipment = shipmentRepository.save(shipment);
         this.logUpdatedShipment(oldShipment, shipment);
         return ShipmentMapper.toResponse(savedShipment);
+    }
+
+    @Override
+    public void updateShipmentStatus(Long id, UpdateShipmentStatusRequestDTO dto) {
+        Shipment shipment = findByIdOrThrow(id, shipmentRepository::findById, "Shipment");
+
+        try {
+            shipment.changeStatusTo(dto.status());
+        } catch (IllegalStateException e) {
+            throw new ConflictException(e.getMessage(), Map.of(
+                    "currentStatus", shipment.getStatus(),
+                    "desiredStatus", dto.status())
+            );
+        }
+
+        this.shipmentRepository.save(shipment);
     }
 
     @Override

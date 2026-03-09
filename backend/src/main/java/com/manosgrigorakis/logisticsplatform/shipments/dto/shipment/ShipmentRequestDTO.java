@@ -2,6 +2,8 @@ package com.manosgrigorakis.logisticsplatform.shipments.dto.shipment;
 
 import com.manosgrigorakis.logisticsplatform.shipments.dto.shipmentCargo.ShipmentCargoRequestDTO;
 import jakarta.annotation.Nullable;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Getter;
@@ -36,5 +38,7 @@ public class ShipmentRequestDTO {
     @Nullable
     private String notes;
 
+    @Valid
+    @NotEmpty(message = "Shipment must have at least one cargo item")
     private List<ShipmentCargoRequestDTO> shipmentCargo;
 }

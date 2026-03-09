@@ -6,6 +6,7 @@ import com.manosgrigorakis.logisticsplatform.shipments.dto.ShipmentFilterRequest
 import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.ShipmentRequestDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.ShipmentResponseDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.UpdateShipmentRequestDTO;
+import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.UpdateShipmentStatusRequestDTO;
 import org.springframework.data.domain.Page;
 
 public interface ShipmentService {
@@ -16,6 +17,8 @@ public interface ShipmentService {
     ShipmentResponseDTO createShipment(ShipmentRequestDTO dto);
 
     ShipmentResponseDTO updateShipmentById(Long id, UpdateShipmentRequestDTO dto);
+
+    void updateShipmentStatus(Long id, UpdateShipmentStatusRequestDTO dto);
 
     Page<ShipmentResponseDTO> getShipmentsByDriver(Long driverId, PageFilterRequest pageFilter, SortFilterRequest sortFilter);
 }

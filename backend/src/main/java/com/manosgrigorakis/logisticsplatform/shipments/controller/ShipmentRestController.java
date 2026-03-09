@@ -7,6 +7,7 @@ import com.manosgrigorakis.logisticsplatform.shipments.dto.ShipmentFilterRequest
 import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.ShipmentRequestDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.ShipmentResponseDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.UpdateShipmentRequestDTO;
+import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.UpdateShipmentStatusRequestDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.service.ShipmentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -102,6 +103,15 @@ public class ShipmentRestController {
     @PutMapping("/{id}")
     public ShipmentResponseDTO updateShipmentById(@PathVariable Long id, @RequestBody @Valid UpdateShipmentRequestDTO dto) {
         return shipmentService.updateShipmentById(id, dto);
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<Void> updateShipmentStatus(
+            @PathVariable Long id,
+            @RequestBody @Valid UpdateShipmentStatusRequestDTO dto
+    ) {
+        this.shipmentService.updateShipmentStatus(id, dto);
+        return ResponseEntity.noContent().build();
     }
 
     @Operation(summary = "Get Shipments by Driver", description = "Gets all shipments assigned specifically to the authenticated driver")
