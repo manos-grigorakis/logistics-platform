@@ -5,8 +5,10 @@ import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.ShipmentRequ
 import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.ShipmentResponseDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.shipmentCargo.ShipmentCargoResponseDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.summary.QuoteSummaryDTO;
+import com.manosgrigorakis.logisticsplatform.shipments.dto.summary.ShipmentStatusSummaryDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.summary.UserSummaryDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.summary.VehicleSummaryDTO;
+import com.manosgrigorakis.logisticsplatform.shipments.enums.ShipmentStatus;
 import com.manosgrigorakis.logisticsplatform.shipments.model.Shipment;
 import com.manosgrigorakis.logisticsplatform.shipments.model.ShipmentCargo;
 import com.manosgrigorakis.logisticsplatform.shipments.model.Vehicle;
@@ -55,15 +57,22 @@ public class ShipmentMapper {
 
 
         // Summaries
+        ShipmentStatus shipmentStatus = shipment.getStatus();
+
         QuoteSummaryDTO quoteSummary = new QuoteSummaryDTO(quote.getId(), quote.getNumber());
         UserSummaryDTO createsByUserSummary = new UserSummaryDTO(createdByUser.getId(), createdByUser.fullName());
+        ShipmentStatusSummaryDTO shipmentStatusSummary = new ShipmentStatusSummaryDTO(
+                shipmentStatus.getLabel(),
+                shipmentStatus.isEditable(),
+                shipmentStatus.isFinalized())
+                ;
         List<ShipmentCargoResponseDTO> cargoItems = shipmentCargo.stream()
                 .map(ShipmentCargoMapper::toResponse)
                 .toList();
 
         return new ShipmentResponseDTO(
                 shipment.getId(),
-                shipment.getStatus(),
+                shipmentStatusSummary,
                 shipment.getNumber(),
                 shipment.getPickup(),
                 shipment.getNotes(),

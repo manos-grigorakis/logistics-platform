@@ -21,8 +21,8 @@
       <div>
         <span
           class="rounded border p-2 capitalize"
-          [ngClass]="shipmentStatusBadgeColor(shipment.status)"
-          >{{ shipment.status }}</span
+          [ngClass]="shipmentStatusBadgeColor(shipment.status.label)"
+          >{{ shipment.status.label }}</span
         >
       </div>
     </div>

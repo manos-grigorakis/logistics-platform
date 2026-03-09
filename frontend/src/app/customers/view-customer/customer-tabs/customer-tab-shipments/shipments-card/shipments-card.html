@@ -7,7 +7,7 @@
     <!-- Shipment status badge -->
     <span
       class="block rounded border px-2 capitalize"
-      [ngClass]="shipmentStatusBadgeColor(shipment.status)"
+      [ngClass]="shipmentStatusBadgeColor(shipment.status.label)"
     >
       {{ shipment.status }}
     </span>
