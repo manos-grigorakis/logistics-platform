@@ -24,7 +24,7 @@ import { ShipmentPayload } from '../models/shipment-payload';
 import { AuthService } from '../../auth/services/auth.service';
 import { Shipment } from '../models/shipment';
 import { MetadataService } from '../../metadata/metadata.service';
-import { LowerCasePipe, TitleCasePipe } from '@angular/common';
+import { LowerCasePipe, TitleCasePipe, NgClass } from '@angular/common';
 import { RoundedIconButton } from '../../shared/forms/rounded-icon-button/rounded-icon-button';
 import { CargoItems } from '../models/cargo-items';
 
@@ -40,6 +40,7 @@ import { CargoItems } from '../models/cargo-items';
     LowerCasePipe,
     TitleCasePipe,
     RoundedIconButton,
+    NgClass,
   ],
   templateUrl: './shipments-form.html',
   styleUrl: './shipments-form.css',
@@ -64,6 +65,7 @@ export class ShipmentsForm implements OnInit {
 
   // UI
   public uiErrorMessage?: string = undefined;
+  public isFormSubmitted: boolean = false;
 
   // Quotes
   public quotesLoading: boolean = false;
@@ -179,6 +181,8 @@ export class ShipmentsForm implements OnInit {
   }
 
   public onSubmitClick(): void {
+    this.isFormSubmitted = true;
+
     if (this.shipmentForm.invalid) {
       // Mark all controls as touched & re-run validators
       this.markFormGroupRecursive(this.shipmentForm);
@@ -223,6 +227,7 @@ export class ShipmentsForm implements OnInit {
   // Cargo Items
   public onClickAddCargoItem(): void {
     this.cargoItems.push(this.createCargoItem());
+    this.isFormSubmitted = false;
   }
 
   public onClickRemoveCargoIndex(index: number): void {
@@ -231,6 +236,10 @@ export class ShipmentsForm implements OnInit {
 
   public getCargoItemUnitControl(index: number): FormControl<string | null> {
     return this.cargoItems.at(index).get('unit') as FormControl<string | null>;
+  }
+
+  public hasCargoItemsErrors(): boolean {
+    return this.cargoItems.controls.some((control) => control.invalid);
   }
 
   private fetchQuotes(): void {

@@ -23,119 +23,135 @@
     }
   </div>
 
-  <form [formGroup]="shipmentForm" (ngSubmit)="onSubmitClick()">
-    <!-- Quote Dropdown -->
-    <div class="mb-6">
-      <label for="quoteId" (click)="onClickFocusQuoteIdSelect()" class="mb-1 block">
-        <span class="text-danger mr-1 text-sm">*</span>Quote
-      </label>
-      <ng-select
-        #quoteIdSelect
-        class="tw-select"
-        placeholder="Search a Quote"
-        bindLabel="number"
-        bindValue="id"
-        formControlName="quoteId"
-        loadingText="Loading Quotes..."
-        notFoundText="No results"
-        [items]="quotesList"
-        [loading]="quotesLoading"
-        [typeahead]="quoteSearch$"
-        [searchable]="true"
-        [clearable]="true"
-      />
+  <form [formGroup]="shipmentForm" (ngSubmit)="onSubmitClick()" class="flex flex-col gap-6">
+    <!-- Basic Information -->
+    <div>
+      <!-- Header -->
+      <h3 class="mb-4 text-lg text-zinc-600">Basic Information</h3>
 
-      @if (quoteId.invalid && (quoteId.dirty || quoteId.touched)) {
-        <div>
-          @if (quoteId.hasError('required')) {
-            <span class="text-danger mt-1 ml-1 text-sm">Quote is required</span>
+      <div class="flex gap-2">
+        <!-- Quote Dropdown -->
+        <div class="flex-1">
+          <label for="quoteId" (click)="onClickFocusQuoteIdSelect()" class="">
+            <span class="text-danger mr-1 text-sm">*</span>Quote
+          </label>
+          <ng-select
+            #quoteIdSelect
+            class="tw-select"
+            placeholder="Search a Quote"
+            bindLabel="number"
+            bindValue="id"
+            formControlName="quoteId"
+            loadingText="Loading Quotes..."
+            notFoundText="No results"
+            [items]="quotesList"
+            [loading]="quotesLoading"
+            [typeahead]="quoteSearch$"
+            [searchable]="true"
+            [clearable]="true"
+          />
+
+          @if (quoteId.invalid && (quoteId.dirty || quoteId.touched)) {
+            <div>
+              @if (quoteId.hasError('required')) {
+                <span class="text-danger mt-1 ml-1 text-sm">Quote is required</span>
+              }
+            </div>
           }
         </div>
-      }
-    </div>
 
-    <!-- Pickup -->
-    <div class="mb-6">
-      <app-main-input
-        type="datetime-local"
-        formControlName="pickup"
-        label="Pickup"
-        [showRequiredStar]="true"
-      />
-    </div>
-
-    <!-- Driver -->
-    <div class="mb-6">
-      <label for="driverId" (click)="onClickFocusDriverIdSelect()" class="mb-1 block">
-        Driver
-      </label>
-      <ng-select
-        #driverIdSelect
-        class="tw-select"
-        placeholder="Search a Driver"
-        bindLabel="fullName"
-        bindValue="id"
-        formControlName="driverId"
-        loadingText="Loading Drivers..."
-        notFoundText="No results"
-        [items]="driversList"
-        [loading]="driverLoading"
-        [typeahead]="driverSearch$"
-        [searchable]="true"
-        [clearable]="true"
-      />
-    </div>
-
-    <!-- Truck & Trailer -->
-    <div class="mb-6 flex flex-col gap-6 sm:flex-row sm:gap-4">
-      <div class="flex-1">
-        <label for="truckId" (click)="onClickFocusTruckIdSelect()" class="mb-1 block">
-          Truck
-        </label>
-        <ng-select
-          #truckIdSelect
-          class="tw-select"
-          placeholder="Search a Truck"
-          bindLabel="plate"
-          bindValue="id"
-          formControlName="truckId"
-          loadingText="Loading Trucks..."
-          notFoundText="No results"
-          [items]="truckList"
-          [loading]="truckLoading"
-          [typeahead]="truckSearch$"
-          [searchable]="true"
-          [clearable]="true"
-        />
+        <!-- Pickup -->
+        <div class="flex-1">
+          <app-main-input
+            type="datetime-local"
+            formControlName="pickup"
+            label="Pickup"
+            [showRequiredStar]="true"
+          />
+        </div>
       </div>
+    </div>
 
-      <div class="flex-1">
-        <label for="trailerId" (click)="onClickFocusTrailerIdSelect()" class="mb-1 block">
-          Trailer
-        </label>
-        <ng-select
-          #trailerIdSelect
-          class="tw-select"
-          placeholder="Search a Trailer"
-          bindLabel="plate"
-          bindValue="id"
-          formControlName="trailerId"
-          loadingText="Loading Trailer..."
-          notFoundText="No results"
-          [items]="trailerList"
-          [loading]="trailerLoading"
-          [typeahead]="trailerSearch$"
-          [searchable]="true"
-          [clearable]="true"
-        />
+    <!-- Fleet Assignment -->
+    <div>
+      <!-- Header -->
+      <h3 class="mb-2 text-lg text-zinc-600">Fleet Assignment</h3>
+      <div class="flex gap-2">
+        <!-- Driver -->
+        <div class="flex-1">
+          <label for="driverId" (click)="onClickFocusDriverIdSelect()" class="mb-1 block">
+            Driver
+          </label>
+          <ng-select
+            #driverIdSelect
+            class="tw-select w-full"
+            placeholder="Search a Driver"
+            bindLabel="fullName"
+            bindValue="id"
+            formControlName="driverId"
+            loadingText="Loading Drivers..."
+            notFoundText="No results"
+            [items]="driversList"
+            [loading]="driverLoading"
+            [typeahead]="driverSearch$"
+            [searchable]="true"
+            [clearable]="true"
+          />
+        </div>
+
+        <!-- Truck -->
+        <div class="flex-1">
+          <label for="truckId" (click)="onClickFocusTruckIdSelect()" class="mb-1 block">
+            Truck
+          </label>
+          <ng-select
+            #truckIdSelect
+            class="tw-select w-full"
+            placeholder="Search a Truck"
+            bindLabel="plate"
+            bindValue="id"
+            formControlName="truckId"
+            loadingText="Loading Trucks..."
+            notFoundText="No results"
+            [items]="truckList"
+            [loading]="truckLoading"
+            [typeahead]="truckSearch$"
+            [searchable]="true"
+            [clearable]="true"
+          />
+        </div>
+
+        <!-- Trailer -->
+        <div class="flex-1">
+          <label for="trailerId" (click)="onClickFocusTrailerIdSelect()" class="mb-1 block">
+            Trailer
+          </label>
+          <ng-select
+            #trailerIdSelect
+            class="tw-select w-full"
+            placeholder="Search a Trailer"
+            bindLabel="plate"
+            bindValue="id"
+            formControlName="trailerId"
+            loadingText="Loading Trailer..."
+            notFoundText="No results"
+            [items]="trailerList"
+            [loading]="trailerLoading"
+            [typeahead]="trailerSearch$"
+            [searchable]="true"
+            [clearable]="true"
+          />
+        </div>
       </div>
     </div>
 
     <!-- Cargo Items -->
-    <div class="mb-6">
-      <div class="mb-6 flex justify-between">
+    <div>
+      <div class="mb-2 flex justify-between">
         <!-- Header -->
-        <h3 class="text-lg font-semibold">Cargo Items</h3>
+        <h3 class="text-lg text-zinc-600">Cargo Items</h3>
+
+        <!-- Cargo Item Add Button -->
         <app-rounded-icon-button
           icon="lucidePlus"
           color="success"
@@ -144,107 +160,138 @@
         />
       </div>
 
-      <!-- Cargo Items Cards -->
-      <div formArrayName="cargoItems" class="flex flex-col gap-4">
-        @for (item of cargoItems.controls; track item; let i = $index) {
-          <div [formGroupName]="i">
-            <!-- Card Header -->
-            <div class="mb-2 flex justify-between">
-              <h4 class="font-light text-gray-700">#Cargo Item {{ i + 1 }}</h4>
-              <app-rounded-icon-button
-                type="button"
-                icon="lucideTrash"
-                color="danger"
-                (clicked)="onClickRemoveCargoIndex(i)"
-              />
+      <!-- Cargo Items Table  -->
+      <div>
+        @if (cargoItems.length > 0) {
+          @if (isFormSubmitted && cargoItems.length > 0 && hasCargoItemsErrors()) {
+            <div class="mb-3 max-w-sm">
+              <app-error-alert errorMessage="The fields with asterisk (*) are required" />
             </div>
+          }
 
-            <!-- Fields -->
-            <div class="flex gap-4">
-              <!-- Description -->
-              <app-main-input
-                formControlName="description"
-                label="Description"
-                placeholder="Pallet"
-                type="text"
-                [showRequiredStar]="true"
-              />
+          <div class="rounded border border-zinc-300">
+            <table class="w-full">
+              <!-- Table Headers -->
+              <thead class="bg-zinc-50 text-sm text-zinc-600">
+                <tr>
+                  <th class="w-20 py-2">#</th>
+                  <th class="py-2"><span class="text-danger mr-1 text-sm">*</span>Description</th>
+                  <th class="w-40 py-2"><span class="text-danger mr-1 text-sm">*</span>Unit</th>
+                  <th class="w-32 py-2"><span class="text-danger mr-1 text-sm">*</span>Quantity</th>
+                  <th class="w-40 py-2">
+                    <span class="text-danger mr-1 text-sm">*</span>Weight (KG)
+                  </th>
+                  <th class="w-40 py-2">Volume (m³)</th>
+                  <th class="w-40 py-2">Delete</th>
+                </tr>
+              </thead>
 
-              <!-- Units Dropdown -->
-              <div>
-                <label [for]="'unit' + i">
-                  <span class="text-danger mr-1 text-sm">*</span>
-                  Unit
-                </label>
-                <select
-                  formControlName="unit"
-                  [id]="'unit' + i"
-                  class="focus:ring-primary-200 w-full rounded border border-gray-300 px-4 py-2.5 text-gray-700 focus:ring focus:outline-none"
-                >
-                  <option [ngValue]="null" disabled selected>Select a unit</option>
+              <tbody formArrayName="cargoItems">
+                <!-- Table Data (Dynamic) -->
+                @for (item of cargoItems.controls; track item; let i = $index) {
+                  <tr class="border-t border-zinc-200" [formGroupName]="i">
+                    <!-- Index -->
+                    <td class="px-3 py-2 text-center">{{ i + 1 }}</td>
 
-                  @for (unit of cargoItemsUnits; track $index) {
-                    <option [ngValue]="unit | lowercase">{{ unit | titlecase }}</option>
-                  } @empty {
-                    <option disabled>No units are available</option>
-                  }
-                </select>
+                    <!-- Description -->
+                    <td class="px-3 py-2 text-center">
+                      <app-main-input
+                        formControlName="description"
+                        placeholder="Pallet"
+                        type="text"
+                        [displayErrors]="false"
+                        [highlightBorders]="true"
+                      />
+                    </td>
 
-                @if (
-                  getCargoItemUnitControl(i).invalid &&
-                  (getCargoItemUnitControl(i).dirty || getCargoItemUnitControl(i).touched)
-                ) {
-                  <div>
-                    @if (getCargoItemUnitControl(i).hasError('required')) {
-                      <span class="text-danger ml-1 text-sm">Unit is required</span>
-                    }
-                  </div>
+                    <!-- Unit -->
+                    <td class="px-3 py-2 text-center">
+                      <select
+                        formControlName="unit"
+                        [id]="'unit' + i"
+                        class="focus:ring-primary-200 h-10 w-full rounded border border-gray-300 px-3 text-gray-700 focus:ring focus:outline-none"
+                        [ngClass]="
+                          getCargoItemUnitControl(i).invalid &&
+                          (getCargoItemUnitControl(i).dirty || getCargoItemUnitControl(i).touched)
+                            ? 'border-red-500 focus:ring-red-200'
+                            : 'border-gray-300'
+                        "
+                      >
+                        <option [ngValue]="null" disabled selected>Select a unit</option>
+
+                        @for (unit of cargoItemsUnits; track $index) {
+                          <option [ngValue]="unit | lowercase">{{ unit | titlecase }}</option>
+                        } @empty {
+                          <option disabled>No units are available</option>
+                        }
+                      </select>
+                    </td>
+
+                    <!-- Quantity -->
+                    <td class="px-3 py-2 text-center">
+                      <app-main-input
+                        formControlName="quantity"
+                        placeholder="1"
+                        type="number"
+                        min="1"
+                        patternErrorMessage="must by a number"
+                        [displayErrors]="false"
+                        [highlightBorders]="true"
+                      />
+                    </td>
+
+                    <!-- Weight -->
+                    <td class="px-3 py-2 text-center">
+                      <app-main-input
+                        formControlName="weightKg"
+                        placeholder="200"
+                        type="text"
+                        patternErrorMessage="must by a number"
+                        [displayErrors]="false"
+                        [highlightBorders]="true"
+                      />
+                    </td>
+
+                    <!-- Volume -->
+                    <td class="px-3 py-2 text-center">
+                      <app-main-input
+                        formControlName="volumeM3"
+                        placeholder="200"
+                        type="text"
+                        patternErrorMessage="must by a number"
+                        [displayErrors]="false"
+                        [highlightBorders]="true"
+                      />
+                    </td>
+
+                    <td class="px-3 py-2">
+                      <div class="flex justify-center">
+                        <app-rounded-icon-button
+                          type="button"
+                          icon="lucideTrash"
+                          color="danger"
+                          iconSize="14"
+                          (clicked)="onClickRemoveCargoIndex(i)"
+                        />
+                      </div>
+                    </td>
+                  </tr>
                 }
-              </div>
-
-              <!-- Quantity -->
-              <app-main-input
-                formControlName="quantity"
-                label="Quantity"
-                placeholder="1"
-                type="number"
-                min="1"
-                patternErrorMessage="must by a number"
-                [showRequiredStar]="true"
-              />
-
-              <!-- Weight -->
-              <app-main-input
-                formControlName="weightKg"
-                label="Weight (KG)"
-                placeholder="200"
-                type="text"
-                patternErrorMessage="must by a number"
-                [showRequiredStar]="true"
-              />
-
-              <!-- Volume -->
-              <app-main-input
-                formControlName="volumeM3"
-                label="Volume (m³)"
-                placeholder="200"
-                type="text"
-                patternErrorMessage="must by a number"
-              />
-            </div>
+              </tbody>
+            </table>
           </div>
         }
       </div>
     </div>
 
     <!-- Notes -->
-    <div class="mb-6">
+    <div>
       <label for="notes" class="mb-1 block">Notes</label>
       <textarea
         formControlName="notes"
         id="notes"
-        cols="30"
-        rows="10"
+        cols="20"
+        rows="4"
         class="focus:ring-primary-200 placeholder:text-body w-full resize-none rounded border border-gray-300 px-4 py-2 text-gray-700 focus:ring focus:outline-none"
       ></textarea>
     </div>
