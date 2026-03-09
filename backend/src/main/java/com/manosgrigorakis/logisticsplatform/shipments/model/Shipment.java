@@ -149,4 +149,50 @@ public class Shipment {
         this.shipmentCargos.add(cargoItem);
         cargoItem.setShipment(this);
     }
+
+    /**
+     * Checks whenever the {@link Shipment} status can change from its current value,
+     * to the given according to the business rules. </br>
+     * Rules: </br>
+     *  Allowed: </br>
+     *      - {@code PENDING -> DISPATCHED} Only if there are cargo items
+     *      - {@code DISPATCHED -> DELIVERED}
+     *  Not Allowed: </br>
+     *      - Finalized statuses cannot be changed
+     * @param status The desired status of the target
+     * @return {@code true} if status can be changed, otherwise {@code false}
+     */
+    public boolean canChangeStatusTo(ShipmentStatus status) {
+        ShipmentStatus currentStatus = this.status;
+
+        if (currentStatus.isFinalized()) return false;
+
+        return switch (currentStatus) {
+            case PENDING -> status == ShipmentStatus.DISPATCHED && !this.shipmentCargos.isEmpty();
+            case DISPATCHED -> status == ShipmentStatus.DELIVERED;
+            default -> false;
+        };
+    }
+
+    /**
+     * Change the {@link Shipment} status to the given target applying business rules.
+     * Use {@link #canChangeStatusTo(ShipmentStatus)} to apply the rules.
+     * @param status The desired status of the target.
+     * @throws IllegalStateException If the transition is not allowed due to the business rules.
+     */
+    public void changeStatusTo(ShipmentStatus status) throws IllegalStateException {
+        if (this.status.isFinalized()) {
+            throw new IllegalStateException("Shipment status is finalized and cannot be changed");
+        }
+
+        if (status == ShipmentStatus.DISPATCHED && this.shipmentCargos.isEmpty()) {
+            throw new IllegalStateException("Shipment status cannot be dispatched without cargo items");
+        }
+
+        if(!canChangeStatusTo(status)) {
+            throw new IllegalStateException("Invalid status transition: " + this.status + " -> " + status);
+        }
+
+        this.status = status;
+    }
 }
