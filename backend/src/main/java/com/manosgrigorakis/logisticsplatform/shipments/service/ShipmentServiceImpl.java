@@ -20,6 +20,7 @@ import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.ShipmentRequ
 import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.ShipmentResponseDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.UpdateShipmentRequestDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.UpdateShipmentStatusRequestDTO;
+import com.manosgrigorakis.logisticsplatform.shipments.mapper.ShipmentCargoMapper;
 import com.manosgrigorakis.logisticsplatform.shipments.mapper.ShipmentMapper;
 import com.manosgrigorakis.logisticsplatform.shipments.model.Shipment;
 import com.manosgrigorakis.logisticsplatform.shipments.model.Vehicle;
@@ -186,6 +187,15 @@ public class ShipmentServiceImpl implements ShipmentService {
         shipment.setNotes(dto.getNotes());
 
         validators(shipment);
+
+        // Clear old shipment cargos
+        shipment.getShipmentCargos().clear();
+
+        // Add updated shipments cargos
+        dto.getShipmentCargo().forEach(item ->
+                shipment.addShipmentCargoItem(ShipmentCargoMapper.toEntity(item))
+        );
+
         Shipment savedShipment = shipmentRepository.save(shipment);
         this.logUpdatedShipment(oldShipment, shipment);
         return ShipmentMapper.toResponse(savedShipment);
