@@ -2,6 +2,7 @@ package com.manosgrigorakis.logisticsplatform.shipments.model;
 
 import com.manosgrigorakis.logisticsplatform.shipments.enums.ShipmentCargoUnit;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -49,6 +50,7 @@ public class ShipmentCargo {
     public ShipmentCargo() {
     }
 
+    @Builder
     public ShipmentCargo(
             String description,
             ShipmentCargoUnit unit,
