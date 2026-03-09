@@ -205,9 +205,14 @@ public class ShipmentServiceImpl implements ShipmentService {
     public void updateShipmentStatus(Long id, UpdateShipmentStatusRequestDTO dto) {
         Shipment shipment = findByIdOrThrow(id, shipmentRepository::findById, "Shipment");
 
+        Shipment oldShipment = new Shipment(shipment);
+
         try {
             shipment.changeStatusTo(dto.status());
         } catch (IllegalStateException e) {
+            log.warn("Failed to update Shipment status with number {} from {} to {}",
+                    shipment.getNumber(), oldShipment.getStatus(), shipment.getStatus()
+            );
             throw new ConflictException(e.getMessage(), Map.of(
                     "currentStatus", shipment.getStatus(),
                     "desiredStatus", dto.status())
@@ -215,6 +220,11 @@ public class ShipmentServiceImpl implements ShipmentService {
         }
 
         this.shipmentRepository.save(shipment);
+        log.info("Shipment status updated with number {} from {} to {}",
+                shipment.getNumber(), oldShipment.getStatus(), shipment.getStatus())
+        ;
+
+        logShipmentStatusUpdate(oldShipment, shipment);
     }
 
     @Override
@@ -345,6 +355,31 @@ public class ShipmentServiceImpl implements ShipmentService {
                 AuditEventDTO.builder()
                         .entityType("Shipment")
                         .entityId(updatedShipment.getId())
+                        .changes(changes)
+                        .action(AuditAction.UPDATE)
+                        .build()
+        );
+    }
+
+    /**
+     * Logs the Shipment status update operation into the audit logging system
+     * @param oldShipment The old {@link Shipment}
+     * @param updatedShipment The updated {@link Shipment}
+     */
+    private void logShipmentStatusUpdate(Shipment oldShipment, Shipment updatedShipment) {
+        Map<String, Object> changes = new HashMap<>();
+
+        changes.put("status", Map.of(
+                        "old", oldShipment.getStatus(),
+                        "updated", updatedShipment.getStatus()
+                )
+        );
+
+        this.auditService.log(
+                AuditEventDTO.builder()
+                        .entityType("Shipment")
+                        .entityId(updatedShipment.getId())
+                        .notes("Shipment Number: " + updatedShipment.getNumber())
                         .changes(changes)
                         .action(AuditAction.UPDATE)
                         .build()
