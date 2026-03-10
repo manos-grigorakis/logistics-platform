@@ -264,8 +264,6 @@ export class CustomerTabShipments implements OnInit, OnDestroy {
       error: (err) => {
         if (err.status === 500) {
           toast.error('Server error. Please try again');
-        } else {
-          toast.error('An error occurred. Please try again');
         }
 
         let errorCode = err.error.errorCode;
