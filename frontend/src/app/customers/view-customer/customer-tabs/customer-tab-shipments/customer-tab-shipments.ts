@@ -12,10 +12,20 @@ import { MetadataService } from '../../../../metadata/metadata.service';
 import { debounceTime, distinctUntilChanged, Subject, Subscription } from 'rxjs';
 import { ShipmentStatus } from '../../../../shipments/models/shipment-status';
 import { ShipmentParams } from '../../../../shipments/models/shipment-params';
+import { Modal } from '../../../../shared/ui/modal/modal';
+import { toast } from 'ngx-sonner';
 
 @Component({
   selector: 'app-customer-tab-shipments',
-  imports: [ShipmentsFilters, ShipmentsCard, ErrorAlert, LoadingSpinner, Pagination, NgClass],
+  imports: [
+    ShipmentsFilters,
+    ShipmentsCard,
+    ErrorAlert,
+    LoadingSpinner,
+    Pagination,
+    NgClass,
+    Modal,
+  ],
   templateUrl: './customer-tab-shipments.html',
   styleUrl: './customer-tab-shipments.css',
 })
@@ -42,7 +52,16 @@ export class CustomerTabShipments implements OnInit, OnDestroy {
 
   // Shipment statuses
   public statuses: ShipmentStatus[] = [];
+  public editingShipmentId?: number;
+  public pendingShipmentStatus?: string;
+  public changeStatusError: string | undefined = undefined;
   private statusesSub?: Subscription;
+  public pendingShipmentStatusUpdate?: { shipment: Shipment; newStatus: string };
+
+  // Modals for Shipment statuses
+  public isShipmentStatusConfirmModalOpen: boolean = false;
+  public confirmShipmentStatusModalMessage: string | undefined = undefined;
+  public isShipmentStatusErrorModalOpen: boolean = false;
 
   // Pagination
   public currentPage: number = 0;
@@ -190,6 +209,98 @@ export class CustomerTabShipments implements OnInit, OnDestroy {
           this.errorMessage = 'Server error. Please try again';
         } else {
           this.errorMessage = 'An error occurred. Please try again';
+        }
+      },
+    });
+  }
+
+  // Error Modal for Shipment statuses
+  public onCloseStatusErrorModal(): void {
+    this.isShipmentStatusErrorModalOpen = false;
+  }
+
+  // Confirm Modal for Shipment statuses
+  public onShipmentStatusUpdate(event: { shipment: Shipment; newStatus: string }): void {
+    this.editingShipmentId = event.shipment.id;
+    this.pendingShipmentStatus = event.newStatus;
+
+    this.pendingShipmentStatusUpdate = event;
+    let shipment: Shipment = event.shipment;
+    let newStatus = event.newStatus;
+
+    this.confirmShipmentStatusModalMessage = `You are about to update the status of shipment ${shipment.number}. 
+    This action cannot be undone. Current: ${shipment.status.label.toUpperCase()} → New: ${newStatus.toUpperCase()}`;
+
+    this.isShipmentStatusConfirmModalOpen = true;
+  }
+
+  public onConfirmShipmentStatusModal(): void {
+    if (!this.pendingShipmentStatusUpdate) return;
+
+    const { shipment, newStatus } = this.pendingShipmentStatusUpdate;
+
+    this.updateShipmentStatus(shipment.id, newStatus);
+    this.pendingShipmentStatusUpdate = undefined;
+    this.onCloseStatusConfirmModal();
+  }
+
+  public onCloseStatusConfirmModal(): void {
+    // Reset
+    this.editingShipmentId = undefined;
+    this.pendingShipmentStatus = undefined;
+    this.pendingShipmentStatusUpdate = undefined;
+    this.isShipmentStatusConfirmModalOpen = false;
+  }
+
+  private updateShipmentStatus(id: number, payload: string): void {
+    this.changeStatusError = undefined;
+    this.isShipmentStatusErrorModalOpen = false;
+
+    this.shipmentsService.updateShipmentStatus(id, payload).subscribe({
+      next: () => {
+        toast.success('Shipment status updated successfully');
+        this.fetchShipmentsByCustomer();
+      },
+      error: (err) => {
+        if (err.status === 500) {
+          toast.error('Server error. Please try again');
+        } else {
+          toast.error('An error occurred. Please try again');
+        }
+
+        let errorCode = err.error.errorCode;
+
+        if (err.status === 409) {
+          this.isShipmentStatusErrorModalOpen = true;
+
+          switch (errorCode) {
+            case 'FINALIZED_STATUS':
+              this.changeStatusError =
+                'This shipment has already been finalized and its status can no longer be changed.';
+              break;
+            case 'SHIPMENT_CARGOS_REQUIRED':
+              this.changeStatusError =
+                'This shipment cannot be dispatched because no cargo items have been added yet. Please add at least one cargo item before dispatching.';
+              break;
+            case 'DRIVER_REQUIRED':
+              this.changeStatusError =
+                'A driver must be assigned before this shipment can be dispatched.';
+              break;
+            case 'TRUCK_REQUIRED':
+              this.changeStatusError =
+                'A truck must be assigned before this shipment can be dispatched.';
+              break;
+            case 'TRAILER_REQUIRED':
+              this.changeStatusError =
+                'A trailer must be assigned before this shipment can be dispatched.';
+              break;
+            case 'INVALID_TRANSITION':
+              this.changeStatusError =
+                'The selected status transition is not allowed for this shipment.';
+              break;
+            default:
+              this.changeStatusError = 'Unable to update shipment status. Please try again.';
+          }
         }
       },
     });

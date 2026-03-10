@@ -5,13 +5,34 @@
     </h2>
 
     <!-- Shipment status badge -->
-    <span
-      class="block rounded border px-2 capitalize"
-      [ngClass]="shipmentStatusBadgeColor(shipment.status.label)"
-    >
-      {{ shipment.status.label }}
-    </span>
+    @if (!shipment.status.isFinalized) {
+      <select
+        class="rounded border px-2"
+        [ngClass]="shipmentStatusBadgeColor(shipment.status.label)"
+        [ngModel]="
+          editingShipmentId === shipment.id ? pendingShipmentStatus : shipment.status.label
+        "
+        (ngModelChange)="onStatusChange(shipment, $event)"
+      >
+        <option [value]="shipment.status.label" selected disabled hidden>
+          {{ shipment.status.label | titlecase }}
+        </option>
+        @for (status of shipmentStatuses; track $index) {
+          @if (status.label.toLowerCase() !== shipment.status.label.toLowerCase()) {
+            <option [value]="status.label">{{ status.label | titlecase }}</option>
+          }
+        }
+      </select>
+    } @else {
+      <span
+        class="block rounded border px-2 capitalize"
+        [ngClass]="shipmentStatusBadgeColor(shipment.status.label)"
+      >
+        {{ shipment.status.label }}
+      </span>
+    }
   </div>
+
   <!-- Pickup -->
   <div>
     <p class="mt-2 text-sm">
