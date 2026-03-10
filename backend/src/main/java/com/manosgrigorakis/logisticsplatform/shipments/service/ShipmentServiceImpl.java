@@ -21,6 +21,7 @@ import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.ShipmentRequ
 import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.ShipmentResponseDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.UpdateShipmentRequestDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.UpdateShipmentStatusRequestDTO;
+import com.manosgrigorakis.logisticsplatform.shipments.enums.ShipmentStatus;
 import com.manosgrigorakis.logisticsplatform.shipments.mapper.ShipmentCargoMapper;
 import com.manosgrigorakis.logisticsplatform.shipments.mapper.ShipmentMapper;
 import com.manosgrigorakis.logisticsplatform.shipments.model.Shipment;
@@ -54,6 +55,7 @@ public class ShipmentServiceImpl implements ShipmentService {
     private final UserRepository userRepository;
     private final VehicleRepository vehicleRepository;
     private final AuditService auditService;
+    private final CmrDocumentService cmrDocumentService;
 
     private final DocumentNumberGenerator documentNumberGenerator;
 
@@ -66,14 +68,15 @@ public class ShipmentServiceImpl implements ShipmentService {
             VehicleRepository vehicleRepository,
             DocumentNumberGenerator documentNumberGenerator,
             AuditService auditService,
-            CmrDocumentService cmrDocumentService)
-    {
+            CmrDocumentService cmrDocumentService
+    ) {
         this.shipmentRepository = shipmentRepository;
         this.quoteRepository = quoteRepository;
         this.userRepository = userRepository;
         this.vehicleRepository = vehicleRepository;
         this.documentNumberGenerator = documentNumberGenerator;
         this.auditService = auditService;
+        this.cmrDocumentService = cmrDocumentService;
     }
 
     @Override
@@ -202,10 +205,10 @@ public class ShipmentServiceImpl implements ShipmentService {
         return ShipmentMapper.toResponse(savedShipment);
     }
 
+    @Transactional
     @Override
     public void updateShipmentStatus(Long id, UpdateShipmentStatusRequestDTO dto) {
         Shipment shipment = findByIdOrThrow(id, shipmentRepository::findById, "Shipment");
-
         Shipment oldShipment = new Shipment(shipment);
 
         try {
@@ -229,6 +232,11 @@ public class ShipmentServiceImpl implements ShipmentService {
         ;
 
         logShipmentStatusUpdate(oldShipment, shipment);
+
+        // Generate CMR
+        if (shipment.getStatus() == ShipmentStatus.DISPATCHED) {
+                cmrDocumentService.createCmrDocument(shipment.getQuote(), shipment);
+        }
     }
 
     @Override
