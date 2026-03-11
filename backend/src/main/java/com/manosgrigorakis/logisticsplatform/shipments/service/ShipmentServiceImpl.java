@@ -15,10 +15,14 @@ import com.manosgrigorakis.logisticsplatform.common.utils.EntityChangeTracker;
 import com.manosgrigorakis.logisticsplatform.quotes.enums.QuoteStatus;
 import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
 import com.manosgrigorakis.logisticsplatform.quotes.repository.QuoteRepository;
+import com.manosgrigorakis.logisticsplatform.shipments.ShipmentStatusException;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.ShipmentFilterRequest;
-import com.manosgrigorakis.logisticsplatform.shipments.dto.ShipmentRequestDTO;
-import com.manosgrigorakis.logisticsplatform.shipments.dto.ShipmentResponseDTO;
-import com.manosgrigorakis.logisticsplatform.shipments.dto.UpdateShipmentRequestDTO;
+import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.ShipmentRequestDTO;
+import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.ShipmentResponseDTO;
+import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.UpdateShipmentRequestDTO;
+import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.UpdateShipmentStatusRequestDTO;
+import com.manosgrigorakis.logisticsplatform.shipments.enums.ShipmentStatus;
+import com.manosgrigorakis.logisticsplatform.shipments.mapper.ShipmentCargoMapper;
 import com.manosgrigorakis.logisticsplatform.shipments.mapper.ShipmentMapper;
 import com.manosgrigorakis.logisticsplatform.shipments.model.Shipment;
 import com.manosgrigorakis.logisticsplatform.shipments.model.Vehicle;
@@ -51,6 +55,7 @@ public class ShipmentServiceImpl implements ShipmentService {
     private final UserRepository userRepository;
     private final VehicleRepository vehicleRepository;
     private final AuditService auditService;
+    private final CmrDocumentService cmrDocumentService;
 
     private final DocumentNumberGenerator documentNumberGenerator;
 
@@ -63,14 +68,15 @@ public class ShipmentServiceImpl implements ShipmentService {
             VehicleRepository vehicleRepository,
             DocumentNumberGenerator documentNumberGenerator,
             AuditService auditService,
-            CmrDocumentService cmrDocumentService)
-    {
+            CmrDocumentService cmrDocumentService
+    ) {
         this.shipmentRepository = shipmentRepository;
         this.quoteRepository = quoteRepository;
         this.userRepository = userRepository;
         this.vehicleRepository = vehicleRepository;
         this.documentNumberGenerator = documentNumberGenerator;
         this.auditService = auditService;
+        this.cmrDocumentService = cmrDocumentService;
     }
 
     @Override
@@ -185,9 +191,52 @@ public class ShipmentServiceImpl implements ShipmentService {
         shipment.setNotes(dto.getNotes());
 
         validators(shipment);
+
+        // Clear old shipment cargos
+        shipment.getShipmentCargos().clear();
+
+        // Add updated shipments cargos
+        dto.getCargoItems().forEach(item ->
+                shipment.addShipmentCargoItem(ShipmentCargoMapper.toEntity(item))
+        );
+
         Shipment savedShipment = shipmentRepository.save(shipment);
         this.logUpdatedShipment(oldShipment, shipment);
         return ShipmentMapper.toResponse(savedShipment);
+    }
+
+    @Transactional
+    @Override
+    public void updateShipmentStatus(Long id, UpdateShipmentStatusRequestDTO dto) {
+        Shipment shipment = findByIdOrThrow(id, shipmentRepository::findById, "Shipment");
+        Shipment oldShipment = new Shipment(shipment);
+
+        try {
+            shipment.changeStatusTo(dto.status());
+        } catch (ShipmentStatusException e) {
+            log.warn("Failed to update Shipment status with number {} from {} to {}",
+                    shipment.getNumber(), oldShipment.getStatus(), shipment.getStatus()
+            );
+            throw new ConflictException(
+                    e.getMessage(),
+                    e.getErrorCode(),
+                    Map.of(
+                            "currentStatus", shipment.getStatus(),
+                            "desiredStatus", dto.status()
+                    ));
+        }
+
+        this.shipmentRepository.save(shipment);
+        log.info("Shipment status updated with number {} from {} to {}",
+                shipment.getNumber(), oldShipment.getStatus(), shipment.getStatus())
+        ;
+
+        logShipmentStatusUpdate(oldShipment, shipment);
+
+        // Generate CMR
+        if (shipment.getStatus() == ShipmentStatus.DISPATCHED) {
+                cmrDocumentService.createCmrDocument(shipment.getQuote(), shipment);
+        }
     }
 
     @Override
@@ -318,6 +367,31 @@ public class ShipmentServiceImpl implements ShipmentService {
                 AuditEventDTO.builder()
                         .entityType("Shipment")
                         .entityId(updatedShipment.getId())
+                        .changes(changes)
+                        .action(AuditAction.UPDATE)
+                        .build()
+        );
+    }
+
+    /**
+     * Logs the Shipment status update operation into the audit logging system
+     * @param oldShipment The old {@link Shipment}
+     * @param updatedShipment The updated {@link Shipment}
+     */
+    private void logShipmentStatusUpdate(Shipment oldShipment, Shipment updatedShipment) {
+        Map<String, Object> changes = new HashMap<>();
+
+        changes.put("status", Map.of(
+                        "old", oldShipment.getStatus(),
+                        "updated", updatedShipment.getStatus()
+                )
+        );
+
+        this.auditService.log(
+                AuditEventDTO.builder()
+                        .entityType("Shipment")
+                        .entityId(updatedShipment.getId())
+                        .notes("Shipment Number: " + updatedShipment.getNumber())
                         .changes(changes)
                         .action(AuditAction.UPDATE)
                         .build()

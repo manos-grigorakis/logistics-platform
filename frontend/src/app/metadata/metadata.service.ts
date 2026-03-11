@@ -13,6 +13,8 @@ export class MetadataService {
 
   public quoteStatuses$ = new BehaviorSubject<string[]>([]);
   public quoteItemUnits$ = new BehaviorSubject<string[]>([]);
+  public cargoItemUnits$ = new BehaviorSubject<string[]>([]);
+
   public shipmentStatuses$ = this.shipmentStatusesSubject$.asObservable();
 
   public fetchCustomersTypes(): Observable<Array<string>> {
@@ -46,5 +48,14 @@ export class MetadataService {
     });
 
     return this.shipmentStatuses$;
+  }
+
+  public fetchCargoItemsUnits(): void {
+    if (this.cargoItemUnits$.value.length > 0) return;
+
+    this.http.get<string[]>(`${environment.apiUrl}/metadata/shipment-cargo-units`).subscribe({
+      next: (res) => this.cargoItemUnits$.next(res),
+      error: (err) => console.error('Failed to fetch metadata for cargo items units', err),
+    });
   }
 }

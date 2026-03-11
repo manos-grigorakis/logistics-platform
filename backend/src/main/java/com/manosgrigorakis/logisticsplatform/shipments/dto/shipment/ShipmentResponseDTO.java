@@ -1,15 +1,17 @@
-package com.manosgrigorakis.logisticsplatform.shipments.dto;
+package com.manosgrigorakis.logisticsplatform.shipments.dto.shipment;
 
+import com.manosgrigorakis.logisticsplatform.shipments.dto.shipmentCargo.ShipmentCargoResponseDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.summary.QuoteSummaryDTO;
+import com.manosgrigorakis.logisticsplatform.shipments.dto.summary.ShipmentStatusSummaryDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.summary.UserSummaryDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.summary.VehicleSummaryDTO;
-import com.manosgrigorakis.logisticsplatform.shipments.enums.ShipmentStatus;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record ShipmentResponseDTO(
         Long id,
-        ShipmentStatus status,
+        ShipmentStatusSummaryDTO status,
         String number,
         LocalDateTime pickup,
         String notes,
@@ -19,6 +21,7 @@ public record ShipmentResponseDTO(
         UserSummaryDTO driver,
         UserSummaryDTO createdByUser,
         VehicleSummaryDTO truck,
-        VehicleSummaryDTO trailer
+        VehicleSummaryDTO trailer,
+        List<ShipmentCargoResponseDTO> cargoItems
 )
 { }

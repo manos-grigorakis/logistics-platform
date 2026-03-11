@@ -6,8 +6,8 @@ import com.manosgrigorakis.logisticsplatform.audit.service.AuditService;
 import com.manosgrigorakis.logisticsplatform.common.exception.DuplicateEntryException;
 import com.manosgrigorakis.logisticsplatform.common.exception.ResourceNotFoundException;
 import com.manosgrigorakis.logisticsplatform.common.utils.EntityChangeTracker;
-import com.manosgrigorakis.logisticsplatform.shipments.dto.VehicleRequestDTO;
-import com.manosgrigorakis.logisticsplatform.shipments.dto.VehicleResponseDTO;
+import com.manosgrigorakis.logisticsplatform.shipments.dto.vehicle.VehicleRequestDTO;
+import com.manosgrigorakis.logisticsplatform.shipments.dto.vehicle.VehicleResponseDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.mapper.VehicleMapper;
 import com.manosgrigorakis.logisticsplatform.shipments.model.Vehicle;
 import com.manosgrigorakis.logisticsplatform.shipments.repository.VehicleRepository;
@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @Service
 public class VehicleServiceImpl implements VehicleService{

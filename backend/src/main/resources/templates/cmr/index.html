@@ -369,9 +369,29 @@
     <!-- ROW 4: Cargo header -->
     <tr class="sec-header-row">
       <td colspan="2">07 — Περιγραφή Φορτίου / Cargo Description</td>
+      <!-- ROW 5: Cargo table -->
+    <tr>
+      <td colspan="2">
+        <table class="cargo-table">
+          <thead>
+          <tr>
+            <th style="width: 40%;">Περιγραφή / Description</th>
+            <th style="width: 15%; text-align: center;">Τεμάχια / Pkgs</th>
+            <th style="width: 15%; text-align: center;">Μονάδα / Unit</th>
+            <th style="width: 15%; text-align: center;">Βάρος / Weight (kg)</th>
+            <th style="width: 15%; text-align: center;">Όγκος / Vol. (m³)</th>
+          </tr>
+          </thead>
+          <tbody>
+          ${cargoRows}
+          </tbody>
+        </table>
+      </td>
     </tr>
 
-    <!-- ROW 5: Vehicles -->
+    </tr>
+
+    <!-- ROW 6: Vehicles -->
     <tr class="sec-header-row">
       <td colspan="2">08 — Στοιχεία Οχήματος / Vehicle Details</td>
     </tr>
@@ -388,7 +408,7 @@
       </td>
     </tr>
 
-    <!-- ROW 6: Special instructions -->
+    <!-- ROW 7: Special instructions -->
     <tr class="sec-header-row">
       <td colspan="2">09 — Ειδικές Οδηγίες / Special Instructions</td>
     </tr>

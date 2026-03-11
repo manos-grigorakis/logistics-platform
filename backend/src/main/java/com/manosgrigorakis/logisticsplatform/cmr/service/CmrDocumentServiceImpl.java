@@ -104,11 +104,7 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
 
         String presignedUrl = fileStorageService.createPresignedUrl(this.bucketPathCmr + cmrDocument.getNumber());
         cmrDocument.setFileUrl(presignedUrl);
-
-        this.cmrDocumentRepository.save(cmrDocument);
-        log.info("CMR Document saved with number {}", cmrDocument.getNumber());
-        logCmrDocument(cmrDocument);
-
+        
         // Generate PDF
         byte[] cmrDocumentPdf = cmrDocumentPdfGenerator.generatePdf(
                 new CmrDocumentPdfRequestDTO(quote, shipment, cmrDocument)
@@ -120,6 +116,10 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
                 cmrDocumentPdf,
                 "application/pdf"
         );
+
+        this.cmrDocumentRepository.save(cmrDocument);
+        log.info("CMR Document saved with number {}", cmrDocument.getNumber());
+        logCmrDocument(cmrDocument);
     }
 
     @Override

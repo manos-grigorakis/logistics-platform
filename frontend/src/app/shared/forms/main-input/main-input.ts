@@ -7,11 +7,12 @@ import {
   ValidationErrors,
   Validator,
 } from '@angular/forms';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-main-input',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [],
+  imports: [NgClass],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -39,6 +40,8 @@ export class MainInput implements ControlValueAccessor, Validator {
   public readonly disabled = signal(false);
   public readonly withErrors = signal(false);
   public readonly patternErrorMessage = input<string>('');
+  public readonly displayErrors = input<boolean>(true);
+  public readonly highlightBorders = input<boolean>(false);
 
   public control: AbstractControl | null = null;
 

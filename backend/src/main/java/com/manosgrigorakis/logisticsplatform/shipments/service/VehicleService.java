@@ -1,7 +1,7 @@
 package com.manosgrigorakis.logisticsplatform.shipments.service;
 
-import com.manosgrigorakis.logisticsplatform.shipments.dto.VehicleRequestDTO;
-import com.manosgrigorakis.logisticsplatform.shipments.dto.VehicleResponseDTO;
+import com.manosgrigorakis.logisticsplatform.shipments.dto.vehicle.VehicleRequestDTO;
+import com.manosgrigorakis.logisticsplatform.shipments.dto.vehicle.VehicleResponseDTO;
 
 import java.util.List;
 

@@ -84,8 +84,9 @@ body {
 /* Ng Select */
 /* Base container */
 .tw-select .ng-select-container {
-  @apply rounded border border-gray-300 bg-white px-4 py-2 text-gray-700;
+  @apply rounded border border-gray-300 bg-white px-4 text-gray-700;
   @apply focus-within:border-primary-200 focus:ring focus:outline-none;
+  height: 2.6rem !important;
 }
 
 /* Placeholder */

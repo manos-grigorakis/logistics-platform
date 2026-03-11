@@ -1,7 +1,10 @@
+import { CargoItems } from './cargo-items';
+import { ShipmentStatus } from './shipment-status';
+
 export interface Shipment {
   id: number;
   number: string;
-  status: string;
+  status: ShipmentStatus;
   pickup: string;
   notes: string;
   createdAt: string;
@@ -28,4 +31,5 @@ export interface Shipment {
     plate: string;
     type: string;
   };
+  cargoItems?: CargoItems[];
 }

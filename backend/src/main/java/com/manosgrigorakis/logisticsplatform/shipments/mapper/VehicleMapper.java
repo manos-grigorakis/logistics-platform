@@ -1,6 +1,6 @@
 package com.manosgrigorakis.logisticsplatform.shipments.mapper;
 
-import com.manosgrigorakis.logisticsplatform.shipments.dto.VehicleResponseDTO;
+import com.manosgrigorakis.logisticsplatform.shipments.dto.vehicle.VehicleResponseDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.model.Vehicle;
 
 public class VehicleMapper {

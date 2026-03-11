@@ -27,8 +27,8 @@
         <td class="px-2 py-4">
           <span
             class="rounded border px-2 capitalize"
-            [ngClass]="shipmentStatusBadgeColor(shipment.status)"
-            >{{ shipment.status }}</span
+            [ngClass]="shipmentStatusBadgeColor(shipment.status.label)"
+            >{{ shipment.status.label }}</span
           >
         </td>
         <td class="px-2 py-4">{{ shipment.quote.number }}</td>
@@ -37,11 +37,15 @@
         <td class="px-2 py-4">{{ shipment.trailer?.plate || '-' }}</td>
 
         <td class="flex gap-2 px-2 py-4">
-          <a
-            [routerLink]="['edit-shipment', shipment.id]"
-            class="text-fg-brand font-medium hover:underline"
-            >Edit</a
-          >
+          @if (shipment.status.isEditable) {
+            <a
+              [routerLink]="['edit-shipment', shipment.id]"
+              class="text-fg-brand font-medium hover:underline"
+              >Edit</a
+            >
+          } @else {
+            <span class="text-gray-400">-</span>
+          }
         </td>
       </tr>
     } @empty {

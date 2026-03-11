@@ -1,7 +1,7 @@
 package com.manosgrigorakis.logisticsplatform.shipments.controller;
 
-import com.manosgrigorakis.logisticsplatform.shipments.dto.VehicleRequestDTO;
-import com.manosgrigorakis.logisticsplatform.shipments.dto.VehicleResponseDTO;
+import com.manosgrigorakis.logisticsplatform.shipments.dto.vehicle.VehicleRequestDTO;
+import com.manosgrigorakis.logisticsplatform.shipments.dto.vehicle.VehicleResponseDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.service.VehicleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

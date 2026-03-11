@@ -49,4 +49,10 @@ export class ShipmentsService {
   public updateShipment(id: number, payload: ShipmentPayload): Observable<ShipmentsResponse> {
     return this.http.put<ShipmentsResponse>(`${environment.apiUrl}/shipments/${id}`, payload);
   }
+
+  public updateShipmentStatus(id: number, status: string): Observable<void> {
+    return this.http.patch<void>(`${environment.apiUrl}/shipments/${id}/status`, {
+      status: status,
+    });
+  }
 }

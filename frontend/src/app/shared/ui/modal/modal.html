@@ -28,18 +28,21 @@
         <div class="mt-6 flex w-full gap-4 md:gap-8">
           <button
             type="button"
-            class="bg-danger hover:bg-danger-dark focus:ring-danger-light box-border flex-1 rounded-md px-4 py-2 text-sm leading-5 font-medium text-white shadow-xs hover:cursor-pointer focus:ring-0 focus:outline-none"
+            class="box-border flex-1 rounded-md px-4 py-2 text-sm leading-5 font-medium text-white shadow-xs hover:cursor-pointer focus:ring-0 focus:outline-none"
+            [ngClass]="confirmButtonColorContainer"
             (click)="onConfirmClick()"
           >
             {{ confirmButtonText }}
           </button>
-          <button
-            type="button"
-            class="text-body hover:text-heading box-border flex-1 rounded-md bg-gray-300 px-4 py-2 text-sm leading-5 font-medium shadow-xs hover:cursor-pointer hover:bg-gray-400 focus:ring-0 focus:outline-none"
-            (click)="onCancelClick()"
-          >
-            {{ cancelButtonText }}
-          </button>
+          @if (showCancelButton) {
+            <button
+              type="button"
+              class="text-body hover:text-heading box-border flex-1 rounded-md bg-gray-300 px-4 py-2 text-sm leading-5 font-medium shadow-xs hover:cursor-pointer hover:bg-gray-400 focus:ring-0 focus:outline-none"
+              (click)="onCancelClick()"
+            >
+              {{ cancelButtonText }}
+            </button>
+          }
         </div>
       </div>
     </div>

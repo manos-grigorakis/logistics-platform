@@ -13,10 +13,12 @@ export class Modal {
   @Input() icon: string = 'lucideInfo';
   @Input() iconSize: string = '28';
   @Input() color: 'info' | 'success' | 'warning' | 'danger' = 'info';
+  @Input() confirmButtonColor: 'info' | 'success' | 'warning' | 'danger' = 'danger';
   @Input() header?: string;
   @Input() message?: string;
   @Input() confirmButtonText: string = "Yes, I'm sure";
   @Input() cancelButtonText: string = 'No, cancel';
+  @Input() showCancelButton: boolean = true;
 
   @Output() closeModalClick = new EventEmitter<void>();
   @Output() confirmClick = new EventEmitter<void>();
@@ -69,6 +71,19 @@ export class Modal {
       case 'info':
       default:
         return 'var(--color-info)';
+    }
+  }
+
+  public get confirmButtonColorContainer(): string {
+    switch (this.confirmButtonColor) {
+      case 'success':
+        return 'bg-success hover:bg-success-dark focus:ring-success-light';
+      case 'warning':
+        return 'bg-warning hover:bg-warning-dark focus:ring-warning-light';
+      case 'info':
+        return 'bg-info hover:bg-info-dark focus:ring-info-light';
+      case 'danger':
+        return 'bg-danger hover:bg-danger-dark focus:ring-danger-light';
     }
   }
 }

@@ -6,6 +6,7 @@ import com.manosgrigorakis.logisticsplatform.customers.model.Customer;
 import com.manosgrigorakis.logisticsplatform.infrastructure.document.dto.CmrDocumentPdfRequestDTO;
 import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
 import com.manosgrigorakis.logisticsplatform.shipments.model.Shipment;
+import com.manosgrigorakis.logisticsplatform.shipments.model.ShipmentCargo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
@@ -50,6 +51,7 @@ public final class CmrDocumentPdfGenerator extends BasePdfGenerator<CmrDocumentP
         String trailerPlate = shipment.getTrailer() != null ? shipment.getTrailer().getPlate() : "-";
         String trailerBrand = shipment.getTrailer() != null ? handleNullFields(shipment.getTrailer().getBrand()) : "-";
         String shipmentNotes = handleNullFields(shipment.getNotes());
+        String cargoItemsRows = buildCargoItemsRows(shipment);
 
         // CMR document
         String cmrNumber = cmrDocument.getNumber();
@@ -80,6 +82,7 @@ public final class CmrDocumentPdfGenerator extends BasePdfGenerator<CmrDocumentP
                 .replace("${trailerPlate}", trailerPlate)
                 .replace("${trailerBrand}", trailerBrand)
                 .replace("${notes}", shipmentNotes)
+                .replace("${cargoRows}", cargoItemsRows)
                 .replace("${issueDate}", formattedIssuedDate)
                 .replace("${cmrNumber}", cmrNumber)
                 .replace("${cmrStatus}", cmrStatus.toString());
@@ -90,5 +93,31 @@ public final class CmrDocumentPdfGenerator extends BasePdfGenerator<CmrDocumentP
     @Override
     protected Resource getTemplate() {
         return cmrHtmlTemplate;
+    }
+
+    /**
+     * Builds the HTML table rows for each cargo item
+     * @param shipment The shipment which will be used to display its cargo items
+     * @return A concatenated {@link Strinng} of table rows
+     */
+    private String buildCargoItemsRows(Shipment shipment) {
+        StringBuilder rows = new StringBuilder();
+
+        for (ShipmentCargo item : shipment.getShipmentCargos()) {
+            String description = item.getDescription();
+            String quantity = item.getQuantity().toString();
+            String unit = item.getUnit().toString();
+            String weightKg = formatDecimal(item.getWeightKg());
+            String volumeM3 = handleNullFields(formatDecimal(item.getVolumeM3()));
+
+            rows.append("<tr>")
+                    .append("<td class=\"nowrap\">").append(escapeHtml(description)).append("</td>")
+                    .append("<td style=\"text-align: center;\">").append(escapeHtml(quantity)).append("</td>")
+                    .append("<td style=\"text-align: center;\">").append(escapeHtml(unit)).append("</td>")
+                    .append("<td style=\"text-align: center;\">").append(escapeHtml(weightKg)).append("</td>")
+                    .append("<td style=\"text-align: center;\">").append(escapeHtml(volumeM3)).append("</td>")
+                    .append("</tr>");
+        }
+        return rows.toString();
     }
 }

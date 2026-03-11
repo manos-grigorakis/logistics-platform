@@ -14,6 +14,32 @@
   <app-loading-spinner />
 }
 
+<!-- Shipment Status Confirm Modal -->
+<app-modal
+  icon="lucideAlertTriangle"
+  color="warning"
+  header="Update Shipment Status"
+  [isEnabled]="isShipmentStatusConfirmModalOpen"
+  [message]="confirmShipmentStatusModalMessage"
+  (confirmClick)="onConfirmShipmentStatusModal()"
+  (closeModalClick)="onCloseStatusConfirmModal()"
+  (cancelClick)="onCloseStatusConfirmModal()"
+/>
+
+<!-- Shipment Status Error Modal -->
+<app-modal
+  icon="lucideAlertTriangle"
+  color="warning"
+  header="Error Updating Shipment Status"
+  confirmButtonText="Cancel"
+  confirmButtonColor="warning"
+  [isEnabled]="isShipmentStatusErrorModalOpen"
+  [message]="changeStatusError"
+  [showCancelButton]="false"
+  (closeModalClick)="onCloseStatusErrorModal()"
+  (confirmClick)="onCloseStatusErrorModal()"
+/>
+
 <div class="flex flex-col" [ngClass]="{ 'min-h-[630px]': shipments.length > 0 }">
   @if (errorMessage) {
     <app-error-alert [errorMessage]="errorMessage" />
@@ -24,7 +50,13 @@
   } @else {
     <div class="flex flex-1 flex-col gap-4 px-2">
       @for (shipment of shipments; track shipment.id) {
-        <app-shipments-card [shipment]="shipment" />
+        <app-shipments-card
+          [shipment]="shipment"
+          [shipmentStatuses]="statuses"
+          [editingShipmentId]="editingShipmentId"
+          [pendingShipmentStatus]="pendingShipmentStatus"
+          (onStatus)="onShipmentStatusUpdate($event)"
+        />
       }
     </div>
 

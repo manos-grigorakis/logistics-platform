@@ -3,7 +3,8 @@ package com.manosgrigorakis.logisticsplatform.metadata;
 import com.manosgrigorakis.logisticsplatform.customers.enums.CustomerType;
 import com.manosgrigorakis.logisticsplatform.quotes.enums.QuoteItemUnit;
 import com.manosgrigorakis.logisticsplatform.quotes.enums.QuoteStatus;
-import com.manosgrigorakis.logisticsplatform.shipments.dto.ShipmentStatusResponse;
+import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.ShipmentStatusResponse;
+import com.manosgrigorakis.logisticsplatform.shipments.enums.ShipmentCargoUnit;
 import com.manosgrigorakis.logisticsplatform.shipments.enums.ShipmentStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -55,5 +56,13 @@ public class MetadataRestController {
                 .map(status -> new ShipmentStatusResponse(
                         status.getLabel(), status.isEditable(), status.isFinalized()
                 )).toList();
+    }
+
+    @Operation(summary = "ENUM Shipment Cargo Unit", description = "List of shipment cargo units")
+    @ApiResponse(responseCode = "200", description = "List of shipment cargo units")
+    @GetMapping("/shipment-cargo-units")
+    public List<String> getShipmentCargosUnits() {
+        return Arrays.stream(ShipmentCargoUnit.values())
+                .map(Enum::name).toList();
     }
 }

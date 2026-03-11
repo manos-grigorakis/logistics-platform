@@ -1,6 +1,7 @@
 package com.manosgrigorakis.logisticsplatform.shipments.model;
 
 import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
+import com.manosgrigorakis.logisticsplatform.shipments.ShipmentStatusException;
 import com.manosgrigorakis.logisticsplatform.shipments.enums.ShipmentStatus;
 import com.manosgrigorakis.logisticsplatform.shipments.enums.VehicleType;
 import com.manosgrigorakis.logisticsplatform.users.model.User;
@@ -11,12 +12,14 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "shipments")
 @Getter
 @Setter
-@ToString(exclude = {"quote", "driver", "createdByUser", "truck", "trailer"})
+@ToString(exclude = {"quote", "driver", "createdByUser", "truck", "trailer", "shipmentCargos"})
 public class Shipment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,6 +64,9 @@ public class Shipment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trailer_id")
     private Vehicle trailer;
+
+    @OneToMany(mappedBy = "shipment", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ShipmentCargo> shipmentCargos = new ArrayList<>();
 
     public Shipment() {
     }
@@ -108,13 +114,13 @@ public class Shipment {
         );
     }
 
-    @PrePersist()
-    public void onCreate() {
+    @PrePersist
+    private void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
 
-    @PreUpdate()
-    public void onUpdate() {
+    @PreUpdate
+    private void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
 
@@ -138,5 +144,84 @@ public class Shipment {
 
     public boolean hasTrailerType() {
         return trailer != null && trailer.getType() == VehicleType.TRAILER;
+    }
+
+    public void addShipmentCargoItem(ShipmentCargo cargoItem) {
+        this.shipmentCargos.add(cargoItem);
+        cargoItem.setShipment(this);
+    }
+
+    /**
+     * Checks whenever the {@link Shipment} status can change from its current value,
+     * to the given according to the business rules. </br>
+     * Rules: </br>
+     *  Allowed: </br>
+     *      - {@code PENDING -> DISPATCHED} Only if there are cargo items, driver, truck & trailer
+     *      - {@code DISPATCHED -> DELIVERED}
+     *  Not Allowed: </br>
+     *      - Finalized statuses cannot be changed
+     * @param status The desired status of the target
+     * @return {@code true} if status can be changed, otherwise {@code false}
+     */
+    public boolean canChangeStatusTo(ShipmentStatus status) {
+        ShipmentStatus currentStatus = this.status;
+
+        if (currentStatus.isFinalized()) return false;
+
+        return switch (currentStatus) {
+            case PENDING -> status == ShipmentStatus.DISPATCHED
+                    && !this.shipmentCargos.isEmpty()
+                    && this.driver != null
+                    && this.truck != null
+                    && this.trailer != null;
+            case DISPATCHED -> status == ShipmentStatus.DELIVERED;
+            default -> false;
+        };
+    }
+
+    /**
+     * Change the {@link Shipment} status to the given target applying business rules.
+     * Use {@link #canChangeStatusTo(ShipmentStatus)} to apply the rules.
+     * @param status The desired status of the target.
+     * @throws ShipmentStatusException If the transition is not allowed due to the business rules.
+     */
+    public void changeStatusTo(ShipmentStatus status) throws ShipmentStatusException {
+        if (this.status.isFinalized()) {
+            throw new ShipmentStatusException("Shipment status is finalized and cannot be changed", "FINALIZED_STATUS");
+        }
+
+        if (status == ShipmentStatus.DISPATCHED) {
+            if (this.shipmentCargos.isEmpty()) {
+                throw new ShipmentStatusException(
+                        "Shipment status cannot be dispatched without cargo items", "SHIPMENT_CARGOS_REQUIRED"
+                );
+            }
+
+            if (this.driver == null) {
+                throw new ShipmentStatusException(
+                        "Shipment status cannot be dispatched without assigned driver", "DRIVER_REQUIRED"
+                );
+            }
+
+            if (this.truck == null) {
+                throw new ShipmentStatusException(
+                        "Shipment status cannot be dispatched without assigned truck", "TRUCK_REQUIRED"
+                );
+            }
+
+            if (this.trailer == null) {
+                throw new ShipmentStatusException(
+                        "Shipment status cannot be dispatched without assigned trailer", "TRAILER_REQUIRED"
+                );
+            }
+        }
+
+        if(!canChangeStatusTo(status)) {
+            throw new ShipmentStatusException(
+                    "Invalid status transition: " + this.status + " -> " + status, "INVALID_TRANSITION"
+                    );
+        }
+
+        this.status = status;
     }
 }

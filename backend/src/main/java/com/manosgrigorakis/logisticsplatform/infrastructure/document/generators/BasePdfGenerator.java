@@ -176,6 +176,18 @@ public abstract class BasePdfGenerator<T extends PdfRequest> {
     }
 
     /**
+     * Formats the passed parameter into two decimal format, if parameter is {@code null}
+     * returns {@code '-'}
+     * @param input The input which will be formatted in two decimal format (e.g. 20 -> 20.00)
+     * @return The formatted input, or if input is null {@code '-'}
+     */
+    protected String formatDecimal(BigDecimal input) {
+        if (input == null) return "-";
+
+        return String.format("%.2f", input);
+    }
+
+    /**
      * Handles null fields by replacing null with a {@code -},
      * preventing for Null Pointer Exception
      * @param field The actual field to be checked for null
