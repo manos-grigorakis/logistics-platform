@@ -6,6 +6,13 @@
   <app-error-alert [errorMessage]="errorMessage" />
 }
 
+<app-modal-file
+  [isEnabled]="showCmrModal"
+  [pdfUrl]="cmrDocumentUrl"
+  [pdfName]="cmrPdfName"
+  (closeModal)="closeCmrDocumentClick()"
+/>
+
 @if (shipment) {
   <section class="mt-4">
     <div class="flex flex-wrap items-center justify-between gap-4">
@@ -99,6 +106,59 @@
       <p class="w-full max-w-lg rounded border border-zinc-300 py-2 pl-2">
         {{ shipment.notes || 'No notes available' }}
       </p>
+    </div>
+
+    <!-- CMR Document -->
+    <div class="mt-4">
+      <div class="mb-3 flex items-center gap-4">
+        <h3 class="text-zinc-500 uppercase">CMR Document</h3>
+        <div class="bg-primary-500 h-0.5 w-1/2 sm:w-1/6"></div>
+      </div>
+      @if (cmrDocument) {
+        <div
+          class="grid grid-cols-1 divide-x divide-zinc-300 overflow-hidden rounded border border-zinc-300 sm:grid-cols-2 lg:grid-cols-6"
+        >
+          <div class="border-b border-zinc-300 p-5 text-center lg:border-b-0">
+            <p class="mb-1 text-sm text-zinc-500 uppercase">CMR Number</p>
+            <p class="cursor-pointer hover:underline" (click)="openCmrDocumentClick()">
+              {{ cmrDocument.number }}
+            </p>
+          </div>
+          <div class="border-b border-zinc-300 p-5 text-center lg:border-b-0">
+            <p class="mb-1 text-sm text-zinc-500 uppercase">Status</p>
+            <span
+              class="rounded border p-1 text-sm capitalize"
+              [ngClass]="cmrDocumentStatusBadgeColor(cmrDocument.status)"
+              >{{ cmrDocument.status }}
+            </span>
+          </div>
+          <div class="border-b border-zinc-300 p-5 text-center lg:border-b-0">
+            <p class="mb-1 text-sm text-zinc-500 uppercase">Signed By</p>
+            <p>{{ cmrDocument.signedBy || '-' }}</p>
+          </div>
+          <div class="border-b border-zinc-300 p-5 text-center lg:border-b-0">
+            <p class="mb-1 text-sm text-zinc-500 uppercase">Signed At</p>
+            <p>{{ (cmrDocument.signedAt | date) || '-' }}</p>
+          </div>
+          <div class="border-b border-zinc-300 p-5 text-center lg:border-b-0">
+            <p class="mb-1 text-sm text-zinc-500 uppercase">Created At</p>
+            <p>{{ cmrDocument.createdAt | date }}</p>
+          </div>
+
+          <div class="border-b border-zinc-300 p-5 text-center lg:border-b-0">
+            <p class="mb-1 text-sm text-zinc-500 uppercase">Action</p>
+            <div class="flex justify-center">
+              <app-rounded-icon-button
+                icon="lucideEye"
+                iconSize="14"
+                (clicked)="openCmrDocumentClick()"
+              />
+            </div>
+          </div>
+        </div>
+      } @else {
+        <p class="rounded border border-zinc-300 p-4 text-center text-zinc-400">No CMR Document</p>
+      }
     </div>
   </section>
 }

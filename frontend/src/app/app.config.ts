@@ -35,6 +35,7 @@ import {
   lucideFileText,
   lucideDownload,
   lucideFileBox,
+  lucideEye,
 } from '@ng-icons/lucide';
 import { JwtHeadersInterceptor } from './auth/interceptors/jwt-headers.interceptor';
 
@@ -73,6 +74,7 @@ export const appConfig: ApplicationConfig = {
       lucideFileText,
       lucideDownload,
       lucideFileBox,
+      lucideEye,
     }),
 
     provideNgIconsConfig({
