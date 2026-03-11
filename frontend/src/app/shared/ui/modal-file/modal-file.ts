@@ -21,6 +21,7 @@ export class ModalFile {
   @Input() pdfUrl?: string;
   @Input() isEnabled?: boolean;
   @Input() pdfName: string = '';
+  @Input() showSendViaMailButton: boolean = true;
   @Output() closeModal = new EventEmitter<void>();
   @Output() onSendMail = new EventEmitter<void>();
 

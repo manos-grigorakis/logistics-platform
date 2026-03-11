@@ -3,10 +3,8 @@ package com.manosgrigorakis.logisticsplatform.shipments.service;
 import com.manosgrigorakis.logisticsplatform.common.dto.PageFilterRequest;
 import com.manosgrigorakis.logisticsplatform.common.dto.SortFilterRequest;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.ShipmentFilterRequest;
-import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.ShipmentRequestDTO;
-import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.ShipmentResponseDTO;
-import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.UpdateShipmentRequestDTO;
-import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.UpdateShipmentStatusRequestDTO;
+import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.*;
+import com.manosgrigorakis.logisticsplatform.shipments.dto.summary.CmrDocumentSummary;
 import org.springframework.data.domain.Page;
 
 public interface ShipmentService {
@@ -21,4 +19,6 @@ public interface ShipmentService {
     void updateShipmentStatus(Long id, UpdateShipmentStatusRequestDTO dto);
 
     Page<ShipmentResponseDTO> getShipmentsByDriver(Long driverId, PageFilterRequest pageFilter, SortFilterRequest sortFilter);
+
+    CmrDocumentSummary getCmrDocumentByShipmentId(Long shipmentId);
 }

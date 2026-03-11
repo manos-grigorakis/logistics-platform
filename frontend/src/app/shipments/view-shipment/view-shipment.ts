@@ -6,10 +6,22 @@ import { DatePipe, NgClass, DecimalPipe } from '@angular/common';
 import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
 import { shipmentStatusBadgeColor } from '../utils/shipment-status-badge-color.utils';
 import { ErrorAlert } from '../../shared/ui/error-alert/error-alert';
+import { finalize } from 'rxjs';
+import { CmrDocumentSummaryResponse } from '../models/cmr-document-summary-response';
+import { ModalFile } from '../../shared/ui/modal-file/modal-file';
+import { RoundedIconButton } from '../../shared/forms/rounded-icon-button/rounded-icon-button';
 
 @Component({
   selector: 'app-view-shipment',
-  imports: [LoadingSpinner, DatePipe, NgClass, ErrorAlert, DecimalPipe],
+  imports: [
+    LoadingSpinner,
+    DatePipe,
+    NgClass,
+    ErrorAlert,
+    DecimalPipe,
+    ModalFile,
+    RoundedIconButton,
+  ],
   templateUrl: './view-shipment.html',
   styleUrl: './view-shipment.css',
 })
@@ -21,15 +33,43 @@ export class ViewShipment implements OnInit {
   public isLoading: boolean = false;
   public errorMessage?: string = undefined;
 
+  // CMR Document
+  public cmrDocument?: CmrDocumentSummaryResponse;
+  public showCmrModal: boolean = false;
+  public cmrDocumentUrl!: string;
+  public cmrPdfName!: string;
+
   ngOnInit(): void {
     let tempId = this.route.snapshot.paramMap.get('id');
 
     if (!tempId) return;
     this.fetchShipment(parseInt(tempId));
+    this.fetchCmrDocumentsByShipment(parseInt(tempId));
   }
 
   public shipmentStatusBadgeColor(status: string): string {
     return shipmentStatusBadgeColor(status);
+  }
+
+  public cmrDocumentStatusBadgeColor(status: string): string {
+    switch (status) {
+      case 'generated':
+        return 'bg-success-light text-success-dark';
+      case 'signed':
+        return 'bg-primary-100 text-primary-800';
+      case 'cancelled':
+        return 'bg-warning-light text-warning-dark';
+      default:
+        return 'bg-slate-200 text-slate-700';
+    }
+  }
+
+  public openCmrDocumentClick(): void {
+    this.showCmrModal = true;
+  }
+
+  public closeCmrDocumentClick(): void {
+    this.showCmrModal = false;
   }
 
   private fetchShipment(id: number): void {
@@ -53,5 +93,26 @@ export class ViewShipment implements OnInit {
         }
       },
     });
+  }
+
+  private fetchCmrDocumentsByShipment(shipmentId: number): void {
+    this.isLoading = true;
+    this.errorMessage = undefined;
+
+    this.shipmentsService
+      .getCmrDocumentByShipmentId(shipmentId)
+      .pipe(finalize(() => (this.isLoading = false)))
+      .subscribe({
+        next: (res) => {
+          this.cmrDocument = res;
+          this.cmrDocumentUrl = this.cmrDocument.fileUrl;
+          this.cmrPdfName = this.cmrDocument.number;
+        },
+        error: (err) => {
+          if (err.status === 500) {
+            this.errorMessage = 'Server error. Please try again';
+          }
+        },
+      });
   }
 }

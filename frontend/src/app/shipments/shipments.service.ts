@@ -7,6 +7,7 @@ import { ShipmentParams } from './models/shipment-params';
 import { addHttpParam } from '../shared/utils/add-http-params.util';
 import { ShipmentPayload } from './models/shipment-payload';
 import { Shipment } from './models/shipment';
+import { CmrDocumentSummaryResponse } from './models/cmr-document-summary-response';
 
 @Injectable({
   providedIn: 'root',
@@ -54,5 +55,11 @@ export class ShipmentsService {
     return this.http.patch<void>(`${environment.apiUrl}/shipments/${id}/status`, {
       status: status,
     });
+  }
+
+  public getCmrDocumentByShipmentId(shipmentId: number): Observable<CmrDocumentSummaryResponse> {
+    return this.http.get<CmrDocumentSummaryResponse>(
+      `${environment.apiUrl}/shipments/${shipmentId}/cmr`,
+    );
   }
 }

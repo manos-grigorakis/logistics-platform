@@ -119,6 +119,7 @@ public class GlobalExceptionHandler {
                 HttpStatus.NOT_FOUND.value(),
                 exc.getMessage(),
                 System.currentTimeMillis(),
+                exc.getErrorCode(),
                 null
         );
 
