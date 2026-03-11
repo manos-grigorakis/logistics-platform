@@ -259,10 +259,23 @@ public class ShipmentServiceImpl implements ShipmentService {
 
     @Override
     public CmrDocumentSummary getCmrDocumentByShipmentId(Long shipmentId) {
+        this.shipmentRepository.findById(shipmentId).orElseThrow(() -> {
+            log.warn("Shipment not found with id: {}", shipmentId);
+            return new ResourceNotFoundException(
+                    "Shipment not found with id " + shipmentId,
+                    "SHIPMENT_NOT_FOUND"
+            );
+        });
+
+        findByIdOrThrow(shipmentId, shipmentRepository::findById, "Shipment");
+
         CmrDocument cmrDocument = cmrDocumentRepository.findCmrDocumentByShipmentId(shipmentId)
                 .orElseThrow(() -> {
                     log.warn("CMR document not found for shipment with id {}", shipmentId);
-                    return new ResourceNotFoundException("CMR document not found for shipment with id: " + shipmentId);
+                    return new ResourceNotFoundException(
+                            "CMR document not found for shipment with id: " + shipmentId,
+                            "CMR_DOCUMENT_NOT_FOUND"
+                    );
                 });
 
         String presignedUrl = fileStorageService.createPresignedUrl(this.bucketPathCmr + cmrDocument.getNumber());

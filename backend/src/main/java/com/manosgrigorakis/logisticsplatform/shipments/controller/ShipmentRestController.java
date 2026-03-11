@@ -140,7 +140,9 @@ public class ShipmentRestController {
     @Operation(summary = "Get Shipment's CMR", description = "Gets all the CMR for the selected shipment")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "CMR for shipment found"),
-            @ApiResponse(responseCode = "404", description = "Shipment doesn't exist"),
+            @ApiResponse(responseCode = "404", description =
+                    "Shipment doesn't exist or Shipment doesn't have CMR Document"
+            ),
     })
     @GetMapping("/{id}/cmr")
     public CmrDocumentSummary getCmrDocumentByShipmentId(@PathVariable Long id) {
