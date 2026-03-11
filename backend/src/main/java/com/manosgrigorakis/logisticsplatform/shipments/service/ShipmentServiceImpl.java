@@ -3,6 +3,8 @@ package com.manosgrigorakis.logisticsplatform.shipments.service;
 import com.manosgrigorakis.logisticsplatform.audit.dto.AuditEventDTO;
 import com.manosgrigorakis.logisticsplatform.audit.enums.AuditAction;
 import com.manosgrigorakis.logisticsplatform.audit.service.AuditService;
+import com.manosgrigorakis.logisticsplatform.cmr.model.CmrDocument;
+import com.manosgrigorakis.logisticsplatform.cmr.repository.CmrDocumentRepository;
 import com.manosgrigorakis.logisticsplatform.cmr.service.CmrDocumentService;
 import com.manosgrigorakis.logisticsplatform.common.dto.PageFilterRequest;
 import com.manosgrigorakis.logisticsplatform.common.dto.SortFilterRequest;
@@ -12,15 +14,14 @@ import com.manosgrigorakis.logisticsplatform.common.exception.DuplicateEntryExce
 import com.manosgrigorakis.logisticsplatform.common.exception.ResourceNotFoundException;
 import com.manosgrigorakis.logisticsplatform.common.generators.DocumentNumberGenerator;
 import com.manosgrigorakis.logisticsplatform.common.utils.EntityChangeTracker;
+import com.manosgrigorakis.logisticsplatform.infrastructure.storage.FileStorageService;
 import com.manosgrigorakis.logisticsplatform.quotes.enums.QuoteStatus;
 import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
 import com.manosgrigorakis.logisticsplatform.quotes.repository.QuoteRepository;
 import com.manosgrigorakis.logisticsplatform.shipments.ShipmentStatusException;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.ShipmentFilterRequest;
-import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.ShipmentRequestDTO;
-import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.ShipmentResponseDTO;
-import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.UpdateShipmentRequestDTO;
-import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.UpdateShipmentStatusRequestDTO;
+import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.*;
+import com.manosgrigorakis.logisticsplatform.shipments.dto.summary.CmrDocumentSummary;
 import com.manosgrigorakis.logisticsplatform.shipments.enums.ShipmentStatus;
 import com.manosgrigorakis.logisticsplatform.shipments.mapper.ShipmentCargoMapper;
 import com.manosgrigorakis.logisticsplatform.shipments.mapper.ShipmentMapper;
@@ -34,6 +35,7 @@ import com.manosgrigorakis.logisticsplatform.users.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -60,6 +62,11 @@ public class ShipmentServiceImpl implements ShipmentService {
     private final DocumentNumberGenerator documentNumberGenerator;
 
     private static final Logger log = LoggerFactory.getLogger(ShipmentServiceImpl.class);
+    private final CmrDocumentRepository cmrDocumentRepository;
+    private final FileStorageService fileStorageService;
+
+    @Value("${app.minio.bucketPathCmr}")
+    private String bucketPathCmr;
 
     public ShipmentServiceImpl(
             ShipmentRepository shipmentRepository,
@@ -68,8 +75,8 @@ public class ShipmentServiceImpl implements ShipmentService {
             VehicleRepository vehicleRepository,
             DocumentNumberGenerator documentNumberGenerator,
             AuditService auditService,
-            CmrDocumentService cmrDocumentService
-    ) {
+            CmrDocumentService cmrDocumentService,
+            CmrDocumentRepository cmrDocumentRepository, FileStorageService fileStorageService) {
         this.shipmentRepository = shipmentRepository;
         this.quoteRepository = quoteRepository;
         this.userRepository = userRepository;
@@ -77,6 +84,8 @@ public class ShipmentServiceImpl implements ShipmentService {
         this.documentNumberGenerator = documentNumberGenerator;
         this.auditService = auditService;
         this.cmrDocumentService = cmrDocumentService;
+        this.cmrDocumentRepository = cmrDocumentRepository;
+        this.fileStorageService = fileStorageService;
     }
 
     @Override
@@ -247,6 +256,28 @@ public class ShipmentServiceImpl implements ShipmentService {
 
         return shipmentPage.map(ShipmentMapper::toResponse);
     };
+
+    @Override
+    public CmrDocumentSummary getCmrDocumentByShipmentId(Long shipmentId) {
+        CmrDocument cmrDocument = cmrDocumentRepository.findCmrDocumentByShipmentId(shipmentId)
+                .orElseThrow(() -> {
+                    log.warn("CMR document not found for shipment with id {}", shipmentId);
+                    return new ResourceNotFoundException("CMR document not found for shipment with id: " + shipmentId);
+                });
+
+        String presignedUrl = fileStorageService.createPresignedUrl(this.bucketPathCmr + cmrDocument.getNumber());
+
+        return new CmrDocumentSummary(
+                cmrDocument.getId(),
+                cmrDocument.getNumber(),
+                cmrDocument.getStatus(),
+                presignedUrl,
+                cmrDocument.getSignedBy(),
+                cmrDocument.getSignedAt(),
+                cmrDocument.getCreatedAt(),
+                cmrDocument.getUpdatedAt()
+        );
+    }
 
     /**
      * Finds an entity by its id, using the provider finder function

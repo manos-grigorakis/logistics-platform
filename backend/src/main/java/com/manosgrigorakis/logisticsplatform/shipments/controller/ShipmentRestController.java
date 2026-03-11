@@ -4,10 +4,8 @@ import com.manosgrigorakis.logisticsplatform.auth.model.UserInfoDetails;
 import com.manosgrigorakis.logisticsplatform.common.dto.PageFilterRequest;
 import com.manosgrigorakis.logisticsplatform.common.dto.SortFilterRequest;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.ShipmentFilterRequest;
-import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.ShipmentRequestDTO;
-import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.ShipmentResponseDTO;
-import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.UpdateShipmentRequestDTO;
-import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.UpdateShipmentStatusRequestDTO;
+import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.*;
+import com.manosgrigorakis.logisticsplatform.shipments.dto.summary.CmrDocumentSummary;
 import com.manosgrigorakis.logisticsplatform.shipments.service.ShipmentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -137,5 +135,15 @@ public class ShipmentRestController {
         Long driverId = userInfoDetails.getUserId();
 
         return shipmentService.getShipmentsByDriver(driverId, pageFilter, sortFilter);
+    }
+
+    @Operation(summary = "Get Shipment's CMR", description = "Gets all the CMR for the selected shipment")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "CMR for shipment found"),
+            @ApiResponse(responseCode = "404", description = "Shipment doesn't exist"),
+    })
+    @GetMapping("/{id}/cmr")
+    public CmrDocumentSummary getCmrDocumentByShipmentId(@PathVariable Long id) {
+        return this.shipmentService.getCmrDocumentByShipmentId(id);
     }
 }

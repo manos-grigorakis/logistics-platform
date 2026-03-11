@@ -17,4 +17,6 @@ public interface CmrDocumentRepository extends JpaRepository<CmrDocument, Long>,
                     "ORDER BY cmr.id DESC LIMIT 1"
     )
     Optional<String> findLastCmrDocumentNumberByYear(@Param("year") int year);
+
+    Optional<CmrDocument> findCmrDocumentByShipmentId(Long shipmentId);
 }
