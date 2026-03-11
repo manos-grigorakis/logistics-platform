@@ -11,7 +11,7 @@ import {
   AbstractControl,
 } from '@angular/forms';
 import { NgSelectComponent } from '@ng-select/ng-select';
-import { map, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, finalize, map, Subject, switchMap, tap } from 'rxjs';
 import { QuoteSummary } from '../models/quote-summary';
 import { QuotesService } from '../../quotes/quotes.service';
 import { DriversSummary } from '../models/drivers-summary';
@@ -71,6 +71,7 @@ export class ShipmentsForm implements OnInit {
   public quotesLoading: boolean = false;
   public quoteSearch$ = new Subject<string>();
   public quotesList: QuoteSummary[] = [];
+  private readonly QUOTE_STATUS: string = 'ACCEPTED';
 
   // Drivers
   public driverLoading: boolean = false;
@@ -146,6 +147,8 @@ export class ShipmentsForm implements OnInit {
 
     this.metadataService.fetchCargoItemsUnits();
     this.metadataService.cargoItemUnits$.subscribe((units) => (this.cargoItemsUnits = units));
+
+    this.fetchQuotesWithSearch();
   }
 
   public get quoteId(): FormControl {
@@ -246,7 +249,7 @@ export class ShipmentsForm implements OnInit {
     this.quotesLoading = true;
     this.uiErrorMessage = undefined;
 
-    this.quotesService.fetchQuotes({ quoteStatus: 'ACCEPTED' }).subscribe({
+    this.quotesService.fetchQuotes({ quoteStatus: this.QUOTE_STATUS }).subscribe({
       next: (res) => {
         this.quotesLoading = false;
 
@@ -265,6 +268,35 @@ export class ShipmentsForm implements OnInit {
         }
       },
     });
+  }
+
+  private fetchQuotesWithSearch(): void {
+    this.uiErrorMessage = undefined;
+
+    this.quoteSearch$
+      .pipe(
+        tap(() => (this.quotesLoading = true)),
+        debounceTime(300),
+        distinctUntilChanged(),
+        switchMap((search) =>
+          this.quotesService
+            .fetchQuotes({
+              quoteStatus: this.QUOTE_STATUS,
+              number: search ?? undefined,
+            })
+            .pipe(finalize(() => (this.quotesLoading = false))),
+        ),
+      )
+      .subscribe({
+        next: (res) => (this.quotesList = [...res.content]),
+        error: (err) => {
+          if (err.status === 500) {
+            this.uiErrorMessage = 'Server error. Please try again';
+          } else {
+            this.uiErrorMessage = 'An error occurred. Please try again';
+          }
+        },
+      });
   }
 
   private fetchDrivers(): void {
