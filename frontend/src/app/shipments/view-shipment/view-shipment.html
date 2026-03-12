@@ -6,12 +6,22 @@
   <app-error-alert [errorMessage]="errorMessage" />
 }
 
+<!-- Quote Modal -->
+<app-modal-file
+  [isEnabled]="showQuoteModal"
+  [pdfUrl]="quoteUrl"
+  [pdfName]="quotePdfName"
+  [showSendViaMailButton]="false"
+  (closeModal)="closeQuoteModal()"
+/>
+
+<!-- CMR Modal -->
 <app-modal-file
   [isEnabled]="showCmrModal"
   [pdfUrl]="cmrDocumentUrl"
   [pdfName]="cmrPdfName"
   [showSendViaMailButton]="false"
-  (closeModal)="closeCmrDocumentClick()"
+  (closeModal)="closeCmrDocument()"
 />
 
 @if (shipment) {
@@ -38,11 +48,13 @@
     <div class="border-primary-500 my-4 rounded border-2"></div>
 
     <div
-      class="grid grid-cols-1 divide-x divide-zinc-300 overflow-hidden rounded border border-zinc-300 sm:grid-cols-2 lg:grid-cols-4"
+      class="grid grid-cols-1 divide-x divide-zinc-300 overflow-hidden rounded border border-zinc-300 sm:grid-cols-2 lg:grid-cols-5"
     >
       <div class="border-b border-zinc-300 p-5 text-center lg:border-b-0">
         <p class="mb-1 text-sm text-zinc-500 uppercase">Quote Number</p>
-        <p>{{ shipment.quote.number }}</p>
+        <p class="cursor-pointer hover:underline" (click)="openQuoteModal()">
+          {{ shipment.quote.number }}
+        </p>
       </div>
       <div class="border-b border-zinc-300 p-5 text-center lg:border-b-0">
         <p class="mb-1 text-sm text-zinc-500 uppercase">Driver</p>
@@ -55,6 +67,12 @@
       <div class="border-b border-zinc-300 p-5 text-center lg:border-b-0">
         <p class="mb-1 text-sm text-zinc-500 uppercase">Trailer</p>
         <p>{{ shipment.trailer?.plate || '- Unassigned' }}</p>
+      </div>
+      <div class="border-b border-zinc-300 p-5 text-center lg:border-b-0">
+        <p class="mb-1 text-sm text-zinc-500 uppercase">Action</p>
+        <div class="flex justify-center">
+          <app-rounded-icon-button icon="lucideEye" iconSize="14" (clicked)="openQuoteModal()" />
+        </div>
       </div>
     </div>
 
@@ -104,7 +122,10 @@
         <div class="bg-primary-500 h-0.5 w-1/2 sm:w-1/4"></div>
       </div>
 
-      <p class="w-full max-w-lg rounded border border-zinc-300 py-2 pl-2">
+      <p
+        class="w-full max-w-lg rounded border border-zinc-300 py-2 pl-2"
+        [ngClass]="{ 'text-zinc-400': !shipment.notes }"
+      >
         {{ shipment.notes || 'No notes available' }}
       </p>
     </div>
@@ -121,7 +142,7 @@
         >
           <div class="border-b border-zinc-300 p-5 text-center lg:border-b-0">
             <p class="mb-1 text-sm text-zinc-500 uppercase">CMR Number</p>
-            <p class="cursor-pointer hover:underline" (click)="openCmrDocumentClick()">
+            <p class="cursor-pointer hover:underline" (click)="openCmrDocument()">
               {{ cmrDocument.number }}
             </p>
           </div>
@@ -152,7 +173,7 @@
               <app-rounded-icon-button
                 icon="lucideEye"
                 iconSize="14"
-                (clicked)="openCmrDocumentClick()"
+                (clicked)="openCmrDocument()"
               />
             </div>
           </div>

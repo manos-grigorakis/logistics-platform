@@ -10,6 +10,7 @@ import { finalize } from 'rxjs';
 import { CmrDocumentSummaryResponse } from '../models/cmr-document-summary-response';
 import { ModalFile } from '../../shared/ui/modal-file/modal-file';
 import { RoundedIconButton } from '../../shared/forms/rounded-icon-button/rounded-icon-button';
+import { QuotesService } from '../../quotes/quotes.service';
 
 @Component({
   selector: 'app-view-shipment',
@@ -28,6 +29,7 @@ import { RoundedIconButton } from '../../shared/forms/rounded-icon-button/rounde
 export class ViewShipment implements OnInit {
   private route = inject(ActivatedRoute);
   private shipmentsService = inject(ShipmentsService);
+  private quoteService = inject(QuotesService);
 
   public shipment?: Shipment;
   public isLoading: boolean = false;
@@ -38,6 +40,11 @@ export class ViewShipment implements OnInit {
   public showCmrModal: boolean = false;
   public cmrDocumentUrl!: string;
   public cmrPdfName!: string;
+
+  // Quote
+  public showQuoteModal: boolean = false;
+  public quoteUrl!: string;
+  public quotePdfName!: string;
 
   ngOnInit(): void {
     let tempId = this.route.snapshot.paramMap.get('id');
@@ -64,12 +71,21 @@ export class ViewShipment implements OnInit {
     }
   }
 
-  public openCmrDocumentClick(): void {
+  // Modals
+  public openCmrDocument(): void {
     this.showCmrModal = true;
   }
 
-  public closeCmrDocumentClick(): void {
+  public closeCmrDocument(): void {
     this.showCmrModal = false;
+  }
+
+  public openQuoteModal(): void {
+    this.showQuoteModal = true;
+  }
+
+  public closeQuoteModal(): void {
+    this.showQuoteModal = false;
   }
 
   private fetchShipment(id: number): void {
@@ -80,6 +96,8 @@ export class ViewShipment implements OnInit {
       next: (res) => {
         this.isLoading = false;
         this.shipment = res;
+
+        this.fetchQuoteById(this.shipment.quote.id);
       },
       error: (err) => {
         this.isLoading = false;
@@ -107,6 +125,26 @@ export class ViewShipment implements OnInit {
           this.cmrDocument = res;
           this.cmrDocumentUrl = this.cmrDocument.fileUrl;
           this.cmrPdfName = this.cmrDocument.number;
+        },
+        error: (err) => {
+          if (err.status === 500) {
+            this.errorMessage = 'Server error. Please try again';
+          }
+        },
+      });
+  }
+
+  private fetchQuoteById(id: number): void {
+    this.isLoading = true;
+    this.errorMessage = undefined;
+
+    this.quoteService
+      .fetchQuoteById(id)
+      .pipe(finalize(() => (this.isLoading = false)))
+      .subscribe({
+        next: (res) => {
+          this.quoteUrl = res.pdfUrl;
+          this.quotePdfName = res.number;
         },
         error: (err) => {
           if (err.status === 500) {
