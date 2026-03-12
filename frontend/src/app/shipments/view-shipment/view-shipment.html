@@ -21,7 +21,7 @@
   [pdfUrl]="cmrDocumentUrl"
   [pdfName]="cmrPdfName"
   [showSendViaMailButton]="false"
-  (closeModal)="closeCmrDocumentClick()"
+  (closeModal)="closeCmrDocument()"
 />
 
 @if (shipment) {
@@ -142,7 +142,7 @@
         >
           <div class="border-b border-zinc-300 p-5 text-center lg:border-b-0">
             <p class="mb-1 text-sm text-zinc-500 uppercase">CMR Number</p>
-            <p class="cursor-pointer hover:underline" (click)="openCmrDocumentClick()">
+            <p class="cursor-pointer hover:underline" (click)="openCmrDocument()">
               {{ cmrDocument.number }}
             </p>
           </div>
@@ -173,7 +173,7 @@
               <app-rounded-icon-button
                 icon="lucideEye"
                 iconSize="14"
-                (clicked)="openCmrDocumentClick()"
+                (clicked)="openCmrDocument()"
               />
             </div>
           </div>

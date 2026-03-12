@@ -71,11 +71,12 @@ export class ViewShipment implements OnInit {
     }
   }
 
-  public openCmrDocumentClick(): void {
+  // Modals
+  public openCmrDocument(): void {
     this.showCmrModal = true;
   }
 
-  public closeCmrDocumentClick(): void {
+  public closeCmrDocument(): void {
     this.showCmrModal = false;
   }
 
