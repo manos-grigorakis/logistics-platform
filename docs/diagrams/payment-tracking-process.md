@@ -8,7 +8,7 @@ flowchart TD
 
 
     UPLOAD_FILES --> MATCHING[Matching Process]
-    MATCHING --> FILTER(Filter Statement by Customer)
+    MATCHING --> FILTER[Filter Statement by Customer]
     FILTER --> ANALYZE[Analyze Transactions]
 
     ANALYZE --> DECISION{Invoice Detected?}
