@@ -22,14 +22,15 @@ public class ExcelInvoiceReader {
     private static final Logger log = LoggerFactory.getLogger(ExcelInvoiceReader.class);
 
     public ExcelInvoiceImportResultDTO readExcel(MultipartFile importedFile) throws IOException {
-        try {
-            Workbook workbook = new XSSFWorkbook(importedFile.getInputStream());
+        log.info("Processing Excel invoice file {}", importedFile.getOriginalFilename());
+
+        try (Workbook workbook = new XSSFWorkbook(importedFile.getInputStream())) {
             Sheet sheet = workbook.getSheetAt(0);
 
             String customerTin = "";
             List<ExcelInvoiceImportDTO> data = new ArrayList<>();
 
-            for(Row row : sheet) {
+            for (Row row : sheet) {
                 Cell customerTinHeaderCell = row.getCell(0);
                 Cell customerTinCell = row.getCell(2);
                 Cell invoiceIssueDateCell = row.getCell(0);
@@ -40,13 +41,13 @@ public class ExcelInvoiceReader {
 
                 // Find customer TIN
                 if (customerTinHeaderCell != null && customerTinHeaderCell.getCellType() == CellType.STRING) {
-                  if (TIN.equals(customerTinHeaderCell.getStringCellValue())) {
-                      if (customerTinCell.getCellType() == CellType.NUMERIC) {
-                          customerTin = String.valueOf((long) customerTinCell.getNumericCellValue());
-                      } else {
-                          customerTin = customerTinCell.getStringCellValue();
-                      }
-                  }
+                    if (TIN.equals(customerTinHeaderCell.getStringCellValue())) {
+                        if (customerTinCell.getCellType() == CellType.NUMERIC) {
+                            customerTin = String.valueOf((long) customerTinCell.getNumericCellValue());
+                        } else {
+                            customerTin = customerTinCell.getStringCellValue();
+                        }
+                    }
                 }
 
                 if (invoiceTypeCell != null && invoiceTypeCell.getCellType() == CellType.STRING) {
@@ -57,15 +58,11 @@ public class ExcelInvoiceReader {
                                         invoiceIssueDateCell.getLocalDateTimeCellValue().toLocalDate()
                                 )
                         );
-
                     }
                 }
             }
 
             return new ExcelInvoiceImportResultDTO(customerTin, data);
-        } catch (IOException exc) {
-            log.warn("Failed to process excel file", exc);
-            throw new IOException("Failed to process excel file", exc);
         }
     }
 }
