@@ -44,6 +44,12 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public BulkInvoiceResponseDTO bulkInvoicesImport(BulkInvoiceRequestDTO dto) {
+        String fileName = dto.getFile().getOriginalFilename();
+
+        if(fileName == null || !fileName.endsWith(".xlsx")) {
+            throw new BadRequestException("Only .xlsx files are support", "UNSUPPORTED_FILE");
+        }
+
         Customer customer = customerRepository.findById(dto.getCustomerId())
                 .orElseThrow(() -> {
                     log.warn("Customer not found with id: {}", dto.getCustomerId());
@@ -59,7 +65,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                     "Failed to read Excel file during bulk invoice import. File name: {}",
                     dto.getFile().getOriginalFilename()
             );
-            throw new BadRequestException("Failed to process uploaded Excel file");
+            throw new BadRequestException("Failed to process uploaded Excel file", "EXCEL_FILE_PROCESSING_FAILED");
         }
 
         if (!Objects.equals(customer.getTin(), data.tin())) {
