@@ -4,6 +4,7 @@ import com.manosgrigorakis.logisticsplatform.payments.dto.ReconciliationRequestD
 import com.manosgrigorakis.logisticsplatform.payments.service.ReconciliationService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +21,7 @@ public class ReconciliationRestController {
         this.reconciliationService = reconciliationService;
     }
 
-    @PostMapping("/process")
+    @PostMapping(value = "/process", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> reconciliation(@ModelAttribute @Valid ReconciliationRequestDTO dto) {
         this.reconciliationService.reconciliationProcess(dto);
         return ResponseEntity.noContent().build();
