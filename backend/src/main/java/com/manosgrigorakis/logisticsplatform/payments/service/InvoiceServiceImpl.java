@@ -61,6 +61,19 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     /**
+     * Prepares invoices from an imported Excel file so they can be used
+     * during the reconciliation process
+     * @param customerId The {@link Customer} id
+     * @param file The imported Excel file
+     * @return A list of prepared {@link Invoice} entities
+     */
+    @Override
+    public List<Invoice> prepareInvoicesForReconciliation(Long customerId, MultipartFile file) {
+        ProcessingInvoicesBulkImportResponse response = this.prepareInvoicesFromImport(file, customerId);
+        return response.invoices();
+    }
+
+    /**
      * Reads and processes an imported Excel fie containing invoices and prepares them for further processing. <br>
      * <b>Steps in Method</b>:
      * <ul>
