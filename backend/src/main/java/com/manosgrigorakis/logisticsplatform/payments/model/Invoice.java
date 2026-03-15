@@ -9,6 +9,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -36,6 +37,9 @@ public class Invoice {
     @Column(name = "remaining_amount", precision = 10, scale = 2, nullable = false)
     private BigDecimal remainingAmount;
 
+    @Column(name = "invoice_date", nullable = false)
+    private LocalDate invoiceDate;
+
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
@@ -56,12 +60,14 @@ public class Invoice {
             String externalInvoiceNumber,
             InvoiceStatus status,
             BigDecimal totalAmount,
-            BigDecimal remainingAmount
+            BigDecimal remainingAmount,
+            LocalDate invoiceDate
     ) {
         this.externalInvoiceNumber = externalInvoiceNumber;
         this.status = status;
         this.totalAmount = totalAmount;
         this.remainingAmount = remainingAmount;
+        this.invoiceDate = invoiceDate;
     }
 
     @PrePersist

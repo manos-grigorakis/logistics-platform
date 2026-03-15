@@ -54,6 +54,7 @@ public class GlobalExceptionHandler {
                 HttpStatus.BAD_REQUEST.value(),
                 exc.getMessage(),
                 System.currentTimeMillis(),
+                exc.getErrorCode(),
                 exc.getDetails()
         );
 
