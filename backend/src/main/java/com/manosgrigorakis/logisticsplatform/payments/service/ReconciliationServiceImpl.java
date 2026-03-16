@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +32,8 @@ public class ReconciliationServiceImpl implements ReconciliationService {
     private final BankTransactionRepository bankTransactionRepository;
 
     private static final Logger log = LoggerFactory.getLogger(ReconciliationServiceImpl.class);
-
+    private static final Integer MAX_INVOICES = 5;
+    private static final Integer MAX_DAYS_RANGE = 60;
 
     public ReconciliationServiceImpl(InvoiceService invoiceService, ExcelBankTransactionReaderNgb excelBankTransactionReaderNgb, InvoiceRepository invoiceRepository, BankTransactionRepository bankTransactionRepository) {
         this.invoiceService = invoiceService;
@@ -47,6 +49,8 @@ public class ReconciliationServiceImpl implements ReconciliationService {
         List<BankTransaction> bankTransactions;
         List<BankTransaction> matchedTransactions = new ArrayList<>();
         List<Invoice> matchedInvoices = new ArrayList<>();
+        List<Invoice> noMatchInvoices = new ArrayList<>();
+        List<BankTransaction> noMatchTransaction = new ArrayList<>();
 
         PrepareReconciliationResult invoicesResult =
                 this.invoiceService.prepareInvoicesForReconciliation(dto.getCustomerId(), dto.getInvoiceFile());
@@ -68,13 +72,7 @@ public class ReconciliationServiceImpl implements ReconciliationService {
         List<BankTransaction> filteredBankTransactions = bankTransactions.stream()
                 .filter(t -> matchesCustomer(t, customer)).toList();
 
-//        DEBUG
-//        for (BankTransaction transaction : filteredBankTransactions) {
-//            log.info("Filtered Transaction: Description {} | Amount {}", transaction.getDescription(), transaction.getAmount());
-//        }
-
-
-        // Rules
+        // Transaction contains one single invoice number in description
         for (Invoice invoice : invoicesResult.invoices()) {
             String invoiceNumber = formatInvoiceNumber(invoice.getExternalInvoiceNumber());
 
@@ -82,7 +80,6 @@ public class ReconciliationServiceImpl implements ReconciliationService {
                 log.info("Invoice Number {} | Transaction Description: {} |  Amount: {} | PAID: {}",
                         invoiceNumber, transaction.getDescription(), invoice.getTotalAmount(), transaction.getAmount());
 
-                // 100% MATCH
                 if(transaction.getDescription() != null && (transaction.getDescription().contains(invoiceNumber))) {
                     if (invoice.getTotalAmount().compareTo(transaction.getAmount()) == 0) {
                         invoice.setStatus(InvoiceStatus.PAID);
@@ -102,10 +99,54 @@ public class ReconciliationServiceImpl implements ReconciliationService {
 
                     // TODO: Relationships connection
                 }
-
-                // TODO: More rules
+            }
+            if(!matchedInvoices.contains(invoice)) {
+                noMatchInvoices.add(invoice);
             }
         }
+
+        filteredBankTransactions.stream()
+                .filter(t -> !matchedTransactions.contains(t))
+                .forEach(noMatchTransaction::add);
+
+        // One transaction multiple paid invoices
+        for(BankTransaction t : noMatchTransaction) {
+            List<Invoice> potentialInvoiceMatch = new ArrayList<>();
+            List<Invoice> combination = new ArrayList<>();
+
+            // Finds the potential invoices based on days range
+            for (Invoice i : noMatchInvoices) {
+                LocalDate maxInvoiceDateRange = i.getInvoiceDate().plusDays(MAX_DAYS_RANGE);
+
+                // These are the potential invoices filtered based on the days range
+                if (!t.getIssueDate().isBefore(i.getInvoiceDate()) &&
+                        (t.getIssueDate().isBefore(maxInvoiceDateRange) || t.getIssueDate().equals(maxInvoiceDateRange))
+                ) {
+                    potentialInvoiceMatch.add(i);
+                }
+            }
+
+            boolean matchFound = calculateSubsetSum(
+                    0,
+                    0,
+                    t.getAmount(),
+                    BigDecimal.ZERO,
+                    potentialInvoiceMatch,
+                    combination
+            );
+
+            if(matchFound) {
+                for(Invoice invoice : combination) {
+                    invoice.setStatus(InvoiceStatus.PAID);
+                    invoice.setRemainingAmount(BigDecimal.ZERO);
+                    matchedInvoices.add(invoice);
+                }
+                matchedTransactions.add(t);
+            }
+        }
+
+        // TODO: More rules
+        // One transaction with multiple invoices while the invoices numbers included in transaction description
 
         invoiceRepository.saveAll(matchedInvoices);
         bankTransactionRepository.saveAll(matchedTransactions);
@@ -140,5 +181,61 @@ public class ReconciliationServiceImpl implements ReconciliationService {
 
         String customerName = customer.getLastName().toUpperCase() + " " +  customer.getFirstName().toUpperCase();
         return senderName.contains(customerName);
+    }
+
+    /**
+     * Finds a valid combination of invoices whose sum equals to the target amount using recursion
+     * <p><b>Recursion Constraints to Stop</b></p>
+     * <ul>
+     *     <li>Target is null {@code false}</li>
+     *     <li>Combination found {@code true}</li>
+     *     <li>Current index >= candidates size prevents AIOBE {@code false}</li>
+     *     <li>Current Count >= {@link #MAX_INVOICES} constraint {@code false}</li>
+     *     <li>Current Sum > target {@code false}</li>
+     * </ul>
+     * @param currentIndex Indexer used to track invoices
+     * @param currentCount Counter used to ensure the {@link #MAX_INVOICES} constraints is followed
+     * @param target The target amount from the {@link BankTransaction}
+     * @param currentSum The current sum of the selected invoices
+     * @param candidates The candidates invoice to be checked
+     * @param currentCombination A {@link List} containing the founded combination from the process
+     * @return {@code true} If a valid combination is found, otherwise {code false}
+     */
+    private static boolean calculateSubsetSum(
+            int currentIndex,
+            int currentCount,
+            BigDecimal target,
+            BigDecimal currentSum,
+            List<Invoice> candidates,
+            List<Invoice> currentCombination
+    ) {
+        if (target == null) return false;
+        if(currentSum.compareTo(target) == 0) return true;
+        if(currentIndex >= candidates.size()) return false;
+        if(currentCount >= MAX_INVOICES) return false;
+        if(currentSum.compareTo(target) > 0) return false;
+
+        Invoice invoice = candidates.get(currentIndex);
+
+        // Include first invoice
+        currentCombination.add(candidates.get(currentIndex));
+        if(
+                calculateSubsetSum(
+                        currentIndex + 1,
+                        currentCount + 1,
+                        target,
+                        currentSum.add(invoice.getTotalAmount()),
+                        candidates,
+                        currentCombination
+                )
+        ) {
+            return true;
+        }
+
+        // If there is no combination from the above operation
+        currentCombination.remove(currentCombination.size() - 1);
+
+        // Don't include the first invoice
+        return calculateSubsetSum(currentIndex + 1, currentCount, target, currentSum, candidates, currentCombination);
     }
 }
