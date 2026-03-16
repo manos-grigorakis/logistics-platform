@@ -9,6 +9,7 @@ import com.manosgrigorakis.logisticsplatform.infrastructure.document.dto.ExcelIn
 import com.manosgrigorakis.logisticsplatform.infrastructure.document.excel.ExcelInvoiceReader;
 import com.manosgrigorakis.logisticsplatform.payments.dto.BulkInvoiceRequestDTO;
 import com.manosgrigorakis.logisticsplatform.payments.dto.BulkInvoiceResponseDTO;
+import com.manosgrigorakis.logisticsplatform.payments.dto.PrepareReconciliationResult;
 import com.manosgrigorakis.logisticsplatform.payments.dto.ProcessingInvoicesBulkImportResponse;
 import com.manosgrigorakis.logisticsplatform.payments.enums.InvoiceStatus;
 import com.manosgrigorakis.logisticsplatform.payments.mapper.InvoiceMapper;
@@ -68,9 +69,9 @@ public class InvoiceServiceImpl implements InvoiceService {
      * @return A list of prepared {@link Invoice} entities
      */
     @Override
-    public List<Invoice> prepareInvoicesForReconciliation(Long customerId, MultipartFile file) {
+    public PrepareReconciliationResult prepareInvoicesForReconciliation(Long customerId, MultipartFile file) {
         ProcessingInvoicesBulkImportResponse response = this.prepareInvoicesFromImport(file, customerId);
-        return response.invoices();
+        return new PrepareReconciliationResult(response.customer(), response.invoices());
     }
 
     /**
