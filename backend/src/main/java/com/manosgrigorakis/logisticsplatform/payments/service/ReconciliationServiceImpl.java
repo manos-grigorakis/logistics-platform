@@ -1,6 +1,8 @@
 package com.manosgrigorakis.logisticsplatform.payments.service;
 
 import com.manosgrigorakis.logisticsplatform.common.exception.BadRequestException;
+import com.manosgrigorakis.logisticsplatform.customers.enums.CustomerType;
+import com.manosgrigorakis.logisticsplatform.customers.model.Customer;
 import com.manosgrigorakis.logisticsplatform.infrastructure.document.dto.BankStatementImportResultDTO;
 import com.manosgrigorakis.logisticsplatform.infrastructure.document.excel.ExcelBankTransactionReaderNgb;
 import com.manosgrigorakis.logisticsplatform.payments.dto.PrepareReconciliationResult;
@@ -49,6 +51,8 @@ public class ReconciliationServiceImpl implements ReconciliationService {
         PrepareReconciliationResult invoicesResult =
                 this.invoiceService.prepareInvoicesForReconciliation(dto.getCustomerId(), dto.getInvoiceFile());
 
+        Customer customer = invoicesResult.customer();
+
         // Bank Statement file process
         try {
             bankResults = excelBankTransactionReaderNgb.readExcel(dto.getBankStatement());
@@ -61,8 +65,8 @@ public class ReconciliationServiceImpl implements ReconciliationService {
         }
 
         // Filter transactions based on the customer name
-        List<BankTransaction> filteredBankTransactions = bankTransactions.stream().
-                filter(t -> t.getSenderName().equals(invoicesResult.customer().getCompanyName())).toList();
+        List<BankTransaction> filteredBankTransactions = bankTransactions.stream()
+                .filter(t -> matchesCustomer(t, customer)).toList();
 
 //        DEBUG
 //        for (BankTransaction transaction : filteredBankTransactions) {
@@ -117,5 +121,24 @@ public class ReconciliationServiceImpl implements ReconciliationService {
     private static String formatInvoiceNumber(String invoiceNumber) {
         String[] splitInvoiceNumber = invoiceNumber.split("-");
         return String.valueOf(Integer.parseInt(splitInvoiceNumber[1]));
+    }
+
+    /**
+     * Checks if the {@code SenderName} from the {@link BankTransaction} matches the {@link Customer}
+     * @param transaction The {@link BankTransaction} to check
+     * @param customer The {@link Customer} used for matching
+     * @return {@code true} If the {@code SenderName} matches with the {@link Customer}, otherwise {@code false}
+     */
+    private boolean matchesCustomer(BankTransaction transaction, Customer customer) {
+        if(transaction.getSenderName() == null) return false;
+
+        String senderName = transaction.getSenderName().toUpperCase();
+
+        if(customer.getCustomerType() == CustomerType.COMPANY) {
+            return senderName.contains(customer.getCompanyName().toUpperCase());
+        }
+
+        String customerName = customer.getLastName().toUpperCase() + " " +  customer.getFirstName().toUpperCase();
+        return senderName.contains(customerName);
     }
 }
