@@ -5,6 +5,7 @@ import com.manosgrigorakis.logisticsplatform.customers.enums.CustomerType;
 import com.manosgrigorakis.logisticsplatform.customers.model.Customer;
 import com.manosgrigorakis.logisticsplatform.infrastructure.document.dto.BankStatementImportResultDTO;
 import com.manosgrigorakis.logisticsplatform.infrastructure.document.excel.ExcelBankTransactionReaderNgb;
+import com.manosgrigorakis.logisticsplatform.infrastructure.document.excel.ExcelInvoiceReader;
 import com.manosgrigorakis.logisticsplatform.payments.dto.InvoiceMatchingResults;
 import com.manosgrigorakis.logisticsplatform.payments.dto.MultipleInvoicesMatchingResults;
 import com.manosgrigorakis.logisticsplatform.payments.dto.PrepareReconciliationResult;
@@ -21,6 +22,7 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,20 +37,20 @@ public class ReconciliationServiceImpl implements ReconciliationService {
 
     private static final Logger log = LoggerFactory.getLogger(ReconciliationServiceImpl.class);
     private final InvoicePaymentsRepository invoicePaymentsRepository;
+    private final ExcelInvoiceReader excelInvoiceReader;
 
-    public ReconciliationServiceImpl(InvoiceService invoiceService, ExcelBankTransactionReaderNgb excelBankTransactionReaderNgb, InvoiceRepository invoiceRepository, BankTransactionRepository bankTransactionRepository, InvoicePaymentsRepository invoicePaymentsRepository) {
+    public ReconciliationServiceImpl(InvoiceService invoiceService, ExcelBankTransactionReaderNgb excelBankTransactionReaderNgb, InvoiceRepository invoiceRepository, BankTransactionRepository bankTransactionRepository, InvoicePaymentsRepository invoicePaymentsRepository, ExcelInvoiceReader excelInvoiceReader) {
         this.invoiceService = invoiceService;
         this.excelBankTransactionReaderNgb = excelBankTransactionReaderNgb;
         this.invoiceRepository = invoiceRepository;
         this.bankTransactionRepository = bankTransactionRepository;
         this.invoicePaymentsRepository = invoicePaymentsRepository;
+        this.excelInvoiceReader = excelInvoiceReader;
     }
 
     @Override
     @Transactional
     public void reconciliationProcess(ReconciliationRequestDTO dto) {
-        List<BankStatementImportResultDTO> bankResults;
-        List<BankTransaction> bankTransactions;
         List<BankTransaction> noMatchTransaction = new ArrayList<>();
 
         PrepareReconciliationResult invoicesResult =
@@ -56,16 +58,8 @@ public class ReconciliationServiceImpl implements ReconciliationService {
 
         Customer customer = invoicesResult.customer();
 
-        // Bank Statement file process
-        try {
-            bankResults = excelBankTransactionReaderNgb.readExcel(dto.getBankStatement());
-            bankTransactions = bankResults.stream().map(result ->
-                    BankTransactionMapper.toEntity(result, "NBG")).toList();
-
-        } catch (IOException e) {
-            log.info("Failed to process bank statement for {}", dto.getBankStatement().getOriginalFilename(), e);
-            throw new BadRequestException("Processing Excel bank statement failed", "FAILED_TO_PROCESS_BANK");
-        }
+        // Process bank statement file
+        List<BankTransaction> bankTransactions = new ArrayList<>(processExcelFile(dto.getBankStatement()));
 
         // Filter transactions based on the customer name
         List<BankTransaction> filteredBankTransactions = bankTransactions.stream()
@@ -99,6 +93,23 @@ public class ReconciliationServiceImpl implements ReconciliationService {
         bankTransactionRepository.saveAll(matchedTransactions);
         invoicePaymentsRepository.saveAll(invoicePayments);
         log.info("Operation was success");
+    }
+
+    /**
+     * Processes the uploaded bank statement Excel file using
+     * {@link #excelBankTransactionReaderNgb#processExcelFile(MultipartFile)}
+     * @param bankStatement The bank statement Excel to process
+     * @return A list containing the parsed bank transactions from the Excel file
+     */
+    private List<BankTransaction> processExcelFile(MultipartFile bankStatement) {
+        try {
+            List<BankStatementImportResultDTO> bankResults = excelBankTransactionReaderNgb.readExcel(bankStatement);
+            return bankResults.stream().map(result ->
+                    BankTransactionMapper.toEntity(result, "NBG")).toList();
+        } catch (IOException e) {
+            log.error("Failed to process bank statement for {}", bankStatement.getOriginalFilename(), e);
+            throw new BadRequestException("Processing Excel bank statement failed", "FAILED_TO_PROCESS_BANK");
+        }
     }
 
     /**
