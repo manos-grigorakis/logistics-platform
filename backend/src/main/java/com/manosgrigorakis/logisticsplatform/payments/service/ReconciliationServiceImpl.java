@@ -11,7 +11,9 @@ import com.manosgrigorakis.logisticsplatform.payments.enums.InvoiceStatus;
 import com.manosgrigorakis.logisticsplatform.payments.mapper.BankTransactionMapper;
 import com.manosgrigorakis.logisticsplatform.payments.model.BankTransaction;
 import com.manosgrigorakis.logisticsplatform.payments.model.Invoice;
+import com.manosgrigorakis.logisticsplatform.payments.model.InvoicePayments;
 import com.manosgrigorakis.logisticsplatform.payments.repository.BankTransactionRepository;
+import com.manosgrigorakis.logisticsplatform.payments.repository.InvoicePaymentsRepository;
 import com.manosgrigorakis.logisticsplatform.payments.repository.InvoiceRepository;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
@@ -34,12 +36,14 @@ public class ReconciliationServiceImpl implements ReconciliationService {
     private static final Logger log = LoggerFactory.getLogger(ReconciliationServiceImpl.class);
     private static final Integer MAX_INVOICES = 5;
     private static final Integer MAX_DAYS_RANGE = 60;
+    private final InvoicePaymentsRepository invoicePaymentsRepository;
 
-    public ReconciliationServiceImpl(InvoiceService invoiceService, ExcelBankTransactionReaderNgb excelBankTransactionReaderNgb, InvoiceRepository invoiceRepository, BankTransactionRepository bankTransactionRepository) {
+    public ReconciliationServiceImpl(InvoiceService invoiceService, ExcelBankTransactionReaderNgb excelBankTransactionReaderNgb, InvoiceRepository invoiceRepository, BankTransactionRepository bankTransactionRepository, InvoicePaymentsRepository invoicePaymentsRepository) {
         this.invoiceService = invoiceService;
         this.excelBankTransactionReaderNgb = excelBankTransactionReaderNgb;
         this.invoiceRepository = invoiceRepository;
         this.bankTransactionRepository = bankTransactionRepository;
+        this.invoicePaymentsRepository = invoicePaymentsRepository;
     }
 
     @Override
@@ -51,6 +55,7 @@ public class ReconciliationServiceImpl implements ReconciliationService {
         List<Invoice> matchedInvoices = new ArrayList<>();
         List<Invoice> noMatchInvoices = new ArrayList<>();
         List<BankTransaction> noMatchTransaction = new ArrayList<>();
+        List<InvoicePayments> invoicePayments = new ArrayList<>();
 
         PrepareReconciliationResult invoicesResult =
                 this.invoiceService.prepareInvoicesForReconciliation(dto.getCustomerId(), dto.getInvoiceFile());
@@ -96,8 +101,7 @@ public class ReconciliationServiceImpl implements ReconciliationService {
                     // Save matched results to lists
                     matchedInvoices.add(invoice);
                     matchedTransactions.add(transaction);
-
-                    // TODO: Relationships connection
+                    invoicePayments.add(new InvoicePayments(invoice, transaction, transaction.getAmount()));
                 }
             }
             if(!matchedInvoices.contains(invoice)) {
@@ -140,6 +144,7 @@ public class ReconciliationServiceImpl implements ReconciliationService {
                     invoice.setStatus(InvoiceStatus.PAID);
                     invoice.setRemainingAmount(BigDecimal.ZERO);
                     matchedInvoices.add(invoice);
+                    invoicePayments.add(new InvoicePayments(invoice, t, t.getAmount()));
                 }
                 matchedTransactions.add(t);
             }
@@ -150,6 +155,7 @@ public class ReconciliationServiceImpl implements ReconciliationService {
 
         invoiceRepository.saveAll(matchedInvoices);
         bankTransactionRepository.saveAll(matchedTransactions);
+        invoicePaymentsRepository.saveAll(invoicePayments);
         log.info("Operation was success");
     }
 
