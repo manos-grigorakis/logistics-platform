@@ -6,12 +6,15 @@ import com.manosgrigorakis.logisticsplatform.payments.enums.InvoiceStatus;
 import com.manosgrigorakis.logisticsplatform.payments.model.BankTransaction;
 import com.manosgrigorakis.logisticsplatform.payments.model.Invoice;
 import com.manosgrigorakis.logisticsplatform.payments.model.InvoicePayments;
+import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+@Slf4j
 public class ReconciliationEngine {
     private static final Integer MAX_INVOICES = 5;
     private static final Integer MAX_DAYS_RANGE = 60;
@@ -20,7 +23,7 @@ public class ReconciliationEngine {
      * Handles the case where an invoice is paid fully or partially by a single transaction
      * that explicitly contains the invoice number in its description.
      * @param invoices The invoices to evaluate
-     * @param bankTransactions The transaction to process
+     * @param bankTransactions The transactions to process
      * @return {@link InvoiceMatchingResults} containing the matched results
      */
     public static InvoiceMatchingResults invoiceNumberDeclared(
@@ -36,7 +39,13 @@ public class ReconciliationEngine {
             String invoiceNumber = formatInvoiceNumber(invoice.getExternalInvoiceNumber());
 
             for (BankTransaction transaction : bankTransactions) {
-                if(transaction.getDescription() != null && (transaction.getDescription().contains(invoiceNumber))) {
+                String description = transaction.getDescription();
+                if(description == null) continue;
+
+                if(description.contains(invoiceNumber)) {
+                    // Possible multiple invoices in the description = skip
+                    if(findInvoicesByDescription(invoices, description).size() > 1) continue;
+
                     if (invoice.getTotalAmount().compareTo(transaction.getAmount()) == 0) {
                         invoice.setStatus(InvoiceStatus.PAID);
                         invoice.setRemainingAmount(BigDecimal.ZERO);
@@ -59,6 +68,52 @@ public class ReconciliationEngine {
             }
         }
         return new InvoiceMatchingResults(matchedInvoices, noMatchInvoices, matchedTransactions, invoicePayments);
+    }
+
+    /**
+     * Handles the case where a transaction includes in its description multiple {@link Invoice} numbers
+     * (e.g. comma or whitespace separation)
+     * @param invoices         The invoices to evaluate
+     * @param bankTransactions The transactions to process
+     * @return {@link MultipleInvoicesMatchingResults} containing the matched results
+     */
+    public static MultipleInvoicesMatchingResults multipleInvoicesDeclared(
+            List<Invoice> invoices,
+            List<BankTransaction> bankTransactions
+    ) {
+        List<Invoice> matchedInvoices = new ArrayList<>();
+        List<BankTransaction> matchedTransactions = new ArrayList<>();
+        List<InvoicePayments> invoicePayments = new ArrayList<>();
+
+        for (BankTransaction transaction : bankTransactions) {
+            if (transaction.getDescription() != null) {
+                // Commas & whitespaces
+                String[] formattedDescription = transaction.getDescription().split("[,\\s]+");
+                List<String> invoiceNumbers = new ArrayList<>();
+
+                for (String s : formattedDescription) {
+                    if (!s.contains("-")) continue;
+                    invoiceNumbers.add(formatInvoiceNumber(s));
+                }
+
+                for (Invoice invoice : invoices) {
+                    String invoiceNumber = formatInvoiceNumber(invoice.getExternalInvoiceNumber());
+
+                    for (String number : invoiceNumbers) {
+                        if (Objects.equals(invoiceNumber, number)) {
+                            invoice.setStatus(InvoiceStatus.PAID);
+                            invoice.setRemainingAmount(BigDecimal.ZERO);
+
+                            matchedInvoices.add(invoice);
+                            matchedTransactions.add(transaction);
+                            invoicePayments.add(new InvoicePayments(invoice, transaction, invoice.getTotalAmount()));
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return new MultipleInvoicesMatchingResults(matchedInvoices, matchedTransactions, invoicePayments);
     }
 
     /**
@@ -192,5 +247,20 @@ public class ReconciliationEngine {
         LocalDate maxDate = invoiceDate.plusDays(MAX_DAYS_RANGE);
 
         return !transactionDate.isBefore(invoiceDate) && !transactionDate.isAfter(maxDate);
+    }
+
+    /**
+     * Filters invoices by formatting their numbers using {@link #formatInvoiceNumber(String)}
+     * and checking if they exist in the provided description
+     * @param invoices The list of the invoices to evaluate
+     * @param description The transaction description
+     * @return A {@link List} of invoices whose numbers are found in the description
+     */
+    private static List<Invoice> findInvoicesByDescription(List<Invoice> invoices, String description) {
+        return invoices.stream()
+                .filter(i -> {
+                    String number = formatInvoiceNumber(i.getExternalInvoiceNumber());
+                    return description.contains(number);
+                }).toList();
     }
 }

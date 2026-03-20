@@ -54,7 +54,7 @@ public class ReconciliationServiceImpl implements ReconciliationService {
         List<BankTransaction> filteredBankTransactions = bankTransactions.stream()
                 .filter(t -> matchesCustomer(t, customer)).toList();
 
-        // Transaction contains one single invoice number in description
+        // 1. Transaction contains one single invoice number in description
         InvoiceMatchingResults singleInvoiceMatchResult = ReconciliationEngine
                 .invoiceNumberDeclared(invoicesResult.invoices(), filteredBankTransactions);
 
@@ -68,15 +68,31 @@ public class ReconciliationServiceImpl implements ReconciliationService {
                 .filter(t -> !matchedTransactions.contains(t))
                 .forEach(noMatchTransaction::add);
 
-        // One transaction pays multiple invoices
+        // 2. One transaction PAYS multiple invoices by defining the invoices numbers in transaction description
+        MultipleInvoicesMatchingResults multipleDeclaredInvoices = ReconciliationEngine
+                .multipleInvoicesDeclared(noMatchInvoices, noMatchTransaction);
+
+        matchedInvoices.addAll(multipleDeclaredInvoices.matchedInvoices());
+        matchedTransactions.addAll(multipleDeclaredInvoices.matchedTransactions());
+        invoicePayments.addAll(multipleDeclaredInvoices.invoicePayments());
+
+        // Remove founded transaction & invoices
+        noMatchTransaction.removeIf(t -> multipleDeclaredInvoices.matchedTransactions().contains(t));
+        noMatchInvoices.removeIf(i -> multipleDeclaredInvoices.matchedInvoices().contains(i));
+
+        noMatchTransaction.forEach(t -> log.info("No match transaction {}", t));
+        noMatchInvoices.forEach(i -> log.info("No match invoice {}", i));
+
+        log.info("After Rule 2 - noMatchInvoices: {} | noMatchTransactions: {}",
+                noMatchInvoices.size(), noMatchTransaction.size());
+
+        // 3. One transaction pays multiple invoices
         MultipleInvoicesMatchingResults multipleInvoicesMatchResult = ReconciliationEngine
                 .multipleInvoices(noMatchTransaction, noMatchInvoices);
 
         matchedInvoices.addAll(multipleInvoicesMatchResult.matchedInvoices());
         matchedTransactions.addAll(multipleInvoicesMatchResult.matchedTransactions());
         invoicePayments.addAll(multipleInvoicesMatchResult.invoicePayments());
-
-        // TODO: One transaction with multiple invoices while the invoices numbers included in transaction description
 
         invoiceRepository.saveAll(matchedInvoices);
         bankTransactionRepository.saveAll(matchedTransactions);
