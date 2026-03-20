@@ -5,10 +5,8 @@ import com.manosgrigorakis.logisticsplatform.customers.enums.CustomerType;
 import com.manosgrigorakis.logisticsplatform.customers.model.Customer;
 import com.manosgrigorakis.logisticsplatform.infrastructure.document.dto.BankStatementImportResultDTO;
 import com.manosgrigorakis.logisticsplatform.infrastructure.document.excel.ExcelBankTransactionReaderNgb;
-import com.manosgrigorakis.logisticsplatform.payments.dto.InvoiceMatchingResults;
-import com.manosgrigorakis.logisticsplatform.payments.dto.MultipleInvoicesMatchingResults;
-import com.manosgrigorakis.logisticsplatform.payments.dto.PrepareReconciliationResult;
-import com.manosgrigorakis.logisticsplatform.payments.dto.ReconciliationRequestDTO;
+import com.manosgrigorakis.logisticsplatform.payments.dto.*;
+import com.manosgrigorakis.logisticsplatform.payments.enums.InvoiceStatus;
 import com.manosgrigorakis.logisticsplatform.payments.mapper.BankTransactionMapper;
 import com.manosgrigorakis.logisticsplatform.payments.model.BankTransaction;
 import com.manosgrigorakis.logisticsplatform.payments.model.Invoice;
@@ -24,8 +22,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -39,7 +37,7 @@ public class ReconciliationServiceImpl implements ReconciliationService {
 
     @Override
     @Transactional
-    public void reconciliationProcess(ReconciliationRequestDTO dto) {
+    public ReconciliationProcessResponse reconciliationProcess(ReconciliationRequestDTO dto) {
         List<BankTransaction> noMatchTransaction = new ArrayList<>();
 
         PrepareReconciliationResult invoicesResult =
@@ -80,12 +78,6 @@ public class ReconciliationServiceImpl implements ReconciliationService {
         noMatchTransaction.removeIf(t -> multipleDeclaredInvoices.matchedTransactions().contains(t));
         noMatchInvoices.removeIf(i -> multipleDeclaredInvoices.matchedInvoices().contains(i));
 
-        noMatchTransaction.forEach(t -> log.info("No match transaction {}", t));
-        noMatchInvoices.forEach(i -> log.info("No match invoice {}", i));
-
-        log.info("After Rule 2 - noMatchInvoices: {} | noMatchTransactions: {}",
-                noMatchInvoices.size(), noMatchTransaction.size());
-
         // 3. One transaction pays multiple invoices
         MultipleInvoicesMatchingResults multipleInvoicesMatchResult = ReconciliationEngine
                 .multipleInvoices(noMatchTransaction, noMatchInvoices);
@@ -94,10 +86,34 @@ public class ReconciliationServiceImpl implements ReconciliationService {
         matchedTransactions.addAll(multipleInvoicesMatchResult.matchedTransactions());
         invoicePayments.addAll(multipleInvoicesMatchResult.invoicePayments());
 
+        noMatchTransaction.removeIf(t -> multipleInvoicesMatchResult.matchedTransactions().contains(t));
+        noMatchInvoices.removeIf(i -> multipleInvoicesMatchResult.matchedInvoices().contains(i));
+
+        log.info("Matched invoices size: {} | Unique: {}", matchedInvoices.size(), new HashSet<>(matchedInvoices).size());
+
         invoiceRepository.saveAll(matchedInvoices);
         bankTransactionRepository.saveAll(matchedTransactions);
         invoicePaymentsRepository.saveAll(invoicePayments);
-        log.info("Operation was success");
+        log.info("Reconciliation process successfully finished for customer id: {}", dto.getCustomerId());
+
+        Set<Invoice> uniqueInvoices = new LinkedHashSet<>(invoicesResult.invoices());
+        List<Invoice> paidInvoices = filterInvoicesByStatus(matchedInvoices, InvoiceStatus.PAID);
+        List<Invoice> partiallyPaidInvoices = filterInvoicesByStatus(matchedInvoices, InvoiceStatus.PARTIALLY_PAID);
+        List<Invoice> outstandingInvoices = filterInvoicesByStatus(matchedInvoices, InvoiceStatus.OUTSTANDING);
+        List<Invoice> disputedInvoices = filterInvoicesByStatus(matchedInvoices, InvoiceStatus.DISPUTED);
+
+
+        return new ReconciliationProcessResponse(
+                uniqueInvoices.size(),
+                matchedInvoices.size(),
+                noMatchInvoices.size(),
+                matchedTransactions.size(),
+                noMatchTransaction.size(),
+                paidInvoices.size(),
+                partiallyPaidInvoices.size(),
+                outstandingInvoices.size(),
+                disputedInvoices.size()
+        );
     }
 
     /**
@@ -134,5 +150,15 @@ public class ReconciliationServiceImpl implements ReconciliationService {
 
         String customerName = customer.getLastName().toUpperCase() + " " +  customer.getFirstName().toUpperCase();
         return senderName.contains(customerName);
+    }
+
+    /**
+     * Returns a set of {@link Invoice} filtered by status
+     * @param invoices The invoices to filter
+     * @param status The {@link InvoiceStatus} to filter the invoices
+     * @return A filtered {@link List} of {@link Invoice} by status
+     */
+    private List<Invoice> filterInvoicesByStatus(List<Invoice> invoices, InvoiceStatus status) {
+        return invoices.stream().filter(i -> Objects.equals(i.getStatus(), status)).toList();
     }
 }
