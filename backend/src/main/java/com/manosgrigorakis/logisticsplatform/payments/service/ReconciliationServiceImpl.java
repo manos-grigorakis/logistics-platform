@@ -5,7 +5,6 @@ import com.manosgrigorakis.logisticsplatform.customers.enums.CustomerType;
 import com.manosgrigorakis.logisticsplatform.customers.model.Customer;
 import com.manosgrigorakis.logisticsplatform.infrastructure.document.dto.BankStatementImportResultDTO;
 import com.manosgrigorakis.logisticsplatform.infrastructure.document.excel.ExcelBankTransactionReaderNgb;
-import com.manosgrigorakis.logisticsplatform.infrastructure.document.excel.ExcelInvoiceReader;
 import com.manosgrigorakis.logisticsplatform.payments.dto.InvoiceMatchingResults;
 import com.manosgrigorakis.logisticsplatform.payments.dto.MultipleInvoicesMatchingResults;
 import com.manosgrigorakis.logisticsplatform.payments.dto.PrepareReconciliationResult;
@@ -19,8 +18,8 @@ import com.manosgrigorakis.logisticsplatform.payments.repository.InvoicePayments
 import com.manosgrigorakis.logisticsplatform.payments.repository.InvoiceRepository;
 import com.manosgrigorakis.logisticsplatform.payments.utility.ReconciliationEngine;
 import jakarta.transaction.Transactional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,25 +27,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
+@RequiredArgsConstructor
 @Service
 public class ReconciliationServiceImpl implements ReconciliationService {
     private final InvoiceService invoiceService;
     private final ExcelBankTransactionReaderNgb excelBankTransactionReaderNgb;
     private final InvoiceRepository invoiceRepository;
     private final BankTransactionRepository bankTransactionRepository;
-
-    private static final Logger log = LoggerFactory.getLogger(ReconciliationServiceImpl.class);
     private final InvoicePaymentsRepository invoicePaymentsRepository;
-    private final ExcelInvoiceReader excelInvoiceReader;
-
-    public ReconciliationServiceImpl(InvoiceService invoiceService, ExcelBankTransactionReaderNgb excelBankTransactionReaderNgb, InvoiceRepository invoiceRepository, BankTransactionRepository bankTransactionRepository, InvoicePaymentsRepository invoicePaymentsRepository, ExcelInvoiceReader excelInvoiceReader) {
-        this.invoiceService = invoiceService;
-        this.excelBankTransactionReaderNgb = excelBankTransactionReaderNgb;
-        this.invoiceRepository = invoiceRepository;
-        this.bankTransactionRepository = bankTransactionRepository;
-        this.invoicePaymentsRepository = invoicePaymentsRepository;
-        this.excelInvoiceReader = excelInvoiceReader;
-    }
 
     @Override
     @Transactional
