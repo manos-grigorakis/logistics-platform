@@ -45,7 +45,8 @@ public class ReconciliationServiceImpl implements ReconciliationService {
 
         Customer customer = invoicesResult.customer();
 
-        // Process bank statement file
+        // Validate and process bank statement file
+        validateFileType(dto.getBankStatement());
         List<BankTransaction> bankTransactions = new ArrayList<>(processExcelFile(dto.getBankStatement()));
 
         // Filter transactions based on the customer name
@@ -160,5 +161,18 @@ public class ReconciliationServiceImpl implements ReconciliationService {
      */
     private List<Invoice> filterInvoicesByStatus(List<Invoice> invoices, InvoiceStatus status) {
         return invoices.stream().filter(i -> Objects.equals(i.getStatus(), status)).toList();
+    }
+
+    /**
+     * Validates that the provided {@code file} has the {@code .xlsx} extension
+     * @param file The file which will be validated
+     * @throws BadRequestException If the file extension is invalid
+     */
+    private void validateFileType(MultipartFile file) {
+        String fileName = file.getOriginalFilename();
+
+        if(fileName == null || !fileName.endsWith(".xlsx")) {
+            throw new BadRequestException("Only .xlsx files are support", "UNSUPPORTED_FILE");
+        }
     }
 }
