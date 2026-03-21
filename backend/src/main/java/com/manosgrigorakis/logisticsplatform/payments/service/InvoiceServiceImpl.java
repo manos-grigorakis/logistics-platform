@@ -9,6 +9,8 @@ import com.manosgrigorakis.logisticsplatform.infrastructure.document.dto.ExcelIn
 import com.manosgrigorakis.logisticsplatform.infrastructure.document.excel.ExcelInvoiceReader;
 import com.manosgrigorakis.logisticsplatform.payments.dto.BulkInvoiceRequestDTO;
 import com.manosgrigorakis.logisticsplatform.payments.dto.BulkInvoiceResponseDTO;
+import com.manosgrigorakis.logisticsplatform.payments.dto.PrepareReconciliationResult;
+import com.manosgrigorakis.logisticsplatform.payments.dto.ProcessingInvoicesBulkImportResponse;
 import com.manosgrigorakis.logisticsplatform.payments.enums.InvoiceStatus;
 import com.manosgrigorakis.logisticsplatform.payments.mapper.InvoiceMapper;
 import com.manosgrigorakis.logisticsplatform.payments.model.Invoice;
@@ -16,9 +18,9 @@ import com.manosgrigorakis.logisticsplatform.payments.repository.InvoiceReposito
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -44,66 +46,129 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public BulkInvoiceResponseDTO bulkInvoicesImport(BulkInvoiceRequestDTO dto) {
-        String fileName = dto.getFile().getOriginalFilename();
+        ProcessingInvoicesBulkImportResponse response =
+                this.prepareInvoicesFromImport(dto.getFile(), dto.getCustomerId());
 
-        if(fileName == null || !fileName.endsWith(".xlsx")) {
-            throw new BadRequestException("Only .xlsx files are support", "UNSUPPORTED_FILE");
-        }
+        List<Invoice> savedInvoices = this.invoiceRepository.saveAll(response.invoices());
+        log.info("Bulk invoice import successful for customer id: {}", response.customer().getId());
 
-        Customer customer = customerRepository.findById(dto.getCustomerId())
+        int skippedInvoices = response.originalInvoicesLength() - savedInvoices.size();
+
+        return new BulkInvoiceResponseDTO(
+                response.originalInvoicesLength(),
+                savedInvoices.size(),
+                skippedInvoices
+        );
+    }
+
+    /**
+     * Prepares invoices from an imported Excel file so they can be used
+     * during the reconciliation process
+     * @param customerId The {@link Customer} id
+     * @param file The imported Excel file
+     * @return A list of prepared {@link Invoice} entities
+     */
+    @Override
+    public PrepareReconciliationResult prepareInvoicesForReconciliation(Long customerId, MultipartFile file) {
+        ProcessingInvoicesBulkImportResponse response = this.prepareInvoicesFromImport(file, customerId);
+        return new PrepareReconciliationResult(response.customer(), response.invoices());
+    }
+
+    /**
+     * Reads and processes an imported Excel fie containing invoices and prepares them for further processing. <br>
+     * <b>Steps in Method</b>:
+     * <ul>
+     *     <li>Validation of file type</li>
+     *     <li>Load the customer</li>
+     *     <li>Parse the imported Excel file</li>
+     *     <li>Validate Customer TIN</li>
+     *     <li>Map Invoices to entities</li>
+     *     <li>Filter invoices that already exist in the database</li>
+     *     <li>Prepare Invoices with default status and amounts</li>
+     * </ul>
+     * @param file The uploaded Excel file
+     * @param customerId The {@link Customer} id
+     * @return A {@link  ProcessingInvoicesBulkImportResponse} containing the prepared invoices
+     */
+    private ProcessingInvoicesBulkImportResponse prepareInvoicesFromImport(MultipartFile file, Long customerId) {
+        this.validateFileType(file);
+
+        Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> {
-                    log.warn("Customer not found with id: {}", dto.getCustomerId());
-                    return new ResourceNotFoundException("Customer not found with id: " + dto.getCustomerId());
+                    log.warn("Customer not found with id: {}", customerId);
+                    return new ResourceNotFoundException("Customer not found with id: " + customerId);
                 });
 
-        ExcelInvoiceImportResultDTO data;
-
-        try {
-            data = excelInvoiceReader.readExcel(dto.getFile());
-        } catch (IOException e) {
-            log.error(
-                    "Failed to read Excel file during bulk invoice import. File name: {}",
-                    dto.getFile().getOriginalFilename()
-            );
-            throw new BadRequestException("Failed to process uploaded Excel file", "EXCEL_FILE_PROCESSING_FAILED");
-        }
-
-        if (!Objects.equals(customer.getTin(), data.tin())) {
-            log.warn(
-                    "TIN mismatch during bulk invoices import. Expected customer TIN: {}, Excel file TIN: {}",
-                    customer.getTin(), data.tin()
-            );
-
-            throw new ConflictException(
-                    "Customer TIN doesn't match the TIN founded in the uploaded Excel file",
-                    "CUSTOMER_TIN_MISMATCH",
-                    Map.of(
-                            "expectedTin", customer.getTin(),
-                            "fileTin", data.tin()
-                    )
-            );
-        }
+        ExcelInvoiceImportResultDTO data = this.processInvoicesExcelFile(file);
+        this.validateCustomerTin(customer.getTin(), data.tin());
 
         List<Invoice> invoices = data.invoices().stream().map(InvoiceMapper::toEntity).toList();
+
         List<Invoice> filteredInvoices = invoices.stream()
                 .filter(i -> !this.invoiceRepository.existsByExternalInvoiceNumber(i.getExternalInvoiceNumber()))
                 .toList();
 
         filteredInvoices.forEach(i -> {
             i.setCustomer(customer);
-            i.setRemainingAmount(BigDecimal.ZERO);
+            i.setRemainingAmount(i.getTotalAmount());
             i.setStatus(InvoiceStatus.OUTSTANDING);
         });
 
-        List<Invoice> savedInvoices = this.invoiceRepository.saveAll(filteredInvoices);
-        log.info("Bulk invoice import successful for customer id: {}", customer.getId());
+        return new ProcessingInvoicesBulkImportResponse(filteredInvoices, customer, invoices.size());
+    }
 
-        int skippedInvoices = invoices.size() - savedInvoices.size();
+    /**
+     * Validates that the provided {@code file} has the {@code .xlsx} extension
+     * @param file The file which will be validated
+     * @throws BadRequestException If the file extension is invalid
+     */
+    private void validateFileType(MultipartFile file) {
+        String fileName = file.getOriginalFilename();
 
-        return new BulkInvoiceResponseDTO(
-                invoices.size(),
-                savedInvoices.size(),
-                skippedInvoices
-        );
+        if(fileName == null || !fileName.endsWith(".xlsx")) {
+            throw new BadRequestException("Only .xlsx files are support", "UNSUPPORTED_FILE");
+        }
+    }
+
+    /**
+     * Processes the Invoices Excel file using the {@link #excelInvoiceReader} to read its data
+     * @param file The Excel file which includes the {@link Invoice}
+     * @return {@link  ExcelInvoiceImportResultDTO} The data from the processed Excel file
+     * @throws BadRequestException If the process operation fails
+     */
+    private ExcelInvoiceImportResultDTO processInvoicesExcelFile(MultipartFile file) {
+        try {
+            return excelInvoiceReader.readExcel(file);
+        } catch (IOException e) {
+            log.error("Failed to read Excel file during bulk invoice import. File name: {}",
+                    file.getOriginalFilename(), e
+            );
+            throw new BadRequestException("Failed to process uploaded Excel file", "EXCEL_FILE_PROCESSING_FAILED");
+        }
+    }
+
+    /**
+     * Validates the {@link  Customer} TIN from the request if its match with the TIN,
+     * from the imported file
+     * @param customerTin The {@link Customer} TIN number
+     * @param fileTin The TIN number in the imported file
+     * @throws ConflictException If there is a miss match in the validation
+     */
+    private void validateCustomerTin(String customerTin, String fileTin) {
+        if (!Objects.equals(customerTin, fileTin)) {
+            log.warn(
+                    "TIN mismatch during bulk invoices import. Expected customer TIN: {}, Excel file TIN: {}",
+                    customerTin, fileTin
+            );
+
+            throw new ConflictException(
+                    "Customer TIN doesn't match the TIN founded in the uploaded Excel file",
+                    "CUSTOMER_TIN_MISMATCH",
+                    Map.of(
+                            "expectedTin", customerTin,
+                            "fileTin", fileTin
+                    )
+            );
+        }
     }
 }
