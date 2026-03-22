@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -95,7 +96,7 @@ public class ReconciliationServiceImpl implements ReconciliationService {
         noMatchTransaction.removeIf(t -> multipleInvoicesMatchResult.matchedTransactions().contains(t));
         noMatchInvoices.removeIf(i -> multipleInvoicesMatchResult.matchedInvoices().contains(i));
 
-        List<ReconciliationRow> reconciliationRows = buildReconciliationRows(invoicePayments);
+        List<ReconciliationRow> reconciliationRows = buildReconciliationRows(invoicePayments, noMatchInvoices);
         LocalDate firstInvoiceDate = getFirstInvoiceDate(invoicesResult.invoices());
         LocalDate lastInvoiceDate = getLastInvoiceDate(invoicesResult.invoices());
 
@@ -203,12 +204,17 @@ public class ReconciliationServiceImpl implements ReconciliationService {
     /**
      * Builds reconciliation rows by mapping the relationships between {@link InvoicePayments}, {@link Invoice} and
      * {@link BankTransaction} into {@link ReconciliationRow}
-     *
+     * <p>Includes both matched & unmatched invoices</p>
+     * <ul>
+     *     <li>Matched invoices are appended along with their relational data</li>
+     *     <li>Unmatched invoices are appended without any transaction data</li>
+     * </ul>
      * @param invoicePayments The {@link List} of the {@link InvoicePayments} entities to be used to build the report
      *                        rows
+     * @param unmatchedInvoices The {@link List} of the unmatched invoices to populate the report
      * @return A list of {@link ReconciliationRow} ready for further processing (e.g. Excel generation)
      */
-    private List<ReconciliationRow> buildReconciliationRows(List<InvoicePayments> invoicePayments) {
+    private List<ReconciliationRow> buildReconciliationRows(List<InvoicePayments> invoicePayments, List<Invoice> unmatchedInvoices) {
         List<ReconciliationRow> reconciliationRows = new ArrayList<>();
 
         for (InvoicePayments invoicePayment : invoicePayments) {
@@ -223,6 +229,21 @@ public class ReconciliationServiceImpl implements ReconciliationService {
                     transaction.getIssueDate(),
                     invoicePayment.getAmount(),
                     invoice.getRemainingAmount()
+            );
+
+            reconciliationRows.add(row);
+        }
+
+        for(Invoice unmatchedInvoice : unmatchedInvoices) {
+            ReconciliationRow row = new ReconciliationRow(
+                    unmatchedInvoice.getInvoiceDate(),
+                    unmatchedInvoice.getExternalInvoiceNumber(),
+                    unmatchedInvoice.getStatus(),
+                    unmatchedInvoice.getTotalAmount(),
+                    "",
+                    null,
+                    BigDecimal.ZERO,
+                    unmatchedInvoice.getRemainingAmount()
             );
 
             reconciliationRows.add(row);
