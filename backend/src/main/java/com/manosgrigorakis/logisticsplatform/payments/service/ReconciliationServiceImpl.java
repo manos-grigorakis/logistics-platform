@@ -105,8 +105,9 @@ public class ReconciliationServiceImpl implements ReconciliationService {
         try {
             report = reconciliationReportExcelGenerator.generateReconciliationReport(customer, reconciliationRows,
                                                                                      firstInvoiceDate, lastInvoiceDate);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (IOException e) {
+            log.error("Failed to generate reconciliation report for customer {}", customer.getCompanyName(), e);
+            throw new RuntimeException("Failed to generate reconciliation Excel report", e);
         }
 
         ReconciliationReportCreateResponseDTO reportResponse = reconciliationReportService.createReconciliationReport(

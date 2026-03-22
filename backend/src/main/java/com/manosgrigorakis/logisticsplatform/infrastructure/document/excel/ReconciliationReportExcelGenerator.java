@@ -11,6 +11,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -42,12 +43,12 @@ public class ReconciliationReportExcelGenerator {
      * @param firstInvoiceDate   The earliest {@link Invoice#getInvoiceDate()} in the report
      * @param lastInvoiceDate    The latest {@link Invoice#getInvoiceDate()} in the report
      * @return A {@link ByteArrayOutputStream} containing the generated Excel file
-     * @throws Exception If an error occurs during the Excel generation
+     * @throws IOException If an error occurs during the Excel generation
      */
     public ByteArrayOutputStream generateReconciliationReport(Customer customer,
                                                               List<ReconciliationRow> reconciliationRows,
                                                               LocalDate firstInvoiceDate,
-                                                              LocalDate lastInvoiceDate) throws Exception {
+                                                              LocalDate lastInvoiceDate) throws IOException {
         log.info("Reconciliation report started");
 
         try (Workbook workbook = new XSSFWorkbook()) {
