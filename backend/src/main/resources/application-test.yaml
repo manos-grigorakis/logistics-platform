@@ -95,6 +95,7 @@ app:
     bucketName: "my_bucket"
     bucketPathQuotes: "quotes/"
     bucketPathCmr: "cmr/"
+    bucketPathReconciliationReport: "reconciliation-report/"
 
 tax:
   vat: 24

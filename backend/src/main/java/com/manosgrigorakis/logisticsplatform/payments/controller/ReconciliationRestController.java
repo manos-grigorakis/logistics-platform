@@ -1,7 +1,9 @@
 package com.manosgrigorakis.logisticsplatform.payments.controller;
 
 import com.manosgrigorakis.logisticsplatform.payments.dto.ReconciliationProcessResponse;
+import com.manosgrigorakis.logisticsplatform.payments.dto.ReconciliationReportResponseDTO;
 import com.manosgrigorakis.logisticsplatform.payments.dto.ReconciliationRequestDTO;
+import com.manosgrigorakis.logisticsplatform.payments.service.ReconciliationReportService;
 import com.manosgrigorakis.logisticsplatform.payments.service.ReconciliationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -10,10 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @Tag(name = "Reconciliation")
@@ -21,6 +20,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/reconciliation")
 public class ReconciliationRestController {
     private final ReconciliationService reconciliationService;
+    private final ReconciliationReportService reconciliationReportService;
+
+
+    @Operation(summary = "Find the Reconciliation Report by Id", description = "Finds the reconciliation report from the given id")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Operation was successfully"),
+            @ApiResponse(responseCode = "404", description = "Reconciliation report with the given id not found")
+    })
+    @GetMapping("/report/{id}")
+    public ReconciliationReportResponseDTO get(@PathVariable Long id) {
+        return reconciliationReportService.getReconciliationReport(id);
+    }
 
     @Operation(summary = "Reconciliation Process",
             description = "Reconciliation process used to track paid invoices from an invoices file and a bank statement"
