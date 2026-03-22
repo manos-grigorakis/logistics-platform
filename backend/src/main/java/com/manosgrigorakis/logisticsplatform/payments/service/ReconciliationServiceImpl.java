@@ -120,8 +120,8 @@ public class ReconciliationServiceImpl implements ReconciliationService {
         Set<Invoice> uniqueInvoices = new LinkedHashSet<>(invoicesResult.invoices());
         List<Invoice> paidInvoices = filterInvoicesByStatus(matchedInvoices, InvoiceStatus.PAID);
         List<Invoice> partiallyPaidInvoices = filterInvoicesByStatus(matchedInvoices, InvoiceStatus.PARTIALLY_PAID);
-        List<Invoice> outstandingInvoices = filterInvoicesByStatus(matchedInvoices, InvoiceStatus.OUTSTANDING);
-        List<Invoice> disputedInvoices = filterInvoicesByStatus(matchedInvoices, InvoiceStatus.DISPUTED);
+        List<Invoice> outstandingInvoices = filterInvoicesByStatus(invoicesResult.invoices(), InvoiceStatus.OUTSTANDING);
+        List<Invoice> disputedInvoices = filterInvoicesByStatus(invoicesResult.invoices(), InvoiceStatus.DISPUTED);
 
         return new ReconciliationProcessResponse(
                 uniqueInvoices.size(),
