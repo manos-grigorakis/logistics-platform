@@ -4,7 +4,9 @@ import com.manosgrigorakis.logisticsplatform.common.exception.BadRequestExceptio
 import com.manosgrigorakis.logisticsplatform.customers.enums.CustomerType;
 import com.manosgrigorakis.logisticsplatform.customers.model.Customer;
 import com.manosgrigorakis.logisticsplatform.infrastructure.document.dto.BankStatementImportResultDTO;
+import com.manosgrigorakis.logisticsplatform.infrastructure.document.dto.ReconciliationRow;
 import com.manosgrigorakis.logisticsplatform.infrastructure.document.excel.ExcelBankTransactionReaderNgb;
+import com.manosgrigorakis.logisticsplatform.infrastructure.document.excel.ReconciliationReportExcelGenerator;
 import com.manosgrigorakis.logisticsplatform.payments.dto.*;
 import com.manosgrigorakis.logisticsplatform.payments.enums.InvoiceStatus;
 import com.manosgrigorakis.logisticsplatform.payments.mapper.BankTransactionMapper;
@@ -21,9 +23,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -34,6 +37,8 @@ public class ReconciliationServiceImpl implements ReconciliationService {
     private final InvoiceRepository invoiceRepository;
     private final BankTransactionRepository bankTransactionRepository;
     private final InvoicePaymentsRepository invoicePaymentsRepository;
+    private final ReconciliationReportExcelGenerator reconciliationReportExcelGenerator;
+    private final ReconciliationReportService reconciliationReportService;
 
     @Override
     @Transactional
@@ -90,11 +95,26 @@ public class ReconciliationServiceImpl implements ReconciliationService {
         noMatchTransaction.removeIf(t -> multipleInvoicesMatchResult.matchedTransactions().contains(t));
         noMatchInvoices.removeIf(i -> multipleInvoicesMatchResult.matchedInvoices().contains(i));
 
-        log.info("Matched invoices size: {} | Unique: {}", matchedInvoices.size(), new HashSet<>(matchedInvoices).size());
+        List<ReconciliationRow> reconciliationRows = buildReconciliationRows(invoicePayments);
+        LocalDate firstInvoiceDate = getFirstInvoiceDate(invoicesResult.invoices());
+        LocalDate lastInvoiceDate = getLastInvoiceDate(invoicesResult.invoices());
 
+        ByteArrayOutputStream report;
+
+        try {
+            report = reconciliationReportExcelGenerator.generateReconciliationReport(customer, reconciliationRows,
+                                                                                     firstInvoiceDate, lastInvoiceDate);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        ReconciliationReportCreateResponseDTO reportResponse = reconciliationReportService.createReconciliationReport(
+                new CreateReconciliationReport(report, firstInvoiceDate, lastInvoiceDate, matchedInvoices.size(),
+                                               noMatchInvoices.size(), customer));
         invoiceRepository.saveAll(matchedInvoices);
         bankTransactionRepository.saveAll(matchedTransactions);
         invoicePaymentsRepository.saveAll(invoicePayments);
+
         log.info("Reconciliation process successfully finished for customer id: {}", dto.getCustomerId());
 
         Set<Invoice> uniqueInvoices = new LinkedHashSet<>(invoicesResult.invoices());
@@ -102,8 +122,7 @@ public class ReconciliationServiceImpl implements ReconciliationService {
         List<Invoice> partiallyPaidInvoices = filterInvoicesByStatus(matchedInvoices, InvoiceStatus.PARTIALLY_PAID);
         List<Invoice> outstandingInvoices = filterInvoicesByStatus(matchedInvoices, InvoiceStatus.OUTSTANDING);
         List<Invoice> disputedInvoices = filterInvoicesByStatus(matchedInvoices, InvoiceStatus.DISPUTED);
-
-
+        
         return new ReconciliationProcessResponse(
                 uniqueInvoices.size(),
                 matchedInvoices.size(),
@@ -113,13 +132,15 @@ public class ReconciliationServiceImpl implements ReconciliationService {
                 paidInvoices.size(),
                 partiallyPaidInvoices.size(),
                 outstandingInvoices.size(),
-                disputedInvoices.size()
+                disputedInvoices.size(),
+                reportResponse
         );
     }
 
     /**
      * Processes the uploaded bank statement Excel file using
      * {@link #excelBankTransactionReaderNgb#processExcelFile(MultipartFile)}
+     *
      * @param bankStatement The bank statement Excel to process
      * @return A list containing the parsed bank transactions from the Excel file
      */
@@ -127,7 +148,7 @@ public class ReconciliationServiceImpl implements ReconciliationService {
         try {
             List<BankStatementImportResultDTO> bankResults = excelBankTransactionReaderNgb.readExcel(bankStatement);
             return bankResults.stream().map(result ->
-                    BankTransactionMapper.toEntity(result, "NBG")).toList();
+                                                    BankTransactionMapper.toEntity(result, "NBG")).toList();
         } catch (IOException e) {
             log.error("Failed to process bank statement for {}", bankStatement.getOriginalFilename(), e);
             throw new BadRequestException("Processing Excel bank statement failed", "FAILED_TO_PROCESS_BANK");
@@ -136,27 +157,29 @@ public class ReconciliationServiceImpl implements ReconciliationService {
 
     /**
      * Checks if the {@code SenderName} from the {@link BankTransaction} matches the {@link Customer}
+     *
      * @param transaction The {@link BankTransaction} to check
-     * @param customer The {@link Customer} used for matching
+     * @param customer    The {@link Customer} used for matching
      * @return {@code true} If the {@code SenderName} matches with the {@link Customer}, otherwise {@code false}
      */
     private boolean matchesCustomer(BankTransaction transaction, Customer customer) {
-        if(transaction.getSenderName() == null) return false;
+        if (transaction.getSenderName() == null) return false;
 
         String senderName = transaction.getSenderName().toUpperCase();
 
-        if(customer.getCustomerType() == CustomerType.COMPANY) {
+        if (customer.getCustomerType() == CustomerType.COMPANY) {
             return senderName.contains(customer.getCompanyName().toUpperCase());
         }
 
-        String customerName = customer.getLastName().toUpperCase() + " " +  customer.getFirstName().toUpperCase();
+        String customerName = customer.getLastName().toUpperCase() + " " + customer.getFirstName().toUpperCase();
         return senderName.contains(customerName);
     }
 
     /**
      * Returns a set of {@link Invoice} filtered by status
+     *
      * @param invoices The invoices to filter
-     * @param status The {@link InvoiceStatus} to filter the invoices
+     * @param status   The {@link InvoiceStatus} to filter the invoices
      * @return A filtered {@link List} of {@link Invoice} by status
      */
     private List<Invoice> filterInvoicesByStatus(List<Invoice> invoices, InvoiceStatus status) {
@@ -165,14 +188,74 @@ public class ReconciliationServiceImpl implements ReconciliationService {
 
     /**
      * Validates that the provided {@code file} has the {@code .xlsx} extension
+     *
      * @param file The file which will be validated
      * @throws BadRequestException If the file extension is invalid
      */
     private void validateFileType(MultipartFile file) {
         String fileName = file.getOriginalFilename();
 
-        if(fileName == null || !fileName.endsWith(".xlsx")) {
+        if (fileName == null || !fileName.endsWith(".xlsx")) {
             throw new BadRequestException("Only .xlsx files are support", "UNSUPPORTED_FILE");
         }
+    }
+
+    /**
+     * Builds reconciliation rows by mapping the relationships between {@link InvoicePayments}, {@link Invoice} and
+     * {@link BankTransaction} into {@link ReconciliationRow}
+     *
+     * @param invoicePayments The {@link List} of the {@link InvoicePayments} entities to be used to build the report
+     *                        rows
+     * @return A list of {@link ReconciliationRow} ready for further processing (e.g. Excel generation)
+     */
+    private List<ReconciliationRow> buildReconciliationRows(List<InvoicePayments> invoicePayments) {
+        List<ReconciliationRow> reconciliationRows = new ArrayList<>();
+
+        for (InvoicePayments invoicePayment : invoicePayments) {
+            BankTransaction transaction = invoicePayment.getBankTransaction();
+            Invoice invoice = invoicePayment.getInvoice();
+            ReconciliationRow row = new ReconciliationRow(
+                    invoice.getInvoiceDate(),
+                    invoice.getExternalInvoiceNumber(),
+                    invoice.getStatus(),
+                    invoice.getTotalAmount(),
+                    transaction.getBankName(),
+                    transaction.getIssueDate(),
+                    invoicePayment.getAmount(),
+                    invoice.getRemainingAmount()
+            );
+
+            reconciliationRows.add(row);
+        }
+
+        return reconciliationRows;
+    }
+
+    /**
+     * Finds from the provided {@link List} of {@link Invoice} the first invoice based on the issue date
+     *
+     * @param invoices The invoices {@link List} to be filtered
+     * @return The date of the first invoice after processing
+     */
+    private LocalDate getFirstInvoiceDate(List<Invoice> invoices) {
+        return invoices.stream()
+                .map(Invoice::getInvoiceDate)
+                .filter(Objects::nonNull)
+                .min(LocalDate::compareTo)
+                .orElse(null);
+    }
+
+    /**
+     * Finds from the provided {@link List} of {@link Invoice} the last invoice based on the issue date
+     *
+     * @param invoices The invoices {@link List} to be filtered
+     * @return The date of the last invoice after processing
+     */
+    private LocalDate getLastInvoiceDate(List<Invoice> invoices) {
+        return invoices.stream()
+                .map(Invoice::getInvoiceDate)
+                .filter(Objects::nonNull)
+                .max(LocalDate::compareTo)
+                .orElse(null);
     }
 }

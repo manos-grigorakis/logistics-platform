@@ -10,5 +10,6 @@ public record ReconciliationProcessResponse (
         Integer paidInvoices,
         Integer partiallyPaidInvoice,
         Integer outstandingInvoices,
-        Integer disputedInvoices
+        Integer disputedInvoices,
+        ReconciliationReportCreateResponseDTO reportSummary
 ) {}
