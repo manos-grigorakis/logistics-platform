@@ -1,9 +1,11 @@
 package com.manosgrigorakis.logisticsplatform.payments.service;
 
+import com.manosgrigorakis.logisticsplatform.common.exception.ResourceNotFoundException;
 import com.manosgrigorakis.logisticsplatform.customers.model.Customer;
 import com.manosgrigorakis.logisticsplatform.infrastructure.storage.FileStorageService;
 import com.manosgrigorakis.logisticsplatform.payments.dto.CreateReconciliationReport;
 import com.manosgrigorakis.logisticsplatform.payments.dto.ReconciliationReportCreateResponseDTO;
+import com.manosgrigorakis.logisticsplatform.payments.dto.ReconciliationReportResponseDTO;
 import com.manosgrigorakis.logisticsplatform.payments.model.ReconciliationReport;
 import com.manosgrigorakis.logisticsplatform.payments.repository.ReconciliationReportRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,30 @@ public class ReconciliationReportServiceImpl implements ReconciliationReportServ
 
     @Value("${app.minio.bucketPathReconciliationReport}")
     private String bucketPathReport;
+
+    @Override
+    public ReconciliationReportResponseDTO getReconciliationReport(Long id) {
+        ReconciliationReport report = reconciliationReportRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.warn("Report not found with id: {}", id);
+                    return new ResourceNotFoundException("Report not found with id: " + id);
+                });
+
+        String fileName = report.getName() + ".xlsx";
+        String presignedUrl = fileStorageService.createPresignedUrl(this.bucketPathReport + fileName);
+
+        return new ReconciliationReportResponseDTO(
+                report.getId(),
+                report.getName(),
+                presignedUrl,
+                report.getFromDate(),
+                report.getToDate(),
+                report.getMatchedInvoices(),
+                report.getUnmatchedInvoices(),
+                report.getCustomer().getId(),
+                report.getCreatedAt()
+        );
+    }
 
     @Override
     public ReconciliationReportCreateResponseDTO createReconciliationReport(CreateReconciliationReport dto) {

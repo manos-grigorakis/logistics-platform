@@ -122,7 +122,7 @@ public class ReconciliationServiceImpl implements ReconciliationService {
         List<Invoice> partiallyPaidInvoices = filterInvoicesByStatus(matchedInvoices, InvoiceStatus.PARTIALLY_PAID);
         List<Invoice> outstandingInvoices = filterInvoicesByStatus(matchedInvoices, InvoiceStatus.OUTSTANDING);
         List<Invoice> disputedInvoices = filterInvoicesByStatus(matchedInvoices, InvoiceStatus.DISPUTED);
-        
+
         return new ReconciliationProcessResponse(
                 uniqueInvoices.size(),
                 matchedInvoices.size(),
