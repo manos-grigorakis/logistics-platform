@@ -11,7 +11,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -83,8 +82,6 @@ public class ReconciliationReportExcelGenerator {
             // Data
             reconciliationRows.sort(Comparator.comparing(ReconciliationRow::invoiceIssueDate));
             buildData(workbook, sheet, reconciliationRows);
-
-            String fileName = buildFileName(customer.getCompanyName(), invoicesDaysRange);
 
             workbook.write(byteArrayOutputStream);
             return byteArrayOutputStream;
@@ -445,20 +442,5 @@ public class ReconciliationReportExcelGenerator {
      */
     private static String buildInvoiceDateRange(LocalDate firstDate, LocalDate lastDate) {
         return formatDate(firstDate) + " - " + formatDate(lastDate);
-    }
-
-    /**
-     * Builds a filename for the reconciliation Excel report The filename is build using the customer's company name and
-     * the invoice date range escaping {@code /} with {@code -}
-     * <p>e.g. acmelogistics-14-02-2026-03-04-2026.xlsx</p>
-     *
-     * @param customerCompanyName The {@link Customer#getCompanyName()}
-     * @param daysRange           The invoice date range (e.g. 14/02/2026-03/04/2026)
-     * @return The filename
-     */
-    private static String buildFileName(String customerCompanyName, String daysRange) {
-        return customerCompanyName.trim().toLowerCase().replaceAll("\\s+", "-") + "-"
-                + daysRange.trim().replace("/", "-")
-                + ".xlsx";
     }
 }
