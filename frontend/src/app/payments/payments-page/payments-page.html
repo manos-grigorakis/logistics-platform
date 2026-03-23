@@ -1,1 +1,72 @@
-<p>payments-page works!</p>
+<section>
+  <!-- Header -->
+  <div class="mb-6">
+    <h2 class="mb-2 text-2xl leading-5 font-bold">Payment Reconciliation</h2>
+    <span class="text-sm leading-5 text-zinc-500"
+      >Match bank transactions against outstanding invoices for a customer.</span
+    >
+  </div>
+
+  <div class="rounded bg-white px-4 py-8 shadow-sm">
+    <app-detailed-stepper class="flex-1" [steps]="stepperData" [activeStep]="activeStep" />
+
+    <!-- Customer Dropdown -->
+    <div class="my-8">
+      <label for="customerId" (click)="onClickFocusCustomersSelect()" class="mb-1 block">
+        Customer
+      </label>
+      <ng-select
+        #customerSelect
+        class="tw-select"
+        placeholder="Search a customer"
+        bindLabel="companyName"
+        bindValue="id"
+        formControlName="customerId"
+        loadingText="Loading customers..."
+        notFoundText="No results"
+        [items]="customersList"
+        [loading]="customersLoading"
+        [typeahead]="customerSearch$"
+        [searchable]="true"
+        [clearable]="true"
+      />
+    </div>
+
+    <!-- Files -->
+    <div class="mb-8 flex gap-6">
+      <div class="flex-1">
+        <div class="flex items-center justify-between">
+          <h3 class="mb-2 leading-5 font-medium">Invoices</h3>
+          <span class="text-sm text-zinc-500">From Epsilon Smart</span>
+        </div>
+        <app-file-dropzone [showMaxFileSize]="false" supportedFiles=".xlsx" />
+        <!-- <app-file-dropzone supportedFiles=".xlsx" [maxFileSize]="2" /> -->
+      </div>
+      <div class="flex-1">
+        <div class="flex items-center justify-between">
+          <h3 class="mb-2 leading-5 font-medium">Bank Statement</h3>
+          <span class="text-sm text-zinc-500">From National Bank Greece</span>
+        </div>
+        <app-file-dropzone [showMaxFileSize]="false" supportedFiles=".xlsx" />
+      </div>
+    </div>
+
+    <!-- Info Message -->
+    <div
+      class="mb-8 flex max-w-6xl flex-wrap items-center gap-2 rounded border border-blue-200 bg-blue-50 px-4 py-2 text-blue-800"
+    >
+      <ng-icon name="lucideInfo" color="#52525c" />
+
+      <div class="text-sm text-zinc-600">
+        <p>
+          The system will match transactions to invoices using invoice number detection and amount
+          combination matching.
+        </p>
+        <p>Only matched transactions and invoices are saved.</p>
+      </div>
+    </div>
+
+    <!-- Process Button -->
+    <app-primary-button value="Start Reconciliation Process" />
+  </div>
+</section>

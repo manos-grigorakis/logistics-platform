@@ -1,0 +1,45 @@
+<div class="relative flex w-full items-center justify-center">
+  <div
+    class="flex h-64 w-full flex-col items-center justify-center rounded border border-dashed"
+    [ngClass]="{
+      'border-zinc-400 bg-zinc-100': !isFileSelected,
+      'border-success-dark bg-success-light': isFileSelected,
+    }"
+  >
+    <div class="flex flex-col items-center justify-center pt-5 pb-6 text-zinc-400">
+      @if (isFileSelected) {
+        <ng-icon name="lucideCheckCircle2" size="30" color="#059669" />
+        <p class="my-2 w-100 truncate text-center">{{ fileName }}</p>
+        <p class="underline hover:cursor-pointer" (click)="fileInput.click()">Replace file</p>
+      } @else {
+        <ng-icon name="lucideUpload" size="30" color="#9f9fa9" />
+        <p class="my-2 text-sm">Click the button below to upload</p>
+
+        @if (showMaxFileSize) {
+          <p class="text-xs">
+            Max File Size: <span class="font-semibold">{{ maxFileSizeInMB }} mb</span>
+          </p>
+        }
+
+        <button
+          class="bg-primary-500 hover:bg-primary-600 my-4 mb-2 flex cursor-pointer items-center gap-1 rounded-md p-1 text-sm text-white transition-all duration-150"
+          (click)="fileInput.click()"
+          [disabled]="isFileLoading"
+        >
+          <ng-icon name="lucideSearch" size="14" />
+          Browse file
+        </button>
+
+        <p class="text-xs">Supported files: {{ supportedFiles }}</p>
+      }
+    </div>
+  </div>
+  <!-- Hidden File Input (Outside Label) -->
+  <input
+    #fileInput
+    type="file"
+    [accept]="supportedFiles"
+    (change)="onFileSelected($event)"
+    class="hidden"
+  />
+</div>
