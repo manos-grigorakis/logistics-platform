@@ -48,12 +48,9 @@ public class ReconciliationEngineTest {
         // Assert
         assertEquals(3, results.matchedInvoices().size());
         assertEquals(3, results.matchedTransactions().size());
-        assertTrue(results.matchedInvoices().stream().anyMatch(
-                i -> i.getExternalInvoiceNumber().equals("INVOICE-0000500") && i.getStatus() == InvoiceStatus.PAID));
-        assertTrue(results.matchedInvoices().stream().anyMatch(
-                i -> i.getExternalInvoiceNumber().equals("INVOICE-0000501") && i.getStatus() == InvoiceStatus.PAID));
-        assertTrue(results.matchedInvoices().stream().anyMatch(i -> i.getExternalInvoiceNumber().equals(
-                "INVOICE-0000502") && i.getStatus() == InvoiceStatus.PARTIALLY_PAID));
+        assertTrue(hasInvoice(results.matchedInvoices(), "INVOICE-0000500", InvoiceStatus.PAID));
+        assertTrue(hasInvoice(results.matchedInvoices(), "INVOICE-0000501", InvoiceStatus.PAID));
+        assertTrue(hasInvoice(results.matchedInvoices(), "INVOICE-0000502", InvoiceStatus.PARTIALLY_PAID));
 
         assertEquals(0, results.noMatchInvoices().size());
     }
@@ -81,11 +78,8 @@ public class ReconciliationEngineTest {
         // Assert
         assertEquals(2, results.matchedInvoices().size());
         assertEquals(1, results.matchedTransactions().size());
-        assertTrue(results.matchedInvoices().stream().allMatch(i -> i.getStatus() == InvoiceStatus.PAID));
-        assertTrue(results.matchedInvoices().stream().
-                           anyMatch(i -> i.getExternalInvoiceNumber().equals("INVOICE-0000503")));
-        assertTrue(results.matchedInvoices().stream().
-                           anyMatch(i -> i.getExternalInvoiceNumber().equals("INVOICE-0000504")));
+        assertTrue(hasInvoice(results.matchedInvoices(), "INVOICE-0000503", InvoiceStatus.PAID));
+        assertTrue(hasInvoice(results.matchedInvoices(), "INVOICE-0000504", InvoiceStatus.PAID));
     }
 
     @Test
@@ -109,11 +103,8 @@ public class ReconciliationEngineTest {
         // Assert
         assertEquals(2, results.matchedInvoices().size());
         assertEquals(1, results.matchedTransactions().size());
-        assertTrue(results.matchedInvoices().stream().allMatch(i -> i.getStatus() == InvoiceStatus.PAID));
-        assertTrue(results.matchedInvoices().stream().
-                           anyMatch(i -> i.getExternalInvoiceNumber().equals("INVOICE-0000505")));
-        assertTrue(results.matchedInvoices().stream().
-                           anyMatch(i -> i.getExternalInvoiceNumber().equals("INVOICE-0000506")));
+        assertTrue(hasInvoice(results.matchedInvoices(), "INVOICE-0000505", InvoiceStatus.PAID));
+        assertTrue(hasInvoice(results.matchedInvoices(), "INVOICE-0000506", InvoiceStatus.PAID));
     }
 
     @Test
@@ -141,11 +132,8 @@ public class ReconciliationEngineTest {
         // Assert
         assertEquals(2, results.matchedInvoices().size());
         assertEquals(1, results.matchedTransactions().size());
-        assertTrue(results.matchedInvoices().stream().allMatch(i -> i.getStatus() == InvoiceStatus.PAID));
-        assertTrue(results.matchedInvoices().stream().
-                           anyMatch(i -> i.getExternalInvoiceNumber().equals("INVOICE-0000506")));
-        assertTrue(results.matchedInvoices().stream().
-                           anyMatch(i -> i.getExternalInvoiceNumber().equals("INVOICE-0000507")));
+        assertTrue(hasInvoice(results.matchedInvoices(), "INVOICE-0000506", InvoiceStatus.PAID));
+        assertTrue(hasInvoice(results.matchedInvoices(), "INVOICE-0000507", InvoiceStatus.PAID));
     }
 
     @Test
@@ -170,5 +158,18 @@ public class ReconciliationEngineTest {
         // Assert
         assertEquals(0, results.matchedInvoices().size());
         assertEquals(0, results.matchedTransactions().size());
+    }
+
+    /**
+     * Verifies that the {@link Invoice} exists with the provided {@code invoiceNumber} and has the {@code status}
+     * in the provided {@link List} of {@link Invoice}
+     * @param invoices The {@link List} of {@link Invoice} to search for matches
+     * @param invoiceNumber The {@link Invoice} number to check
+     * @param status The status of the {@link Invoice}
+     * @return {@code true} If there is a match, otherwise {@code false}
+     */
+    private boolean hasInvoice(List<Invoice> invoices, String invoiceNumber, InvoiceStatus status) {
+        return invoices.stream().anyMatch(i -> i.getExternalInvoiceNumber().
+                equals(invoiceNumber) && i.getStatus() == status);
     }
 }
