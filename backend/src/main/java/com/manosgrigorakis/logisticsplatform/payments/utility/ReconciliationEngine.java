@@ -105,12 +105,12 @@ public class ReconciliationEngine {
                             invoice.setRemainingAmount(BigDecimal.ZERO);
 
                             matchedInvoices.add(invoice);
-                            matchedTransactions.add(transaction);
                             invoicePayments.add(new InvoicePayments(invoice, transaction, invoice.getTotalAmount()));
                             break;
                         }
                     }
                 }
+                matchedTransactions.add(transaction);
             }
         }
         return new MultipleInvoicesMatchingResults(matchedInvoices, matchedTransactions, invoicePayments);
