@@ -31,6 +31,7 @@ import { CreateShipment } from './shipments/create-shipment/create-shipment';
 import { EditShipment } from './shipments/edit-shipment/edit-shipment';
 import { ViewShipment } from './shipments/view-shipment/view-shipment';
 import { CustomerTabShipments } from './customers/view-customer/customer-tabs/customer-tab-shipments/customer-tab-shipments';
+import { PaymentsPage } from './payments/payments-page/payments-page';
 
 export const routes: Routes = [
   {
@@ -101,6 +102,11 @@ export const routes: Routes = [
           { path: 'create-shipment', component: CreateShipment, title: 'Create Shipment' },
           { path: 'edit-shipment/:id', component: EditShipment, title: 'Edit Shipment' },
         ],
+      },
+      {
+        path: 'payments-tracking',
+        component: PaymentsPage,
+        title: 'Payments Tracking',
       },
     ],
   },
