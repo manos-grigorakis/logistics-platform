@@ -17,11 +17,18 @@ export class FileDropzone {
 
   public isFileSelected: boolean = false;
   public isFileLoading: boolean = false;
+  public isDropzoneHovered: boolean = false;
   public error: boolean = false;
   public fileName?: string = undefined;
 
+  // === Handle File ===
   public onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    if (!file) return;
+    this.handleFile(file);
+
     this.error = false;
 
     if (input.files && input.files.length > 0) {
@@ -37,20 +44,64 @@ export class FileDropzone {
     }
   }
 
-  private fileValidation(file: File) {
+  public onDrop(event: DragEvent): void {
+    event.preventDefault();
+    this.isDropzoneHovered = false;
+
+    if (!event.dataTransfer?.files?.length) return;
+
+    const file = event.dataTransfer.files[0];
+
+    this.fileValidation(file);
+    if (this.error) return;
+
+    this.isFileLoading = true;
+    this.isFileSelected = true;
+    this.fileName = file.name;
+    this.fileSelected.emit(file);
+  }
+
+  // === Drag Events ===
+  public onDragEnter(event: DragEvent): void {
+    event.preventDefault();
+    this.isDropzoneHovered = true;
+  }
+
+  public onDragLeave(event: DragEvent): void {
+    event.preventDefault();
+    this.isDropzoneHovered = false;
+  }
+
+  public onDragOver(event: DragEvent): void {
+    event.preventDefault();
+  }
+
+  private handleFile(file: File): void {
+    this.error = false;
+    if (!this.fileValidation(file)) return;
+
+    this.isFileLoading = true;
+    this.isFileSelected = true;
+    this.fileName = file.name;
+    this.fileSelected.emit(file);
+  }
+
+  // === File Validations ===
+  private fileValidation(file: File): boolean {
     this.error = false;
 
     if (!this.validateFileSize(file.size)) {
       this.error = true;
       toast.error('File too large');
-      return;
+      return false;
     }
 
     if (!this.validateFileType(file)) {
       this.error = true;
       toast.error('Unsupported file type');
-      return;
+      return false;
     }
+    return true;
   }
 
   private validateFileSize(size: number): boolean {

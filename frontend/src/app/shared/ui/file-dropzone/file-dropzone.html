@@ -1,19 +1,31 @@
-<div class="relative flex w-full items-center justify-center">
+<div
+  class="relative flex w-full items-center justify-center"
+  [ngClass]="{
+    'border-primary-500 bg-primary-50 scale-[1.02]': isDropzoneHovered,
+  }"
+  (dragenter)="onDragEnter($event)"
+  (dragleave)="onDragLeave($event)"
+  (dragover)="onDragOver($event)"
+  (drop)="onDrop($event)"
+>
   <div
-    class="flex h-64 w-full flex-col items-center justify-center rounded border border-dashed"
+    class="flex h-64 w-full flex-col items-center justify-center rounded border border-dashed transition-all duration-200"
     [ngClass]="{
-      'border-zinc-400 bg-zinc-100': !isFileSelected,
+      'border-zinc-400 bg-zinc-100': !isFileSelected && !isDropzoneHovered,
       'border-success-dark bg-success-light': isFileSelected,
     }"
   >
-    <div class="flex flex-col items-center justify-center pt-5 pb-6 text-zinc-400">
+    <div
+      class="flex flex-col items-center justify-center pt-5 pb-6 text-zinc-400"
+      [class.pointer-events-none]="isDropzoneHovered"
+    >
       @if (isFileSelected) {
         <ng-icon name="lucideCheckCircle2" size="30" color="#059669" />
         <p class="my-2 w-100 truncate text-center">{{ fileName }}</p>
         <p class="underline hover:cursor-pointer" (click)="fileInput.click()">Replace file</p>
       } @else {
         <ng-icon name="lucideUpload" size="30" color="#9f9fa9" />
-        <p class="my-2 text-sm">Click the button below to upload</p>
+        <p class="my-2 text-sm">Drop or Click the button below to upload</p>
 
         @if (showMaxFileSize) {
           <p class="text-xs">
@@ -34,6 +46,16 @@
       }
     </div>
   </div>
+
+  <!-- Overlay for dropzone -->
+  @if (isDropzoneHovered) {
+    <div
+      class="bg-primary-500/10 pointer-events-none absolute inset-0 z-10 flex items-center justify-center rounded backdrop-blur-sm"
+    >
+      <p class="text-sm font-medium">Drop file here</p>
+    </div>
+  }
+
   <!-- Hidden File Input (Outside Label) -->
   <input
     #fileInput
