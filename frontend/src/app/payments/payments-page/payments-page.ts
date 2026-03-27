@@ -11,6 +11,9 @@ import { FormBuilder, FormControl, Validators, ReactiveFormsModule } from '@angu
 import { PaymentsService } from '../payments.service';
 import { ReconciliationProcessRequest } from '../models/reconciliaton-process-request';
 import { toast } from 'ngx-sonner';
+import { ReconciliationProcessResponse } from '../models/reconciliation-process-response';
+import { ReconciliationResultsTab } from './reconciliation-results-tab/reconciliation-results-tab';
+import { ReconciliationProcessTab } from './reconciliation-process-tab/reconciliation-process-tab';
 
 @Component({
   selector: 'app-payments-page',
@@ -21,6 +24,8 @@ import { toast } from 'ngx-sonner';
     NgIcon,
     DetailedStepper,
     ReactiveFormsModule,
+    ReconciliationProcessTab,
+    ReconciliationResultsTab,
   ],
   templateUrl: './payments-page.html',
   styleUrl: './payments-page.css',
@@ -33,6 +38,8 @@ export class PaymentsPage implements OnInit {
     { title: 'Processing', description: 'Matching Transactions' },
     { title: 'Results', description: 'Download results' },
   ];
+
+  public results?: ReconciliationProcessResponse;
 
   // Customer
   @ViewChild('customerSelect') customerSelect!: any;
@@ -93,17 +100,35 @@ export class PaymentsPage implements OnInit {
       return;
     }
 
+    // Processing step
+    this.activeStep = 1;
+
     const payload: ReconciliationProcessRequest = {
       customerId: this.customerId.getRawValue(),
       invoiceFile: this.invoicesFile.getRawValue(),
       bankStatement: this.bankStatementFile.getRawValue(),
     };
 
+    const responseStartTime = performance.now();
+
     this.paymentService.reconciliationProcess(payload).subscribe({
       next: (res) => {
-        console.log(res);
+        const responseDuration = performance.now() - responseStartTime;
+        const minTime = 900;
+        const delay = Math.max(minTime - responseDuration, 0);
+
+        console.log(responseDuration);
+
+        // Timeout to show the UI processing state
+        setTimeout(() => {
+          // Results step
+          this.activeStep = 2;
+          this.results = res;
+        }, delay);
       },
       error: (err) => {
+        this.activeStep = 0;
+
         let errorCode = err?.error?.errorCode;
 
         switch (err.status) {
