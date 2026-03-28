@@ -1,29 +1,23 @@
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
-import { FileDropzone } from '../../shared/ui/file-dropzone/file-dropzone';
 import { CustomersService } from '../../customers/customers.service';
 import { Customer } from '../../customers/models/customer';
-import { NgSelectComponent } from '@ng-select/ng-select';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
-import { PrimaryButton } from '../../shared/ui/primary-button/primary-button';
-import { NgIcon } from '@ng-icons/core';
 import { DetailedStepper } from '../../shared/ui/detailed-stepper/detailed-stepper';
 import { FormBuilder, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { PaymentsService } from '../payments.service';
 import { ReconciliationProcessRequest } from '../models/reconciliaton-process-request';
 import { toast } from 'ngx-sonner';
 import { ReconciliationProcessResponse } from '../models/reconciliation-process-response';
+import { ReconciliationForm } from './reconciliation-form/reconciliation-form';
 import { ReconciliationResultsTab } from './reconciliation-results-tab/reconciliation-results-tab';
 import { ReconciliationProcessTab } from './reconciliation-process-tab/reconciliation-process-tab';
 
 @Component({
   selector: 'app-payments-page',
   imports: [
-    FileDropzone,
-    NgSelectComponent,
-    PrimaryButton,
-    NgIcon,
     DetailedStepper,
     ReactiveFormsModule,
+    ReconciliationForm,
     ReconciliationProcessTab,
     ReconciliationResultsTab,
   ],
@@ -42,21 +36,22 @@ export class PaymentsPage implements OnInit {
   public results?: ReconciliationProcessResponse;
 
   // Customer
-  @ViewChild('customerSelect') customerSelect!: any;
   public customersList: Customer[] = [];
   public customersLoading: boolean = false;
   public customersErrorMessage?: string = undefined;
   public customerSearch$: Subject<string> = new Subject<string>();
 
+  // Services
   private customersService = inject(CustomersService);
   private paymentService = inject(PaymentsService);
 
+  // Form
   public isFormValid: boolean = false;
   private formBuilder = inject(FormBuilder);
 
   reconciliationForm = this.formBuilder.group({
     customerId: new FormControl<number | null>(null, Validators.required),
-    invoicesFile: new FormControl<File | null>(null, Validators.required),
+    invoiceFile: new FormControl<File | null>(null, Validators.required),
     bankStatementFile: new FormControl<File | null>(null, Validators.required),
   });
 
@@ -69,31 +64,6 @@ export class PaymentsPage implements OnInit {
     this.fetchCustomers('');
   }
 
-  public onClickFocusCustomersSelect(): void {
-    this.customerSelect.focus();
-  }
-
-  public onInvoicesFileSelected(file: File): void {
-    this.invoicesFile.setValue(file);
-  }
-
-  public onBankFileSelected(file: File): void {
-    this.bankStatementFile.setValue(file);
-  }
-
-  // Getters
-  public get customerId(): FormControl {
-    return this.reconciliationForm.get('customerId') as FormControl;
-  }
-
-  public get invoicesFile(): FormControl {
-    return this.reconciliationForm.get('invoicesFile') as FormControl;
-  }
-
-  public get bankStatementFile(): FormControl {
-    return this.reconciliationForm.get('bankStatementFile') as FormControl;
-  }
-
   public onFormSubmit(): void {
     if (this.reconciliationForm.invalid) {
       this.reconciliationForm.markAllAsTouched();
@@ -103,10 +73,11 @@ export class PaymentsPage implements OnInit {
     // Processing step
     this.activeStep = 1;
 
+    const { customerId, invoiceFile, bankStatementFile } = this.reconciliationForm.getRawValue();
     const payload: ReconciliationProcessRequest = {
-      customerId: this.customerId.getRawValue(),
-      invoiceFile: this.invoicesFile.getRawValue(),
-      bankStatement: this.bankStatementFile.getRawValue(),
+      customerId: customerId!,
+      invoiceFile: invoiceFile!,
+      bankStatementFile: bankStatementFile!,
     };
 
     const responseStartTime = performance.now();
@@ -116,8 +87,6 @@ export class PaymentsPage implements OnInit {
         const responseDuration = performance.now() - responseStartTime;
         const minTime = 900;
         const delay = Math.max(minTime - responseDuration, 0);
-
-        console.log(responseDuration);
 
         // Timeout to show the UI processing state
         setTimeout(() => {

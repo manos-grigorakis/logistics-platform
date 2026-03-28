@@ -18,7 +18,7 @@ export class PaymentsService {
     const formData = new FormData();
     formData.append('customerId', payload.customerId.toString());
     formData.append('invoiceFile', payload.invoiceFile);
-    formData.append('bankStatement', payload.bankStatement);
+    formData.append('bankStatementFile', payload.bankStatementFile);
 
     return this.httpClient.post<ReconciliationProcessResponse>(`${environment.apiUrl}/reconciliation/process`, formData);
   }
