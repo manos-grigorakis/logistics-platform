@@ -110,6 +110,8 @@ export class PaymentsPage implements OnInit {
           case 409:
             if (errorCode === 'CUSTOMER_TIN_MISMATCH') {
               toast.error("The selected customer's TIN number doesn't match the invoices file");
+            } else if (errorCode === 'DUPLICATE_REPORT_NAME') {
+              toast.error('A report already exists for this invoice range');
             }
             break;
           case 500:
