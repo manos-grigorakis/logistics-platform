@@ -43,6 +43,7 @@ public class ReconciliationRestController {
                     <ul>
                         <li>Unsupported file extension</li>
                         <li>Failed to process the uploaded files</li>
+                        <li>No invoices found in the uploaded file</li>
                     </ul>
                     """
             ),
@@ -52,6 +53,7 @@ public class ReconciliationRestController {
                     <ul>
                         <li>Customer's TIN doesn't match TIN founded in the file</li>
                         <li>A report already exist with this invoice range</li>
+                        <li>Invoices already exist in the system</li>
                     </ul>
                     """)
     })
