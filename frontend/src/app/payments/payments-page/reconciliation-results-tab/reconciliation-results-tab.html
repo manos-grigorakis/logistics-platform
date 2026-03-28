@@ -1,0 +1,105 @@
+<div>
+  <div class="mb-8 flex items-center justify-between">
+    <h3 class="text-lg font-semibold text-zinc-800">Results</h3>
+    <button
+      class="cursor-pointer rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:border-gray-400 hover:bg-gray-50"
+      (click)="onNewReconciliation()"
+    >
+      New Reconciliation
+    </button>
+  </div>
+
+  <div class="mb-8 grid grid-cols-1 gap-6 text-center md:grid-cols-2 lg:grid-cols-4">
+    <!-- Total invoices -->
+    <div>
+      <p class="mb-1 text-xs font-medium tracking-wide text-zinc-500 uppercase">Total Invoices</p>
+      <p class="text-2xl font-semibold text-zinc-900">{{ results.totalInvoices }}</p>
+    </div>
+
+    <!-- Matched -->
+    <div>
+      <p class="mb-1 text-xs font-medium tracking-wide text-zinc-500 uppercase">Matched</p>
+      <p class="text-success text-2xl font-semibold">
+        {{ results.matchedInvoices }}
+      </p>
+    </div>
+
+    <!-- Unmatched -->
+    <div>
+      <p class="mb-1 text-xs font-medium tracking-wide text-zinc-500 uppercase">Unmatched</p>
+      <p class="text-danger text-2xl font-semibold">
+        {{ results.unmatchedInvoices }}
+      </p>
+    </div>
+
+    <!-- Matched transactions -->
+    <div>
+      <p class="mb-1 text-xs font-medium tracking-wide text-zinc-500 uppercase">
+        Bank Transactions Matched
+      </p>
+      <p class="text-2xl font-semibold text-zinc-900">{{ results.matchedTransactions }}</p>
+    </div>
+  </div>
+
+  <!-- Breakdown -->
+  <div class="mb-8 rounded border border-zinc-200 bg-zinc-50 px-6 py-5">
+    <h4 class="mb-4 text-sm font-semibold text-zinc-700">Invoice Breakdown</h4>
+    <div class="grid grid-cols-1 items-center text-center md:grid-cols-2 lg:grid-cols-4">
+      <!-- Paid -->
+      <div class="flex items-center justify-center gap-4">
+        <p class="text-xs text-zinc-500">Paid</p>
+        <p class="text-success text-lg font-semibold">{{ results.paidInvoices }}</p>
+      </div>
+
+      <!-- Partially Paid -->
+      <div class="flex items-center justify-center gap-4">
+        <p class="text-xs text-zinc-500">Partially Paid</p>
+        <p class="text-warning text-lg font-semibold">{{ results.paidInvoices }}</p>
+      </div>
+
+      <!-- Outstanding -->
+      <div class="flex items-center justify-center gap-4">
+        <p class="text-xs text-zinc-500">Oustanding</p>
+        <p class="text-danger text-lg font-semibold">{{ results.paidInvoices }}</p>
+      </div>
+
+      <!-- Disputed -->
+      <div class="flex items-center justify-center gap-4">
+        <p class="text-xs text-zinc-500">Disputed</p>
+        <p class="text-lg font-semibold text-zinc-500">{{ results.disputedInvoices }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Report details -->
+  <div class="mb-8 rounded border border-zinc-200 bg-zinc-50 px-6 py-5">
+    <h4 class="mb-4 text-sm font-semibold text-zinc-700">Report Details</h4>
+    <div class="grid grid-cols-1 gap-6 text-center md:grid-cols-2 lg:grid-cols-3">
+      <!-- Report name -->
+      <div>
+        <p class="mb-1 text-sm tracking-wide text-zinc-500 uppercase">Report Name</p>
+        <p class="text-sm font-medium break-all text-zinc-800">{{ results.reportSummary.name }}</p>
+      </div>
+
+      <!-- Period -->
+      <div>
+        <p class="mb-1 text-sm tracking-wide text-zinc-500 uppercase">Period</p>
+        <p class="text-sm font-medium text-zinc-800">
+          {{ results.reportSummary.fromDate | date }} -
+          {{ results.reportSummary.toDate | date }}
+        </p>
+      </div>
+
+      <!-- Created at -->
+      <div>
+        <p class="mb-1 text-sm tracking-wide text-zinc-500 uppercase">Created At</p>
+        <p class="text-sm font-medium text-zinc-800">
+          {{ results.reportSummary.createdAt | date }}
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="mx-auto mt-2 max-w-sm">
+    <app-primary-button value="Download Report" (click)="downloadReport()" />
+  </div>
+</div>

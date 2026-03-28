@@ -1,0 +1,32 @@
+<ol class="flex flex-col justify-around gap-4 md:flex-row">
+  @for (step of steps; track $index) {
+    <li class="flex items-center gap-3">
+      <!-- Number -->
+      <span
+        class="flex h-8 w-8 items-center justify-center rounded-full text-white"
+        [ngClass]="{
+          'bg-primary-500': $index === activeStep,
+          'bg-zinc-400': $index !== activeStep,
+        }"
+      >
+        {{ $index + 1 }}
+      </span>
+
+      <!-- Title -->
+      <span>
+        <h3
+          class="leading-tight font-medium"
+          [ngClass]="{
+            'text-black': $index === activeStep,
+            'text-zinc-400': $index !== activeStep,
+          }"
+        >
+          {{ step.title }}
+        </h3>
+
+        <!-- Description -->
+        <p class="text-sm text-zinc-500">{{ step.description }}</p>
+      </span>
+    </li>
+  }
+</ol>

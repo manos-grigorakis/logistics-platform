@@ -1,0 +1,93 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <!-- Customer Dropdown -->
+  <div class="my-8">
+    <label for="customerId" (click)="onClickFocusCustomersSelect()" class="mb-2 block font-medium">
+      <span class="text-danger mr-1 text-sm">*</span>Customer
+    </label>
+    <ng-select
+      #customerSelect
+      class="tw-select"
+      placeholder="Search a customer"
+      bindLabel="companyName"
+      bindValue="id"
+      formControlName="customerId"
+      loadingText="Loading customers..."
+      notFoundText="No results"
+      [items]="customersList"
+      [loading]="customersLoading"
+      [typeahead]="customerSearch$"
+      [searchable]="true"
+      [clearable]="true"
+    />
+    @if (customerId.invalid && (customerId.dirty || customerId.touched)) {
+      <div>
+        @if (customerId.hasError('required')) {
+          <span class="text-danger mt-1 ml-1 text-sm">Customer is required</span>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Files -->
+  <div class="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2">
+    <!-- Invoice -->
+    <div>
+      <div class="flex items-center justify-between">
+        <h3 class="mb-2 font-medium"><span class="text-danger mr-1 text-sm">*</span>Invoices</h3>
+        <span class="text-sm text-zinc-500">From Epsilon Smart</span>
+      </div>
+      <app-file-dropzone
+        [showMaxFileSize]="false"
+        supportedFiles=".xlsx"
+        (fileSelected)="onInvoicesFileSelected($event)"
+      />
+      @if (invoiceFile.invalid && (invoiceFile.dirty || invoiceFile.touched)) {
+        <div>
+          @if (invoiceFile.hasError('required')) {
+            <span class="text-danger mt-1 ml-1 text-sm">Invoice file is required</span>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Bank Statement -->
+    <div>
+      <div class="flex items-center justify-between">
+        <h3 class="mb-2 font-medium">
+          <span class="text-danger mr-1 text-sm">*</span>Bank Statement
+        </h3>
+        <span class="text-sm text-zinc-500">From National Bank Greece</span>
+      </div>
+      <app-file-dropzone
+        [showMaxFileSize]="false"
+        supportedFiles=".xlsx"
+        (fileSelected)="onBankFileSelected($event)"
+      />
+      @if (bankStatementFile.invalid && (bankStatementFile.dirty || bankStatementFile.touched)) {
+        <div>
+          @if (bankStatementFile.hasError('required')) {
+            <span class="text-danger mt-1 ml-1 text-sm">Bank Statement file is required</span>
+          }
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Info Message -->
+  <div
+    class="mb-8 flex max-w-6xl flex-wrap items-center gap-2 rounded border border-blue-200 bg-blue-50 px-4 py-2 text-blue-800"
+  >
+    <ng-icon name="lucideInfo" color="#52525c" />
+
+    <div class="text-sm leading-relaxed text-zinc-600">
+      <p>
+        The system will match transactions to invoices using invoice number detection and amount
+        combination matching.
+      </p>
+      <p>Only matched transactions and invoices are saved.</p>
+    </div>
+  </div>
+
+  <!-- Process Button -->
+  <app-primary-button value="Start Reconciliation Process" />
+</form>

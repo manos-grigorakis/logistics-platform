@@ -1,0 +1,42 @@
+<section>
+  <!-- Header -->
+  <div class="mb-6">
+    <h2 class="mb-2 text-xl font-semibold text-zinc-800">Payment Reconciliation</h2>
+    <span class="text-sm leading-5 text-zinc-500"
+      >Match bank transactions against outstanding invoices for a customer.</span
+    >
+  </div>
+
+  <div class="rounded bg-white px-4 py-8 shadow-sm">
+    <app-detailed-stepper class="flex-1" [steps]="stepperData" [activeStep]="activeStep" />
+
+    <!-- Divider -->
+    <div class="my-4 h-px w-full bg-zinc-300"></div>
+
+    <!-- Form -->
+    @if (activeStep === 0) {
+      <app-reconciliation-form
+        [form]="reconciliationForm"
+        [customersList]="customersList"
+        [customersLoading]="customersLoading"
+        [customerSearch$]="customerSearch$"
+        (formSubmit)="onFormSubmit()"
+      />
+    }
+
+    <!-- Processing -->
+    @if (activeStep === 1) {
+      <app-reconciliation-process-tab />
+    }
+
+    <!-- Results -->
+    @if (activeStep === 2) {
+      @if (results) {
+        <app-reconciliation-results-tab
+          [results]="results"
+          (newReconciliation)="onNewReconciliation()"
+        />
+      }
+    }
+  </div>
+</section>
