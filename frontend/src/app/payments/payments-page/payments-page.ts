@@ -102,7 +102,11 @@ export class PaymentsPage implements OnInit {
 
         switch (err.status) {
           case 400:
-            toast.error('Failed to process the uploaded files. Please try again');
+            if (errorCode === 'NO_INVOICES_FOUND') {
+              toast.error('No invoices were found in the uploaded file');
+            } else {
+              toast.error('Failed to process the uploaded files. Please try again');
+            }
             break;
           case 404:
             toast.error('Failed to process the uploaded files. Please try again');
@@ -112,6 +116,8 @@ export class PaymentsPage implements OnInit {
               toast.error("The selected customer's TIN number doesn't match the invoices file");
             } else if (errorCode === 'DUPLICATE_REPORT_NAME') {
               toast.error('A report already exists for this invoice range');
+            } else if (errorCode === 'INVOICES_ALREADY_EXIST') {
+              toast.error('All invoices already exist in the system');
             }
             break;
           case 500:
