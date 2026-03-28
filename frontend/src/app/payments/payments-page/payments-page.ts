@@ -122,6 +122,12 @@ export class PaymentsPage implements OnInit {
     });
   }
 
+  public onNewReconciliation(): void {
+    this.activeStep = 0;
+    this.reconciliationForm.reset();
+    this.results = undefined;
+  }
+
   private fetchCustomers(customer: string): void {
     this.customersLoading = true;
     this.customersErrorMessage = undefined;

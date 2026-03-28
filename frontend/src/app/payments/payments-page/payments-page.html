@@ -32,7 +32,10 @@
     <!-- Results -->
     @if (activeStep === 2) {
       @if (results) {
-        <app-reconciliation-results-tab [results]="results" />
+        <app-reconciliation-results-tab
+          [results]="results"
+          (newReconciliation)="onNewReconciliation()"
+        />
       }
     }
   </div>

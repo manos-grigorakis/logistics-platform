@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { PrimaryButton } from '../../../shared/ui/primary-button/primary-button';
 import { ReconciliationProcessResponse } from '../../models/reconciliation-process-response';
 import { DatePipe } from '@angular/common';
@@ -11,6 +11,11 @@ import { DatePipe } from '@angular/common';
 })
 export class ReconciliationResultsTab {
   @Input() results!: ReconciliationProcessResponse;
+  @Output() newReconciliation = new EventEmitter<void>();
+
+  public onNewReconciliation(): void {
+    this.newReconciliation.emit();
+  }
 
   public downloadReport(): void {
     const link = document.createElement('a');
