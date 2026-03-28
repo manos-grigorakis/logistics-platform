@@ -1,5 +1,8 @@
 package com.manosgrigorakis.logisticsplatform.payments.service;
 
+import com.manosgrigorakis.logisticsplatform.audit.dto.AuditEventDTO;
+import com.manosgrigorakis.logisticsplatform.audit.enums.AuditAction;
+import com.manosgrigorakis.logisticsplatform.audit.service.AuditService;
 import com.manosgrigorakis.logisticsplatform.common.exception.BadRequestException;
 import com.manosgrigorakis.logisticsplatform.customers.enums.CustomerType;
 import com.manosgrigorakis.logisticsplatform.customers.model.Customer;
@@ -40,6 +43,7 @@ public class ReconciliationServiceImpl implements ReconciliationService {
     private final InvoicePaymentsRepository invoicePaymentsRepository;
     private final ReconciliationReportExcelGenerator reconciliationReportExcelGenerator;
     private final ReconciliationReportService reconciliationReportService;
+    private final AuditService auditService;
 
     @Override
     @Transactional
@@ -122,8 +126,13 @@ public class ReconciliationServiceImpl implements ReconciliationService {
         Set<Invoice> uniqueInvoices = new LinkedHashSet<>(invoicesResult.invoices());
         List<Invoice> paidInvoices = filterInvoicesByStatus(matchedInvoices, InvoiceStatus.PAID);
         List<Invoice> partiallyPaidInvoices = filterInvoicesByStatus(matchedInvoices, InvoiceStatus.PARTIALLY_PAID);
-        List<Invoice> outstandingInvoices = filterInvoicesByStatus(invoicesResult.invoices(), InvoiceStatus.OUTSTANDING);
+        List<Invoice> outstandingInvoices = filterInvoicesByStatus(invoicesResult.invoices(),
+                                                                   InvoiceStatus.OUTSTANDING);
         List<Invoice> disputedInvoices = filterInvoicesByStatus(invoicesResult.invoices(), InvoiceStatus.DISPUTED);
+
+        logReconciliationProcess(customer.getId(), matchedTransactions.size(), matchedInvoices.size(),
+                                 paidInvoices.size(), outstandingInvoices.size(), partiallyPaidInvoices.size(),
+                                 disputedInvoices.size());
 
         return new ReconciliationProcessResponse(
                 uniqueInvoices.size(),
@@ -210,12 +219,14 @@ public class ReconciliationServiceImpl implements ReconciliationService {
      *     <li>Matched invoices are appended along with their relational data</li>
      *     <li>Unmatched invoices are appended without any transaction data</li>
      * </ul>
-     * @param invoicePayments The {@link List} of the {@link InvoicePayments} entities to be used to build the report
-     *                        rows
+     *
+     * @param invoicePayments   The {@link List} of the {@link InvoicePayments} entities to be used to build the report
+     *                          rows
      * @param unmatchedInvoices The {@link List} of the unmatched invoices to populate the report
      * @return A list of {@link ReconciliationRow} ready for further processing (e.g. Excel generation)
      */
-    private List<ReconciliationRow> buildReconciliationRows(List<InvoicePayments> invoicePayments, List<Invoice> unmatchedInvoices) {
+    private List<ReconciliationRow> buildReconciliationRows(List<InvoicePayments> invoicePayments,
+                                                            List<Invoice> unmatchedInvoices) {
         List<ReconciliationRow> reconciliationRows = new ArrayList<>();
 
         for (InvoicePayments invoicePayment : invoicePayments) {
@@ -235,7 +246,7 @@ public class ReconciliationServiceImpl implements ReconciliationService {
             reconciliationRows.add(row);
         }
 
-        for(Invoice unmatchedInvoice : unmatchedInvoices) {
+        for (Invoice unmatchedInvoice : unmatchedInvoices) {
             ReconciliationRow row = new ReconciliationRow(
                     unmatchedInvoice.getInvoiceDate(),
                     unmatchedInvoice.getExternalInvoiceNumber(),
@@ -279,5 +290,25 @@ public class ReconciliationServiceImpl implements ReconciliationService {
                 .filter(Objects::nonNull)
                 .max(LocalDate::compareTo)
                 .orElse(null);
+    }
+
+    private void logReconciliationProcess(Long customerId, int matchedBankTransactions, int matchedInvoices,
+                                          int paidInvoices, int outstandingInvoices, int partiallyPaidInvoices,
+                                          int disputedInvoices) {
+        auditService.log(
+                AuditEventDTO.builder()
+                        .entityType("Reconciliation Process")
+                        .notes(
+                                "Customer ID: " + customerId
+                                        + " | Matched Bank Transactions: " + matchedBankTransactions
+                                        + " | Matched Invoices: " + matchedInvoices
+                                        + " | Paid Invoices: " + paidInvoices
+                                        + " | Outstanding Invoices: " + outstandingInvoices
+                                        + " | Partially Paid Invoices: " + partiallyPaidInvoices
+                                        + " | DisputedInvoices: " + disputedInvoices
+                        )
+                        .action(AuditAction.CREATE)
+                        .build()
+        );
     }
 }
