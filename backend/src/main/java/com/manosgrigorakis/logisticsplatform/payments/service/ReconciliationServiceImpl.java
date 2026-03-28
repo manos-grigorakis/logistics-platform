@@ -292,6 +292,16 @@ public class ReconciliationServiceImpl implements ReconciliationService {
                 .orElse(null);
     }
 
+    /**
+     * Logs the reconciliation process in the audit log system
+     * @param customerId The {@link Customer} id
+     * @param matchedBankTransactions The matched {@link BankTransaction} from the process
+     * @param matchedInvoices The matched {@link Invoice} from the process
+     * @param paidInvoices The paid invoices
+     * @param outstandingInvoices The outstanding invoices
+     * @param partiallyPaidInvoices The partially paid invoices
+     * @param disputedInvoices The disputed invoices
+     */
     private void logReconciliationProcess(Long customerId, int matchedBankTransactions, int matchedInvoices,
                                           int paidInvoices, int outstandingInvoices, int partiallyPaidInvoices,
                                           int disputedInvoices) {
