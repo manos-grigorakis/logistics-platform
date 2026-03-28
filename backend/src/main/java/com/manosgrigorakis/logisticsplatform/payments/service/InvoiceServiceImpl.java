@@ -72,7 +72,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public PrepareReconciliationResult prepareInvoicesForReconciliation(Long customerId, MultipartFile file) {
         ProcessingInvoicesBulkImportResponse response = this.prepareInvoicesFromImport(file, customerId);
-        
+
         if (response.originalInvoicesLength() == 0) {
             log.warn("No invoices found in the uploaded file for customer with id: {}", customerId);
             throw new BadRequestException("No invoices found in the uploaded file", "NO_INVOICES_FOUND");
@@ -102,7 +102,7 @@ public class InvoiceServiceImpl implements InvoiceService {
      * @param file The uploaded Excel file
      * @param customerId The {@link Customer} id
      * @return A {@link  ProcessingInvoicesBulkImportResponse} containing the prepared invoices
-     * @throw {@link ResourceNotFoundException} when customer not found by {@code id}
+     * @throw {@link ResourceNotFoundException} when customer not found by {@code customerId}
      */
     private ProcessingInvoicesBulkImportResponse prepareInvoicesFromImport(MultipartFile file, Long customerId) {
         this.validateFileType(file);
