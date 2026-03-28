@@ -19,5 +19,5 @@ public class ReconciliationRequestDTO {
 
     @Schema(type = "string", format = "binary", description = "Bank statement Excel file")
     @NotNull(message = "Bank statement Excel file file is required")
-    private MultipartFile bankStatement;
+    private MultipartFile bankStatementFile;
 }

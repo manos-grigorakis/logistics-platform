@@ -52,8 +52,8 @@ public class ReconciliationServiceImpl implements ReconciliationService {
         Customer customer = invoicesResult.customer();
 
         // Validate and process bank statement file
-        validateFileType(dto.getBankStatement());
-        List<BankTransaction> bankTransactions = new ArrayList<>(processExcelFile(dto.getBankStatement()));
+        validateFileType(dto.getBankStatementFile());
+        List<BankTransaction> bankTransactions = new ArrayList<>(processExcelFile(dto.getBankStatementFile()));
 
         // Filter transactions based on the customer name
         List<BankTransaction> filteredBankTransactions = bankTransactions.stream()
