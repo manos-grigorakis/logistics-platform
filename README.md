@@ -8,7 +8,7 @@
 
 ## Overview
 
-Logistics Platform is a management platform for small to medium businesses aiming to simplify daily management tasks such as generating quotes for customers, shipments and fleet management, and generating CMR documents. The application follows a monolithic architecture with Domain-Driven Design (DDD) structure.
+Logistics Platform is a management platform for small to medium businesses aiming to simplify daily operations such as customer quote generation, shipment and fleet management, CMR document generation and invoice reconciliation. The application follows a monolithic architecture with a Domain-Driven Design (DDD) structure.
 
 ### Core Features
 
@@ -17,6 +17,7 @@ Logistics Platform is a management platform for small to medium businesses aimin
 - Quote Generation
 - Shipment Management
 - CMR Document Generation
+- Invoice Reconciliation
 - Audit Logging
 - Metrics & Observability
 
