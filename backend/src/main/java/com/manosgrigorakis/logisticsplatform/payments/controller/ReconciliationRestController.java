@@ -53,7 +53,10 @@ public class ReconciliationRestController {
                     <ul>
                         <li>Customer's TIN doesn't match TIN founded in the file</li>
                         <li>A report already exist with this invoice range</li>
+<<<<<<< HEAD
                         <li>Invoices already exist in the system</li>
+=======
+>>>>>>> 40d49b5 (docs: update controller docs)
                     </ul>
                     """)
     })
