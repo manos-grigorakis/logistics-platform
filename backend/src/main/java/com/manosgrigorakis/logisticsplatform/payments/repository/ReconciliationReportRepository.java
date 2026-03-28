@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ReconciliationReportRepository extends JpaRepository<ReconciliationReport, Long> {
+    boolean existsByName(String name);
 }
