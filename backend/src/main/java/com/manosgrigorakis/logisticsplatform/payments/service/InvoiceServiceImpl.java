@@ -83,7 +83,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         if(response.invoices().isEmpty()) {
             log.warn("All {} invoices already exist in the system for customer with id: {}",
                      response.originalInvoicesLength(), customerId);
-            throw new DuplicateEntryException("All invoices already exist in the system", "INVOICES_ALREADY_EXIST");
+            throw new DuplicateEntryException("externalInvoiceNumber", "all invoices" , "INVOICES_ALREADY_EXIST");
         }
 
         return new PrepareReconciliationResult(response.customer(), response.invoices());

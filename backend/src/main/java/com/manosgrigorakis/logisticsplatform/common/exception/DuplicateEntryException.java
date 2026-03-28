@@ -24,4 +24,10 @@ public class DuplicateEntryException extends RuntimeException {
         this.value = value;
         this.errorCode = errorCode;
     }
+
+//    public static DuplicateEntryException withMessage(String message, String errorCode) {
+//        DuplicateEntryException ex = new DuplicateEntryException(message);
+//        ex.errorCode = errorCode;
+//        return ex;
+//    }
 }
