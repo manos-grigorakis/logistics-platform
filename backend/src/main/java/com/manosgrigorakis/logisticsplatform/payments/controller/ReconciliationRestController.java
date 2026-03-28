@@ -43,12 +43,19 @@ public class ReconciliationRestController {
                     <ul>
                         <li>Unsupported file extension</li>
                         <li>Failed to process the uploaded files</li>
+                        <li>No invoices found in the uploaded file</li>
                     </ul>
                     """
             ),
             @ApiResponse(responseCode = "404", description = "Customer doesn't exist"),
-            @ApiResponse(responseCode = "409", description = "Customer's TIN doesn't match TIN founded in the file")
-
+            @ApiResponse(responseCode = "409", description = """
+                    Possible Causes:
+                    <ul>
+                        <li>Customer's TIN doesn't match TIN founded in the file</li>
+                        <li>A report already exist with this invoice range</li>
+                        <li>Invoices already exist in the system</li>
+                    </ul>
+                    """)
     })
     @PostMapping(value = "/process", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ReconciliationProcessResponse reconciliationProcess(@ModelAttribute @Valid ReconciliationRequestDTO dto) {

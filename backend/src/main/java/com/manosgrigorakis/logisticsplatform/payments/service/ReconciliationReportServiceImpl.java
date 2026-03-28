@@ -1,5 +1,6 @@
 package com.manosgrigorakis.logisticsplatform.payments.service;
 
+import com.manosgrigorakis.logisticsplatform.common.exception.DuplicateEntryException;
 import com.manosgrigorakis.logisticsplatform.common.exception.ResourceNotFoundException;
 import com.manosgrigorakis.logisticsplatform.customers.model.Customer;
 import com.manosgrigorakis.logisticsplatform.infrastructure.storage.FileStorageService;
@@ -62,6 +63,11 @@ public class ReconciliationReportServiceImpl implements ReconciliationReportServ
                                  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 
         String presignedUrl = fileStorageService.createPresignedUrl(this.bucketPathReport + fileName);
+
+        if(reconciliationReportRepository.existsByName(normalizeName)) {
+            log.warn("Attempt to create duplicate reconciliation report: {}", normalizeName);
+            throw new DuplicateEntryException("name", normalizeName, "DUPLICATE_REPORT_NAME");
+        }
 
         ReconciliationReport report = ReconciliationReport.builder()
                 .name(normalizeName)

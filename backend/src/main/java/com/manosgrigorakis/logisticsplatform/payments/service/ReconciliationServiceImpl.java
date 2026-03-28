@@ -113,7 +113,7 @@ public class ReconciliationServiceImpl implements ReconciliationService {
         ReconciliationReportCreateResponseDTO reportResponse = reconciliationReportService.createReconciliationReport(
                 new CreateReconciliationReport(report, firstInvoiceDate, lastInvoiceDate, matchedInvoices.size(),
                                                noMatchInvoices.size(), customer));
-        invoiceRepository.saveAll(matchedInvoices);
+        invoiceRepository.saveAll(invoicesResult.invoices());
         bankTransactionRepository.saveAll(matchedTransactions);
         invoicePaymentsRepository.saveAll(invoicePayments);
 
