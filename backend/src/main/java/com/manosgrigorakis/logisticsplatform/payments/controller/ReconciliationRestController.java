@@ -47,8 +47,13 @@ public class ReconciliationRestController {
                     """
             ),
             @ApiResponse(responseCode = "404", description = "Customer doesn't exist"),
-            @ApiResponse(responseCode = "409", description = "Customer's TIN doesn't match TIN founded in the file")
-
+            @ApiResponse(responseCode = "409", description = """
+                    Possible Causes:
+                    <ul>
+                        <li>Customer's TIN doesn't match TIN founded in the file</li>
+                        <li>A report already exist with this invoice range</li>
+                    </ul>
+                    """)
     })
     @PostMapping(value = "/process", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ReconciliationProcessResponse reconciliationProcess(@ModelAttribute @Valid ReconciliationRequestDTO dto) {
