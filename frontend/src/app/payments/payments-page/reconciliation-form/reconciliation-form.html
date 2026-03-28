@@ -1,4 +1,4 @@
-<form [formGroup]="form">
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
   <!-- Customer Dropdown -->
   <div class="my-8">
     <label for="customerId" (click)="onClickFocusCustomersSelect()" class="mb-2 block font-medium">
