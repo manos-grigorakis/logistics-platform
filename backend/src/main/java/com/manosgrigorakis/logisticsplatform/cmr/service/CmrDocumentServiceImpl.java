@@ -102,6 +102,9 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
                 .status(CmrStatus.GENERATED)
                 .build();
 
+        // PDF Document needs creation time (unavailable from PrePersist because is not saved in the DB yet)
+        cmrDocument.setCreatedAt(LocalDateTime.now());
+
         String presignedUrl = fileStorageService.createPresignedUrl(this.bucketPathCmr + cmrDocument.getNumber());
         cmrDocument.setFileUrl(presignedUrl);
         
