@@ -2,7 +2,6 @@ package com.manosgrigorakis.logisticsplatform.payments.service;
 
 import com.manosgrigorakis.logisticsplatform.common.exception.BadRequestException;
 import com.manosgrigorakis.logisticsplatform.common.exception.ConflictException;
-import com.manosgrigorakis.logisticsplatform.common.exception.DuplicateEntryException;
 import com.manosgrigorakis.logisticsplatform.common.exception.ResourceNotFoundException;
 import com.manosgrigorakis.logisticsplatform.customers.model.Customer;
 import com.manosgrigorakis.logisticsplatform.customers.repository.CustomerRepository;
@@ -68,13 +67,12 @@ public class InvoiceServiceImpl implements InvoiceService {
      * @param customerId The {@link Customer} id
      * @param file The imported Excel file
      * @return A list of prepared {@link Invoice} entities
-     * @throw {@link BadRequestException} when no invoices found in the uploaded file
-     * @throw {@link DuplicateEntryException} when invoices already exist in the system
+     * @throw {@link BadRequestException} when no invoices found in the uploaded file or invoices already exist
      */
     @Override
     public PrepareReconciliationResult prepareInvoicesForReconciliation(Long customerId, MultipartFile file) {
         ProcessingInvoicesBulkImportResponse response = this.prepareInvoicesFromImport(file, customerId);
-
+        
         if (response.originalInvoicesLength() == 0) {
             log.warn("No invoices found in the uploaded file for customer with id: {}", customerId);
             throw new BadRequestException("No invoices found in the uploaded file", "NO_INVOICES_FOUND");
@@ -83,7 +81,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         if(response.invoices().isEmpty()) {
             log.warn("All {} invoices already exist in the system for customer with id: {}",
                      response.originalInvoicesLength(), customerId);
-            throw new DuplicateEntryException("externalInvoiceNumber", "all invoices" , "INVOICES_ALREADY_EXIST");
+            throw new BadRequestException("All invoices already exist in the system", "INVOICES_ALREADY_EXIST");
         }
 
         return new PrepareReconciliationResult(response.customer(), response.invoices());
@@ -104,7 +102,7 @@ public class InvoiceServiceImpl implements InvoiceService {
      * @param file The uploaded Excel file
      * @param customerId The {@link Customer} id
      * @return A {@link  ProcessingInvoicesBulkImportResponse} containing the prepared invoices
-     * @throw {@link ResourceNotFoundException} when customer not found by {@code customerId}
+     * @throw {@link ResourceNotFoundException} when customer not found by {@code id}
      */
     private ProcessingInvoicesBulkImportResponse prepareInvoicesFromImport(MultipartFile file, Long customerId) {
         this.validateFileType(file);
