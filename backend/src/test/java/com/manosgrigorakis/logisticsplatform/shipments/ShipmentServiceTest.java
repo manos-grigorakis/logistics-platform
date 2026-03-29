@@ -1,6 +1,7 @@
 package com.manosgrigorakis.logisticsplatform.shipments;
 
 import com.manosgrigorakis.logisticsplatform.audit.service.AuditService;
+import com.manosgrigorakis.logisticsplatform.cmr.model.CmrDocument;
 import com.manosgrigorakis.logisticsplatform.cmr.repository.CmrDocumentRepository;
 import com.manosgrigorakis.logisticsplatform.cmr.service.CmrDocumentService;
 import com.manosgrigorakis.logisticsplatform.common.exception.ConflictException;
@@ -13,7 +14,14 @@ import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
 import com.manosgrigorakis.logisticsplatform.quotes.repository.QuoteRepository;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.ShipmentRequestDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.ShipmentResponseDTO;
+import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.UpdateShipmentRequestDTO;
+import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.UpdateShipmentStatusRequestDTO;
+import com.manosgrigorakis.logisticsplatform.shipments.dto.summary.CmrDocumentSummary;
+import com.manosgrigorakis.logisticsplatform.shipments.enums.ShipmentStatus;
+import com.manosgrigorakis.logisticsplatform.shipments.enums.VehicleType;
 import com.manosgrigorakis.logisticsplatform.shipments.model.Shipment;
+import com.manosgrigorakis.logisticsplatform.shipments.model.ShipmentCargo;
+import com.manosgrigorakis.logisticsplatform.shipments.model.Vehicle;
 import com.manosgrigorakis.logisticsplatform.shipments.repository.ShipmentRepository;
 import com.manosgrigorakis.logisticsplatform.shipments.repository.VehicleRepository;
 import com.manosgrigorakis.logisticsplatform.shipments.service.ShipmentServiceImpl;
@@ -26,6 +34,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -193,5 +203,155 @@ public class ShipmentServiceTest {
         verify(shipmentRepository).save(captor.capture());
         Shipment shipment = captor.getValue();
         assertEquals(QuoteStatus.CONVERTED, shipment.getQuote().getQuoteStatus());
+    }
+
+    @Test
+    public void updateShipment_shouldSaveShipment() {
+        // Arrange
+        Shipment shipment = new Shipment();
+        Quote quote = new Quote();
+        User createdBy = new User();
+        List<ShipmentCargo> shipmentCargos = new ArrayList<>();
+
+        shipment.setQuote(quote);
+        shipment.setCreatedByUser(createdBy);
+        shipment.setShipmentCargos(shipmentCargos);
+
+        when(shipmentRepository.save(any(Shipment.class))).thenReturn(shipment);
+        when(shipmentRepository.findById(1L)).thenReturn(Optional.of(shipment));
+
+        Vehicle truck = new Vehicle();
+        truck.setId(1L);
+        truck.setPlate("ABC-2020");
+        truck.setType(VehicleType.TRUCK);
+
+        when(vehicleRepository.findById(1L)).thenReturn(Optional.of(truck));
+
+        UpdateShipmentRequestDTO request = new UpdateShipmentRequestDTO();
+        request.setTruckId(1L);
+        request.setCargoItems(new ArrayList<>());
+
+        // Act
+        shipmentService.updateShipmentById(1L, request);
+
+        // Assert
+        ArgumentCaptor<Shipment> captor = ArgumentCaptor.forClass(Shipment.class);
+        verify(shipmentRepository).save(captor.capture());
+        Shipment updatedShipment = captor.getValue();
+
+        assertEquals(truck.getId(), updatedShipment.getTruck().getId());
+        assertEquals(truck.getPlate(), updatedShipment.getTruck().getPlate());
+    }
+
+    @Test
+    public void updateShipmentById_shouldThrowNotFoundException() {
+        // Arrange
+        when(shipmentRepository.findById(1000L)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(ResourceNotFoundException.class, () ->
+                shipmentService.updateShipmentById(1000L, new UpdateShipmentRequestDTO()));
+    }
+
+    @Test
+    public void updateShipmentById_shouldThrowConflictException_whenShipmentStatusIsNotEditable() {
+        // Arrange
+        Shipment shipment = new Shipment();
+        shipment.setId(1L);
+        shipment.setStatus(ShipmentStatus.DELIVERED);
+        when(shipmentRepository.findById(1L)).thenReturn(Optional.of(shipment));
+
+        // Act & Assert
+        assertThrows(ConflictException.class, () ->
+                shipmentService.updateShipmentById(1L, new UpdateShipmentRequestDTO()));
+    }
+
+    @Test
+    public void updateShipmentStatus_shouldUpdateShipmentStatus() {
+        // Arrange
+        Quote quote = new Quote();
+        User createdBy = new User();
+        User driver = new User();
+        Vehicle truck = new Vehicle();
+        Vehicle trailer = new Vehicle();
+        truck.setType(VehicleType.TRUCK);
+        trailer.setType(VehicleType.TRAILER);
+
+        List<ShipmentCargo> shipmentCargos = new ArrayList<>();
+        shipmentCargos.add(new ShipmentCargo());
+
+        Shipment shipment = new Shipment();
+        shipment.setStatus(ShipmentStatus.PENDING);
+        shipment.setQuote(quote);
+        shipment.setCreatedByUser(createdBy);
+        shipment.setShipmentCargos(shipmentCargos);
+        shipment.setDriver(driver);
+        shipment.setTruck(truck);
+        shipment.setTrailer(trailer);
+
+        when(shipmentRepository.findById(1L)).thenReturn(Optional.of(shipment));
+
+        // Act
+        shipmentService.updateShipmentStatus(1L, new UpdateShipmentStatusRequestDTO(ShipmentStatus.DISPATCHED));
+
+        // Assert
+        ArgumentCaptor<Shipment> captor = ArgumentCaptor.forClass(Shipment.class);
+        verify(shipmentRepository).save(captor.capture());
+        Shipment updatedShipment = captor.getValue();
+        assertEquals(ShipmentStatus.DISPATCHED, updatedShipment.getStatus());
+    }
+
+    @Test
+    public void updateShipmentStatus_shouldThrowNotFoundException_whenShipmentDoesNotExist() {
+        // Arrange
+        when(shipmentRepository.findById(1L)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(ResourceNotFoundException.class, () ->
+                shipmentService.updateShipmentById(1L, new UpdateShipmentRequestDTO()));
+    }
+
+    @Test
+    public void updateShipmentStatus_shouldThrowNotFoundException_whenShipmentIsNotEditable() {
+        // Arrange
+        Quote quote = new Quote();
+        User createdBy = new User();
+        Shipment shipment = new Shipment();
+        shipment.setId(1L);
+        shipment.setStatus(ShipmentStatus.DELIVERED);
+        shipment.setQuote(quote);
+        shipment.setCreatedByUser(createdBy);
+
+        when(shipmentRepository.findById(1L)).thenReturn(Optional.of(shipment));
+
+        // Act & Assert
+        assertThrows(ConflictException.class, () ->
+                shipmentService.updateShipmentById(1L, new UpdateShipmentRequestDTO()));
+    }
+
+    @Test
+    public void getCmrDocumentByShipmentId_shouldReturnCmrDocument() {
+        // Arrange
+        Shipment shipment = new Shipment();
+        CmrDocument cmrDocument = new CmrDocument();
+        cmrDocument.setNumber("CMR-2026-0001");
+
+        when(shipmentRepository.findById(1L)).thenReturn(Optional.of(shipment));
+        when(cmrDocumentRepository.findCmrDocumentByShipmentId(1L)).thenReturn(Optional.of(cmrDocument));
+
+        // Act
+        CmrDocumentSummary response = shipmentService.getCmrDocumentByShipmentId(1L);
+
+        // Assert
+        assertEquals(cmrDocument.getNumber(), response.number());
+    }
+
+    @Test
+    public void getCmrDocumentByShipmentId_shouldThrowNotFoundException_whenShipmentDoesNotExist() {
+        // Arrange
+        when(shipmentRepository.findById(1L)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(ResourceNotFoundException.class, () -> shipmentService.getCmrDocumentByShipmentId(1L));
     }
 }
