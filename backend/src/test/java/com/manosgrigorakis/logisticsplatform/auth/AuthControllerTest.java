@@ -40,7 +40,6 @@ public class AuthControllerTest extends HttpRequestTest {
     private PasswordEncoder passwordEncoder;
 
     private String AUTH_URL;
-    private String authToken;
 
     private static final String RAW_PASSWORD = "admin";
     private static final String EMAIL = "jdoe@logistics.com";
@@ -49,7 +48,7 @@ public class AuthControllerTest extends HttpRequestTest {
     void beforeAll() {
         BASE_URL = "http://localhost:%d/api".formatted(port);
         AUTH_URL = BASE_URL + "/auth";
-        authToken = authenticate();
+        authToken = authenticate(EMAIL, RAW_PASSWORD);
     }
 
     @BeforeEach
@@ -243,34 +242,6 @@ public class AuthControllerTest extends HttpRequestTest {
                     role.setName("ADMIN");
                     return roleRepository.save(role);
                 });
-    }
-
-    /**
-     * Authenticates a {@link User} using the credentials:
-     * <ul>
-     *     <li>Email: {@link #EMAIL}</li>
-     *     <li>Password: {@link #RAW_PASSWORD}</li>
-     * </ul>
-     * @return The JWT token from the response
-     */
-    private String authenticate() {
-        AuthRequestDTO request = new AuthRequestDTO(EMAIL, RAW_PASSWORD);
-        ResponseEntity<JwtResponseDTO> response = restTemplate.postForEntity(
-                AUTH_URL + "/login", request, JwtResponseDTO.class
-        );
-
-        Assertions.assertNotNull(response.getBody());
-        return response.getBody().getToken();
-    }
-
-    /**
-     * Sets Bearer Authorization in {@link #authToken}
-     * @return The headers with the token
-     */
-    private HttpHeaders setAuthorizationHeader() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(authToken);
-        return headers;
     }
 
     /**
