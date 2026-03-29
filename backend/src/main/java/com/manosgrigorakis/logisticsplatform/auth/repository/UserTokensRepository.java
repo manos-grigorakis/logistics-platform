@@ -12,4 +12,6 @@ public interface UserTokensRepository extends JpaRepository<UserTokens, Long> {
     Optional<UserTokens> findByToken(String token);
 
     void deleteAllByExpiresAtBefore(LocalDateTime current);
+
+    Optional<UserTokens> findByUserId(Long userId);
 }
