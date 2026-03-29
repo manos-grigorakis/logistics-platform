@@ -66,7 +66,7 @@ public class AuthControllerTest extends HttpRequestTest {
     }
 
     @Test
-    public void login() {
+    public void login_shouldAuthenticateUser_withValidCredentials() {
         // Arrange
         String url = AUTH_URL + "/login";
         AuthRequestDTO authRequestDTO = new AuthRequestDTO(EMAIL, RAW_PASSWORD);
@@ -83,7 +83,7 @@ public class AuthControllerTest extends HttpRequestTest {
     }
 
     @Test
-    public void loginWithWrongCredentials_shouldReturn401() {
+    public void login_shouldReturn401_whenWrongCredentials() {
         // Arrange
         String url = AUTH_URL + "/login";
         AuthRequestDTO authRequestDTO = new AuthRequestDTO("adoe@logistics.com", "admin123");
@@ -97,7 +97,7 @@ public class AuthControllerTest extends HttpRequestTest {
     }
 
     @Test
-    public void loginWithMissingEmail_shouldReturn400() {
+    public void login_shouldReturn400_whenEmailIsMissing() {
         // Arrange
         String url = AUTH_URL + "/login";
         AuthRequestDTO authRequestDTO = new AuthRequestDTO("", "admin123");
@@ -111,7 +111,7 @@ public class AuthControllerTest extends HttpRequestTest {
     }
 
     @Test
-    public void loginWithInvitedUser_shouldReturn401() {
+    public void login_shouldReturn401_whenUserIsInvited() {
         // Arrange
         String url = AUTH_URL + "/login";
         User user = createInvitedUser();
@@ -126,7 +126,7 @@ public class AuthControllerTest extends HttpRequestTest {
     }
 
     @Test
-    public void requestResetPassword() {
+    public void requestResetPassword_shouldCreateResetToken_whenUserExists() {
         // Arrange & Act
         TestResetPasswordResult resetPasswordResult = getRequestResetToken();
 
@@ -136,7 +136,7 @@ public class AuthControllerTest extends HttpRequestTest {
     }
 
     @Test
-    public void resetPassword() {
+    public void resetPassword_shouldReturn200_whenTokenIsValid() {
         // Arrange & Act for Reset Token
         TestResetPasswordResult resetPasswordResult = getRequestResetToken();
 
@@ -154,7 +154,7 @@ public class AuthControllerTest extends HttpRequestTest {
     }
 
     @Test
-    public void resetPassword_withInvalidToken_shouldReturn404() {
+    public void resetPassword_shouldReturn404_whenTokenIsInvalid() {
         // Arrange
         ResetPasswordRequestDTO request = new ResetPasswordRequestDTO();
         request.setToken(UUID.randomUUID().toString());
@@ -169,7 +169,7 @@ public class AuthControllerTest extends HttpRequestTest {
     }
 
     @Test
-    public void setupPassword() {
+    public void setupPassword_shouldActivateUserAndEnableAccount() {
         // Arrange & Act for Setup Token
         UserTokens setupToken = getSetupToken();
 
