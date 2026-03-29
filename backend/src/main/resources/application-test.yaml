@@ -34,8 +34,6 @@ spring:
     port: 1025
     username: test
     password: test
-  main:
-    web-application-type: none
 
 springdoc:
   api-docs:
