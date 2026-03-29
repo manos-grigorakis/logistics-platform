@@ -23,7 +23,7 @@ public abstract class HttpRequestTest {
     private FileStorageService fileStorageService;
 
     @MockitoBean
-    private JavaMailSender javaMailSender;
+    protected JavaMailSender javaMailSender;
 
     protected String BASE_URL;
 
