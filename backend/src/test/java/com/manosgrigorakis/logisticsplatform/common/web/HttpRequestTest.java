@@ -14,7 +14,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public abstract class HttpRequestTest {
     @LocalServerPort
-    private int port;
+    protected int port;
 
     @Autowired
     protected TestRestTemplate restTemplate;
