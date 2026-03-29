@@ -79,15 +79,11 @@ public class ShipmentServiceTest {
     @Test
     public void getShipmentById_shouldReturnResponse() {
         // Arrange
-        Shipment shipment = new Shipment();
-        Quote quote = new Quote();
-        User createdBy = new User();
         User driver = new User();
-
+        Shipment shipment = buildShipment();
         shipment.setNumber("SH-2026-0001");
-        shipment.setQuote(quote);
         shipment.setDriver(driver);
-        shipment.setCreatedByUser(createdBy);
+
         when(shipmentRepository.findById(1L)).thenReturn(Optional.of(shipment));
 
         // Act
@@ -136,10 +132,7 @@ public class ShipmentServiceTest {
     @Test
     public void createShipment_shouldThrowConflictException_whenQuoteStatusIsNotAccepted() {
         // Arrange
-        Quote quote = new Quote();
-        quote.setId(1L);
-        quote.setNumber("Q-2026-0001");
-        quote.setQuoteStatus(QuoteStatus.DRAFT);
+        Quote quote = buildQuote(QuoteStatus.DRAFT);
 
         when(quoteRepository.findById(1L)).thenReturn(Optional.of(quote));
         when(userRepository.findById(1L)).thenReturn(Optional.of(new User()));
@@ -155,10 +148,7 @@ public class ShipmentServiceTest {
     @Test
     public void createShipment_shouldThrowDuplicateException_whenQuoteIsAlreadyExist() {
         // Arrange
-        Quote quote = new Quote();
-        quote.setId(1L);
-        quote.setNumber("Q-2026-0001");
-        quote.setQuoteStatus(QuoteStatus.ACCEPTED);
+        Quote quote = buildQuote(QuoteStatus.ACCEPTED);
 
         when(quoteRepository.findById(1L)).thenReturn(Optional.of(quote));
         when(userRepository.findById(1L)).thenReturn(Optional.of(new User()));
@@ -175,10 +165,7 @@ public class ShipmentServiceTest {
     @Test
     public void createShipment_shouldSaveShipmentAndQuoteStatusToConverted() {
         // Arrange
-        Quote quote = new Quote();
-        quote.setId(1L);
-        quote.setNumber("Q-2026-0001");
-        quote.setQuoteStatus(QuoteStatus.ACCEPTED);
+        Quote quote = buildQuote(QuoteStatus.ACCEPTED);
 
         User createdBy = new User();
 
@@ -208,14 +195,7 @@ public class ShipmentServiceTest {
     @Test
     public void updateShipment_shouldSaveShipment() {
         // Arrange
-        Shipment shipment = new Shipment();
-        Quote quote = new Quote();
-        User createdBy = new User();
-        List<ShipmentCargo> shipmentCargos = new ArrayList<>();
-
-        shipment.setQuote(quote);
-        shipment.setCreatedByUser(createdBy);
-        shipment.setShipmentCargos(shipmentCargos);
+        Shipment shipment = buildShipment();
 
         when(shipmentRepository.save(any(Shipment.class))).thenReturn(shipment);
         when(shipmentRepository.findById(1L)).thenReturn(Optional.of(shipment));
@@ -269,8 +249,6 @@ public class ShipmentServiceTest {
     @Test
     public void updateShipmentStatus_shouldUpdateShipmentStatus() {
         // Arrange
-        Quote quote = new Quote();
-        User createdBy = new User();
         User driver = new User();
         Vehicle truck = new Vehicle();
         Vehicle trailer = new Vehicle();
@@ -280,10 +258,8 @@ public class ShipmentServiceTest {
         List<ShipmentCargo> shipmentCargos = new ArrayList<>();
         shipmentCargos.add(new ShipmentCargo());
 
-        Shipment shipment = new Shipment();
+        Shipment shipment = buildShipment();
         shipment.setStatus(ShipmentStatus.PENDING);
-        shipment.setQuote(quote);
-        shipment.setCreatedByUser(createdBy);
         shipment.setShipmentCargos(shipmentCargos);
         shipment.setDriver(driver);
         shipment.setTruck(truck);
@@ -312,15 +288,11 @@ public class ShipmentServiceTest {
     }
 
     @Test
-    public void updateShipmentStatus_shouldThrowNotFoundException_whenShipmentIsNotEditable() {
+    public void updateShipmentStatus_shouldThrowConflictException_whenShipmentIsNotEditable() {
         // Arrange
-        Quote quote = new Quote();
-        User createdBy = new User();
-        Shipment shipment = new Shipment();
+        Shipment shipment = buildShipment();
         shipment.setId(1L);
         shipment.setStatus(ShipmentStatus.DELIVERED);
-        shipment.setQuote(quote);
-        shipment.setCreatedByUser(createdBy);
 
         when(shipmentRepository.findById(1L)).thenReturn(Optional.of(shipment));
 
@@ -353,5 +325,42 @@ public class ShipmentServiceTest {
 
         // Act & Assert
         assertThrows(ResourceNotFoundException.class, () -> shipmentService.getCmrDocumentByShipmentId(1L));
+    }
+
+    /**
+     * Builds a {@link Shipment} to be used for testing purposes
+     * <p>The shipment includes:</p>
+     * <ul>
+     *     <li>A {@link Shipment#quote}</li>
+     *     <li>A {@link Shipment#createdByUser}</li>
+     *     <li>A {@link Shipment#shipmentCargos}</li>
+     * </ul>
+     * @return The preconfigured {@link Shipment} for testing
+     */
+    private Shipment buildShipment() {
+        Shipment shipment = new Shipment();
+        shipment.setQuote(new Quote());
+        shipment.setCreatedByUser(new User());
+        shipment.setShipmentCargos(new ArrayList<>());
+        return shipment;
+    }
+
+    /**
+     * Builds a {@link Quote} to be used for testing purposes
+     * <p>The quote includes</p>
+     * <ul>
+     *     <li>{@link Quote#id} -> {@code 1L}</li>
+     *     <li>{@link Quote#number} -> {@code Q-2026-0001}</li>
+     *     <li>{@link Quote#quoteStatus} -> The provided status</li>
+     * </ul>
+     * @param status The {@link QuoteStatus} to be set on the created quote
+     * @return The preconfigured {@link Quote} for testing
+     */
+    private Quote buildQuote(QuoteStatus status) {
+        Quote quote = new Quote();
+        quote.setId(1L);
+        quote.setNumber("Q-2026-0001");
+        quote.setQuoteStatus(status);
+        return quote;
     }
 }
