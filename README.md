@@ -1,6 +1,6 @@
 # Logistics Platform
 
-![Created At](https://img.shields.io/github/created-at/manos-grigorakis/logistics-platform?color=007ec6)
+
 ![Status](https://img.shields.io/badge/status-active-brightgreen)
 ![Coverage](https://github.com/manos-grigorakis/logistics-platform/blob/main/.github/badges/jacoco.svg?raw=true)
 ![Branches Coverage](https://github.com/manos-grigorakis/logistics-platform/blob/main/.github/badges/branches.svg?raw=true)
@@ -8,6 +8,8 @@
 ![Open PRs](https://img.shields.io/github/issues-pr/manos-grigorakis/logistics-platform)
 ![Build & Tests](https://github.com/manos-grigorakis/logistics-platform/actions/workflows/build-and-test.yaml/badge.svg)
 ![Latest Release](https://img.shields.io/github/v/release/manos-grigorakis/logistics-platform)
+
+![Created At](https://img.shields.io/github/created-at/manos-grigorakis/logistics-platform?color=007ec6)
 ![Commits/month](https://img.shields.io/github/commit-activity/m/manos-grigorakis/logistics-platform)
 ![Last Commit](https://img.shields.io/github/last-commit/manos-grigorakis/logistics-platform)
 
