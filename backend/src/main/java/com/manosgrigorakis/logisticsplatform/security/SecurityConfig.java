@@ -132,6 +132,9 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.POST, "/api/shipments").hasAnyAuthority("ADMIN", "MANAGER")
                     .requestMatchers(HttpMethod.PUT, "/api/shipments/**").hasAnyAuthority("ADMIN", "MANAGER")
 
+                    // Analytics
+                    .requestMatchers(HttpMethod.GET, "/api/analytics/*").hasAnyAuthority("ADMIN", "MANAGER")
+
                     // All other endpoints require authentication
                     .anyRequest().authenticated();
         });

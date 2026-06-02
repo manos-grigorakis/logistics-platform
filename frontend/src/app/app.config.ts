@@ -42,6 +42,19 @@ import {
 } from '@ng-icons/lucide';
 import { JwtHeadersInterceptor } from './auth/interceptors/jwt-headers.interceptor';
 
+import { provideCharts } from 'ng2-charts';
+import {
+  BarController,
+  PieController,
+  ArcElement,
+  CategoryScale,
+  LinearScale,
+  Legend,
+  Colors,
+  Tooltip,
+  BarElement,
+} from 'chart.js';
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
@@ -86,6 +99,20 @@ export const appConfig: ApplicationConfig = {
     provideNgIconsConfig({
       size: '1.5rem',
       color: 'currentColor',
+    }),
+
+    provideCharts({
+      registerables: [
+        BarController,
+        BarElement,
+        PieController,
+        ArcElement,
+        CategoryScale,
+        LinearScale,
+        Legend,
+        Colors,
+        Tooltip,
+      ],
     }),
   ],
 };

@@ -1,5 +1,6 @@
 package com.manosgrigorakis.logisticsplatform.quotes.repository;
 
+import com.manosgrigorakis.logisticsplatform.analytics.dto.ValueByStatus;
 import com.manosgrigorakis.logisticsplatform.quotes.enums.QuoteStatus;
 import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,4 +24,7 @@ public interface QuoteRepository extends JpaRepository<Quote, Long>, JpaSpecific
         "AND q.quoteStatus IN :statuses"
     )
     List<Quote> findExpiredQuotes(@Param("statuses")List<QuoteStatus> statuses);
+
+    @Query("SELECT q.quoteStatus AS status, COUNT(q) FROM Quote AS q GROUP BY q.quoteStatus")
+    List<ValueByStatus<QuoteStatus>> getQuotesByStatus();
 }
