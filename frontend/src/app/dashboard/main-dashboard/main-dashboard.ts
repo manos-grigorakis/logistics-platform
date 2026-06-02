@@ -2,9 +2,8 @@ import { Component, inject, OnInit } from '@angular/core';
 import { KpiCard } from './kpi-card/kpi-card';
 import { AnalyticsService } from './analytics.service';
 import { CurrencyPipe } from '@angular/common';
-import { ValueByStatusResponse } from '../models/value-by-status-response.interface';
 import { BaseChartDirective } from 'ng2-charts';
-import { ChartData, ChartOptions, plugins } from 'chart.js';
+import { ChartData, ChartOptions } from 'chart.js';
 import { formatEnumLabel } from '../../shared/utils/format-enum-label.util';
 
 @Component({
