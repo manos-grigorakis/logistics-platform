@@ -1,5 +1,6 @@
 package com.manosgrigorakis.logisticsplatform.payments.controller;
 
+import com.manosgrigorakis.logisticsplatform.common.dto.ApiResponseWrapper;
 import com.manosgrigorakis.logisticsplatform.payments.dto.ReconciliationProcessResponse;
 import com.manosgrigorakis.logisticsplatform.payments.dto.ReconciliationReportResponseDTO;
 import com.manosgrigorakis.logisticsplatform.payments.dto.ReconciliationRequestDTO;
@@ -22,15 +23,14 @@ public class ReconciliationRestController {
     private final ReconciliationService reconciliationService;
     private final ReconciliationReportService reconciliationReportService;
 
-
     @Operation(summary = "Find the Reconciliation Report by Id", description = "Finds the reconciliation report from the given id")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Operation was successfully"),
             @ApiResponse(responseCode = "404", description = "Reconciliation report with the given id not found")
     })
     @GetMapping("/report/{id}")
-    public ReconciliationReportResponseDTO get(@PathVariable Long id) {
-        return reconciliationReportService.getReconciliationReport(id);
+    public ApiResponseWrapper<ReconciliationReportResponseDTO> get(@PathVariable Long id) {
+        return new ApiResponseWrapper<>(reconciliationReportService.getReconciliationReport(id));
     }
 
     @Operation(summary = "Reconciliation Process",
@@ -58,7 +58,7 @@ public class ReconciliationRestController {
                     """)
     })
     @PostMapping(value = "/process", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ReconciliationProcessResponse reconciliationProcess(@ModelAttribute @Valid ReconciliationRequestDTO dto) {
-        return reconciliationService.reconciliationProcess(dto);
+    public ApiResponseWrapper<ReconciliationProcessResponse> reconciliationProcess(@ModelAttribute @Valid ReconciliationRequestDTO dto) {
+        return new ApiResponseWrapper<>(reconciliationService.reconciliationProcess(dto));
     }
 }

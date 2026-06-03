@@ -1,5 +1,6 @@
 package com.manosgrigorakis.logisticsplatform.payments.controller;
 
+import com.manosgrigorakis.logisticsplatform.common.dto.ApiResponseWrapper;
 import com.manosgrigorakis.logisticsplatform.payments.dto.BulkInvoiceRequestDTO;
 import com.manosgrigorakis.logisticsplatform.payments.dto.BulkInvoiceResponseDTO;
 import com.manosgrigorakis.logisticsplatform.payments.service.InvoiceService;
@@ -36,7 +37,7 @@ public class InvoiceRestController {
             @ApiResponse(responseCode = "409", description = "Customer's TIN doesn't match TIN founded in the file")
     })
     @PostMapping(value = "/bulk-import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public BulkInvoiceResponseDTO bulkInvoicesImport(@ModelAttribute @Valid BulkInvoiceRequestDTO dto) {
-        return this.invoiceService.bulkInvoicesImport(dto);
+    public ApiResponseWrapper<BulkInvoiceResponseDTO> bulkInvoicesImport(@ModelAttribute @Valid BulkInvoiceRequestDTO dto) {
+        return new ApiResponseWrapper<>(invoiceService.bulkInvoicesImport(dto));
     }
 }
