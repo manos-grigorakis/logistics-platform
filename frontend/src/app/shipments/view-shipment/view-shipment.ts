@@ -143,8 +143,8 @@ export class ViewShipment implements OnInit {
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: (res) => {
-          this.quoteUrl = res.pdfUrl;
-          this.quotePdfName = res.number;
+          this.quoteUrl = res.data.pdfUrl;
+          this.quotePdfName = res.data.number;
         },
         error: (err) => {
           if (err.status === 500) {

@@ -308,7 +308,7 @@ export class CustomerTabQuotes implements OnInit, OnDestroy {
     this.quotesService.fetchQuoteById(id).subscribe({
       next: (res) => {
         this.isQuotePdfLoading = false;
-        this.pdfUrl = res.pdfUrl;
+        this.pdfUrl = res.data.pdfUrl;
       },
       error: (err) => {
         this.isQuotePdfLoading = false;

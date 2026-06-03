@@ -196,13 +196,14 @@ export class QuotesPage implements OnInit {
       next: (res) => {
         this.isLoading = false;
         this.errorMessage = undefined;
-        this.quotes = res.content;
+        const data = res.data;
+        this.quotes = data.content;
 
         // pagination
-        this.currentPage = res.number;
-        this.totalPages = res.totalPages;
-        this.totalElements = res.totalElements;
-        this.pageSize = res.size;
+        this.currentPage = data.number;
+        this.totalPages = data.totalPages;
+        this.totalElements = data.totalElements;
+        this.pageSize = data.size;
       },
       error: (err) => {
         this.isLoading = false;
@@ -224,8 +225,8 @@ export class QuotesPage implements OnInit {
       next: (res) => {
         this.isLoading = false;
         this.errorMessage = undefined;
-        this.pdfUrl = res.pdfUrl;
-        this.pdfNumber = res.number;
+        this.pdfUrl = res.data.pdfUrl;
+        this.pdfNumber = res.data.number;
       },
       error: (err) => {
         this.isLoading = false;

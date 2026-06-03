@@ -253,7 +253,7 @@ export class ShipmentsForm implements OnInit {
       next: (res) => {
         this.quotesLoading = false;
 
-        this.quotesList = res.content.map((quote) => ({
+        this.quotesList = res.data.content.map((quote) => ({
           id: quote.id,
           number: quote.number,
         }));
@@ -288,7 +288,7 @@ export class ShipmentsForm implements OnInit {
         ),
       )
       .subscribe({
-        next: (res) => (this.quotesList = [...res.content]),
+        next: (res) => (this.quotesList = [...res.data.content]),
         error: (err) => {
           if (err.status === 500) {
             this.uiErrorMessage = 'Server error. Please try again';

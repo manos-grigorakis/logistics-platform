@@ -85,7 +85,7 @@ export class EditQuote implements OnInit {
       next: (res) => {
         this.isLoading = false;
         this.errorMessage = undefined;
-        this.quote = res;
+        this.quote = res.data;
 
         if (this.quote.quoteStatus !== 'draft') {
           toast.warning('You can only update quotes in DRAFT status');
