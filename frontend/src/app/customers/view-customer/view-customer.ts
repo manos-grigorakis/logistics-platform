@@ -53,7 +53,7 @@ export class ViewCustomer implements OnInit {
     this.customersService.fetchCustomer(id).subscribe({
       next: (res) => {
         this.isLoading = false;
-        this.customer = res;
+        this.customer = res.data;
         this.customersService.setSelectedCustomer(this.customer);
       },
       error: (err) => {

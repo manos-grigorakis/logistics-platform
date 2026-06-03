@@ -143,7 +143,7 @@ export class PaymentsPage implements OnInit {
     this.customersService.fetchCustomers({ companyName: customer }).subscribe({
       next: (res) => {
         this.customersLoading = false;
-        this.customersList = res.content;
+        this.customersList = res.data.content;
       },
       error: (err) => {
         this.customersLoading = false;

@@ -30,7 +30,7 @@ export class CreateCustomer {
       },
       error: (err) => {
         this.isLoading = false;
-        const fieldError = err.error?.details?.duplicateField;
+        const fieldError = err.error?.error?.details?.duplicateField;
 
         if (err.status === 409 && fieldError === 'tin') {
           this.errorMessage = `Customer with TIN: ${data.tin} already exists`;

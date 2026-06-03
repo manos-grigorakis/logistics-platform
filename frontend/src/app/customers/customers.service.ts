@@ -8,6 +8,7 @@ import { Customer } from './models/customer';
 import { CustomerRequest } from './models/customer-request';
 import { QuotePerCustomerResponse } from './models/quote-per-customer-response';
 import { QuotesPerCustomerParameters } from './models/quotes-per-customer-parameters';
+import { ApiResponse } from '../shared/models/api-response.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +23,9 @@ export class CustomersService {
     this.selectedCustomer.next(c);
   }
 
-  public fetchCustomers(param: FetchCustomersParameters = {}): Observable<FetchCustomersResponse> {
+  public fetchCustomers(
+    param: FetchCustomersParameters = {},
+  ): Observable<ApiResponse<FetchCustomersResponse>> {
     let params = new HttpParams();
     params = this.addParam(params, 'page', param.page);
     params = this.addParam(params, 'size', param.size);
@@ -32,21 +35,21 @@ export class CustomersService {
     params = this.addParam(params, 'companyName', param.companyName);
     params = this.addParam(params, 'customerType', param.customerType);
 
-    return this.http.get<FetchCustomersResponse>(`${environment.apiUrl}/customers`, {
+    return this.http.get<ApiResponse<FetchCustomersResponse>>(`${environment.apiUrl}/customers`, {
       params: params,
     });
   }
 
-  public fetchCustomer(id: number): Observable<Customer> {
-    return this.http.get<Customer>(`${environment.apiUrl}/customers/${id}`);
+  public fetchCustomer(id: number): Observable<ApiResponse<Customer>> {
+    return this.http.get<ApiResponse<Customer>>(`${environment.apiUrl}/customers/${id}`);
   }
 
-  public createCustomer(data: CustomerRequest): Observable<Customer> {
-    return this.http.post<Customer>(`${environment.apiUrl}/customers`, data);
+  public createCustomer(data: CustomerRequest): Observable<ApiResponse<Customer>> {
+    return this.http.post<ApiResponse<Customer>>(`${environment.apiUrl}/customers`, data);
   }
 
-  public updateCustomer(id: number, data: CustomerRequest): Observable<Customer> {
-    return this.http.put<Customer>(`${environment.apiUrl}/customers/${id}`, data);
+  public updateCustomer(id: number, data: CustomerRequest): Observable<ApiResponse<Customer>> {
+    return this.http.put<ApiResponse<Customer>>(`${environment.apiUrl}/customers/${id}`, data);
   }
 
   public deleteCustomer(id: number): Observable<void> {
@@ -56,7 +59,7 @@ export class CustomersService {
   public quotesPerCustomer(
     id: number,
     param: QuotesPerCustomerParameters = {},
-  ): Observable<QuotePerCustomerResponse> {
+  ): Observable<ApiResponse<QuotePerCustomerResponse>> {
     let params = new HttpParams();
 
     params = this.addParam(params, 'page', param.page);
@@ -66,9 +69,12 @@ export class CustomersService {
     params = this.addParam(params, 'number', param.number);
     params = this.addParam(params, 'quoteStatus', param.quoteStatus);
 
-    return this.http.get<QuotePerCustomerResponse>(`${environment.apiUrl}/customers/${id}/quotes`, {
-      params,
-    });
+    return this.http.get<ApiResponse<QuotePerCustomerResponse>>(
+      `${environment.apiUrl}/customers/${id}/quotes`,
+      {
+        params,
+      },
+    );
   }
 
   // Helper method that creates param

@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ShipmentStatus } from '../shipments/models/shipment-status';
+import { ApiResponse } from '../shared/models/api-response.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -17,35 +18,41 @@ export class MetadataService {
 
   public shipmentStatuses$ = this.shipmentStatusesSubject$.asObservable();
 
-  public fetchCustomersTypes(): Observable<Array<string>> {
-    return this.http.get<Array<string>>(`${environment.apiUrl}/metadata/customer-types`);
+  public fetchCustomersTypes(): Observable<ApiResponse<string[]>> {
+    return this.http.get<ApiResponse<string[]>>(`${environment.apiUrl}/metadata/customer-types`);
   }
 
   public fetchQuotesStatuses(): void {
     if (this.quoteStatuses$.value.length > 0) return;
 
-    this.http.get<string[]>(`${environment.apiUrl}/metadata/quote-statuses`).subscribe({
-      next: (res) => this.quoteStatuses$.next(res),
-      error: (err) => console.error('Failed to fetch quote statuses', err),
-    });
+    this.http
+      .get<ApiResponse<string[]>>(`${environment.apiUrl}/metadata/quote-statuses`)
+      .subscribe({
+        next: (res) => this.quoteStatuses$.next(res.data),
+        error: (err) => console.error('Failed to fetch quote statuses', err),
+      });
   }
 
   public fetchQuoteItemUnits(): void {
     if (this.quoteItemUnits$.value.length > 0) return;
 
-    this.http.get<string[]>(`${environment.apiUrl}/metadata/quote-item-units`).subscribe({
-      next: (res) => this.quoteItemUnits$.next(res),
-      error: (err) => console.error('Failed to fetch quote units', err),
-    });
+    this.http
+      .get<ApiResponse<string[]>>(`${environment.apiUrl}/metadata/quote-item-units`)
+      .subscribe({
+        next: (res) => this.quoteItemUnits$.next(res.data),
+        error: (err) => console.error('Failed to fetch quote units', err),
+      });
   }
 
   public fetchShipmentsStatuses(): Observable<ShipmentStatus[]> {
     if (this.shipmentStatusesSubject$.value.length > 0) return this.shipmentStatuses$;
 
-    this.http.get<ShipmentStatus[]>(`${environment.apiUrl}/metadata/shipment-statuses`).subscribe({
-      next: (res) => this.shipmentStatusesSubject$.next(res),
-      error: (err) => console.error(err),
-    });
+    this.http
+      .get<ApiResponse<ShipmentStatus[]>>(`${environment.apiUrl}/metadata/shipment-statuses`)
+      .subscribe({
+        next: (res) => this.shipmentStatusesSubject$.next(res.data),
+        error: (err) => console.error(err),
+      });
 
     return this.shipmentStatuses$;
   }
@@ -53,9 +60,11 @@ export class MetadataService {
   public fetchCargoItemsUnits(): void {
     if (this.cargoItemUnits$.value.length > 0) return;
 
-    this.http.get<string[]>(`${environment.apiUrl}/metadata/shipment-cargo-units`).subscribe({
-      next: (res) => this.cargoItemUnits$.next(res),
-      error: (err) => console.error('Failed to fetch metadata for cargo items units', err),
-    });
+    this.http
+      .get<ApiResponse<string[]>>(`${environment.apiUrl}/metadata/shipment-cargo-units`)
+      .subscribe({
+        next: (res) => this.cargoItemUnits$.next(res.data),
+        error: (err) => console.error('Failed to fetch metadata for cargo items units', err),
+      });
   }
 }

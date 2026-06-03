@@ -147,7 +147,7 @@ export class CustomersForm implements OnInit {
       next: (res) => {
         this.loadingCustomerType = false;
         this.customerTypesError = undefined;
-        this.customerTypes = res;
+        this.customerTypes = res.data;
       },
       error: (err) => {
         this.loadingCustomerType = false;

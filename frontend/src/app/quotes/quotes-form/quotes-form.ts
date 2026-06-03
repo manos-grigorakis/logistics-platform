@@ -213,7 +213,7 @@ export class QuotesForm implements OnInit, AfterViewInit {
     this.customersService.fetchCustomers({ companyName: customer }).subscribe({
       next: (res) => {
         this.customersLoading = false;
-        this.customersList = res.content;
+        this.customersList = res.data.content;
       },
       error: (err) => {
         this.customersLoading = false;
