@@ -59,7 +59,7 @@ export class EditShipment implements OnInit {
     this.shipmentsService.getShipment(id).subscribe({
       next: (res) => {
         this.isLoading = false;
-        this.shipment = res;
+        this.shipment = res.data;
       },
       error: (err) => {
         this.isLoading = false;

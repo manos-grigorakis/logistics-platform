@@ -199,13 +199,14 @@ export class ShipmentsPage implements OnInit, OnDestroy {
     this.shipmentsService.fetchShipments(finalParams).subscribe({
       next: (res) => {
         this.isLoading = false;
-        this.shipments = res.content;
+        const data = res.data;
+        this.shipments = data.content;
 
         // pagination
-        this.currentPage = res.number;
-        this.totalPages = res.totalPages;
-        this.totalElements = res.totalElements;
-        this.pageSize = res.size;
+        this.currentPage = data.number;
+        this.totalPages = data.totalPages;
+        this.totalElements = data.totalElements;
+        this.pageSize = data.size;
       },
       error: (err) => {
         this.isLoading = false;

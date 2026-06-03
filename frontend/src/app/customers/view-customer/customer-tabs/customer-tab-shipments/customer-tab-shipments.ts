@@ -195,12 +195,13 @@ export class CustomerTabShipments implements OnInit, OnDestroy {
     this.shipmentsService.fetchShipments(finalParams).subscribe({
       next: (res) => {
         this.isLoading = false;
-        this.shipments = res.content;
+        const data = res.data;
+        this.shipments = data.content;
 
         // Pagination
-        this.currentPage = res.number;
-        this.totalPages = res.totalPages;
-        this.totalElements = res.totalElements;
+        this.currentPage = data.number;
+        this.totalPages = data.totalPages;
+        this.totalElements = data.totalElements;
       },
       error: (err) => {
         this.isLoading = false;
