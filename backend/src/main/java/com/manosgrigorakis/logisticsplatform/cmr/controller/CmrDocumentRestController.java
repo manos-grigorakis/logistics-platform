@@ -17,7 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/cmr-documents")
+@RequestMapping("${app.api.prefix}/v1/cmr-documents")
 @Tag(name = "CMR Documents")
 public class CmrDocumentRestController {
     private final CmrDocumentService cmrDocumentService;

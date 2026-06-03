@@ -20,7 +20,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/shipments")
+@RequestMapping("${app.api.prefix}/v1/shipments")
 @Tag(name = "Shipments")
 public class ShipmentRestController {
     private final ShipmentService shipmentService;

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/roles")
+@RequestMapping("${app.api.prefix}/v1/roles")
 @Tag(name = "Roles", description = "CRUD operation for roles")
 public class RoleRestController {
     private final RoleService roleService;

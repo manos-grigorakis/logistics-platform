@@ -13,7 +13,7 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("${app.api.prefix}/v1/auth")
 @Tag(name = "User Authentication", description = "Login, password reset and User authentication")
 public class AuthenticationRestController {
     private final AuthenticationService authenticationService;

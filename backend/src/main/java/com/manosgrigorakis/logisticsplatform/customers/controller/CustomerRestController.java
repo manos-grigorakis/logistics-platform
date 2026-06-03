@@ -16,7 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/customers")
+@RequestMapping("${app.api.prefix}/v1/customers")
 @Tag(name = "Customers", description = "CRUD operation for customers")
 public class CustomerRestController {
     private final CustomerService customerService;

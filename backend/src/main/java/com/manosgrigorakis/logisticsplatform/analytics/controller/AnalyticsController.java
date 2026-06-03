@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @RequiredArgsConstructor
-@RequestMapping("/api/analytics")
+@RequestMapping("${app.api.prefix}/v1/analytics")
 @RestController
 public class AnalyticsController {
     private final AnalyticsService analyticsService;

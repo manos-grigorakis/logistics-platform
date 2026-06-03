@@ -17,7 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/quotes")
+@RequestMapping("${app.api.prefix}/v1/quotes")
 @Tag(name = "Quotes", description =
         "Create, Read, Update operations on Quotes with PDF generation, presigned URL for preview and storing on S3/Minio"
 )

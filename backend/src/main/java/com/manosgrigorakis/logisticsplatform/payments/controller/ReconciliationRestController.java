@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @Tag(name = "Reconciliation")
 @RestController
-@RequestMapping("/api/reconciliation")
+@RequestMapping("${app.api.prefix}/v1/reconciliation")
 public class ReconciliationRestController {
     private final ReconciliationService reconciliationService;
     private final ReconciliationReportService reconciliationReportService;

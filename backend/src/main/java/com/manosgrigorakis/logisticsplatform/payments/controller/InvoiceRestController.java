@@ -13,7 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/invoices")
+@RequestMapping("${app.api.prefix}/v1/invoices")
 @Tag(name = "Invoices")
 public class InvoiceRestController {
     private final InvoiceService invoiceService;

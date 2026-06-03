@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/vehicles")
+@RequestMapping("${app.api.prefix}/v1/vehicles")
 @Tag(name = "Vehicles", description = "CRUD operation for vehicles")
 public class VehicleRestController {
     private final VehicleService vehicleService;

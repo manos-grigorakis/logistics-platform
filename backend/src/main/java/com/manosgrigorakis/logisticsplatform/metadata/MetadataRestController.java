@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/metadata")
+@RequestMapping("${app.api.prefix}/v1/metadata")
 @Tag(name = "Metadata", description = "System metadata")
 public class MetadataRestController {
 
