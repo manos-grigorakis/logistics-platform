@@ -114,7 +114,7 @@ export class UserForm implements OnInit {
     this.rolesService.fetchRoles().subscribe({
       next: (res) => {
         this.roleIsLoading = false;
-        this.roles = res;
+        this.roles = res.data;
       },
       error: (err) => {
         this.roleIsLoading = false;

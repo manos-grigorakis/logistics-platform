@@ -253,7 +253,7 @@ export class ShipmentsForm implements OnInit {
       next: (res) => {
         this.quotesLoading = false;
 
-        this.quotesList = res.content.map((quote) => ({
+        this.quotesList = res.data.content.map((quote) => ({
           id: quote.id,
           number: quote.number,
         }));
@@ -288,7 +288,7 @@ export class ShipmentsForm implements OnInit {
         ),
       )
       .subscribe({
-        next: (res) => (this.quotesList = [...res.content]),
+        next: (res) => (this.quotesList = [...res.data.content]),
         error: (err) => {
           if (err.status === 500) {
             this.uiErrorMessage = 'Server error. Please try again';
@@ -305,7 +305,7 @@ export class ShipmentsForm implements OnInit {
 
     this.usersService
       .fetchUsers()
-      .pipe(map((users) => users.filter((u) => u.roleName === 'DRIVER')))
+      .pipe(map((users) => users.data.filter((u) => u.roleName === 'DRIVER')))
       .subscribe({
         next: (res) => {
           this.driverLoading = false;
@@ -336,8 +336,8 @@ export class ShipmentsForm implements OnInit {
       .fetchAllVehicles()
       .pipe(
         map((vehicles) => ({
-          truck: vehicles.filter((v) => v.type === 'truck'),
-          trailer: vehicles.filter((v) => v.type === 'trailer'),
+          truck: vehicles.data.filter((v) => v.type === 'truck'),
+          trailer: vehicles.data.filter((v) => v.type === 'trailer'),
         })),
       )
       .subscribe({

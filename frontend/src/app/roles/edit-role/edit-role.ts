@@ -65,13 +65,13 @@ export class EditRole implements OnInit {
         this.isLoading = false;
         this.errorMessage = undefined;
 
-        if (!res.editable) {
+        if (!res.data.editable) {
           toast.warning('This role is protected');
           this.router.navigate(['/roles']);
           return;
         }
 
-        this.role = res;
+        this.role = res.data;
       },
       error: (err) => {
         this.isLoading = false;

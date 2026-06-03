@@ -1,10 +1,10 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { KpiCard } from './kpi-card/kpi-card';
-import { AnalyticsService } from './analytics.service';
 import { CurrencyPipe } from '@angular/common';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartData, ChartOptions } from 'chart.js';
 import { formatEnumLabel } from '../../shared/utils/format-enum-label.util';
+import { AnalyticsService } from '../analytics.service';
 
 @Component({
   selector: 'app-main-dashboard',
@@ -66,8 +66,8 @@ export class MainDashboard implements OnInit {
 
   private loadTotalCustomers(): void {
     this.analyticsService.fetchTotalCustomers().subscribe({
-      next: (response) => {
-        this.totalCustomers = response.value;
+      next: (res) => {
+        this.totalCustomers = res.data.value;
       },
       error: (error) => console.error(error),
     });
@@ -75,8 +75,8 @@ export class MainDashboard implements OnInit {
 
   private loadTotalShipments(): void {
     this.analyticsService.fetchTotalShipments().subscribe({
-      next: (response) => {
-        this.totalShipments = response.value;
+      next: (res) => {
+        this.totalShipments = res.data.value;
       },
       error: (error) => console.error(error),
     });
@@ -84,8 +84,8 @@ export class MainDashboard implements OnInit {
 
   private loadTotalOutstandingAmount(): void {
     this.analyticsService.fetchTotalOutstandingAmount().subscribe({
-      next: (response) => {
-        this.totalOutstandingAmount = response.value;
+      next: (res) => {
+        this.totalOutstandingAmount = res.data.value;
       },
       error: (error) => console.error(error),
     });
@@ -93,8 +93,8 @@ export class MainDashboard implements OnInit {
 
   private loadTotalPendingShipments(): void {
     this.analyticsService.fetchTotalPendingShipments().subscribe({
-      next: (response) => {
-        this.totalPendingShipments = response.value;
+      next: (res) => {
+        this.totalPendingShipments = res.data.value;
       },
       error: (error) => console.error(error),
     });
@@ -102,12 +102,12 @@ export class MainDashboard implements OnInit {
 
   private loadQuotesByStatus(): void {
     this.analyticsService.fetchQuotesByStatus().subscribe({
-      next: (response) => {
+      next: (res) => {
         this.quotesByStatusChartData = {
-          labels: response.map((item) => formatEnumLabel(item.status)),
+          labels: res.data.map((item) => formatEnumLabel(item.status)),
           datasets: [
             {
-              data: response.map((item) => item.count),
+              data: res.data.map((item) => item.count),
               label: 'Quotes',
             },
           ],
@@ -119,12 +119,12 @@ export class MainDashboard implements OnInit {
 
   private loadShipmentsByStatus(): void {
     this.analyticsService.fetchShipmentsByStatus().subscribe({
-      next: (response) => {
+      next: (res) => {
         this.shipmentsByStatusChartData = {
-          labels: response.map((item) => formatEnumLabel(item.status)),
+          labels: res.data.map((item) => formatEnumLabel(item.status)),
           datasets: [
             {
-              data: response.map((item) => item.count),
+              data: res.data.map((item) => item.count),
               label: 'Shipments',
             },
           ],
@@ -136,12 +136,12 @@ export class MainDashboard implements OnInit {
 
   private loadInvoicesByStatus(): void {
     this.analyticsService.fetchInvoicesByStatus().subscribe({
-      next: (response) => {
+      next: (res) => {
         this.invoicesByStatusChartData = {
-          labels: response.map((item) => formatEnumLabel(item.status)),
+          labels: res.data.map((item) => formatEnumLabel(item.status)),
           datasets: [
             {
-              data: response.map((item) => item.count),
+              data: res.data.map((item) => item.count),
               label: 'Invoices',
             },
           ],

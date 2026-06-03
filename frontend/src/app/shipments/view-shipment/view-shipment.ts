@@ -95,7 +95,7 @@ export class ViewShipment implements OnInit {
     this.shipmentsService.getShipment(id).subscribe({
       next: (res) => {
         this.isLoading = false;
-        this.shipment = res;
+        this.shipment = res.data;
 
         this.fetchQuoteById(this.shipment.quote.id);
       },
@@ -122,7 +122,7 @@ export class ViewShipment implements OnInit {
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: (res) => {
-          this.cmrDocument = res;
+          this.cmrDocument = res.data;
           this.cmrDocumentUrl = this.cmrDocument.fileUrl;
           this.cmrPdfName = this.cmrDocument.number;
         },
@@ -143,8 +143,8 @@ export class ViewShipment implements OnInit {
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: (res) => {
-          this.quoteUrl = res.pdfUrl;
-          this.quotePdfName = res.number;
+          this.quoteUrl = res.data.pdfUrl;
+          this.quotePdfName = res.data.number;
         },
         error: (err) => {
           if (err.status === 500) {

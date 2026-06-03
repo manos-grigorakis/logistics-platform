@@ -278,11 +278,12 @@ export class CustomerTabQuotes implements OnInit, OnDestroy {
       this.quotesReqSub$ = this.customersService.quotesPerCustomer(c.id, finalParams).subscribe({
         next: (res) => {
           this.isQuotesLoading = false;
-          this.quotes = res.content;
+          const data = res.data;
+          this.quotes = data.content;
 
-          this.currentPage = res.number;
-          this.totalPages = res.totalPages;
-          this.totalElements = res.totalElements;
+          this.currentPage = data.number;
+          this.totalPages = data.totalPages;
+          this.totalElements = data.totalElements;
         },
         error: (err) => {
           this.isQuotesLoading = false;
@@ -307,7 +308,7 @@ export class CustomerTabQuotes implements OnInit, OnDestroy {
     this.quotesService.fetchQuoteById(id).subscribe({
       next: (res) => {
         this.isQuotePdfLoading = false;
-        this.pdfUrl = res.pdfUrl;
+        this.pdfUrl = res.data.pdfUrl;
       },
       error: (err) => {
         this.isQuotePdfLoading = false;

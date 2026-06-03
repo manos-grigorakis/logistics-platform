@@ -7,6 +7,7 @@ import { QuoteResponse } from './models/quote-response';
 import { FetchQuotesParameters } from './models/fetch-quotes-parameters';
 import { QuoteRequest } from './models/quote-request';
 import { CreatedQuoteResponse } from './models/created-quote-response';
+import { ApiResponse } from '../shared/models/api-response.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,8 @@ import { CreatedQuoteResponse } from './models/created-quote-response';
 export class QuotesService {
   private http: HttpClient = inject(HttpClient);
 
-  public fetchQuotes(param: FetchQuotesParameters = {}): Observable<FetchQuotesResponse> {
+  // prettier-ignore
+  public fetchQuotes(param: FetchQuotesParameters = {}): Observable<ApiResponse<FetchQuotesResponse>> {
     let params = new HttpParams();
     params = this.addParam(params, 'page', param.page);
     params = this.addParam(params, 'size', param.size);
@@ -24,21 +26,25 @@ export class QuotesService {
     params = this.addParam(params, 'companyName', param.companyName);
     params = this.addParam(params, 'quoteStatus', param.quoteStatus);
 
-    return this.http.get<FetchQuotesResponse>(`${environment.apiUrl}/quotes`, {
+    return this.http.get<ApiResponse<FetchQuotesResponse>>(`${environment.apiUrl}/quotes`, {
       params: params,
     });
   }
 
-  public fetchQuoteById(id: number): Observable<QuoteResponse> {
-    return this.http.get<QuoteResponse>(`${environment.apiUrl}/quotes/${id}`);
+  public fetchQuoteById(id: number): Observable<ApiResponse<QuoteResponse>> {
+    return this.http.get<ApiResponse<QuoteResponse>>(`${environment.apiUrl}/quotes/${id}`);
   }
 
-  public createQuote(data: QuoteRequest): Observable<CreatedQuoteResponse> {
-    return this.http.post<CreatedQuoteResponse>(`${environment.apiUrl}/quotes`, data);
+  public createQuote(data: QuoteRequest): Observable<ApiResponse<CreatedQuoteResponse>> {
+    return this.http.post<ApiResponse<CreatedQuoteResponse>>(`${environment.apiUrl}/quotes`, data);
   }
 
-  public updateQuoteById(id: number, data: QuoteRequest): Observable<CreatedQuoteResponse> {
-    return this.http.put<CreatedQuoteResponse>(`${environment.apiUrl}/quotes/${id}`, data);
+  // prettier-ignore
+  public updateQuoteById(id: number, data: QuoteRequest): Observable<ApiResponse<CreatedQuoteResponse>> {
+    return this.http.put<ApiResponse<CreatedQuoteResponse>>(
+      `${environment.apiUrl}/quotes/${id}`,
+      data,
+    );
   }
 
   public updateQuoteStatus(id: number, quoteStatus: string): Observable<void> {

@@ -65,7 +65,7 @@ export class EditVehicle implements OnInit {
   private fetchSelectedVehicle(id: number): void {
     this.vehiclesService.fetchVehicleById(id).subscribe({
       next: (res) => {
-        this.vehicle = res;
+        this.vehicle = res.data;
       },
       error: (err) => {
         if (err.status === 404) {

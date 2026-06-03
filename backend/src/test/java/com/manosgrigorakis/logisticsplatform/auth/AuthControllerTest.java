@@ -4,6 +4,7 @@ import com.manosgrigorakis.logisticsplatform.auth.dto.*;
 import com.manosgrigorakis.logisticsplatform.auth.enums.TokenType;
 import com.manosgrigorakis.logisticsplatform.auth.model.UserTokens;
 import com.manosgrigorakis.logisticsplatform.auth.repository.UserTokensRepository;
+import com.manosgrigorakis.logisticsplatform.common.dto.ApiResponseWrapper;
 import com.manosgrigorakis.logisticsplatform.common.dto.MessageResponseDTO;
 import com.manosgrigorakis.logisticsplatform.common.web.HttpRequestTest;
 import com.manosgrigorakis.logisticsplatform.users.enums.UserStatus;
@@ -15,6 +16,7 @@ import com.manosgrigorakis.logisticsplatform.users.repository.UserRepository;
 import jakarta.mail.internet.MimeMessage;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -46,9 +48,8 @@ public class AuthControllerTest extends HttpRequestTest {
 
     @BeforeAll
     void beforeAll() {
-        BASE_URL = "http://localhost:%d/api".formatted(port);
+        BASE_URL = "http://localhost:%d/api/v1".formatted(port);
         AUTH_URL = BASE_URL + "/auth";
-        authToken = authenticate(EMAIL, RAW_PASSWORD);
     }
 
     @BeforeEach
@@ -56,6 +57,7 @@ public class AuthControllerTest extends HttpRequestTest {
         MimeMessage mimeMessage = mock(MimeMessage.class);
         when(javaMailSender.createMimeMessage()).thenReturn(mimeMessage);
         registerUserWithRole();
+        authToken = authenticate(EMAIL, RAW_PASSWORD);
     }
 
     @AfterEach
@@ -72,14 +74,18 @@ public class AuthControllerTest extends HttpRequestTest {
         AuthRequestDTO authRequestDTO = new AuthRequestDTO(EMAIL, RAW_PASSWORD);
 
         // Act
-        ResponseEntity<JwtResponseDTO> response = restTemplate.exchange(
-                url, HttpMethod.POST, new HttpEntity<>(authRequestDTO), JwtResponseDTO.class);
+        ResponseEntity<ApiResponseWrapper<JwtResponseDTO>> response = restTemplate.exchange(
+                url, HttpMethod.POST, new HttpEntity<>(authRequestDTO),
+                new ParameterizedTypeReference<>() {});
 
         // Assert
+        Assertions.assertNotNull(response.getBody());
+        JwtResponseDTO responseDTO = response.getBody().data();
+
         assertThat(response.getStatusCode().value()).isEqualTo(200);
         Assertions.assertNotNull(response.getBody());
-        assertThat(response.getBody().getUser().getEmail()).isEqualTo(EMAIL);
-        assertThat(response.getBody().getUser().getRole()).isEqualTo("ADMIN");
+        assertThat(responseDTO.getUser().getEmail()).isEqualTo(EMAIL);
+        assertThat(responseDTO.getUser().getRole()).isEqualTo("ADMIN");
     }
 
     @Test
@@ -89,8 +95,8 @@ public class AuthControllerTest extends HttpRequestTest {
         AuthRequestDTO authRequestDTO = new AuthRequestDTO("adoe@logistics.com", "admin123");
 
         // Act
-        ResponseEntity<JwtResponseDTO> response = restTemplate.exchange(
-                url, HttpMethod.POST, new HttpEntity<>(authRequestDTO), JwtResponseDTO.class);
+        ResponseEntity<?> response = restTemplate.exchange(
+                url, HttpMethod.POST, new HttpEntity<>(authRequestDTO), ApiResponseWrapper.class);
 
         // Assert
         assertThat(response.getStatusCode().value()).isEqualTo(401);
@@ -103,8 +109,8 @@ public class AuthControllerTest extends HttpRequestTest {
         AuthRequestDTO authRequestDTO = new AuthRequestDTO("", "admin123");
 
         // Act
-        ResponseEntity<JwtResponseDTO> response = restTemplate.exchange(
-                url, HttpMethod.POST, new HttpEntity<>(authRequestDTO), JwtResponseDTO.class);
+        ResponseEntity<?> response = restTemplate.exchange(
+                url, HttpMethod.POST, new HttpEntity<>(authRequestDTO), ApiResponseWrapper.class);
 
         // Assert
         assertThat(response.getStatusCode().value()).isEqualTo(400);
@@ -118,8 +124,8 @@ public class AuthControllerTest extends HttpRequestTest {
         AuthRequestDTO authRequestDTO = new AuthRequestDTO(user.getEmail(), "admin123");
 
         // Act
-        ResponseEntity<JwtResponseDTO> response = restTemplate.exchange(
-                url, HttpMethod.POST, new HttpEntity<>(authRequestDTO), JwtResponseDTO.class);
+        ResponseEntity<?> response = restTemplate.exchange(
+                url, HttpMethod.POST, new HttpEntity<>(authRequestDTO), ApiResponseWrapper.class);
 
         // Assert
         assertThat(response.getStatusCode().value()).isEqualTo(401);
@@ -146,8 +152,8 @@ public class AuthControllerTest extends HttpRequestTest {
         resetPasswordRequestDTO.setNewPassword("admin123");
 
         // Act
-        ResponseEntity<MessageResponseDTO> response = restTemplate.postForEntity(
-                AUTH_URL + "/reset-password/confirm", resetPasswordRequestDTO, MessageResponseDTO.class);
+        ResponseEntity<?> response = restTemplate.postForEntity(
+                AUTH_URL + "/reset-password/confirm", resetPasswordRequestDTO, ApiResponseWrapper.class);
 
         // Assert
         assertThat(response.getStatusCode().value()).isEqualTo(200);
@@ -161,8 +167,8 @@ public class AuthControllerTest extends HttpRequestTest {
         request.setNewPassword("admin123");
 
         // Act
-        ResponseEntity<MessageResponseDTO> response = restTemplate.postForEntity(
-                AUTH_URL + "/reset-password/confirm", request, MessageResponseDTO.class);
+        ResponseEntity<?> response = restTemplate.postForEntity(
+                AUTH_URL + "/reset-password/confirm", request, ApiResponseWrapper.class);
 
         // Assert
         assertThat(response.getStatusCode().value()).isEqualTo(404);
@@ -179,8 +185,8 @@ public class AuthControllerTest extends HttpRequestTest {
         requestDTO.setPassword(RAW_PASSWORD);
 
         // Act
-        ResponseEntity<MessageResponseDTO> response = restTemplate.postForEntity(
-                AUTH_URL + "/setup-password", requestDTO, MessageResponseDTO.class);
+        ResponseEntity<?> response = restTemplate.postForEntity(
+                AUTH_URL + "/setup-password", requestDTO, ApiResponseWrapper.class);
 
         User user = userRepository.findByEmail(setupToken.getUser().getEmail())
                 .orElseThrow(() -> new AssertionError("User not found for setup password"));
@@ -257,8 +263,8 @@ public class AuthControllerTest extends HttpRequestTest {
         dto.setEmail(user.getEmail());
 
         // Act
-        ResponseEntity<MessageResponseDTO> response = restTemplate.exchange(
-                url, HttpMethod.POST, new HttpEntity<>(dto), MessageResponseDTO.class);
+        ResponseEntity<ApiResponseWrapper<MessageResponseDTO>> response = restTemplate.exchange(
+                url, HttpMethod.POST, new HttpEntity<>(dto), new ParameterizedTypeReference<>() {});
 
         UserTokens token = userTokensRepository.findByUserId(user.getId())
                 .orElseThrow(() -> new AssertionError("Token not found for user"));

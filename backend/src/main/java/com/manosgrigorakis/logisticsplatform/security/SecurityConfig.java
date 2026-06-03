@@ -32,6 +32,9 @@ public class SecurityConfig {
     private final JwtAuthFilter jwtAuthFilter;
     private final UserDetailsService userDetailsService;
 
+    @Value("${app.api.prefix}")
+    private String apiPrefix;
+
     @Value("${app.frontend.url}")
     private String frontendUrl;
 
@@ -81,59 +84,53 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                     // Public endpoints
-                    .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/api/auth/request-reset").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/api/auth/reset-password/**").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/api/auth/reset-password/confirm").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/api/auth/setup-password").permitAll()
+                    .requestMatchers(HttpMethod.POST, apiPrefix + "/v1/auth/login").permitAll()
+                    .requestMatchers(HttpMethod.POST, apiPrefix + "/v1/auth/request-reset").permitAll()
+                    .requestMatchers(HttpMethod.GET, apiPrefix + "/v1/auth/reset-password/**").permitAll()
+                    .requestMatchers(HttpMethod.POST, apiPrefix + "/v1/auth/reset-password/confirm").permitAll()
+                    .requestMatchers(HttpMethod.POST, apiPrefix + "/v1/auth/setup-password").permitAll()
 
                     // Metadata
-                    .requestMatchers(HttpMethod.GET, "/api/metadata/customer-types").authenticated()
+                    .requestMatchers(HttpMethod.GET, apiPrefix + "/v1/metadata/**").authenticated()
 
                     // ROLES
-                    .requestMatchers(HttpMethod.GET, "/api/roles").hasAuthority("ADMIN")
-                    .requestMatchers(HttpMethod.GET, "/api/roles/**").hasAuthority("ADMIN")
-                    .requestMatchers(HttpMethod.POST, "/api/roles").hasAuthority("ADMIN")
-                    .requestMatchers(HttpMethod.PUT, "/api/roles/**").hasAuthority("ADMIN")
-                    .requestMatchers(HttpMethod.DELETE, "/api/roles/**").hasAuthority("ADMIN")
+                    .requestMatchers(HttpMethod.GET, apiPrefix + "/v1/roles/**").hasAuthority("ADMIN")
+                    .requestMatchers(HttpMethod.POST, apiPrefix + "/v1/roles").hasAuthority("ADMIN")
+                    .requestMatchers(HttpMethod.PUT, apiPrefix + "/v1/roles/**").hasAuthority("ADMIN")
+                    .requestMatchers(HttpMethod.DELETE, apiPrefix + "/v1/roles/**").hasAuthority("ADMIN")
 
                     // USERS
-                    .requestMatchers(HttpMethod.GET, "/api/users").hasAuthority("ADMIN")
-                    .requestMatchers(HttpMethod.GET, "/api/users/**").hasAuthority("ADMIN")
-                    .requestMatchers(HttpMethod.POST, "/api/users").hasAuthority("ADMIN")
-                    .requestMatchers(HttpMethod.PUT, "/api/users/**").hasAuthority("ADMIN")
-                    .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasAuthority("ADMIN")
+                    .requestMatchers(HttpMethod.GET, apiPrefix + "/v1/users/**").hasAuthority("ADMIN")
+                    .requestMatchers(HttpMethod.POST, apiPrefix + "/v1/users").hasAuthority("ADMIN")
+                    .requestMatchers(HttpMethod.PUT, apiPrefix + "/v1/users/**").hasAuthority("ADMIN")
+                    .requestMatchers(HttpMethod.DELETE, apiPrefix + "/v1/users/**").hasAuthority("ADMIN")
 
                     // Customers
-                    .requestMatchers(HttpMethod.GET, "/api/customers").hasAnyAuthority("ADMIN", "MANAGER")
-                    .requestMatchers(HttpMethod.GET, "/api/customers/**").hasAnyAuthority("ADMIN", "MANAGER")
-                    .requestMatchers(HttpMethod.POST, "/api/customers").hasAnyAuthority("ADMIN", "MANAGER")
-                    .requestMatchers(HttpMethod.PUT, "/api/customers/**").hasAnyAuthority("ADMIN", "MANAGER")
-                    .requestMatchers(HttpMethod.DELETE, "/api/customers/**").hasAnyAuthority("ADMIN", "MANAGER")
+                    .requestMatchers(HttpMethod.GET, apiPrefix + "/v1/customers/**").hasAnyAuthority("ADMIN", "MANAGER")
+                    .requestMatchers(HttpMethod.POST, apiPrefix + "/v1/customers").hasAnyAuthority("ADMIN", "MANAGER")
+                    .requestMatchers(HttpMethod.PUT, apiPrefix + "/v1/customers/**").hasAnyAuthority("ADMIN", "MANAGER")
+                    .requestMatchers(HttpMethod.DELETE, apiPrefix + "/v1/customers/**").hasAnyAuthority("ADMIN", "MANAGER")
 
                     // Quotes
-                    .requestMatchers(HttpMethod.GET, "/api/quotes").hasAnyAuthority("ADMIN", "MANAGER")
-                    .requestMatchers(HttpMethod.GET, "/api/quotes/**").hasAnyAuthority("ADMIN", "MANAGER")
-                    .requestMatchers(HttpMethod.POST, "/api/quotes").hasAnyAuthority("ADMIN", "MANAGER")
-                    .requestMatchers(HttpMethod.PUT, "/api/quotes/**").hasAnyAuthority("ADMIN", "MANAGER")
-                    .requestMatchers(HttpMethod.PATCH, "/api/quotes/**").hasAnyAuthority("ADMIN", "MANAGER")
+                    .requestMatchers(HttpMethod.GET, apiPrefix + "/v1/quotes/**").hasAnyAuthority("ADMIN", "MANAGER")
+                    .requestMatchers(HttpMethod.POST, apiPrefix + "/v1/quotes").hasAnyAuthority("ADMIN", "MANAGER")
+                    .requestMatchers(HttpMethod.PUT, apiPrefix + "/v1/quotes/**").hasAnyAuthority("ADMIN", "MANAGER")
+                    .requestMatchers(HttpMethod.PATCH, apiPrefix + "/v1/quotes/**").hasAnyAuthority("ADMIN", "MANAGER")
 
                     // Vehicles
-                    .requestMatchers(HttpMethod.GET, "/api/vehicles").hasAnyAuthority("ADMIN", "MANAGER")
-                    .requestMatchers(HttpMethod.GET, "/api/vehicles/**").hasAnyAuthority("ADMIN", "MANAGER")
-                    .requestMatchers(HttpMethod.POST, "/api/vehicles").hasAnyAuthority("ADMIN", "MANAGER")
-                    .requestMatchers(HttpMethod.PUT, "/api/vehicles/**").hasAnyAuthority("ADMIN", "MANAGER")
-                    .requestMatchers(HttpMethod.DELETE, "/api/vehicles/**").hasAnyAuthority("ADMIN", "MANAGER")
+                    .requestMatchers(HttpMethod.GET, apiPrefix + "/v1/vehicles/**").hasAnyAuthority("ADMIN", "MANAGER")
+                    .requestMatchers(HttpMethod.POST, apiPrefix + "/v1/vehicles").hasAnyAuthority("ADMIN", "MANAGER")
+                    .requestMatchers(HttpMethod.PUT, apiPrefix + "/v1/vehicles/**").hasAnyAuthority("ADMIN", "MANAGER")
+                    .requestMatchers(HttpMethod.DELETE, apiPrefix + "/v1/vehicles/**").hasAnyAuthority("ADMIN", "MANAGER")
 
                     // Shipments
-                    .requestMatchers(HttpMethod.GET, "/api/shipments").hasAnyAuthority("ADMIN", "MANAGER")
-                    .requestMatchers(HttpMethod.GET, "/api/shipments/driver").hasAnyAuthority("ADMIN", "DRIVER")
-                    .requestMatchers(HttpMethod.GET, "/api/shipments/**").hasAnyAuthority("ADMIN", "MANAGER")
-                    .requestMatchers(HttpMethod.POST, "/api/shipments").hasAnyAuthority("ADMIN", "MANAGER")
-                    .requestMatchers(HttpMethod.PUT, "/api/shipments/**").hasAnyAuthority("ADMIN", "MANAGER")
+                    .requestMatchers(HttpMethod.GET, apiPrefix + "/v1/shipments/driver").hasAnyAuthority("ADMIN", "DRIVER")
+                    .requestMatchers(HttpMethod.GET, apiPrefix + "/v1/shipments/**").hasAnyAuthority("ADMIN", "MANAGER")
+                    .requestMatchers(HttpMethod.POST, apiPrefix + "/v1/shipments").hasAnyAuthority("ADMIN", "MANAGER")
+                    .requestMatchers(HttpMethod.PUT, apiPrefix + "/v1/shipments/**").hasAnyAuthority("ADMIN", "MANAGER")
 
                     // Analytics
-                    .requestMatchers(HttpMethod.GET, "/api/analytics/*").hasAnyAuthority("ADMIN", "MANAGER")
+                    .requestMatchers(HttpMethod.GET, apiPrefix + "/v1/analytics/*").hasAnyAuthority("ADMIN", "MANAGER")
 
                     // All other endpoints require authentication
                     .anyRequest().authenticated();

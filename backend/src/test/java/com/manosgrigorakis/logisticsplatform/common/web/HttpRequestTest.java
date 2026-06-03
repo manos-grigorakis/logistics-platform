@@ -2,6 +2,7 @@ package com.manosgrigorakis.logisticsplatform.common.web;
 
 import com.manosgrigorakis.logisticsplatform.auth.dto.AuthRequestDTO;
 import com.manosgrigorakis.logisticsplatform.auth.dto.JwtResponseDTO;
+import com.manosgrigorakis.logisticsplatform.common.dto.ApiResponseWrapper;
 import com.manosgrigorakis.logisticsplatform.infrastructure.storage.FileStorageService;
 import com.manosgrigorakis.logisticsplatform.users.model.User;
 import org.junit.jupiter.api.Assertions;
@@ -9,7 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.ActiveProfiles;
@@ -40,12 +44,13 @@ public abstract class HttpRequestTest {
      */
     protected String authenticate(String email, String password) {
         AuthRequestDTO request = new AuthRequestDTO(email, password);
-        ResponseEntity<JwtResponseDTO> response = restTemplate.postForEntity(
-                BASE_URL + "/auth/login", request, JwtResponseDTO.class
+        ResponseEntity<ApiResponseWrapper<JwtResponseDTO>> response = restTemplate.exchange(
+                BASE_URL + "/auth/login", HttpMethod.POST , new HttpEntity<>(request),
+                new ParameterizedTypeReference<>() {}
         );
 
         Assertions.assertNotNull(response.getBody());
-        return response.getBody().getToken();
+        return response.getBody().data().getToken();
     }
 
     /**

@@ -67,7 +67,7 @@ export class EditCustomer implements OnInit {
         this.isLoading = false;
         this.errorMessage = undefined;
 
-        this.customer = res;
+        this.customer = res.data;
       },
       error: (err) => {
         this.isLoading = false;

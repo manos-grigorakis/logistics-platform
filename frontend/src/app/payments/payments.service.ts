@@ -4,6 +4,7 @@ import { ReconciliationProcessRequest } from './models/reconciliaton-process-req
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ReconciliationProcessResponse } from './models/reconciliation-process-response';
+import { ApiResponse } from '../shared/models/api-response.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -14,12 +15,12 @@ export class PaymentsService {
   constructor() {}
 
   // prettier-ignore
-  public reconciliationProcess(payload: ReconciliationProcessRequest): Observable<ReconciliationProcessResponse> {
+  public reconciliationProcess(payload: ReconciliationProcessRequest): Observable<ApiResponse<ReconciliationProcessResponse>> {
     const formData = new FormData();
     formData.append('customerId', payload.customerId.toString());
     formData.append('invoiceFile', payload.invoiceFile);
     formData.append('bankStatementFile', payload.bankStatementFile);
 
-    return this.httpClient.post<ReconciliationProcessResponse>(`${environment.apiUrl}/reconciliation/process`, formData);
+    return this.httpClient.post<ApiResponse<ReconciliationProcessResponse>>(`${environment.apiUrl}/reconciliation/process`, formData);
   }
 }

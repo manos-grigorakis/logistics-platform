@@ -8,6 +8,7 @@ import { addHttpParam } from '../shared/utils/add-http-params.util';
 import { ShipmentPayload } from './models/shipment-payload';
 import { Shipment } from './models/shipment';
 import { CmrDocumentSummaryResponse } from './models/cmr-document-summary-response';
+import { ApiResponse } from '../shared/models/api-response.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +18,7 @@ export class ShipmentsService {
 
   constructor() {}
 
-  public fetchShipments(param: ShipmentParams = {}): Observable<ShipmentsResponse> {
+  public fetchShipments(param: ShipmentParams = {}): Observable<ApiResponse<ShipmentsResponse>> {
     let params = new HttpParams();
     params = addHttpParam(params, 'page', param.page);
     params = addHttpParam(params, 'size', param.size);
@@ -36,19 +37,28 @@ export class ShipmentsService {
       params = params.set('customerId', param.customerId.toString());
     }
 
-    return this.http.get<ShipmentsResponse>(`${environment.apiUrl}/shipments`, { params });
+    return this.http.get<ApiResponse<ShipmentsResponse>>(`${environment.apiUrl}/shipments`, {
+      params,
+    });
   }
 
-  public getShipment(id: number): Observable<Shipment> {
-    return this.http.get<Shipment>(`${environment.apiUrl}/shipments/${id}`);
+  public getShipment(id: number): Observable<ApiResponse<Shipment>> {
+    return this.http.get<ApiResponse<Shipment>>(`${environment.apiUrl}/shipments/${id}`);
   }
 
-  public createShipment(payload: ShipmentPayload): Observable<ShipmentsResponse> {
-    return this.http.post<ShipmentsResponse>(`${environment.apiUrl}/shipments`, payload);
+  public createShipment(payload: ShipmentPayload): Observable<ApiResponse<ShipmentsResponse>> {
+    return this.http.post<ApiResponse<ShipmentsResponse>>(
+      `${environment.apiUrl}/shipments`,
+      payload,
+    );
   }
 
-  public updateShipment(id: number, payload: ShipmentPayload): Observable<ShipmentsResponse> {
-    return this.http.put<ShipmentsResponse>(`${environment.apiUrl}/shipments/${id}`, payload);
+  // prettier-ignore
+  public updateShipment(id: number, payload: ShipmentPayload): Observable<ApiResponse<ShipmentsResponse>> {
+    return this.http.put<ApiResponse<ShipmentsResponse>>(
+      `${environment.apiUrl}/shipments/${id}`,
+      payload,
+    );
   }
 
   public updateShipmentStatus(id: number, status: string): Observable<void> {
@@ -57,8 +67,9 @@ export class ShipmentsService {
     });
   }
 
-  public getCmrDocumentByShipmentId(shipmentId: number): Observable<CmrDocumentSummaryResponse> {
-    return this.http.get<CmrDocumentSummaryResponse>(
+  // prettier-ignore
+  public getCmrDocumentByShipmentId(shipmentId: number): Observable<ApiResponse<CmrDocumentSummaryResponse>> {
+    return this.http.get<ApiResponse<CmrDocumentSummaryResponse>>(
       `${environment.apiUrl}/shipments/${shipmentId}/cmr`,
     );
   }

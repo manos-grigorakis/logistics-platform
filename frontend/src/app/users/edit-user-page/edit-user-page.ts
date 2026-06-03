@@ -57,7 +57,7 @@ export class EditUserPage implements OnInit {
   private fetchUserData(id: number): void {
     this.userService.getUser(id).subscribe({
       next: (res) => {
-        this.user = res;
+        this.user = res.data;
         this.errorMessage = undefined;
       },
       error: (err) => {

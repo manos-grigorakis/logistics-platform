@@ -67,6 +67,8 @@ management:
       application: ${spring.application.name}
 
 app:
+  api:
+    prefix: ${API_PREFIX:/api}
   frontend:
     url: ${FRONTEND_URL}
   setup_password:

@@ -1,6 +1,7 @@
 package com.manosgrigorakis.logisticsplatform.auth.controller;
 
 import com.manosgrigorakis.logisticsplatform.auth.dto.*;
+import com.manosgrigorakis.logisticsplatform.common.dto.ApiResponseWrapper;
 import com.manosgrigorakis.logisticsplatform.common.dto.MessageResponseDTO;
 import com.manosgrigorakis.logisticsplatform.auth.service.AuthenticationService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,11 +10,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("${app.api.prefix}/v1/auth")
 @Tag(name = "User Authentication", description = "Login, password reset and User authentication")
 public class AuthenticationRestController {
     private final AuthenticationService authenticationService;
@@ -29,10 +29,8 @@ public class AuthenticationRestController {
             @ApiResponse(responseCode = "401", description = "Invalid credentials | Locked Account"),
     })
     @PostMapping("/login")
-    public ResponseEntity<JwtResponseDTO> login(@RequestBody @Valid AuthRequestDTO dto) {
-        JwtResponseDTO response = authenticationService.authenticateAndGetToken(dto);
-
-        return ResponseEntity.ok(response);
+    public ApiResponseWrapper<JwtResponseDTO> login(@RequestBody @Valid AuthRequestDTO dto) {
+        return new ApiResponseWrapper<>(authenticationService.authenticateAndGetToken(dto));
     }
 
     @Operation(summary = "Setup User Password", description = "Setup the user's password and activates their account")
@@ -43,10 +41,10 @@ public class AuthenticationRestController {
             @ApiResponse(responseCode = "404", description = "Setup token does not exist"),
     })
     @PostMapping("/setup-password")
-    public ResponseEntity<MessageResponseDTO> setupPassword(@RequestBody @Valid SetupPasswordRequestDTO dto) {
+    public ApiResponseWrapper<MessageResponseDTO> setupPassword(@RequestBody @Valid SetupPasswordRequestDTO dto) {
         authenticationService.setupPassword(dto);
 
-        return ResponseEntity.ok(new MessageResponseDTO("Your account has been successfully activated"));
+        return new ApiResponseWrapper<>(new MessageResponseDTO("Your account has been successfully activated"));
     }
 
     @Operation(summary = "Request Reset Password", description = "Request for reset password")
@@ -55,14 +53,12 @@ public class AuthenticationRestController {
             @ApiResponse(responseCode = "200", description = "Generates a URI for the user to reset their password"),
     })
     @PostMapping("/request-reset")
-    public ResponseEntity<MessageResponseDTO> requestResetPassword(
+    public ApiResponseWrapper<MessageResponseDTO> requestResetPassword(
             @RequestBody @Valid RequestResetPasswordRequestDTO dto) {
         authenticationService.requestResetPassword(dto);
 
-        MessageResponseDTO response = new MessageResponseDTO(
-                "If the email is registered, you will get a reset link in your email.");
-
-        return ResponseEntity.ok(response);
+        return new ApiResponseWrapper<>(new MessageResponseDTO(
+                "If the email is registered, you will get a reset link in your email."));
     }
 
     @Operation(summary = "Validates Reset Password Token", description = "Validation of reset password token")
@@ -73,16 +69,11 @@ public class AuthenticationRestController {
             @ApiResponse(responseCode = "404", description = "Validation token does not exist for the user"),
     })
     @GetMapping("/reset-password")
-    public ResponseEntity<ValidateResetPasswordTokenResponseDTO> validateResetPasswordToken(
+    public ApiResponseWrapper<ValidateResetPasswordTokenResponseDTO> validateResetPasswordToken(
             @RequestParam("token") String token) {
         authenticationService.validateResetPasswordToken(token);
 
-        ValidateResetPasswordTokenResponseDTO response = new ValidateResetPasswordTokenResponseDTO(
-                true,
-                "Token is valid."
-        );
-
-        return ResponseEntity.ok(response);
+        return new ApiResponseWrapper<>(new ValidateResetPasswordTokenResponseDTO(true, "Token is valid."));
     }
 
     @Operation(summary = "Reset user's password", description = "Reset user's password")
@@ -93,9 +84,9 @@ public class AuthenticationRestController {
             @ApiResponse(responseCode = "404", description = "Validation token does not exist for the user"),
     })
     @PostMapping("/reset-password/confirm")
-    public ResponseEntity<MessageResponseDTO> resetPassword(@RequestBody @Valid ResetPasswordRequestDTO dto) {
+    public ApiResponseWrapper<MessageResponseDTO> resetPassword(@RequestBody @Valid ResetPasswordRequestDTO dto) {
         authenticationService.resetPassword(dto);
 
-        return ResponseEntity.ok(new MessageResponseDTO("Password successfully reset"));
+        return new ApiResponseWrapper<>(new MessageResponseDTO("Password successfully reset"));
     }
 }

@@ -214,13 +214,14 @@ export class CustomersPage implements OnInit {
       next: (res) => {
         this.isLoading = false;
         this.selectCustomerIds.clear();
-        this.customers = res.content;
+        const data = res.data;
+        this.customers = data.content;
 
         // pagination
-        this.currentPage = res.number;
-        this.totalPages = res.totalPages;
-        this.totalElements = res.totalElements;
-        this.pageSize = res.size;
+        this.currentPage = data.number;
+        this.totalPages = data.totalPages;
+        this.totalElements = data.totalElements;
+        this.pageSize = data.size;
       },
       error: (err) => {
         this.isLoading = false;
@@ -257,7 +258,7 @@ export class CustomersPage implements OnInit {
     this.metadataService.fetchCustomersTypes().subscribe({
       next: (res) => {
         this.isLoading = false;
-        this.customerTypes = res;
+        this.customerTypes = res.data;
       },
       error: (err) => {
         this.isLoading = false;

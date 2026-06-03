@@ -33,7 +33,7 @@ export class RolesPage implements OnInit {
     this.rolesService.fetchRoles().subscribe({
       next: (res) => {
         this.isLoading = false;
-        this.roles = res;
+        this.roles = res.data;
       },
       error: (err) => {
         this.isLoading = false;
