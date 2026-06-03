@@ -1,5 +1,6 @@
 package com.manosgrigorakis.logisticsplatform.users.controller;
 
+import com.manosgrigorakis.logisticsplatform.common.dto.ApiResponseWrapper;
 import com.manosgrigorakis.logisticsplatform.users.dto.UserRequestDTO;
 import com.manosgrigorakis.logisticsplatform.users.dto.UserResponseDTO;
 import com.manosgrigorakis.logisticsplatform.users.service.UserService;
@@ -9,7 +10,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,8 +29,8 @@ public class UserRestController {
             @ApiResponse(responseCode = "200", description = "List all the users"),
     })
     @GetMapping()
-    public List<UserResponseDTO> getAllUsers() {
-        return userService.getAllUsers();
+    public ApiResponseWrapper<List<UserResponseDTO>> getAllUsers() {
+        return new ApiResponseWrapper<>(userService.getAllUsers());
     }
 
     @Operation(summary = "Get User by Id", description = "Find user by id")
@@ -39,8 +39,8 @@ public class UserRestController {
             @ApiResponse(responseCode = "404", description = "User doesn't exist"),
     })
     @GetMapping("/{id}")
-    public UserResponseDTO getUserById(@PathVariable Long id) {
-        return userService.getUserById(id);
+    public ApiResponseWrapper<UserResponseDTO> getUserById(@PathVariable Long id) {
+        return new ApiResponseWrapper<>(userService.getUserById(id));
     }
 
     @Operation(summary = "Create a User", description = """
@@ -52,11 +52,10 @@ public class UserRestController {
             @ApiResponse(responseCode = "404", description = "Role doesn't exist"),
             @ApiResponse(responseCode = "409", description = "User email already exist"),
     })
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping()
-    public ResponseEntity<UserResponseDTO> createUser(@RequestBody @Valid UserRequestDTO dto) {
-        UserResponseDTO response = userService.createUser(dto);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    public ApiResponseWrapper<UserResponseDTO> createUser(@RequestBody @Valid UserRequestDTO dto) {
+        return new ApiResponseWrapper<>(userService.createUser(dto));
     }
 
     @Operation(summary = "Update a User by Id", description = "Updates a user account by id")
@@ -66,8 +65,9 @@ public class UserRestController {
             @ApiResponse(responseCode = "409", description = "User email already exists")
     })
     @PutMapping("/{id}")
-    public UserResponseDTO updateUserById(@PathVariable Long id, @RequestBody @Valid UserRequestDTO dto) {
-        return userService.updateUserById(id, dto);
+    public ApiResponseWrapper<UserResponseDTO> updateUserById(@PathVariable Long id,
+                                                              @RequestBody @Valid UserRequestDTO dto) {
+        return new ApiResponseWrapper<>(userService.updateUserById(id, dto));
     }
 
     @Operation(summary = "Delete a User by Id", description = "Deletes a user by id")
@@ -75,10 +75,9 @@ public class UserRestController {
             @ApiResponse(responseCode = "204", description = "User deleted successfully"),
             @ApiResponse(responseCode = "404", description = "User doesn't exist"),
     })
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUserById(@PathVariable Long id) {
+    public void deleteUserById(@PathVariable Long id) {
         userService.deleteUserById(id);
-
-        return ResponseEntity.noContent().build();
     }
 }
