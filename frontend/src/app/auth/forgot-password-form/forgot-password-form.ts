@@ -46,9 +46,7 @@ export class ForgotPasswordForm {
       next: (res) => {
         this.isLoading = false;
 
-        if (res.status === 200) {
-          this.successMessage = res.body.message;
-        }
+        this.successMessage = res.data.message;
       },
       error: (err) => {
         this.isLoading = false;
