@@ -39,7 +39,7 @@ public final class CmrDocumentPdfGenerator extends BasePdfGenerator<CmrDocumentP
         // Customer
         Customer customer = quote.getCustomer();
         String consigneeName = customer.getFullName();
-        String consigneeLocation = customer.getLocation();
+        String consigneeLocation = handleNullFields(customer.getLocation());
         String consigneeContact = handleNullFields(customer.getPhone()) + " · " + handleNullFields(customer.getEmail());
 
         // Shipment
