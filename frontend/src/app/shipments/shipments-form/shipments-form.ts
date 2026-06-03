@@ -336,8 +336,8 @@ export class ShipmentsForm implements OnInit {
       .fetchAllVehicles()
       .pipe(
         map((vehicles) => ({
-          truck: vehicles.filter((v) => v.type === 'truck'),
-          trailer: vehicles.filter((v) => v.type === 'trailer'),
+          truck: vehicles.data.filter((v) => v.type === 'truck'),
+          trailer: vehicles.data.filter((v) => v.type === 'trailer'),
         })),
       )
       .subscribe({

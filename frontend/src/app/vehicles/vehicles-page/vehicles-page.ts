@@ -63,7 +63,7 @@ export class VehiclesPage implements OnInit {
     this.vehiclesService.fetchAllVehicles().subscribe({
       next: (res) => {
         this.isLoading = false;
-        this.vehicles = res;
+        this.vehicles = res.data;
       },
       error: (err) => {
         this.isLoading = false;

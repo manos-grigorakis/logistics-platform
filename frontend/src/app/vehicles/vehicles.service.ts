@@ -4,6 +4,7 @@ import { VehicleResponse } from './models/vehicle-response';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { VehicleRequest } from './models/vehicle-request';
+import { ApiResponse } from '../shared/models/api-response.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -13,20 +14,21 @@ export class VehiclesService {
 
   constructor() {}
 
-  public fetchAllVehicles(): Observable<VehicleResponse[]> {
-    return this.http.get<VehicleResponse[]>(`${environment.apiUrl}/vehicles`);
+  public fetchAllVehicles(): Observable<ApiResponse<VehicleResponse[]>> {
+    return this.http.get<ApiResponse<VehicleResponse[]>>(`${environment.apiUrl}/vehicles`);
   }
 
-  public fetchVehicleById(id: number): Observable<VehicleResponse> {
-    return this.http.get<VehicleResponse>(`${environment.apiUrl}/vehicles/${id}`);
+  public fetchVehicleById(id: number): Observable<ApiResponse<VehicleResponse>> {
+    return this.http.get<ApiResponse<VehicleResponse>>(`${environment.apiUrl}/vehicles/${id}`);
   }
 
-  public createVehicle(payload: VehicleRequest): Observable<VehicleResponse> {
-    return this.http.post<VehicleResponse>(`${environment.apiUrl}/vehicles`, payload);
+  public createVehicle(payload: VehicleRequest): Observable<ApiResponse<VehicleResponse>> {
+    return this.http.post<ApiResponse<VehicleResponse>>(`${environment.apiUrl}/vehicles`, payload);
   }
 
-  public updateVehicle(id: number, payload: VehicleRequest): Observable<VehicleResponse> {
-    return this.http.put<VehicleResponse>(`${environment.apiUrl}/vehicles/${id}`, payload);
+  // prettier-ignore
+  public updateVehicle(id: number, payload: VehicleRequest): Observable<ApiResponse<VehicleResponse>> {
+    return this.http.put<ApiResponse<VehicleResponse>>(`${environment.apiUrl}/vehicles/${id}`, payload);
   }
 
   public deleteVehicleById(id: number): Observable<void> {
