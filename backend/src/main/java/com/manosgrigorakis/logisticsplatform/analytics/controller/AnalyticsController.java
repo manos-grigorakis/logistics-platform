@@ -2,6 +2,7 @@ package com.manosgrigorakis.logisticsplatform.analytics.controller;
 
 import com.manosgrigorakis.logisticsplatform.analytics.dto.ValueByStatus;
 import com.manosgrigorakis.logisticsplatform.analytics.service.AnalyticsService;
+import com.manosgrigorakis.logisticsplatform.common.dto.ApiResponse;
 import com.manosgrigorakis.logisticsplatform.common.dto.ValueResponse;
 import com.manosgrigorakis.logisticsplatform.payments.enums.InvoiceStatus;
 import com.manosgrigorakis.logisticsplatform.quotes.enums.QuoteStatus;
@@ -21,37 +22,37 @@ public class AnalyticsController {
     private final AnalyticsService analyticsService;
 
     @GetMapping("/total-customers")
-    public ValueResponse<Long> getTotalCustomers(){
-        return analyticsService.getTotalCustomers();
+    public ApiResponse<ValueResponse<Long>> getTotalCustomers(){
+        return new ApiResponse<>(analyticsService.getTotalCustomers());
     }
 
     @GetMapping("/total-shipments")
-    public ValueResponse<Long> getTotalShipments(){
-        return analyticsService.getTotalShipments();
+    public ApiResponse<ValueResponse<Long>> getTotalShipments(){
+        return new ApiResponse<>(analyticsService.getTotalShipments());
     }
 
     @GetMapping("/total-outstanding-amount")
-    public ValueResponse<BigDecimal> getTotalOutstandingInvoicesAmount(){
-        return analyticsService.getTotalOutstandingInvoicesAmount();
+    public ApiResponse<ValueResponse<BigDecimal>> getTotalOutstandingInvoicesAmount(){
+        return new ApiResponse<>(analyticsService.getTotalOutstandingInvoicesAmount());
     }
 
     @GetMapping("/total-pending-shipments")
-    public ValueResponse<Integer> getUpcomingPendingShipments(){
-        return analyticsService.getUpcomingPendingShipments();
+    public ApiResponse<ValueResponse<Integer>> getUpcomingPendingShipments(){
+        return new ApiResponse<>(analyticsService.getUpcomingPendingShipments());
     }
 
     @GetMapping("/quotes-by-status")
-    public List<ValueByStatus<QuoteStatus>> getQuotesByStatus(){
-        return analyticsService.getQuotesByStatus();
+    public ApiResponse<List<ValueByStatus<QuoteStatus>>> getQuotesByStatus(){
+        return new ApiResponse<>(analyticsService.getQuotesByStatus());
     }
 
     @GetMapping("/shipments-by-status")
-    public List<ValueByStatus<ShipmentStatus>> getShipmentsByStatus(){
-        return analyticsService.getShipmentByStatus();
+    public ApiResponse<List<ValueByStatus<ShipmentStatus>>> getShipmentsByStatus(){
+        return new ApiResponse<>(analyticsService.getShipmentByStatus());
     }
 
     @GetMapping("/invoices-by-status")
-    public List<ValueByStatus<InvoiceStatus>> getInvoicesByStatus(){
-        return analyticsService.getInvoicesByStatus();
+    public ApiResponse<List<ValueByStatus<InvoiceStatus>>> getInvoicesByStatus(){
+        return new ApiResponse<>(analyticsService.getInvoicesByStatus());
     }
 }
