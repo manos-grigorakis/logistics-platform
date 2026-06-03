@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Role } from './models/role';
 import { RoleRequest } from './models/role-request';
+import { ApiResponse } from '../shared/models/api-response.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -13,20 +14,20 @@ export class RolesService {
 
   constructor() {}
 
-  public fetchRoles(): Observable<Role[]> {
-    return this.http.get<Role[]>(`${environment.apiUrl}/roles`);
+  public fetchRoles(): Observable<ApiResponse<Role[]>> {
+    return this.http.get<ApiResponse<Role[]>>(`${environment.apiUrl}/roles`);
   }
 
-  public fetchRole(id: number): Observable<Role> {
-    return this.http.get<Role>(`${environment.apiUrl}/roles/${id}`);
+  public fetchRole(id: number): Observable<ApiResponse<Role>> {
+    return this.http.get<ApiResponse<Role>>(`${environment.apiUrl}/roles/${id}`);
   }
 
-  public createRole(data: RoleRequest): Observable<Role> {
-    return this.http.post<Role>(`${environment.apiUrl}/roles`, data);
+  public createRole(data: RoleRequest): Observable<ApiResponse<Role>> {
+    return this.http.post<ApiResponse<Role>>(`${environment.apiUrl}/roles`, data);
   }
 
-  public updateRole(id: number, data: RoleRequest): Observable<Role> {
-    return this.http.put<Role>(`${environment.apiUrl}/roles/${id}`, data);
+  public updateRole(id: number, data: RoleRequest): Observable<ApiResponse<Role>> {
+    return this.http.put<ApiResponse<Role>>(`${environment.apiUrl}/roles/${id}`, data);
   }
 
   public deleteRole(id: number): Observable<void> {
