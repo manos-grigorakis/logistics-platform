@@ -92,13 +92,13 @@ export class PaymentsPage implements OnInit {
         setTimeout(() => {
           // Results step
           this.activeStep = 2;
-          this.results = res;
+          this.results = res.data;
         }, delay);
       },
       error: (err) => {
         this.activeStep = 0;
 
-        let errorCode = err?.error?.errorCode;
+        let errorCode = err?.error?.error?.errorCode;
 
         switch (err.status) {
           case 400:
