@@ -1,6 +1,7 @@
 package com.manosgrigorakis.logisticsplatform.shipments.controller;
 
 import com.manosgrigorakis.logisticsplatform.auth.model.UserInfoDetails;
+import com.manosgrigorakis.logisticsplatform.common.dto.ApiResponseWrapper;
 import com.manosgrigorakis.logisticsplatform.common.dto.PageFilterRequest;
 import com.manosgrigorakis.logisticsplatform.common.dto.SortFilterRequest;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.ShipmentFilterRequest;
@@ -15,7 +16,6 @@ import jakarta.validation.Valid;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,13 +35,12 @@ public class ShipmentRestController {
             @ApiResponse(responseCode = "400", description = "pickupFrom must be before pickupTo"),
     })
     @GetMapping()
-    public Page<ShipmentResponseDTO> getAllShipments(
+    public ApiResponseWrapper<Page<ShipmentResponseDTO>> getAllShipments(
             @ParameterObject @ModelAttribute @Valid PageFilterRequest pageFilter,
             @ParameterObject @ModelAttribute SortFilterRequest sortFilter,
             @ParameterObject @ModelAttribute @Valid ShipmentFilterRequest shipmentFilter
-            )
-    {
-        return shipmentService.getAllShipments(pageFilter, sortFilter, shipmentFilter);
+    ) {
+        return new ApiResponseWrapper<>(shipmentService.getAllShipments(pageFilter, sortFilter, shipmentFilter));
     }
 
     @Operation(summary = "Get Shipment by Id", description = "Find Shipment by id")
@@ -50,8 +49,8 @@ public class ShipmentRestController {
             @ApiResponse(responseCode = "404", description = "Shipment id doesn't exist"),
     })
     @GetMapping("/{id}")
-    public ShipmentResponseDTO getShipmentById(@PathVariable Long id) {
-        return shipmentService.getShipmentById(id);
+    public ApiResponseWrapper<ShipmentResponseDTO> getShipmentById(@PathVariable Long id) {
+        return new ApiResponseWrapper<>(shipmentService.getShipmentById(id));
     }
 
     @Operation(summary = "Create a Shipment", description = "Creates a new shipment")
@@ -59,13 +58,13 @@ public class ShipmentRestController {
             @ApiResponse(responseCode = "201", description = "Shipment created"),
             @ApiResponse(responseCode = "400", description = "Validation Error"),
             @ApiResponse(responseCode = "404", description = """
-                            Resource not found. Possible causes:\s
-                            - Quote Id doesn't exist\s
-                            - Created by User Id` doesn't exist\s
-                            - Driver Id doesn't exist (If provided)\s
-                            - Truck Id doesn't exist (If provided)\s
-                            - Trailer Id doesn't exist (If provided)\s
-                            """
+                    Resource not found. Possible causes:\s
+                    - Quote Id doesn't exist\s
+                    - Created by User Id` doesn't exist\s
+                    - Driver Id doesn't exist (If provided)\s
+                    - Truck Id doesn't exist (If provided)\s
+                    - Trailer Id doesn't exist (If provided)\s
+                    """
             ),
             @ApiResponse(responseCode = "409", description = """
                     Conflict. Possible causes:
@@ -77,11 +76,10 @@ public class ShipmentRestController {
                     """
             ),
     })
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public ResponseEntity<ShipmentResponseDTO> createShipment(@RequestBody @Valid ShipmentRequestDTO dto) {
-        ShipmentResponseDTO response = shipmentService.createShipment(dto);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    public ApiResponseWrapper<ShipmentResponseDTO> createShipment(@RequestBody @Valid ShipmentRequestDTO dto) {
+        return new ApiResponseWrapper<>(shipmentService.createShipment(dto));
     }
 
     @Operation(summary = "Update a Shipment", description = "Updates a shipment by id")
@@ -99,8 +97,9 @@ public class ShipmentRestController {
             )
     })
     @PutMapping("/{id}")
-    public ShipmentResponseDTO updateShipmentById(@PathVariable Long id, @RequestBody @Valid UpdateShipmentRequestDTO dto) {
-        return shipmentService.updateShipmentById(id, dto);
+    public ApiResponseWrapper<ShipmentResponseDTO> updateShipmentById(@PathVariable Long id,
+                                                                      @RequestBody @Valid UpdateShipmentRequestDTO dto) {
+        return new ApiResponseWrapper<>(shipmentService.updateShipmentById(id, dto));
     }
 
     @Operation(summary = "Update Shipment Status", description = "Updates shipment status by id")
@@ -110,13 +109,10 @@ public class ShipmentRestController {
             @ApiResponse(responseCode = "404", description = "Shipment doesn't exists"),
             @ApiResponse(responseCode = "409", description = "Business rules doesn't allow this status transition")
     })
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PatchMapping("/{id}/status")
-    public ResponseEntity<Void> updateShipmentStatus(
-            @PathVariable Long id,
-            @RequestBody @Valid UpdateShipmentStatusRequestDTO dto
-    ) {
-        this.shipmentService.updateShipmentStatus(id, dto);
-        return ResponseEntity.noContent().build();
+    public void updateShipmentStatus(@PathVariable Long id, @RequestBody @Valid UpdateShipmentStatusRequestDTO dto) {
+        shipmentService.updateShipmentStatus(id, dto);
     }
 
     @Operation(summary = "Get Shipments by Driver", description = "Gets all shipments assigned specifically to the authenticated driver")
@@ -125,16 +121,14 @@ public class ShipmentRestController {
             @ApiResponse(responseCode = "400", description = "Validation Error"),
     })
     @GetMapping("/driver")
-    public Page<ShipmentResponseDTO> getShipmentsByDriver(
+    public ApiResponseWrapper<Page<ShipmentResponseDTO>> getShipmentsByDriver(
             @AuthenticationPrincipal UserInfoDetails userInfoDetails,
             @ParameterObject @ModelAttribute @Valid PageFilterRequest pageFilter,
-            @ParameterObject @ModelAttribute SortFilterRequest sortFilter
-    )
-    {
+            @ParameterObject @ModelAttribute SortFilterRequest sortFilter) {
         // Get driver's id from JWT
         Long driverId = userInfoDetails.getUserId();
 
-        return shipmentService.getShipmentsByDriver(driverId, pageFilter, sortFilter);
+        return new ApiResponseWrapper<>(shipmentService.getShipmentsByDriver(driverId, pageFilter, sortFilter));
     }
 
     @Operation(summary = "Get Shipment's CMR", description = "Gets all the CMR for the selected shipment")
@@ -145,7 +139,7 @@ public class ShipmentRestController {
             ),
     })
     @GetMapping("/{id}/cmr")
-    public CmrDocumentSummary getCmrDocumentByShipmentId(@PathVariable Long id) {
-        return this.shipmentService.getCmrDocumentByShipmentId(id);
+    public ApiResponseWrapper<CmrDocumentSummary> getCmrDocumentByShipmentId(@PathVariable Long id) {
+        return new ApiResponseWrapper<>(shipmentService.getCmrDocumentByShipmentId(id));
     }
 }
