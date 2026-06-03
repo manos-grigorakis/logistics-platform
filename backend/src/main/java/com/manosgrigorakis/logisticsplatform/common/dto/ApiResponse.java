@@ -1,7 +1,5 @@
 package com.manosgrigorakis.logisticsplatform.common.dto;
 
-import com.manosgrigorakis.logisticsplatform.common.exception.ErrorResponse;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
 
