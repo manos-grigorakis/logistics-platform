@@ -305,7 +305,7 @@ export class ShipmentsForm implements OnInit {
 
     this.usersService
       .fetchUsers()
-      .pipe(map((users) => users.filter((u) => u.roleName === 'DRIVER')))
+      .pipe(map((users) => users.data.filter((u) => u.roleName === 'DRIVER')))
       .subscribe({
         next: (res) => {
           this.driverLoading = false;

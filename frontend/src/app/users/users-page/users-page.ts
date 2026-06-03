@@ -43,8 +43,9 @@ export class UsersPage implements OnInit {
     this.usersService.fetchUsers().subscribe({
       next: (res) => {
         this.isLoading = false;
-        this.users = res;
-        this.displayedUsers = res;
+        const data = res.data;
+        this.users = data;
+        this.displayedUsers = data;
         this.selectedUserIds.clear();
       },
       error: (err) => {
