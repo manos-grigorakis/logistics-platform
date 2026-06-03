@@ -1,6 +1,6 @@
 package com.manosgrigorakis.logisticsplatform.common.exception;
 
-import com.manosgrigorakis.logisticsplatform.common.dto.ApiResponse;
+import com.manosgrigorakis.logisticsplatform.common.dto.ApiResponseWrapper;
 import com.manosgrigorakis.logisticsplatform.common.dto.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +19,7 @@ import java.util.Map;
 public class GlobalExceptionHandler {
     // Field validation error - 400
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiResponse<Void>> handleFieldValidationException(MethodArgumentNotValidException exc) {
+    public ResponseEntity<ApiResponseWrapper<Void>> handleFieldValidationException(MethodArgumentNotValidException exc) {
         Map<String, String> details = new HashMap<>();
 
         exc.getBindingResult().getFieldErrors().forEach(error ->
@@ -32,24 +32,24 @@ public class GlobalExceptionHandler {
                 details
         );
 
-        return new ResponseEntity<>(new ApiResponse<>(response), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ApiResponseWrapper<>(response), HttpStatus.BAD_REQUEST);
     }
 
     // Token expired error - 400
     @ExceptionHandler(TokenExpiredException.class)
-    public ResponseEntity<ApiResponse<Void>> handleExpiredTokenException(TokenExpiredException exc) {
+    public ResponseEntity<ApiResponseWrapper<Void>> handleExpiredTokenException(TokenExpiredException exc) {
         ErrorResponse response = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 "Token has expired",
                 null
         );
 
-        return new ResponseEntity<>(new ApiResponse<>(response), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ApiResponseWrapper<>(response), HttpStatus.BAD_REQUEST);
     }
 
     // Bad Request - 400
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<ApiResponse<Void>> handleBadRequestException(BadRequestException exc) {
+    public ResponseEntity<ApiResponseWrapper<Void>> handleBadRequestException(BadRequestException exc) {
         ErrorResponse response = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 exc.getMessage(),
@@ -57,60 +57,60 @@ public class GlobalExceptionHandler {
                 exc.getDetails()
         );
 
-        return new ResponseEntity<>(new ApiResponse<>(response), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ApiResponseWrapper<>(response), HttpStatus.BAD_REQUEST);
     }
 
     // Bad credentials - 401
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<ApiResponse<Void>> handleBadCredentialsException(BadCredentialsException exc) {
+    public ResponseEntity<ApiResponseWrapper<Void>> handleBadCredentialsException(BadCredentialsException exc) {
         ErrorResponse response = new ErrorResponse(
                 HttpStatus.UNAUTHORIZED.value(),
                 "Invalid email or password",
                 null
         );
 
-        return new ResponseEntity<>(new ApiResponse<>(response), HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(new ApiResponseWrapper<>(response), HttpStatus.UNAUTHORIZED);
     }
 
     // Account disabled - 401
     @ExceptionHandler(DisabledException.class)
-    public ResponseEntity<ApiResponse<Void>> handleDisabledAccountException(DisabledException exc) {
+    public ResponseEntity<ApiResponseWrapper<Void>> handleDisabledAccountException(DisabledException exc) {
         ErrorResponse response = new ErrorResponse(
                 HttpStatus.UNAUTHORIZED.value(),
                 "Disabled account",
                 null
         );
 
-        return new ResponseEntity<>(new ApiResponse<>(response), HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(new ApiResponseWrapper<>(response), HttpStatus.UNAUTHORIZED);
     }
 
     // Account locked - 401
     @ExceptionHandler(LockedException.class)
-    public ResponseEntity<ApiResponse<Void>> handleLockedAccountException(LockedException exc) {
+    public ResponseEntity<ApiResponseWrapper<Void>> handleLockedAccountException(LockedException exc) {
         ErrorResponse response = new ErrorResponse(
                 HttpStatus.UNAUTHORIZED.value(),
                 "Locked account",
                 null
         );
 
-        return new ResponseEntity<>(new ApiResponse<>(response), HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(new ApiResponseWrapper<>(response), HttpStatus.UNAUTHORIZED);
     }
 
     // Forbidden - 403
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ApiResponse<Void>> handleAccessDeniedException(AccessDeniedException exc) {
+    public ResponseEntity<ApiResponseWrapper<Void>> handleAccessDeniedException(AccessDeniedException exc) {
         ErrorResponse response = new ErrorResponse(
                 HttpStatus.FORBIDDEN.value(),
                 exc.getMessage(),
                 null
         );
 
-        return new ResponseEntity<>(new ApiResponse<>(response), HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(new ApiResponseWrapper<>(response), HttpStatus.FORBIDDEN);
     }
 
     // Not found - 404
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ApiResponse<Void>> handleResourceNotFoundException(ResourceNotFoundException exc) {
+    public ResponseEntity<ApiResponseWrapper<Void>> handleResourceNotFoundException(ResourceNotFoundException exc) {
         ErrorResponse response = new ErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
                 exc.getMessage(),
@@ -118,12 +118,12 @@ public class GlobalExceptionHandler {
                 null
         );
 
-        return new ResponseEntity<>(new ApiResponse<>(response), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new ApiResponseWrapper<>(response), HttpStatus.NOT_FOUND);
     }
 
     // Duplicate Entry - 409
     @ExceptionHandler(DuplicateEntryException.class)
-    public ResponseEntity<ApiResponse<Void>> handleDuplicateEntryException(DuplicateEntryException exc) {
+    public ResponseEntity<ApiResponseWrapper<Void>> handleDuplicateEntryException(DuplicateEntryException exc) {
         Map<String, Object> details = Map.of(
                 "duplicateField", exc.getField(),
                 "duplicateValue", exc.getValue()
@@ -136,24 +136,24 @@ public class GlobalExceptionHandler {
                 details
         );
 
-        return new ResponseEntity<>(new ApiResponse<>(response), HttpStatus.CONFLICT);
+        return new ResponseEntity<>(new ApiResponseWrapper<>(response), HttpStatus.CONFLICT);
     }
 
     // Delete Conflict Due to Data Integrity Violation - 409
     @ExceptionHandler(DeleteConflictException.class)
-    public ResponseEntity<ApiResponse<Void>> handleDeleteConflictException(DeleteConflictException exc) {
+    public ResponseEntity<ApiResponseWrapper<Void>> handleDeleteConflictException(DeleteConflictException exc) {
         ErrorResponse response = new ErrorResponse(
                 HttpStatus.CONFLICT.value(),
                 exc.getMessage(),
                 null
         );
 
-        return new ResponseEntity<>(new ApiResponse<>(response), HttpStatus.CONFLICT);
+        return new ResponseEntity<>(new ApiResponseWrapper<>(response), HttpStatus.CONFLICT);
     }
 
     // Conflict - 409
     @ExceptionHandler(ConflictException.class)
-    public ResponseEntity<ApiResponse<Void>> handleConflictException(ConflictException exc) {
+    public ResponseEntity<ApiResponseWrapper<Void>> handleConflictException(ConflictException exc) {
         ErrorResponse response = new ErrorResponse(
                 HttpStatus.CONFLICT.value(),
                 exc.getMessage(),
@@ -161,18 +161,18 @@ public class GlobalExceptionHandler {
                 exc.getDetails()
         );
 
-        return new ResponseEntity<>(new ApiResponse<>(response), HttpStatus.CONFLICT);
+        return new ResponseEntity<>(new ApiResponseWrapper<>(response), HttpStatus.CONFLICT);
     }
 
     // Server error - 500
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse<Void>> handleException(Exception exc) {
+    public ResponseEntity<ApiResponseWrapper<Void>> handleException(Exception exc) {
         ErrorResponse response = new ErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 exc.getMessage(),
                 null
         );
 
-        return new ResponseEntity<>(new ApiResponse<>(response), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(new ApiResponseWrapper<>(response), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
