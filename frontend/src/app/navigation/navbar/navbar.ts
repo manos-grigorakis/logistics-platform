@@ -5,10 +5,11 @@ import { DropdownMenuItem } from '../dropdown-menu-item/dropdown-menu-item';
 import { User } from '../../auth/models/User';
 import { DropdownButton } from '../../shared/ui/dropdown-button/dropdown-button';
 import { NgIcon } from '@ng-icons/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-navbar',
-  imports: [RouterLink, DropdownMenuItem, DropdownButton, NgIcon],
+  imports: [RouterLink, DropdownMenuItem, DropdownButton, NgIcon, TranslatePipe],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })

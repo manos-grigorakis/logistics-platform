@@ -19,44 +19,44 @@
         <app-sidebar-menu-item
           route="/users"
           icon="lucideUsers"
-          label="Users"
+          [label]="'nav.side-bar.users' | translate"
           (onItemClick)="closeOnMobile()"
         />
         <app-sidebar-menu-item
           route="/roles"
           icon="lucideUserCog"
-          label="Roles"
+          [label]="'nav.side-bar.roles' | translate"
           (onItemClick)="closeOnMobile()"
         />
       }
       <app-sidebar-menu-item
         route="/customers"
         icon="lucideBuilding"
-        label="Customers"
+        [label]="'nav.side-bar.customers' | translate"
         (onItemClick)="closeOnMobile()"
       />
       <app-sidebar-menu-item
         route="/vehicles"
         icon="lucideTruck"
-        label="Vehicles"
+        [label]="'nav.side-bar.vehicles' | translate"
         (onItemClick)="closeOnMobile()"
       />
       <app-sidebar-menu-item
         route="/quotes"
         icon="lucideFileText"
-        label="Quotes"
+        [label]="'nav.side-bar.quotes' | translate"
         (onItemClick)="closeOnMobile()"
       />
       <app-sidebar-menu-item
         route="/shipments"
         icon="lucideFileBox"
-        label="Shipments"
+        [label]="'nav.side-bar.shipments' | translate"
         (onItemClick)="closeOnMobile()"
       />
       <app-sidebar-menu-item
         route="/payments-tracking"
         icon="lucideScale"
-        label="Payments Tracking"
+        [label]="'nav.side-bar.payment-tracking' | translate"
         (onItemClick)="closeOnMobile()"
       />
     </ul>

@@ -22,6 +22,24 @@
     }
   },
 
+  "nav": {
+    "top-nav": {
+      "account": "Account",
+      "settings": "Settings",
+      "logout": "Logout"
+    },
+
+    "side-bar": {
+      "users": "Users",
+      "roles": "Roles",
+      "customers": "Customers",
+      "vehicles": "Vehicles",
+      "quotes": "Quotes",
+      "shipments": "Shipments",
+      "payment-tracking": "Payment Tracking"
+    }
+  },
+
   "auth": {
     "login": {
       "title": "Login",

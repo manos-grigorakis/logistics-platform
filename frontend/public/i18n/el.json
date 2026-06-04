@@ -22,6 +22,24 @@
     }
   },
 
+  "nav": {
+    "top-nav": {
+      "account": "Λογαριασμός",
+      "settings": "Ρυθμίσεις",
+      "logout": "Αποσύνδεση"
+    },
+
+    "side-bar": {
+      "users": "Χρήστες",
+      "roles": "Ρόλοι",
+      "customers": "Πελάτες",
+      "vehicles": "Οχήματα",
+      "quotes": "Προσφορές",
+      "shipments": "Αποστολές",
+      "payment-tracking": "Πληρωμές"
+    }
+  },
+
   "auth": {
     "login": {
       "title": "Σύνδεση",
