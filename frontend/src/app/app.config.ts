@@ -1,5 +1,6 @@
 import {
   ApplicationConfig,
+  inject,
   provideBrowserGlobalErrorListeners,
   provideZoneChangeDetection,
 } from '@angular/core';
@@ -55,6 +56,9 @@ import {
   BarElement,
 } from 'chart.js';
 
+import { provideTranslateService } from '@ngx-translate/core';
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
@@ -65,6 +69,7 @@ export const appConfig: ApplicationConfig = {
     { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
     JwtHelperService,
 
+    // Icons
     provideIcons({
       lucideTruck,
       lucideUsers,
@@ -101,6 +106,7 @@ export const appConfig: ApplicationConfig = {
       color: 'currentColor',
     }),
 
+    // Charts
     provideCharts({
       registerables: [
         BarController,
@@ -113,6 +119,15 @@ export const appConfig: ApplicationConfig = {
         Colors,
         Tooltip,
       ],
+    }),
+
+    // Translate
+    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideTranslateService({
+      loader: provideTranslateHttpLoader({
+        prefix: './i18n/',
+        suffix: '.json',
+      }),
     }),
   ],
 };

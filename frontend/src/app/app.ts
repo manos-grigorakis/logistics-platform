@@ -1,6 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { toast, NgxSonnerToaster } from 'ngx-sonner';
+import { LanguageService } from './shared/services/language.service';
 
 @Component({
   selector: 'app-root',
@@ -11,4 +12,10 @@ import { toast, NgxSonnerToaster } from 'ngx-sonner';
 export class App {
   protected readonly title = signal('frontend');
   protected readonly toast = toast;
+
+  private languageService = inject(LanguageService);
+
+  constructor() {
+    this.languageService.init();
+  }
 }

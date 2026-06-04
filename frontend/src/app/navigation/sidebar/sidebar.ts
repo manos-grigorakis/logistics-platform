@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { SidebarMenuItem } from '../sidebar-menu-item/sidebar-menu-item';
+import { LanguageSwitcher } from '../../shared/ui/language-switcher/language-switcher';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [SidebarMenuItem],
+  imports: [SidebarMenuItem, LanguageSwitcher],
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.css',
 })

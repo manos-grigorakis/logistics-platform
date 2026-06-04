@@ -1,0 +1,30 @@
+<div
+  class="0 relative flex w-full rounded-md p-1"
+  [ngClass]="variant === 'dark' ? 'bg-white/10' : 'bg-gray-100'"
+>
+  <!-- Sliding pill -->
+  <div
+    class="absolute top-1 h-[calc(100%-6px)] w-[calc(50%-3px)] rounded-md shadow-sm transition-transform duration-200"
+    [ngClass]="
+      variant === 'dark' ? 'border border-white/20 bg-white/20' : 'border border-gray-200 bg-white'
+    "
+    [class.translate-x-0]="currentLanguage === 'en'"
+    [class.translate-x-full]="currentLanguage === 'el'"
+  ></div>
+
+  <button
+    (click)="changeLanguage('en')"
+    class="relative z-10 flex-1 cursor-pointer rounded-md px-3 py-1 text-sm font-medium transition-colors duration-200"
+    [ngClass]="getTextClass('en')"
+  >
+    EN
+  </button>
+
+  <button
+    (click)="changeLanguage('el')"
+    class="relative z-10 flex-1 cursor-pointer rounded-md px-3 py-1 text-sm font-medium transition-colors duration-200"
+    [ngClass]="getTextClass('el')"
+  >
+    ΕΛ
+  </button>
+</div>
