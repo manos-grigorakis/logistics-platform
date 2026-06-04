@@ -1,16 +1,16 @@
 <table class="text-body w-full text-left text-sm whitespace-nowrap rtl:text-right">
   @if (isLoading) {
-    <app-loading-spinner></app-loading-spinner>
+    <app-loading-spinner />
   }
   <thead class="text-body bg-secondary-700 text-sm text-white">
     <tr>
       <th scope="col" class="p-4"></th>
-      <th scope="col" class="px-2 py-3 font-medium">First Name</th>
-      <th scope="col" class="px-2 py-3 font-medium">Last Name</th>
+      <th scope="col" class="px-2 py-3 font-medium">{{ 'users.fields.first-name' | translate }}</th>
+      <th scope="col" class="px-2 py-3 font-medium">{{ 'users.fields.last-name' | translate }}</th>
       <th scope="col" class="truncate px-2 py-3 font-medium">Email</th>
-      <th scope="col" class="px-2 py-3 font-medium">Phone</th>
-      <th scope="col" class="px-2 py-3 font-medium">Status</th>
-      <th scope="col" class="px-2 py-3 font-medium">Action</th>
+      <th scope="col" class="px-2 py-3 font-medium">{{ 'users.fields.phone' | translate }}</th>
+      <th scope="col" class="px-2 py-3 font-medium">{{ 'common.fields.status' | translate }}</th>
+      <th scope="col" class="px-2 py-3 font-medium">{{ 'common.actions.action' | translate }}</th>
     </tr>
   </thead>
   <tbody>
@@ -35,7 +35,9 @@
               <label for="table-checkbox-22" class="sr-only">Table checkbox</label>
             </div>
           } @else {
-            <span class="text-secondary-500 text-xs">(you)</span>
+            <span class="text-secondary-500 text-xs">{{
+              'users.messages.current-user' | translate
+            }}</span>
           }
         </td>
 
@@ -46,23 +48,25 @@
         <td class="px-2 py-4">
           @if (user.status === 'ACTIVE') {
             <span class="bg-success-light text-success-dark rounded border px-2">{{
-              user.status
+              'metadata.user-statuses.active' | translate
             }}</span>
           } @else if (user.status === 'INVITED') {
             <span class="bg-info-light text-info-dark border-info rounded border px-2">{{
-              user.status
+              'metadata.user-statuses.invited' | translate
             }}</span>
           } @else if (user.status === 'SUSPENDED') {
             <span class="bg-danger-light text-danger-dark border-danger rounded border px-2">{{
-              user.status
+              'metadata.user-statuses.suspended' | translate
             }}</span>
           } @else {
             <span class="px-2">{{ user.status || '-' }}</span>
           }
         </td>
         <td class="px-2 py-4">
-          <a [routerLink]="['edit-user', user.id]" class="text-fg-brand font-medium hover:underline"
-            >Edit</a
+          <a
+            [routerLink]="['edit-user', user.id]"
+            class="text-fg-brand font-medium hover:underline"
+            >{{ 'common.actions.edit' | translate }}</a
           >
         </td>
       </tr>
@@ -74,7 +78,7 @@
               errorMessage
             }}</span>
           } @else {
-            There are no users
+            {{ 'users.empty-state' | translate }}
           }
         </td>
       </tr>

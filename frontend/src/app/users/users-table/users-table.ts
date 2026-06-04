@@ -3,10 +3,11 @@ import { RouterLink } from '@angular/router';
 import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
 import { UserResponse } from '../models/user-response';
 import { NgClass } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-users-table',
-  imports: [RouterLink, LoadingSpinner, NgClass],
+  imports: [RouterLink, LoadingSpinner, NgClass, TranslatePipe],
   templateUrl: './users-table.html',
   styleUrl: './users-table.css',
 })

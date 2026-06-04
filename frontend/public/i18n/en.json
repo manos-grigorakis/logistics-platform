@@ -24,7 +24,15 @@
       "invalid-format": "{{field}} has an invalid format",
       "8-chars-long": "must be 8 characters long"
     },
-    "created-at": "Created At"
+    "filters": {
+      "search": "Search",
+      "sort-by": "Sort By",
+      "all": "All"
+    },
+    "fields": {
+      "status": "Status",
+      "created-at": "Created At"
+    }
   },
 
   "nav": {
@@ -129,6 +137,11 @@
     "vehicle-types": {
       "truck": "Truck",
       "trailer": "Trailer"
+    },
+    "user-statuses": {
+      "active": "Active",
+      "invited": "Invited",
+      "suspended": "Suspended"
     }
   },
 
@@ -165,6 +178,35 @@
       "success-deletion": "Vehicle deleted successfully",
       "exists-by-plate": "Vehicle already exists with plate number: {{plate}}",
       "not-found": "Vehicle doesn't exist"
+    }
+  },
+
+  "users": {
+    "empty-state": "There are no users",
+    "fields": {
+      "first-name": "First Name",
+      "last-name": "Last Name",
+      "phone": "Phone",
+      "role": "Role"
+    },
+    "actions": {
+      "create": "Create User",
+      "update": "Update User"
+    },
+    "messages": {
+      "current-user": "(you)",
+      "select-role": "Select a role",
+      "roles-empty-state": "No role available",
+      "role-required": "Role is required",
+      "success-creation": "User created successfully",
+      "success-update": "User updated successfully",
+      "email-exists": "User already exists with email {{email}}",
+      "not-found": "User doesn't exist",
+      "modal": {
+        "title": "Delete Selected User(s)",
+        "message": "This action is permanent and cannot be undone",
+        "success": "User(s) deleted successfully"
+      }
     }
   }
 }

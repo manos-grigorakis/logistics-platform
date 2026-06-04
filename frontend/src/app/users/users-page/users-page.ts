@@ -3,14 +3,15 @@ import { UsersTable } from '../users-table/users-table';
 import { UsersService } from '../users.service';
 import { UserResponse } from '../models/user-response';
 import { UsersFilters } from '../users-filters/users-filters';
-import { toast } from 'ngx-sonner';
-import { forkJoin } from 'rxjs';
+import { forkJoin, take } from 'rxjs';
 import { Modal } from '../../shared/ui/modal/modal';
 import { AuthService } from '../../auth/services/auth.service';
+import { TranslatePipe } from '@ngx-translate/core';
+import { LanguageService } from '../../shared/services/language.service';
 
 @Component({
   selector: 'app-users-page',
-  imports: [UsersTable, UsersFilters, Modal],
+  imports: [UsersTable, UsersFilters, Modal, TranslatePipe],
   templateUrl: './users-page.html',
   styleUrl: './users-page.css',
 })
@@ -25,15 +26,24 @@ export class UsersPage implements OnInit {
   public modalHeader: string = '';
   public modalMessage: string = '';
   public searchTerm: string = '';
-  public sortLabel: string = 'Sort by';
+  public sortLabel: string = '';
   public currentUserId: number | null = null;
 
+  // Services
   private usersService: UsersService = inject(UsersService);
   private authService: AuthService = inject(AuthService);
+  private languageService = inject(LanguageService);
 
   ngOnInit(): void {
     this.loadUsers();
     this.currentUserId = this.authService.getUserId();
+
+    if (!this.sortLabel) {
+      this.languageService
+        .translateKeyAsync('common.filters.sort-by')
+        .pipe(take(1))
+        .subscribe((val) => (this.sortLabel = val));
+    }
   }
 
   public loadUsers(): void {
@@ -52,9 +62,9 @@ export class UsersPage implements OnInit {
         this.isLoading = false;
 
         if (err.status === 500) {
-          this.errorMessage = 'Server error. Please try again';
+          this.errorMessage = 'common.errors.server';
         } else {
-          this.errorMessage = 'An error occured. Please try again';
+          this.errorMessage = 'common.errors.generic';
         }
       },
     });
@@ -73,8 +83,8 @@ export class UsersPage implements OnInit {
   }
 
   public onUserDeleteClick(): void {
-    this.modalHeader = 'Delete Selected User(s)';
-    this.modalMessage = 'This action is permanent and cannot be undone';
+    this.modalHeader = 'users.messages.modal.title';
+    this.modalMessage = 'users.messages.modal.message';
     this.showModal = true;
   }
 
@@ -93,7 +103,7 @@ export class UsersPage implements OnInit {
     forkJoin(deleteUsers).subscribe({
       next: (res) => {
         this.isLoading = false;
-        toast.success('User(s) deleted successfully');
+        this.languageService.toastSuccess('users.messages.modal.success');
         this.selectedUserIds.clear();
         this.disableDeleteButton = true;
         this.loadUsers();
@@ -102,9 +112,9 @@ export class UsersPage implements OnInit {
         this.isLoading = false;
 
         if (err.status === 500) {
-          toast.error('Server error. Please try again');
+          this.languageService.toastError('common.errors.server');
         } else {
-          toast.error('An error has occured. Please try again');
+          this.languageService.toastError('common.errors.generic');
         }
       },
     });
@@ -133,29 +143,29 @@ export class UsersPage implements OnInit {
   public onSort(sortOption: string): void {
     switch (sortOption) {
       case 'all':
-        this.sortLabel = 'Sort by';
+        this.sortLabel = `${this.languageService.translateKey('common.filters.sort-by')}`;
         this.displayedUsers = this.users;
         break;
       case 'asc-by-first-name':
-        this.sortLabel = 'First Name (A-Z)';
+        this.sortLabel = `${this.languageService.translateKey('users.fields.first-name')} (A-Z)`;
         this.displayedUsers = [...this.displayedUsers].sort((a, b) =>
           a.firstName.toLocaleLowerCase().localeCompare(b.firstName.toLocaleLowerCase()),
         );
         break;
       case 'desc-by-first-name':
-        this.sortLabel = 'First Name (Z-A)';
+        this.sortLabel = `${this.languageService.translateKey('users.fields.first-name')} (Z-A)`;
         this.displayedUsers = [...this.displayedUsers].sort((a, b) =>
           b.firstName.toLocaleLowerCase().localeCompare(a.firstName.toLocaleLowerCase()),
         );
         break;
       case 'asc-by-last-name':
-        this.sortLabel = 'Last Name (A-Z)';
+        this.sortLabel = `${this.languageService.translateKey('users.fields.last-name')} (A-Z)`;
         this.displayedUsers = [...this.displayedUsers].sort((a, b) =>
           a.lastName.toLocaleLowerCase().localeCompare(b.lastName.toLocaleLowerCase()),
         );
         break;
       case 'desc-by-last-name':
-        this.sortLabel = 'Last Name (Z-A)';
+        this.sortLabel = `${this.languageService.translateKey('users.fields.last-name')} (Z-A)`;
         this.displayedUsers = [...this.displayedUsers].sort((a, b) =>
           b.lastName.toLocaleLowerCase().localeCompare(a.lastName.toLocaleLowerCase()),
         );

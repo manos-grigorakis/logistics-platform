@@ -1,9 +1,9 @@
 <div class="mx-auto mt-6 max-w-xl rounded-lg bg-white p-6 shadow-lg shadow-black/10">
   <h2 class="mb-4 text-center text-3xl font-semibold">
     @if (formUsage === 'create') {
-      Create a User
+      {{ 'users.actions.create' | translate }}
     } @else {
-      Update User
+      {{ 'users.actions.update' | translate }}
     }
   </h2>
 
@@ -19,7 +19,7 @@
 
   <div class="mb-5">
     @if (roleErrorMessage) {
-      <app-error-alert [errorMessage]="roleErrorMessage" />
+      <app-error-alert [errorMessage]="roleErrorMessage | translate" />
     }
   </div>
 
@@ -27,20 +27,20 @@
     <div class="mb-6">
       <app-main-input
         formControlName="firstName"
-        label="First Name"
-        placeholder="First Name"
+        [label]="'users.fields.first-name' | translate"
+        [placeholder]="'users.fields.first-name' | translate"
         type="text"
         [showRequiredStar]="true"
-      ></app-main-input>
+      />
     </div>
     <div class="mb-6">
       <app-main-input
         formControlName="lastName"
-        label="Last Name"
-        placeholder="Last Name"
+        [label]="'users.fields.last-name' | translate"
+        [placeholder]="'users.fields.last-name' | translate"
         type="text"
         [showRequiredStar]="true"
-      ></app-main-input>
+      />
     </div>
     <div class="mb-6">
       <app-main-input
@@ -49,44 +49,48 @@
         placeholder="Email"
         type="email"
         [showRequiredStar]="true"
-      ></app-main-input>
+      />
     </div>
     <div class="mb-6">
       <app-main-input
         formControlName="phone"
-        label="Phone"
-        placeholder="Phone"
+        [label]="'users.fields.phone' | translate"
+        [placeholder]="'users.fields.phone' | translate"
         type="text"
-      ></app-main-input>
+      />
     </div>
 
     <div class="mb-6">
-      <label for="role"><span class="text-danger mr-1 text-sm">*</span>Role</label>
+      <label for="role"
+        ><span class="text-danger mr-1 text-sm">*</span>{{ 'users.fields.role' | translate }}</label
+      >
       <select
         formControlName="roleId"
         id="role"
         class="focus:ring-primary-200 w-full rounded border border-gray-300 px-4 py-2 text-gray-700 focus:ring focus:outline-none"
       >
-        <option [ngValue]="null" disabled>Select a role</option>
+        <option [ngValue]="null" disabled>{{ 'users.messages.select-role' | translate }}</option>
 
         @for (role of roles; track role.id) {
           <option [ngValue]="role.id">{{ role.name }}</option>
         } @empty {
-          <option disabled>No roles available</option>
+          <option disabled>{{ 'users.messages.roles-empty-state' | translate }}</option>
         }
       </select>
       @if (roleId.invalid && (roleId.dirty || roleId.touched)) {
         <div>
           @if (roleId.hasError('required')) {
-            <span class="text-danger ml-1 text-sm">Role is required</span>
+            <span class="text-danger ml-1 text-sm">{{
+              'users.messages.role-required' | translate
+            }}</span>
           }
         </div>
       }
     </div>
     @if (formUsage === 'create') {
-      <app-primary-button value="Create User" [isDisabled]="isLoading"></app-primary-button>
+      <app-primary-button [value]="'users.actions.create' | translate" [isDisabled]="isLoading" />
     } @else {
-      <app-primary-button value="Update User" [isDisabled]="isLoading"></app-primary-button>
+      <app-primary-button [value]="'users.actions.update' | translate" [isDisabled]="isLoading" />
     }
   </form>
 </div>

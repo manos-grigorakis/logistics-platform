@@ -60,4 +60,8 @@ export class LanguageService {
   translateKey(key: string, params?: object): string {
     return this.translate.instant(key, params);
   }
+
+  translateKeyAsync(key: string, params?: object): Observable<string> {
+    return this.translate.stream(key, params);
+  }
 }

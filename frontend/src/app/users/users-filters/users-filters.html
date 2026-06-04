@@ -1,14 +1,10 @@
 <div class="flex items-center justify-between space-x-4 p-4">
-  <app-search-bar [value]="searchTerm" (valueChange)="onSearchChange($event)"></app-search-bar>
+  <app-search-bar [value]="searchTerm" (valueChange)="onSearchChange($event)" />
 
   <div class="flex items-center gap-6">
     <div class="flex items-center gap-4">
       <!-- Add -->
-      <app-rounded-icon-button
-        (clicked)="onCreateUser()"
-        icon="lucidePlus"
-        color="success"
-      ></app-rounded-icon-button>
+      <app-rounded-icon-button (clicked)="onCreateUser()" icon="lucidePlus" color="success" />
 
       <!-- Refresh -->
       <app-rounded-icon-button
@@ -16,7 +12,7 @@
         [isDisabled]="isLoading"
         icon="lucideRefreshCcw"
         color="info"
-      ></app-rounded-icon-button>
+      />
 
       <!-- Delete -->
       <app-rounded-icon-button
@@ -24,7 +20,7 @@
         [isDisabled]="isDeleteDisabled"
         icon="lucideTrash"
         color="danger"
-      ></app-rounded-icon-button>
+      />
     </div>
 
     <!-- Filters -->
@@ -37,35 +33,35 @@
         <a
           class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
           (click)="onSortByField('all')"
-          >All</a
+          >{{ 'common.filters.all' | translate }}</a
         >
       </li>
       <li dropdown-menu-item>
         <a
           class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
           (click)="onSortByField('asc-by-first-name')"
-          >First Name (A-Z)</a
+          >{{ 'users.fields.first-name' | translate }} (A-Z)</a
         >
       </li>
       <li dropdown-menu-item>
         <a
           class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
           (click)="onSortByField('desc-by-first-name')"
-          >First Name (Z-A)</a
+          >{{ 'users.fields.first-name' | translate }} (Z-A)</a
         >
       </li>
       <li dropdown-menu-item>
         <a
           class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
           (click)="onSortByField('asc-by-last-name')"
-          >Last Name (A-Z)</a
+          >{{ 'users.fields.last-name' | translate }} (A-Z)</a
         >
       </li>
       <li dropdown-menu-item>
         <a
           class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
           (click)="onSortByField('desc-by-last-name')"
-          >Last Name (Z-A)</a
+          >{{ 'users.fields.last-name' | translate }} (Z-A)</a
         >
       </li>
     </app-dropdown-button>
