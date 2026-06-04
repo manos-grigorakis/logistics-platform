@@ -40,6 +40,15 @@
     }
   },
 
+  "not-found-page": {
+    "title": "Page not found",
+    "subtitle": "The page you are trying to access does not exist or has been moved."
+  },
+  "forbidden-page": {
+    "title": "Forbidden Page",
+    "subtitle": "You don't have permission to this page"
+  },
+
   "auth": {
     "login": {
       "title": "Login",
@@ -74,12 +83,56 @@
     "password": "Password",
     "back-to-login": "Back to Login"
   },
-  "not-found-page": {
-    "title": "Page not found",
-    "subtitle": "The page you are trying to access does not exist or has been moved."
+
+  "metadata": {
+    "customers-types": {
+      "individual": "Individual",
+      "company": "Company"
+    },
+    "quotes-statuses": {
+      "draft": "Draft",
+      "sent": "Sent",
+      "accepted": "Accepted",
+      "rejected": "Rejected",
+      "cancelled": "Cancelled",
+      "expired": "Expired",
+      "converted": "Converted"
+    },
+    "quotes-item-units": {
+      "hour": "Hour",
+      "piece": "Piece",
+      "pallet": "Pallet"
+    },
+    "shipments-statuses": {
+      "pending": "Pending",
+      "dispatched": "Dispatched",
+      "delivered": "Delivered"
+    },
+    "cargo-items-units": {
+      "pallet": "Pallet",
+      "box": "Box",
+      "piece": "Piece",
+      "roll": "Roll",
+      "bag": "Bag"
+    },
+    "invoices-statuses": {
+      "paid": "Paid",
+      "disputed": "Disputed",
+      "outstanding": "Outstanding",
+      "partially_paid": "Partially Paid"
+    }
   },
-  "forbidden-page": {
-    "title": "Forbidden Page",
-    "subtitle": "You don't have permission to this page"
+
+  "dashboard": {
+    "total-customers": "Total Customers",
+    "total-shipments": "Total Shipments",
+    "total-outstanding-amount": "Total Outstanding Amount",
+    "total-pending-shipments": "Total Pending Shipments (Next 24h)",
+    "quotes-by-status": "Quotes by Status",
+    "shipments-by-status": "Shipments by Status",
+    "invoices-by-status": "Invoices by Status",
+    "quotes-label": "Quotes",
+    "shipments-label": "Shipments",
+    "invoices-label": "Invoices"
   }
 }

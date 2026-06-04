@@ -50,4 +50,14 @@ export class LanguageService {
       .pipe(take(1))
       .subscribe((msg) => toast.success(msg));
   }
+
+  /**
+   * Translate a key based on the current language
+   * @param key The key to be used for translation
+   * @param params (Optional) Any additional params for translation
+   * @returns The translated output based on the current language
+   */
+  translateKey(key: string, params?: object): string {
+    return this.translate.instant(key, params);
+  }
 }

@@ -35,9 +35,19 @@
       "customers": "Πελάτες",
       "vehicles": "Οχήματα",
       "quotes": "Προσφορές",
-      "shipments": "Αποστολές",
+      "shipments": "Μεταφορές",
       "payment-tracking": "Πληρωμές"
     }
+  },
+
+  "not-found-page": {
+    "title": "Η σελίδα δεν βρέθηκε",
+    "subtitle": "Η σελίδα που προσπαθείτε να δείτε δεν υπάρχει ή έχει μετακινηθεί"
+  },
+
+  "forbidden-page": {
+    "title": "Δεν επιτρέπεται η πρόσβαση",
+    "subtitle": "Δεν έχετε τα απαραίτητα δικαιώματα για να δείτε αυτή τη σελίδα"
   },
 
   "auth": {
@@ -74,13 +84,56 @@
     "password": "Κωδικός Πρόσβασης",
     "back-to-login": "Επιστροφή στη Σύνδεση"
   },
-  "not-found-page": {
-    "title": "Η σελίδα δεν βρέθηκε",
-    "subtitle": "Η σελίδα που προσπαθείτε να δείτε δεν υπάρχει ή έχει μετακινηθεί"
+
+  "metadata": {
+    "customers-types": {
+      "individual": "Ιδιώτης",
+      "company": "Εταιρεία"
+    },
+    "quotes-statuses": {
+      "draft": "Προσχέδιο",
+      "sent": "Απεστάλη",
+      "accepted": "Εγκρίθηκε",
+      "rejected": "Απορρίφθηκε",
+      "cancelled": "Ακυρώθηκε",
+      "expired": "Έληξε",
+      "converted": "Μετατράπηκε"
+    },
+    "quotes-item-units": {
+      "hour": "Ώρα",
+      "piece": "Τεμάχιο",
+      "pallet": "Παλέτα"
+    },
+    "shipments-statuses": {
+      "pending": "Σε εκκρεμότητα",
+      "dispatched": "Απεστάλη",
+      "delivered": "Παραδόθηκε"
+    },
+    "cargo-items-units": {
+      "pallet": "Παλέτα",
+      "box": "Κιβώτιο",
+      "piece": "Τεμάχιο",
+      "roll": "Ρολό",
+      "bag": "Σάκος"
+    },
+    "invoices-statuses": {
+      "paid": "Πληρωμένη",
+      "disputed": "Σε διαφωνία",
+      "outstanding": "Εκκρεμής",
+      "partially_paid": "Μερικώς Πληρωμένη"
+    }
   },
 
-  "forbidden-page": {
-    "title": "Δεν επιτρέπεται η πρόσβαση",
-    "subtitle": "Δεν έχετε τα απαραίτητα δικαιώματα για να δείτε αυτή τη σελίδα"
+  "dashboard": {
+    "total-customers": "Συνολικοί Πελάτες",
+    "total-shipments": "Συνολικές Μεταφορές",
+    "total-outstanding-amount": "Συνολικό Ανεξόφλητο Ποσό",
+    "total-pending-shipments": "Εκκρεμείς Μεταφορές (Επόμενες 24ώρες)",
+    "quotes-by-status": "Προσφορές ανά Κατάσταση",
+    "shipments-by-status": "Μεταφορές ανά Κατάσταση",
+    "invoices-by-status": "Τιμολόγια ανά Κατάσταση",
+    "quotes-label": "Προσφορές",
+    "shipments-label": "Μεταφορές",
+    "invoices-label": "Τιμολόγια"
   }
 }
