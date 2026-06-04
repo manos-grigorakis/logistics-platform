@@ -1,0 +1,57 @@
+{
+  "app": {
+    "title": "Logistics Platform"
+  },
+
+  "common": {
+    "actions": {
+      "submit": "Submit",
+      "cancel": "Cancel",
+      "save": "Save"
+    },
+    "errors": {
+      "server": "Server error. Please try again later",
+      "generic": "An error occurred. Please try again"
+    },
+    "validation": {
+      "required": "{{field}} is required",
+      "email": "Invalid email address",
+      "invalid-format": "{{field}} has an invalid format"
+    }
+  },
+
+  "auth": {
+    "login": {
+      "title": "Login",
+      "button": "Login",
+      "errors": {
+        "invalid-credentials": "Invalid Credentials"
+      }
+    },
+    "forgot-password": {
+      "title": "Forgot Password",
+      "check-your-email": "Check your email",
+      "success": "If the email is registered, you will get a reset link in your email"
+    },
+    "reset-password": {
+      "title": "Reset Password",
+      "new-password": "New Password",
+      "button": "Reset Password",
+      "success": "Your password has been reset successfully",
+      "errors": {
+        "invalid-or-expired-link": "This password reset link is invalid or has expired",
+        "invalid-or-used-link": "This password reset link is invalid or has already been used"
+      }
+    },
+    "setup-password": {
+      "title": "Setup Password",
+      "button": "Setup Password",
+      "success": "Your password has been set up successfully",
+      "errors": {
+        "invalid-or-used-link": "This password setup link is invalid or has already been used"
+      }
+    },
+    "password": "Password",
+    "back-to-login": "Back to Login"
+  }
+}

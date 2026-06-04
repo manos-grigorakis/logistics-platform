@@ -5,19 +5,28 @@ import { AuthService } from '../services/auth.service';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SetupPasswordRequest } from '../models/setup-password-request';
-import { toast } from 'ngx-sonner';
 import { MainInput } from '../../shared/forms/main-input/main-input';
 import { ErrorAlert } from '../../shared/ui/error-alert/error-alert';
+import { TranslatePipe } from '@ngx-translate/core';
+import { LanguageService } from '../../shared/services/language.service';
 
 @Component({
   selector: 'app-setup-password-form',
-  imports: [PrimaryButton, LoadingSpinner, ReactiveFormsModule, MainInput, ErrorAlert],
+  imports: [
+    PrimaryButton,
+    LoadingSpinner,
+    ReactiveFormsModule,
+    MainInput,
+    ErrorAlert,
+    TranslatePipe,
+  ],
   templateUrl: './setup-password-form.html',
   styleUrl: './setup-password-form.css',
 })
 export class SetupPasswordForm implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private languageService = inject(LanguageService);
   private token!: string;
 
   isLoading: boolean = false;
@@ -67,19 +76,19 @@ export class SetupPasswordForm implements OnInit {
     this.authService.setupPassword(data).subscribe({
       next: (res) => {
         this.isLoading = false;
-        toast.success('You have successfully setup you password');
+        this.languageService.toastSuccess('auth.setup-password.success');
         this.router.navigate(['/login']);
       },
       error: (err) => {
         this.isLoading = false;
 
         if (err.status === 400 || err.status === 404) {
-          toast.error('This password setup link is invalid or has already been used');
+          this.languageService.toastError('auth.setup-password.errors.invalid-or-used-link');
           this.router.navigate(['/login']);
         } else if (err.status === 500) {
-          this.errorMessage = 'Internal server error. Please try again later';
+          this.errorMessage = 'common.errors.server';
         } else {
-          this.errorMessage = 'An error occured. Please try again';
+          this.errorMessage = 'common.errors.generic';
         }
 
         setTimeout(() => {

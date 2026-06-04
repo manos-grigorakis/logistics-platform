@@ -16,6 +16,6 @@ export class App {
   private languageService = inject(LanguageService);
 
   constructor() {
-    this.languageService.init();
+    this.languageService.init().subscribe();
   }
 }

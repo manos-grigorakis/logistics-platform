@@ -5,19 +5,29 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PrimaryButton } from '../../shared/ui/primary-button/primary-button';
 import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
 import { ResetPasswordRequest } from '../models/reset-password-request';
-import { toast } from 'ngx-sonner';
 import { MainInput } from '../../shared/forms/main-input/main-input';
 import { ErrorAlert } from '../../shared/ui/error-alert/error-alert';
+import { TranslatePipe } from '@ngx-translate/core';
+import { LanguageService } from '../../shared/services/language.service';
 
 @Component({
   selector: 'app-reset-password-form',
-  imports: [PrimaryButton, LoadingSpinner, ReactiveFormsModule, MainInput, ErrorAlert],
+  imports: [
+    PrimaryButton,
+    LoadingSpinner,
+    ReactiveFormsModule,
+    MainInput,
+    ErrorAlert,
+    TranslatePipe,
+  ],
   templateUrl: './reset-password-form.html',
   styleUrl: './reset-password-form.css',
 })
 export class ResetPasswordForm implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private languageService = inject(LanguageService);
+
   private token!: string;
   private isTokenValid: boolean = false;
   isLoading: boolean = false;
@@ -52,17 +62,17 @@ export class ResetPasswordForm implements OnInit {
         this.isTokenValid = isValid;
 
         if (!isValid) {
-          toast.error('This password reset link is invalid or has expired');
+          this.languageService.toastError('auth.reset-password.errors.invalid-or-expired-link');
           this.router.navigate(['/login']);
         }
       },
       error: (err) => {
         if (err.status === 400 || err.status === 404) {
-          toast.error('This password reset link is invalid or has already been used');
+          this.languageService.toastError('auth.reset-password.errors.invalid-or-used-link');
         } else if (err.status === 500) {
-          toast.error('Internal server error. Please try again later');
+          this.languageService.toastError('common.errors.server');
         } else {
-          toast.error('An error occured. Please try again');
+          this.languageService.toastError('common.errors.generic');
         }
         this.router.navigate(['/login']);
       },
@@ -92,19 +102,19 @@ export class ResetPasswordForm implements OnInit {
     this.authService.resetPassword(data).subscribe({
       next: (res) => {
         this.isLoading = false;
-        toast.success('You have successfully updated your password');
+        this.languageService.toastSuccess('auth.reset-password.success');
         this.router.navigate(['/login']);
       },
       error: (err) => {
         this.isLoading = false;
 
         if (err.status === 400 || err.status === 404) {
-          toast.error('This password reset link is invalid or has already been used');
+          this.languageService.toastError('auth.reset-password.errors.invalid-or-used-link');
           this.router.navigate(['/login']);
         } else if (err.status === 500) {
-          this.errorMessage = 'Internal server error. Please try again later';
+          this.errorMessage = 'common.errors.server';
         } else {
-          this.errorMessage = 'An error occured. Please try again';
+          this.errorMessage = 'common.errors.generic';
         }
       },
     });

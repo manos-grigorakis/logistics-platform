@@ -7,16 +7,28 @@ import { Router, RouterLink } from '@angular/router';
 import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
 import { MainInput } from '../../shared/forms/main-input/main-input';
 import { ErrorAlert } from '../../shared/ui/error-alert/error-alert';
+import { TranslatePipe } from '@ngx-translate/core';
+import { LanguageSwitcher } from '../../shared/ui/language-switcher/language-switcher';
 
 @Component({
   selector: 'app-login-form',
-  imports: [PrimaryButton, ReactiveFormsModule, LoadingSpinner, RouterLink, MainInput, ErrorAlert],
+  imports: [
+    PrimaryButton,
+    ReactiveFormsModule,
+    LoadingSpinner,
+    RouterLink,
+    MainInput,
+    ErrorAlert,
+    TranslatePipe,
+    LanguageSwitcher,
+  ],
   templateUrl: './login-form.html',
   styleUrl: './login-form.css',
 })
 export class LoginForm {
   private formBuilder = inject(FormBuilder);
   private router = inject(Router);
+
   loginFailed: boolean = false;
   errorMessage?: string;
   isLoading: boolean = false;
@@ -59,11 +71,11 @@ export class LoginForm {
         this.loginFailed = true;
 
         if (err.status === 401) {
-          this.errorMessage = 'Invalid Credentials';
+          this.errorMessage = 'auth.login.errors.invalid-credentials';
         } else if (err.status === 500) {
-          this.errorMessage = 'Server error. Please try again later';
+          this.errorMessage = 'common.errors.server';
         } else {
-          this.errorMessage = 'An error occured. Please try again';
+          this.errorMessage = 'common.errors.generic';
         }
 
         setTimeout(() => {

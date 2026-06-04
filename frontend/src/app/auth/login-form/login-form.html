@@ -1,12 +1,17 @@
 <section class="flex min-h-screen items-center justify-center">
   @if (isLoading) {
-    <app-loading-spinner></app-loading-spinner>
+    <app-loading-spinner />
   }
   <div class="w-full max-w-md rounded-lg bg-white p-6 shadow-md">
-    <h2 class="mb-4 text-center text-3xl font-semibold">Login</h2>
+    <!-- Language Switcher -->
+    <div class="mb-2 flex justify-end">
+      <app-language-switcher />
+    </div>
+
+    <h2 class="mb-4 text-center text-3xl font-semibold">{{ 'auth.login.title' | translate }}</h2>
     <div class="mb-5">
       @if (loginFailed) {
-        <app-error-alert [errorMessage]="errorMessage" />
+        <app-error-alert [errorMessage]="errorMessage | translate" />
       }
     </div>
 
@@ -16,7 +21,7 @@
       </div>
       <div class="mb-1">
         <app-main-input
-          label="Password"
+          [label]="'auth.password' | translate"
           placeholder="Password"
           type="password"
           formControlName="password"
@@ -26,10 +31,10 @@
         <a
           routerLink="/forgot-password"
           class="text-primary-400 text-sm font-medium hover:underline"
-          >Forgot Password?</a
+          >{{ 'auth.forgot-password.title' | translate }}</a
         >
       </div>
-      <app-primary-button [value]="'Login'" [isDisabled]="isLoading"></app-primary-button>
+      <app-primary-button [value]="'auth.login.button' | translate" [isDisabled]="isLoading" />
     </form>
   </div>
 </section>

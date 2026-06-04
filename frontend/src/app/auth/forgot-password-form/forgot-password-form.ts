@@ -6,10 +6,19 @@ import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner'
 import { RouterLink } from '@angular/router';
 import { MainInput } from '../../shared/forms/main-input/main-input';
 import { ErrorAlert } from '../../shared/ui/error-alert/error-alert';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-forgot-password-form',
-  imports: [PrimaryButton, ReactiveFormsModule, LoadingSpinner, RouterLink, MainInput, ErrorAlert],
+  imports: [
+    PrimaryButton,
+    ReactiveFormsModule,
+    LoadingSpinner,
+    RouterLink,
+    MainInput,
+    ErrorAlert,
+    TranslatePipe,
+  ],
   templateUrl: './forgot-password-form.html',
   styleUrl: './forgot-password-form.css',
 })
@@ -45,16 +54,15 @@ export class ForgotPasswordForm {
     this.authService.forgotPassword(this.email.value).subscribe({
       next: (res) => {
         this.isLoading = false;
-
-        this.successMessage = res.data.message;
+        this.successMessage = 'auth.forgot-password.success';
       },
       error: (err) => {
         this.isLoading = false;
 
         if (err.status === 500) {
-          this.errorMessage = 'Server error. Please try again later';
+          this.errorMessage = 'common.errors.server';
         } else {
-          this.errorMessage = 'An error occured. Please try again';
+          this.errorMessage = 'common.errors.generic';
         }
 
         // Clear errors
