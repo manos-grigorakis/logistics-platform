@@ -4,15 +4,18 @@ import { RolesService } from '../roles.service';
 import { Router } from '@angular/router';
 import { toast } from 'ngx-sonner';
 import { RoleRequest } from '../models/role-request';
+import { TranslatePipe } from '@ngx-translate/core';
+import { LanguageService } from '../../shared/services/language.service';
 
 @Component({
   selector: 'app-create-role',
-  imports: [RoleForm],
+  imports: [RoleForm, TranslatePipe],
   templateUrl: './create-role.html',
   styleUrl: './create-role.css',
 })
 export class CreateRole {
   private rolesService: RolesService = inject(RolesService);
+  private languageService = inject(LanguageService);
   private router: Router = inject(Router);
 
   public isLoading: boolean = false;
@@ -25,18 +28,18 @@ export class CreateRole {
     this.rolesService.createRole(data).subscribe({
       next: (res) => {
         this.isLoading = false;
-        toast.success('Role created successfully');
+        this.languageService.toastSuccess('roles.messages.success-creation');
         this.router.navigate(['/roles']);
       },
       error: (err) => {
         this.isLoading = false;
 
         if (err.status === 409) {
-          this.errorMessage = 'Role already exists';
+          this.errorMessage = 'roles.messages.role-exists';
         } else if (err.status === 500) {
-          this.errorMessage = 'Server error. Please try again';
+          this.errorMessage = 'common.errors.server';
         } else {
-          this.errorMessage = 'An error occured. Please try again';
+          this.errorMessage = 'common.errors.generic';
         }
       },
     });

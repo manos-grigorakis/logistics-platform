@@ -208,5 +208,33 @@
         "success": "User(s) deleted successfully"
       }
     }
+  },
+
+  "roles": {
+    "empty-state": "There are no roles",
+    "protected-role": "Protected Role",
+    "fields": {
+      "name": "Name",
+      "description": "Description",
+      "description-placeholder": "Describe role"
+    },
+    "actions": {
+      "create": "Create a Role",
+      "update": "Update Role"
+    },
+    "messages": {
+      "success-creation": "Role created successfully",
+      "success-update": "Role updated successfully",
+      "success-deletion": "Role deleted successfully",
+      "assigned-users": "This role cannot be deleted because it is assigned to existing users",
+      "not-found": "Role not found",
+      "invalid-role-id": "Invalid role ID",
+      "protected-role": "Role is protected and cannot be edited",
+      "role-exists": "Role already exists",
+      "modal": {
+        "title": "Delete Selected Role",
+        "message": "This action is permanent and cannot be undone"
+      }
+    }
   }
 }

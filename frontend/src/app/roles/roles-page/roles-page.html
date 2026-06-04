@@ -6,14 +6,17 @@
     [isEnabled]="showModal"
     color="danger"
     icon="lucideAlertTriangle"
-    confirmButtonText="Delete"
-    cancelButtonText="Cancel"
-    [header]="modalHeader"
-    [message]="modalMessage"
+    [confirmButtonText]="'common.actions.delete' | translate"
+    [cancelButtonText]="'common.actions.cancel' | translate"
+    [header]="modalHeader | translate"
+    [message]="modalMessage | translate"
   />
 
   <div class="mb-4 ml-auto max-w-3xs">
-    <app-primary-button value="Create Role" routerLink="/roles/create-role" />
+    <app-primary-button
+      [value]="'roles.actions.create' | translate"
+      routerLink="/roles/create-role"
+    />
   </div>
   <div class="relative overflow-x-auto rounded-lg bg-white shadow-md">
     <app-roles-table [roles]="roles" (deleteRole)="onRoleDeleteRequest($event)" />

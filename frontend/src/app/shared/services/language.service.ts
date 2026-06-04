@@ -52,6 +52,18 @@ export class LanguageService {
   }
 
   /**
+   * Creates a warning toast with the provided key to be translated
+   * @param key The key to be used for translation
+   * @param params (Optional) Any additional params for translation
+   */
+  toastWarning(key: string, params?: object): void {
+    this.translate
+      .stream(key, params)
+      .pipe(take(1))
+      .subscribe((msg) => toast.warning(msg));
+  }
+
+  /**
    * Translate a key based on the current language
    * @param key The key to be used for translation
    * @param params (Optional) Any additional params for translation
