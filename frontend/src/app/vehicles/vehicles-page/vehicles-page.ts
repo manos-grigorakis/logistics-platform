@@ -2,14 +2,15 @@ import { Component, inject, OnInit } from '@angular/core';
 import { VehiclesService } from '../vehicles.service';
 import { VehicleResponse } from '../models/vehicle-response';
 import { VehiclesTable } from '../vehicles-table/vehicles-table';
-import { toast } from 'ngx-sonner';
 import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
 import { RoundedIconButton } from '../../shared/forms/rounded-icon-button/rounded-icon-button';
 import { RouterLink } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
+import { LanguageService } from '../../shared/services/language.service';
 
 @Component({
   selector: 'app-vehicles-page',
-  imports: [VehiclesTable, LoadingSpinner, RoundedIconButton, RouterLink],
+  imports: [VehiclesTable, LoadingSpinner, RoundedIconButton, RouterLink, TranslatePipe],
   templateUrl: './vehicles-page.html',
   styleUrl: './vehicles-page.css',
 })
@@ -24,6 +25,7 @@ export class VehiclesPage implements OnInit {
 
   // Services
   private vehiclesService = inject(VehiclesService);
+  private languageService = inject(LanguageService);
 
   ngOnInit(): void {
     this.fetchVehicles();
@@ -36,17 +38,17 @@ export class VehiclesPage implements OnInit {
       next: () => {
         this.isVehicleDeleted = false;
         this.vehicles = this.vehicles?.filter((v) => v.id !== id);
-        toast.success('Vehicle deleted successfully');
+        this.languageService.toastSuccess('vehicles.messages.success-deletion');
       },
       error: (err) => {
         this.isVehicleDeleted = false;
 
         if (err.status === 404) {
-          toast.error('Vehicle doesnt exist');
+          this.languageService.toastError('vehicles.messages.not-found');
         } else if (err.status === 500) {
-          toast.error('Server error. Please try again');
+          this.languageService.toastError('common.errors.server');
         } else {
-          toast.error('An error occurred. Please try again');
+          this.languageService.toastError('common.errors.generic');
         }
       },
     });
@@ -69,9 +71,9 @@ export class VehiclesPage implements OnInit {
         this.isLoading = false;
 
         if (err.status === 500) {
-          this.errorMessage = 'Server error. Please try again';
+          this.errorMessage = 'common.errors.server';
         } else {
-          this.errorMessage = 'An error occurred. Please try again';
+          this.errorMessage = 'common.errors.generic';
         }
       },
     });

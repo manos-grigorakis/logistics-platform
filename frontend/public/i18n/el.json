@@ -8,6 +8,9 @@
       "submit": "Υποβολή",
       "cancel": "Ακύρωση",
       "save": "Αποθήκευση",
+      "edit": "Επεξεργασία",
+      "delete": "Διαγραφή",
+      "action": "Ενέργεια",
       "back-to-login": "Επιστροφή στη Σύνδεση",
       "back-to-dashboard": "Επιστροφή στο Dashboard"
     },
@@ -18,8 +21,10 @@
     "validation": {
       "required": "Το πεδίο {{field}} είναι υποχρεωτικό",
       "email": "Παρακαλώ εισάγετε έγκυρη διεύθυνση email",
-      "invalid-format": "Το πεδίο {{field}} έχει μη έγκυρη μορφή"
-    }
+      "invalid-format": "Το πεδίο {{field}} έχει μη έγκυρη μορφή",
+      "8-chars-long": "πρέπει να είναι 8 χαρακτήρες"
+    },
+    "created-at": "Ημ. Δημιουργίας"
   },
 
   "nav": {
@@ -121,6 +126,10 @@
       "disputed": "Σε διαφωνία",
       "outstanding": "Εκκρεμής",
       "partially_paid": "Μερικώς Πληρωμένη"
+    },
+    "vehicle-types": {
+      "truck": "Φορτηγό",
+      "trailer": "Ρυμουλκούμενο"
     }
   },
 
@@ -135,5 +144,28 @@
     "quotes-label": "Προσφορές",
     "shipments-label": "Μεταφορές",
     "invoices-label": "Τιμολόγια"
+  },
+
+  "vehicles": {
+    "vehicle": "Όχημα",
+    "empty-state": "Δεν βρέθηκαν οχήματα",
+    "fields": {
+      "brand": "Μάρκα",
+      "type": "Τύπος",
+      "plate-number": "Αριθμός Κυκλοφορίας",
+      "choose-vehicle-type": "Επιλέξτε τύπο οχήματος"
+    },
+    "actions": {
+      "create": "Δημιουργία Οχήματος",
+      "update": "Ενημέρωση Οχήματος"
+    },
+    "messages": {
+      "type-required": "Ο τύπος είναι υποχρεωτικός",
+      "success-creation": "Το όχημα δημιουργήθηκε με επιτυχία",
+      "success-update": "Το όχημα ενημερώθηκε με επιτυχία",
+      "success-deletion": "Το όχημα διαγράφηκε με επιτυχία",
+      "exists-by-plate": "Υπάρχει ήδη όχημα με αριθμό κυκλοφορίας: {{plate}}",
+      "not-found": "Το όχημα δεν βρέθηκε"
+    }
   }
 }

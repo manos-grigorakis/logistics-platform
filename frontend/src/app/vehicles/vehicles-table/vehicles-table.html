@@ -4,10 +4,12 @@
   }
   <thead class="text-body bg-secondary-700 text-sm text-white">
     <tr>
-      <th scope="col" class="py-3 pl-4 font-medium">Vehicle</th>
-      <th scope="col" class="px-2 py-3 font-medium">Type</th>
-      <th scope="col" class="px-2 py-3 font-medium">Plate Number</th>
-      <th scope="col" class="px-2 py-3 font-medium">Action</th>
+      <th scope="col" class="py-3 pl-4 font-medium">{{ 'vehicles.vehicle' | translate }}</th>
+      <th scope="col" class="px-2 py-3 font-medium">{{ 'vehicles.fields.type' | translate }}</th>
+      <th scope="col" class="px-2 py-3 font-medium">
+        {{ 'vehicles.fields.plate-number' | translate }}
+      </th>
+      <th scope="col" class="px-2 py-3 font-medium">{{ 'common.actions.action' | translate }}</th>
     </tr>
   </thead>
   <tbody>
@@ -47,7 +49,8 @@
             <div class="flex flex-col gap-0.5">
               <span class="text-secondary-800 font-semibold">{{ vehicle.brand }}</span>
               <span class="text-secondary-500 text-xs"
-                >Created: {{ vehicle.createdAt | date }}</span
+                >{{ 'common.created-at' | translate }}:
+                {{ vehicle.createdAt | date: 'dd/MM/yyyy' }}</span
               >
             </div>
           </div>
@@ -56,7 +59,7 @@
           <span
             class="rounded border px-2 capitalize"
             [ngClass]="applyVehicleTypeBadgeColor(vehicle.type)"
-            >{{ vehicle.type }}</span
+            >{{ 'metadata.vehicle-types.' + vehicle.type.toLowerCase() | translate }}</span
           >
         </td>
         <td class="px-2 py-4">{{ vehicle.plate }}</td>
@@ -67,12 +70,12 @@
             <a
               [routerLink]="['edit-vehicle', vehicle.id]"
               class="text-info-dark font-medium hover:underline"
-              >Edit</a
+              >{{ 'common.actions.edit' | translate }}</a
             >
             <a
               (click)="onDeleteVehicleClick(vehicle.id)"
               class="text-danger cursor-pointer font-medium hover:underline"
-              >Delete</a
+              >{{ 'common.actions.delete' | translate }}</a
             >
           </div>
         </td>
@@ -85,7 +88,7 @@
               errorMessage
             }}</span>
           } @else {
-            There are no vehicles
+            {{ 'vehicles.empty-state' | translate }}
           }
         </td>
       </tr>

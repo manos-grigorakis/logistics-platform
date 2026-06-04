@@ -3,12 +3,13 @@ import { VehicleForm } from '../vehicle-form/vehicle-form';
 import { VehiclesService } from '../vehicles.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { VehicleResponse } from '../models/vehicle-response';
-import { toast } from 'ngx-sonner';
 import { VehicleRequest } from '../models/vehicle-request';
+import { TranslatePipe } from '@ngx-translate/core';
+import { LanguageService } from '../../shared/services/language.service';
 
 @Component({
   selector: 'app-edit-vehicle',
-  imports: [VehicleForm],
+  imports: [VehicleForm, TranslatePipe],
   templateUrl: './edit-vehicle.html',
   styleUrl: './edit-vehicle.css',
 })
@@ -17,16 +18,17 @@ export class EditVehicle implements OnInit {
   public vehicle?: VehicleResponse;
   public errorMessage?: string;
 
-  private vehiclesService = inject(VehiclesService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private vehiclesService = inject(VehiclesService);
+  private languageService = inject(LanguageService);
   private id?: number;
 
   ngOnInit(): void {
     let id = this.route.snapshot.paramMap.get('id');
 
     if (!id) {
-      toast.error('Vehicle doesnt exist');
+      this.languageService.toastError('vehicles.messages.not-found');
       this.router.navigate(['vehicles']);
       return;
     }
@@ -43,20 +45,23 @@ export class EditVehicle implements OnInit {
     this.vehiclesService.updateVehicle(this.id, payload).subscribe({
       next: () => {
         this.isLoading = false;
-        toast.success('Vehicle updated successfully');
+        this.languageService.toastSuccess('vehicles.messages.success-update');
         this.router.navigate(['vehicles']);
       },
       error: (err) => {
         this.isLoading = false;
 
         if (err.status === 404) {
-          this.errorMessage = "Vehicle doesn't exists";
+          this.errorMessage = 'vehicles.messages.not-found';
         } else if (err.status === 409) {
-          this.errorMessage = `Vehicle already exists with plate number: ${payload.plate}`;
+          this.errorMessage = this.languageService.translateKey(
+            'vehicles.messages.exists-by-plate',
+            { plate: payload.plate },
+          );
         } else if (err.status === 500) {
-          this.errorMessage = 'Server error. Please try again';
+          this.errorMessage = 'common.errors.server';
         } else {
-          this.errorMessage = 'An error occured. Please try again';
+          this.errorMessage = 'common.errors.generic';
         }
       },
     });
@@ -69,12 +74,12 @@ export class EditVehicle implements OnInit {
       },
       error: (err) => {
         if (err.status === 404) {
-          toast.error('Vehicle doesnt exist');
+          this.languageService.toastError('vehicles.messages.not-found');
           this.router.navigate(['vehicles']);
         } else if (err.status === 500) {
-          toast.error('Server error. Please try again');
+          this.languageService.toastError('common.errors.server');
         } else {
-          toast.error('An error occurred. Please try again');
+          this.languageService.toastError('common.errors.generic');
         }
       },
     });

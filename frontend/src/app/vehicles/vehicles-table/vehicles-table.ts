@@ -4,10 +4,11 @@ import { VehicleResponse } from '../models/vehicle-response';
 import { RouterLink } from '@angular/router';
 import { NgClass, DatePipe } from '@angular/common';
 import { NgIcon } from '@ng-icons/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-vehicles-table',
-  imports: [LoadingSpinner, RouterLink, NgClass, DatePipe, NgIcon],
+  imports: [LoadingSpinner, RouterLink, NgClass, DatePipe, NgIcon, TranslatePipe],
   templateUrl: './vehicles-table.html',
   styleUrl: './vehicles-table.css',
 })

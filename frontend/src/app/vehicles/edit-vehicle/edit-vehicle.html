@@ -2,6 +2,6 @@
   formUsage="update"
   [isLoading]="isLoading"
   [vehicleData]="vehicle"
-  [errorMessage]="errorMessage"
+  [errorMessage]="errorMessage | translate"
   (onSubmit)="onSubmitForm($event)"
 />

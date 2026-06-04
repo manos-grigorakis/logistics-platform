@@ -8,6 +8,9 @@
       "submit": "Submit",
       "cancel": "Cancel",
       "save": "Save",
+      "edit": "Edit",
+      "delete": "Delete",
+      "action": "Action",
       "back-to-login": "Back to Login",
       "back-to-dashboard": "Back to Dashboard"
     },
@@ -18,8 +21,10 @@
     "validation": {
       "required": "{{field}} is required",
       "email": "Invalid email address",
-      "invalid-format": "{{field}} has an invalid format"
-    }
+      "invalid-format": "{{field}} has an invalid format",
+      "8-chars-long": "must be 8 characters long"
+    },
+    "created-at": "Created At"
   },
 
   "nav": {
@@ -120,6 +125,10 @@
       "disputed": "Disputed",
       "outstanding": "Outstanding",
       "partially_paid": "Partially Paid"
+    },
+    "vehicle-types": {
+      "truck": "Truck",
+      "trailer": "Trailer"
     }
   },
 
@@ -134,5 +143,28 @@
     "quotes-label": "Quotes",
     "shipments-label": "Shipments",
     "invoices-label": "Invoices"
+  },
+
+  "vehicles": {
+    "vehicle": "Vehicle",
+    "empty-state": "There are no vehicles",
+    "fields": {
+      "brand": "Brand",
+      "type": "Type",
+      "plate-number": "Plate Number",
+      "choose-vehicle-type": "Choose vehicle type"
+    },
+    "actions": {
+      "create": "Create Vehicle",
+      "update": "Update Vehicle"
+    },
+    "messages": {
+      "type-required": "Type is required",
+      "success-creation": "Vehicle created successfully",
+      "success-update": "Vehicle updated successfully",
+      "success-deletion": "Vehicle deleted successfully",
+      "exists-by-plate": "Vehicle already exists with plate number: {{plate}}",
+      "not-found": "Vehicle doesn't exist"
+    }
   }
 }
