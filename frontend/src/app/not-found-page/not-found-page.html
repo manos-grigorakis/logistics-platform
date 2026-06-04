@@ -1,13 +1,19 @@
-<section class="flex items-center justify-center min-h-screen text-center px-20">
+<section class="flex min-h-screen items-center justify-center px-20 text-center">
   <div>
     <h2 class="text-5xl font-bold">404</h2>
-    <h3 class="text-2xl font-medium mt-1 mb-2">Page not found</h3>
-    <p>The page you are trying to access does not exist or has been moved.</p>
-    <div class="mt-6 max-w-xs mx-auto">
+    <h3 class="mt-1 mb-2 text-2xl font-medium">{{ 'not-found-page.title' | translate }}</h3>
+    <p>{{ 'not-found-page.title' | translate }}</p>
+    <div class="mx-auto mt-6 max-w-xs">
       @if (!authService.isAuthenticated()) {
-      <app-primary-button value="Back to Login" routerLink="/login"></app-primary-button>
+        <app-primary-button
+          [value]="'common.actions.back-to-login' | translate"
+          routerLink="/login"
+        />
       } @else {
-      <app-primary-button value="Back to Dashboard" routerLink="/dashboard"></app-primary-button>
+        <app-primary-button
+          [value]="'common.actions.back-to-dashboard' | translate"
+          routerLink="/dashboard"
+        />
       }
     </div>
   </div>

@@ -7,7 +7,9 @@
     "actions": {
       "submit": "Submit",
       "cancel": "Cancel",
-      "save": "Save"
+      "save": "Save",
+      "back-to-login": "Back to Login",
+      "back-to-dashboard": "Back to Dashboard"
     },
     "errors": {
       "server": "Server error. Please try again later",
@@ -53,5 +55,13 @@
     },
     "password": "Password",
     "back-to-login": "Back to Login"
+  },
+  "not-found-page": {
+    "title": "Page not found",
+    "subtitle": "The page you are trying to access does not exist or has been moved."
+  },
+  "forbidden-page": {
+    "title": "Forbidden Page",
+    "subtitle": "You don't have permission to this page"
   }
 }
