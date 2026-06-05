@@ -9,11 +9,12 @@ import { Pagination } from '../../../../shared/ui/pagination/pagination';
 import { ActivatedRoute } from '@angular/router';
 import { NgClass } from '@angular/common';
 import { MetadataService } from '../../../../metadata/metadata.service';
-import { debounceTime, distinctUntilChanged, Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Subject, Subscription, take } from 'rxjs';
 import { ShipmentStatus } from '../../../../shipments/models/shipment-status';
 import { ShipmentParams } from '../../../../shipments/models/shipment-params';
 import { Modal } from '../../../../shared/ui/modal/modal';
-import { toast } from 'ngx-sonner';
+import { TranslatePipe } from '@ngx-translate/core';
+import { LanguageService } from '../../../../shared/services/language.service';
 
 @Component({
   selector: 'app-customer-tab-shipments',
@@ -25,25 +26,21 @@ import { toast } from 'ngx-sonner';
     Pagination,
     NgClass,
     Modal,
+    TranslatePipe,
   ],
   templateUrl: './customer-tab-shipments.html',
   styleUrl: './customer-tab-shipments.css',
 })
 export class CustomerTabShipments implements OnInit, OnDestroy {
-  private shipmentsService = inject(ShipmentsService);
-  private metadataService = inject(MetadataService);
-  private route = inject(ActivatedRoute);
-  private customerId?: number;
-
   public isLoading: boolean = false;
   public errorMessage?: string = undefined;
   public shipments: Shipment[] = [];
 
   // Filters | Sorting | Search
-  public activeSortLabel: string = 'Sort by';
-  public activeFilterLabel: string = 'Filter by';
-  public filterLabel: string = 'Filter by';
-  public sortLabel: string = 'Sort by';
+  public activeSortLabel: string = '';
+  public activeFilterLabel: string = '';
+  public filterLabel: string = '';
+  public sortLabel: string = '';
   private searchChanged$ = new Subject<string>();
   private subSearch$?: Subscription;
   private currentParams: ShipmentParams = {
@@ -70,6 +67,14 @@ export class CustomerTabShipments implements OnInit, OnDestroy {
   private shipmentsToShow: number = 5;
   public pageSize: number = this.shipmentsToShow;
 
+  private route = inject(ActivatedRoute);
+  private customerId?: number;
+
+  // Services
+  private shipmentsService = inject(ShipmentsService);
+  private metadataService = inject(MetadataService);
+  private languageService = inject(LanguageService);
+
   ngOnInit(): void {
     let tempId = this.route.parent?.snapshot.paramMap.get('id');
     if (!tempId) return;
@@ -86,6 +91,8 @@ export class CustomerTabShipments implements OnInit, OnDestroy {
     this.subSearch$ = this.searchChanged$
       .pipe(debounceTime(400), distinctUntilChanged())
       .subscribe((value) => this.onSearch(value));
+
+    this.setLabels();
   }
 
   ngOnDestroy(): void {
@@ -140,23 +147,23 @@ export class CustomerTabShipments implements OnInit, OnDestroy {
   public onSort(value: string): void {
     switch (value) {
       case 'sort-all':
-        this.sortLabel = 'Sort by';
+        this.sortLabel = this.languageService.translateKey('common.filters.sort-by');
         this.fetchShipmentsByCustomer({ page: 0, sortBy: undefined, sortDirection: undefined });
         break;
       case 'sort-asc-by-number':
-        this.sortLabel = 'Number (A-Z)';
+        this.sortLabel = `${this.languageService.translateKey('common.fields.number')} (A-Z)`;
         this.fetchShipmentsByCustomer({ page: 0, sortBy: 'number', sortDirection: 'asc' });
         break;
       case 'sort-desc-by-number':
-        this.sortLabel = 'Number (Z-A)';
+        this.sortLabel = `${this.languageService.translateKey('common.fields.number')} (Z-A)`;
         this.fetchShipmentsByCustomer({ page: 0, sortBy: 'number', sortDirection: 'desc' });
         break;
       case 'sort-asc-by-pickup':
-        this.sortLabel = 'Pickup (A-Z)';
+        this.sortLabel = `${this.languageService.translateKey('shipments.fields.pickup')} (A-Z)`;
         this.fetchShipmentsByCustomer({ page: 0, sortBy: 'pickup', sortDirection: 'asc' });
         break;
       case 'sort-desc-by-pickup':
-        this.sortLabel = 'Pickup (Z-A)';
+        this.sortLabel = `${this.languageService.translateKey('shipments.fields.pickup')} (Z-A)`;
         this.fetchShipmentsByCustomer({ page: 0, sortBy: 'pickup', sortDirection: 'desc' });
         break;
     }
@@ -164,7 +171,7 @@ export class CustomerTabShipments implements OnInit, OnDestroy {
 
   public onFilter(value: string): void {
     if (value === 'filter-by-all') {
-      this.filterLabel = 'Filter by';
+      this.filterLabel = this.languageService.translateKey('common.filters.filter-by');
       this.fetchShipmentsByCustomer({ page: 0, status: undefined, sortDirection: undefined });
       return;
     }
@@ -207,9 +214,9 @@ export class CustomerTabShipments implements OnInit, OnDestroy {
         this.isLoading = false;
 
         if (err.status === 500) {
-          this.errorMessage = 'Server error. Please try again';
+          this.errorMessage = 'common.errors.server';
         } else {
-          this.errorMessage = 'An error occurred. Please try again';
+          this.errorMessage = 'common.errors.generic';
         }
       },
     });
@@ -229,8 +236,14 @@ export class CustomerTabShipments implements OnInit, OnDestroy {
     let shipment: Shipment = event.shipment;
     let newStatus = event.newStatus;
 
-    this.confirmShipmentStatusModalMessage = `You are about to update the status of shipment ${shipment.number}. 
-    This action cannot be undone. Current: ${shipment.status.label.toUpperCase()} → New: ${newStatus.toUpperCase()}`;
+    this.confirmShipmentStatusModalMessage = this.languageService.translateKey(
+      'customers.messages.shipments.modal.message',
+      {
+        number: shipment.number,
+        currentStatus: shipment.status.label.toUpperCase(),
+        newStatus: newStatus.toUpperCase(),
+      },
+    );
 
     this.isShipmentStatusConfirmModalOpen = true;
   }
@@ -259,12 +272,14 @@ export class CustomerTabShipments implements OnInit, OnDestroy {
 
     this.shipmentsService.updateShipmentStatus(id, payload).subscribe({
       next: () => {
-        toast.success('Shipment status updated successfully');
+        this.languageService.toastSuccess(
+          'customers.messages.shipments.actions.success-status-update',
+        );
         this.fetchShipmentsByCustomer();
       },
       error: (err) => {
         if (err.status === 500) {
-          toast.error('Server error. Please try again');
+          this.languageService.toastError('common.errors.server');
         }
 
         let errorCode = err.error.errorCode;
@@ -274,34 +289,50 @@ export class CustomerTabShipments implements OnInit, OnDestroy {
 
           switch (errorCode) {
             case 'FINALIZED_STATUS':
-              this.changeStatusError =
-                'This shipment has already been finalized and its status can no longer be changed.';
+              this.changeStatusError = 'customers.messages.shipments.errors.finalized-status';
               break;
             case 'SHIPMENT_CARGOS_REQUIRED':
-              this.changeStatusError =
-                'This shipment cannot be dispatched because no cargo items have been added yet. Please add at least one cargo item before dispatching.';
+              this.changeStatusError = 'customers.messages.shipments.errors.cargo-required';
               break;
             case 'DRIVER_REQUIRED':
-              this.changeStatusError =
-                'A driver must be assigned before this shipment can be dispatched.';
+              this.changeStatusError = 'customers.messages.shipments.errors.driver-required';
               break;
             case 'TRUCK_REQUIRED':
-              this.changeStatusError =
-                'A truck must be assigned before this shipment can be dispatched.';
+              this.changeStatusError = 'customers.messages.shipments.errors.truck-required';
               break;
             case 'TRAILER_REQUIRED':
-              this.changeStatusError =
-                'A trailer must be assigned before this shipment can be dispatched.';
+              this.changeStatusError = 'customers.messages.shipments.errors.trailer-required';
               break;
             case 'INVALID_TRANSITION':
-              this.changeStatusError =
-                'The selected status transition is not allowed for this shipment.';
+              this.changeStatusError = 'customers.messages.shipments.errors.invalid-transition';
               break;
             default:
-              this.changeStatusError = 'Unable to update shipment status. Please try again.';
+              this.changeStatusError = 'customers.messages.shipments.errors.default-status';
           }
         }
       },
     });
+  }
+
+  private setLabels(): void {
+    // Filter
+    this.languageService
+      .translateKeyAsync('common.filters.filter-by')
+      .pipe(take(1))
+      .subscribe((val) => (this.activeFilterLabel = val));
+    this.languageService
+      .translateKeyAsync('common.filters.filter-by')
+      .pipe(take(1))
+      .subscribe((val) => (this.filterLabel = val));
+
+    // Sort
+    this.languageService
+      .translateKeyAsync('common.filters.sort-by')
+      .pipe(take(1))
+      .subscribe((val) => (this.activeSortLabel = val));
+    this.languageService
+      .translateKeyAsync('common.filters.sort-by')
+      .pipe(take(1))
+      .subscribe((val) => (this.sortLabel = val));
   }
 }

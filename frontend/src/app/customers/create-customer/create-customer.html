@@ -1,6 +1,6 @@
 <app-customers-form
   formUsage="create"
   [isLoading]="isLoading"
-  [errorMessage]="errorMessage"
+  [errorMessage]="errorMessage | translate"
   (onFormSubmit)="onSubmit($event)"
 />

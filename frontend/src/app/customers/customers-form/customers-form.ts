@@ -7,10 +7,18 @@ import { PrimaryButton } from '../../shared/ui/primary-button/primary-button';
 import { MetadataService } from '../../metadata/metadata.service';
 import { Customer } from '../models/customer';
 import { ErrorAlert } from '../../shared/ui/error-alert/error-alert';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-customers-form',
-  imports: [LoadingSpinner, MainInput, ReactiveFormsModule, PrimaryButton, ErrorAlert],
+  imports: [
+    LoadingSpinner,
+    MainInput,
+    ReactiveFormsModule,
+    PrimaryButton,
+    ErrorAlert,
+    TranslatePipe,
+  ],
   templateUrl: './customers-form.html',
   styleUrl: './customers-form.css',
 })
@@ -153,9 +161,9 @@ export class CustomersForm implements OnInit {
         this.loadingCustomerType = false;
 
         if (err.status === 500) {
-          this.customerTypesError = 'Server error. Please try again';
+          this.customerTypesError = 'common.errors.server';
         } else {
-          this.customerTypesError = 'An error occured. Please try again';
+          this.customerTypesError = 'common.errors.generic';
         }
       },
     });

@@ -1,9 +1,9 @@
 <div class="mx-auto mt-6 max-w-xl rounded-lg bg-white p-6 shadow-lg shadow-black/10">
   <h2 class="mb-4 text-center text-3xl font-semibold">
     @if (formUsage === 'create') {
-      Create a Customer
+      {{ 'customers.actions.create' | translate }}
     } @else {
-      Update Customer
+      {{ 'customers.actions.update' | translate }}
     }
   </h2>
 
@@ -18,7 +18,7 @@
   </div>
   <div class="mb-5">
     @if (customerTypesError) {
-      <app-error-alert [errorMessage]="customerTypesError" />
+      <app-error-alert [errorMessage]="customerTypesError | translate" />
     }
   </div>
 
@@ -26,32 +26,43 @@
     <div class="mb-6">
       <app-main-input
         formControlName="companyName"
-        label="Company Name"
-        placeholder="Company Name"
+        [label]="'customers.fields.company-name' | translate"
+        [placeholder]="'customers.fields.placeholders.company-name' | translate"
         type="text"
         [showRequiredStar]="true"
-      ></app-main-input>
+      />
     </div>
 
     <div class="mb-6">
-      <label for="role"><span class="text-danger mr-1 text-sm">*</span>Customer Type</label>
+      <label for="role"
+        ><span class="text-danger mr-1 text-sm">*</span
+        >{{ 'customers.fields.customer-type' | translate }}</label
+      >
       <select
         formControlName="customerType"
         id="role"
         class="focus:ring-primary-200 w-full rounded border border-gray-300 px-4 py-2 text-gray-700 focus:ring focus:outline-none"
       >
-        <option [ngValue]="null" disabled>Select a customer type</option>
+        <option [ngValue]="null" disabled>
+          {{ 'customers.messages.select-customer-type' | translate }}
+        </option>
 
         @for (customerType of customerTypes; track $index) {
-          <option [ngValue]="customerType">{{ customerType }}</option>
+          <option [ngValue]="customerType">
+            {{ 'metadata.customers-types.' + customerType.toLowerCase() | translate }}
+          </option>
         } @empty {
-          <option disabled>No customer types available</option>
+          <option disabled>
+            {{ 'customers.messages.no-customer-types-availble' | translate }}
+          </option>
         }
       </select>
       @if (customerType.invalid && (customerType.dirty || customerType.touched)) {
         <div>
           @if (customerType.hasError('required')) {
-            <span class="text-danger ml-1 text-sm">Customer Type is required</span>
+            <span class="text-danger ml-1 text-sm">{{
+              'customers.messages.customer-type-required' | translate
+            }}</span>
           }
         </div>
       }
@@ -60,59 +71,65 @@
       <div class="mb-6">
         <app-main-input
           formControlName="tin"
-          label="TIN"
-          placeholder="TIN"
+          [label]="'customers.fields.tin' | translate"
+          [placeholder]="'customers.fields.placeholders.tin' | translate"
           type="text"
-          patternErrorMessage="must be 9 digits"
+          [patternErrorMessage]="'common.validation.digits-long' | translate: { number: 9 }"
           [showRequiredStar]="true"
-        ></app-main-input>
+        />
       </div>
     }
     <div class="mb-6 flex flex-col gap-6 sm:flex-row sm:gap-8">
       <app-main-input
         formControlName="firstName"
-        label="First Name"
-        placeholder="First Name"
+        [label]="'common.fields.first-name' | translate"
+        [placeholder]="'common.fields.placeholders.first-name' | translate"
         type="text"
         [showRequiredStar]="true"
-      ></app-main-input>
+      />
       <app-main-input
         formControlName="lastName"
-        label="Last Name"
-        placeholder="Last Name"
+        [label]="'common.fields.last-name' | translate"
+        [placeholder]="'common.fields.placeholders.last-name' | translate"
         type="text"
         [showRequiredStar]="true"
-      ></app-main-input>
+      />
     </div>
     <div class="mb-6">
       <app-main-input
         formControlName="email"
         label="Email"
-        placeholder="Email"
+        [placeholder]="'common.fields.placeholders.email' | translate"
         type="email"
-      ></app-main-input>
+      />
     </div>
 
     <div class="mb-6">
       <app-main-input
         formControlName="location"
-        label="Location"
-        placeholder="Location"
+        [label]="'customers.fields.location' | translate"
+        [placeholder]="'customers.fields.placeholders.location' | translate"
         type="text"
-      ></app-main-input>
+      />
     </div>
     <div class="mb-6">
       <app-main-input
         formControlName="phone"
-        label="Phone"
-        placeholder="Phone"
+        [label]="'common.fields.phone' | translate"
+        [placeholder]="'common.fields.placeholders.phone' | translate"
         type="text"
-      ></app-main-input>
+      />
     </div>
     @if (formUsage === 'create') {
-      <app-primary-button value="Create Customer" [isDisabled]="isLoading"></app-primary-button>
+      <app-primary-button
+        [value]="'customers.actions.create' | translate"
+        [isDisabled]="isLoading"
+      />
     } @else {
-      <app-primary-button value="Update Customer" [isDisabled]="isLoading"></app-primary-button>
+      <app-primary-button
+        [value]="'customers.actions.update' | translate"
+        [isDisabled]="isLoading"
+      />
     }
   </form>
 </div>

@@ -1,28 +1,36 @@
 @if (customer) {
   <div class="flex flex-col gap-4">
     <!-- Business Details -->
-    <div class="flex flex-col p-4 border-l-4 border-blue-500 rounded-md bg-gray-50">
-      <h4 class="mb-2 text-lg font-medium">Business Details</h4>
+    <div class="flex flex-col rounded-md border-l-4 border-blue-500 bg-gray-50 p-4">
+      <h4 class="mb-2 text-lg font-medium">{{ 'customers.business-details' | translate }}</h4>
       <div class="flex flex-col gap-2">
         <div class="flex flex-col gap-0.5">
-          <span class="text-sm font-light text-gray-500">Company Name</span>
+          <span class="text-sm font-light text-gray-500">{{
+            'customers.fields.company-name' | translate
+          }}</span>
           <span>{{ customer.companyName }}</span>
         </div>
         <div class="flex flex-col gap-0.5">
-          <span class="text-sm font-light text-gray-500">Location</span>
+          <span class="text-sm font-light text-gray-500">{{
+            'customers.fields.location' | translate
+          }}</span>
           <span>{{ customer.location }}</span>
         </div>
         <div class="h-0.5 w-full rounded bg-gray-200"></div>
         <div class="mt-2">
           <span class="mt-0.5 mb-0.5 flex items-center gap-2 text-sm font-light"
-            ><ng-icon name="lucideCalendar" size="16" />Created
-            {{ customer.createdAt | date }}</span
+            ><ng-icon name="lucideCalendar" size="16" />{{
+              'common.fields.created-at' | translate
+            }}
+            {{ customer.createdAt | date: 'dd/MM/yyyy' }}</span
           >
 
           @if (customer.updatedAt) {
             <span class="mt-0.5 flex items-center gap-2 text-sm font-light"
-              ><ng-icon name="lucideCalendar" size="16" />Updated
-              {{ customer.updatedAt | date }}
+              ><ng-icon name="lucideCalendar" size="16" />{{
+                'common.fields.updated-at' | translate
+              }}
+              {{ customer.updatedAt | date: 'dd/MM/yyyy' }}
             </span>
           }
         </div>
@@ -30,8 +38,8 @@
     </div>
 
     <!-- Contact info -->
-    <div class="flex flex-col p-4 border-l-4 border-blue-500 rounded-md bg-gray-50">
-      <h4 class="mb-2 text-lg font-medium">Contact Information</h4>
+    <div class="flex flex-col rounded-md border-l-4 border-blue-500 bg-gray-50 p-4">
+      <h4 class="mb-2 text-lg font-medium">{{ 'customers.contact-information' | translate }}</h4>
       <span class="flex items-center gap-2"
         ><ng-icon name="lucideUser" size="16" /> {{ customer.firstName }}
         {{ customer.lastName }}</span

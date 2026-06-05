@@ -31,6 +31,7 @@
       "email": "Invalid email address",
       "invalid-format": "{{field}} has an invalid format",
       "8-chars-long": "must be 8 characters long",
+      "digits-long": "must be {{number}} digits",
       "supported-files": "Supported files",
       "max-file-size": "Max File Size",
       "file-too-large": "File is too large",
@@ -40,11 +41,26 @@
       "search": "Search",
       "sort-by": "Sort By",
       "filter-by": "Filter By",
-      "all": "All"
+      "all": "All",
+      "search-by-number": "Search by Number"
     },
     "fields": {
+      "first-name": "First Name",
+      "last-name": "Last Name",
       "status": "Status",
-      "created-at": "Created At"
+      "number": "Number",
+      "phone": "Phone",
+      "date": "Date",
+      "created-at": "Created At",
+      "updated-at": "Updated At",
+      "issue-date": "Issue Date",
+      "unassigned": "Unassigned",
+      "placeholders": {
+        "first-name": "e.g. John",
+        "last-name": "e.g. Doe",
+        "email": "e.g. john.doe@example.com",
+        "phone": "e.g. +30 210 123 4567"
+      }
     },
     "pagination": {
       "previous": "Previous",
@@ -59,6 +75,11 @@
       "errors": {
         "preview": "PDF cannot be previewed"
       }
+    },
+    "messages": {
+      "from": "From",
+      "to": "To",
+      "cannot-undone": "This action is permanent and cannot be undone"
     }
   },
 
@@ -262,6 +283,83 @@
         "title": "Delete Selected Role",
         "message": "This action is permanent and cannot be undone"
       }
+    }
+  },
+
+  "customers": {
+    "empty-state": "There are no customers",
+    "business-details": "Business Details",
+    "contact-information": "Contact Information",
+    "search-by-tin-or-company-name": "Search by TIN or Company Name",
+    "fields": {
+      "tin": "TIN",
+      "company-name": "Company Name",
+      "customer-type": "Customer Type",
+      "location": "Location",
+      "placeholders": {
+        "tin": "e.g. 123456789",
+        "company-name": "e.g. Acme Logistics",
+        "location": "e.g. Athens, Attiki"
+      }
+    },
+    "actions": {
+      "create": "Create Customer",
+      "update": "Update Customer",
+      "update-quote-status": "Update quote status"
+    },
+    "messages": {
+      "select-customer-type": "Select a customer type",
+      "no-customer-types-availble": "No customer types available",
+      "customer-type-required": "Customer Type is required",
+      "success-creation": "Customer created successfully",
+      "success-update": "Customer updated successfully",
+      "delete-customers-title": "Delete Selected Customer(s)",
+      "success-deletion": "Customer(s) deleted successfully",
+      "exist-by-tin": "Customer with TIN: {{tin}} already exists",
+      "exist-by-company-name": "Customer with Company Name: {{companyName}} already exist",
+      "invalid-role-id": "Invalid role ID",
+      "not-found": "Customer not found",
+      "not-found-with-id": "Customer with id: {{id}} not found",
+      "quotes": {
+        "empty-state": "No quotes yet",
+        "not-found": "Quote not found",
+        "not-found-id": "Quote with id: {{id}} not exist",
+        "status-modal-message": "You are about to update the status of quote {{number}}. This action cannot be undone. Current {{currentStatus}} -> New: {{newStatus}}",
+        "success-status-update": "Quote status updated successfully",
+        "status-violation": "You can't update from {{currentStatus}} to {{desiredStatus}}"
+      },
+      "shipments": {
+        "empty-state": "No shipments yet",
+        "actions": {
+          "success-status-update": "Shipment status updated successfully"
+        },
+        "modal": {
+          "header-update": "Update Shipment Status",
+          "title": "Error Updating Shipment Status",
+          "message": "You are about to update the status of shipment {{number}}. This action cannot be undone. Current: {{currentStatus}} -> New: {{newStatus}}"
+        },
+        "errors": {
+          "default-status": "Unable to update shipment status. Please try again",
+          "finalized-status": "This shipment has already been finalized and its status can no longer be changed",
+          "cargo-required": "This shipment cannot be dispatched because no cargo items have been added yet. Please add at least one cargo item before dispatching",
+          "driver-required": "A driver must be assigned before this shipment can be dispatched.",
+          "truck-required": "A truck must be assigned before this shipment can be dispatched.",
+          "trailer-required": "A trailer must be assigned before this shipment can be dispatched.",
+          "invalid-transition": "The selected status transition is not allowed for this shipment."
+        }
+      }
+    }
+  },
+
+  "shipments": {
+    "fields": {
+      "pickup": "Pickup",
+      "driver": "Driver",
+      "truck-plate": "Truck Plate",
+      "trailer-plate": "Trailer Plate"
+    },
+    "filters": {
+      "search-by-shipment-number": "Search"
     }
   }
 }

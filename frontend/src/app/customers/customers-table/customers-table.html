@@ -5,12 +5,18 @@
   <thead class="text-body bg-secondary-700 text-sm text-white">
     <tr>
       <th scope="col" class="p-4"></th>
-      <th scope="col" class="px-2 py-3 font-medium">TIN</th>
-      <th scope="col" class="px-2 py-3 font-medium">Company Name</th>
+      <th scope="col" class="px-2 py-3 font-medium">{{ 'customers.fields.tin' | translate }}</th>
+      <th scope="col" class="px-2 py-3 font-medium">
+        {{ 'customers.fields.company-name' | translate }}
+      </th>
       <th scope="col" class="truncate px-2 py-3 font-medium">Email</th>
-      <th scope="col" class="px-2 py-3 font-medium">Customer Type</th>
-      <th scope="col" class="px-2 py-3 font-medium">Location</th>
-      <th scope="col" class="px-2 py-3 font-medium">Action</th>
+      <th scope="col" class="px-2 py-3 font-medium">
+        {{ 'customers.fields.customer-type' | translate }}
+      </th>
+      <th scope="col" class="px-2 py-3 font-medium">
+        {{ 'customers.fields.location' | translate }}
+      </th>
+      <th scope="col" class="px-2 py-3 font-medium">{{ 'common.actions.action' | translate }}</th>
     </tr>
   </thead>
   <tbody>
@@ -44,8 +50,9 @@
           <span
             class="rounded border px-2"
             [ngClass]="customerTypeBadgeColor(customer.customerType)"
-            >{{ customer.customerType | titlecase }}</span
           >
+            {{ 'metadata.customers-types.' + customer.customerType.toLowerCase() | translate }}
+          </span>
         </td>
         <td class="px-2 py-4">{{ customer?.location || '-' }}</td>
 
@@ -53,7 +60,7 @@
           <a
             [routerLink]="['edit-customer', customer.id]"
             class="text-fg-brand font-medium hover:underline"
-            >Edit</a
+            >{{ 'common.actions.edit' | translate }}</a
           >
         </td>
       </tr>
@@ -62,10 +69,10 @@
         <td class="w-full py-4 text-center text-lg" colspan="7">
           @if (errorMessage) {
             <span class="bg-danger-light text-danger-dark border-danger rounded border px-2">{{
-              errorMessage
+              errorMessage | translate
             }}</span>
           } @else {
-            There are no customers
+            {{ 'customers.empty-state' | translate }}
           }
         </td>
       </tr>

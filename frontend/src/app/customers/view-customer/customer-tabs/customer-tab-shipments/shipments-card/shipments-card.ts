@@ -1,13 +1,14 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Shipment } from '../../../../../shipments/models/shipment';
 import { shipmentStatusBadgeColor } from '../../../../../shipments/utils/shipment-status-badge-color.utils';
-import { NgClass, DatePipe, TitleCasePipe } from '@angular/common';
+import { NgClass, DatePipe } from '@angular/common';
 import { ShipmentStatus } from '../../../../../shipments/models/shipment-status';
 import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-shipments-card',
-  imports: [NgClass, DatePipe, TitleCasePipe, FormsModule],
+  imports: [NgClass, DatePipe, FormsModule, TranslatePipe],
   templateUrl: './shipments-card.html',
   styleUrl: './shipments-card.css',
 })

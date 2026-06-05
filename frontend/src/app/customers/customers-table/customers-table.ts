@@ -3,12 +3,12 @@ import { Customer } from '../models/customer';
 import { RouterLink } from '@angular/router';
 import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
 import { NgClass } from '@angular/common';
-import { TitleCasePipe } from '@angular/common';
 import { customerTypeBadgeColor } from '../utils/customer-type-color.utils';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-customers-table',
-  imports: [RouterLink, LoadingSpinner, NgClass, TitleCasePipe],
+  imports: [RouterLink, LoadingSpinner, NgClass, TranslatePipe],
   templateUrl: './customers-table.html',
   styleUrl: './customers-table.css',
 })

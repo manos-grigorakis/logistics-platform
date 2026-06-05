@@ -8,7 +8,7 @@
         routerLink="tab-quotes"
         routerLinkActive="text-gray-900"
         (click)="onTabClick('quotes')"
-        >Quotes</a
+        >{{ 'nav.side-bar.quotes' | translate }}</a
       >
     </li>
     <li class="me-2">
@@ -18,25 +18,7 @@
         routerLink="tab-shipments"
         routerLinkActive="text-gray-900"
         (click)="onTabClick('shipments')"
-        >Shipments</a
-      >
-    </li>
-    <li class="me-2">
-      <a
-        class="inline-block rounded px-2 py-1 text-gray-500 hover:cursor-pointer hover:bg-gray-200 hover:text-gray-900"
-        routerLink="#"
-        routerLinkActive="text-gray-900"
-        (click)="onTabClick('')"
-        >Item 3</a
-      >
-    </li>
-    <li class="me-2">
-      <a
-        class="inline-block rounded px-2 py-1 text-gray-500 hover:cursor-pointer hover:bg-gray-200 hover:text-gray-900"
-        routerLink="#"
-        routerLinkActive="text-gray-900"
-        (click)="onTabClick('')"
-        >Item 4</a
+        >{{ 'nav.side-bar.shipments' | translate }}</a
       >
     </li>
   </ul>

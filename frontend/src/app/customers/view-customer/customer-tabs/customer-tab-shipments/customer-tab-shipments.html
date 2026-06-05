@@ -18,7 +18,7 @@
 <app-modal
   icon="lucideAlertTriangle"
   color="warning"
-  header="Update Shipment Status"
+  [header]="'customers.messages.shipments.modal.header-update' | translate"
   [isEnabled]="isShipmentStatusConfirmModalOpen"
   [message]="confirmShipmentStatusModalMessage"
   (confirmClick)="onConfirmShipmentStatusModal()"
@@ -30,11 +30,11 @@
 <app-modal
   icon="lucideAlertTriangle"
   color="warning"
-  header="Error Updating Shipment Status"
-  confirmButtonText="Cancel"
+  [header]="'customers.messages.shipments.modal.title' | translate"
+  [confirmButtonText]="'common.actions.cancel' | translate"
   confirmButtonColor="warning"
   [isEnabled]="isShipmentStatusErrorModalOpen"
-  [message]="changeStatusError"
+  [message]="changeStatusError | translate"
   [showCancelButton]="false"
   (closeModalClick)="onCloseStatusErrorModal()"
   (confirmClick)="onCloseStatusErrorModal()"
@@ -42,11 +42,13 @@
 
 <div class="flex flex-col" [ngClass]="{ 'min-h-[630px]': shipments.length > 0 }">
   @if (errorMessage) {
-    <app-error-alert [errorMessage]="errorMessage" />
+    <app-error-alert [errorMessage]="errorMessage | translate" />
   }
 
   @if (!isLoading && !errorMessage && shipments.length === 0) {
-    <div class="text-secondary-500 p-6 text-center">No shipments yet</div>
+    <div class="text-secondary-500 p-6 text-center">
+      {{ 'customers.messages.shipments.empty-state' | translate }}
+    </div>
   } @else {
     <div class="flex flex-1 flex-col gap-4 px-2">
       @for (shipment of shipments; track shipment.id) {

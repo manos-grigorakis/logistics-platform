@@ -1,17 +1,20 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { DropdownButton } from '../../shared/ui/dropdown-button/dropdown-button';
 import { NgIcon } from '@ng-icons/core';
 import { RoundedIconButton } from '../../shared/forms/rounded-icon-button/rounded-icon-button';
 import { SearchBar } from '../../shared/forms/search-bar/search-bar';
 import { Router } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
+import { LanguageService } from '../../shared/services/language.service';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-quotes-filters',
-  imports: [DropdownButton, NgIcon, RoundedIconButton, SearchBar],
+  imports: [DropdownButton, NgIcon, RoundedIconButton, SearchBar, TranslatePipe],
   templateUrl: './quotes-filters.html',
   styleUrl: './quotes-filters.css',
 })
-export class QuotesFilters {
+export class QuotesFilters implements OnInit {
   @Output() refresh = new EventEmitter<void>();
   @Output() searchChanged = new EventEmitter<string>();
   @Output() sortBy = new EventEmitter<string>();
@@ -20,12 +23,22 @@ export class QuotesFilters {
   @Input() isLoading: boolean = false;
   @Input() sortLabel?: string;
   @Input() filterLabel?: string;
-  @Input() searchPlaceholder: string = 'Search by Number or Company Name';
+  @Input() searchPlaceholder: string = '';
   @Input() createButton: boolean = true;
 
   public searchTerm: string = '';
 
   private router: Router = inject(Router);
+  private languangeService = inject(LanguageService);
+
+  ngOnInit(): void {
+    if (!this.searchPlaceholder) {
+      this.languangeService
+        .translateKeyAsync('quotes.filters.search-by-number-or-company-name')
+        .pipe(take(1))
+        .subscribe((val) => (this.searchPlaceholder = val));
+    }
+  }
 
   public onSearchChange(value: string): void {
     this.searchTerm = value;

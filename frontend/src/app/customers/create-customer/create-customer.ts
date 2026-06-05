@@ -3,29 +3,33 @@ import { CustomersForm } from '../customers-form/customers-form';
 import { CustomersService } from '../customers.service';
 import { Router } from '@angular/router';
 import { CustomerRequest } from '../models/customer-request';
-import { toast } from 'ngx-sonner';
+import { LanguageService } from '../../shared/services/language.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-create-customer',
-  imports: [CustomersForm],
+  imports: [CustomersForm, TranslatePipe],
   templateUrl: './create-customer.html',
   styleUrl: './create-customer.css',
 })
 export class CreateCustomer {
-  private customerService: CustomersService = inject(CustomersService);
-  private router: Router = inject(Router);
-
   public isLoading: boolean = false;
   public errorMessage?: string = undefined;
+
+  private router: Router = inject(Router);
+
+  // Services
+  private customerService: CustomersService = inject(CustomersService);
+  private languageService = inject(LanguageService);
 
   public onSubmit(data: CustomerRequest): void {
     this.isLoading = true;
     this.errorMessage = undefined;
 
     this.customerService.createCustomer(data).subscribe({
-      next: (res) => {
+      next: () => {
         this.isLoading = false;
-        toast.success('Customer created successfully');
+        this.languageService.toastSuccess('customers.messages.success-creation');
         this.router.navigate(['/customers']);
       },
       error: (err) => {
@@ -33,13 +37,20 @@ export class CreateCustomer {
         const fieldError = err.error?.error?.details?.duplicateField;
 
         if (err.status === 409 && fieldError === 'tin') {
-          this.errorMessage = `Customer with TIN: ${data.tin} already exists`;
+          this.errorMessage = this.languageService.translateKey('customers.messages.exist-by-tin', {
+            tin: data.tin,
+          });
         } else if (err.status === 409 && fieldError === 'companyName') {
-          this.errorMessage = `Customer with Company Name: ${data.companyName} already exists`;
+          this.errorMessage = this.languageService.translateKey(
+            'customers.messages.exist-by-company-name',
+            {
+              companyName: data.companyName,
+            },
+          );
         } else if (err.status === 500) {
-          this.errorMessage = 'Server error. Please try again';
+          this.errorMessage = 'common.errors.server';
         } else {
-          this.errorMessage = 'An error occured. Please try again';
+          this.errorMessage = 'common.errors.generic';
         }
       },
     });

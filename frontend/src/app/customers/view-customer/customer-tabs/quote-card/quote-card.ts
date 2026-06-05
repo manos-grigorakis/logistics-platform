@@ -1,12 +1,13 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { QuotePerCustomer } from '../../../models/quotes-per-customer';
 import { quoteStatusBadgeColor } from '../../../../quotes/utils/quotes-status-badge-color';
-import { NgClass, TitleCasePipe, CurrencyPipe, DatePipe } from '@angular/common';
+import { NgClass, CurrencyPipe, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-quote-card',
-  imports: [NgClass, TitleCasePipe, CurrencyPipe, DatePipe, FormsModule],
+  imports: [NgClass, CurrencyPipe, DatePipe, FormsModule, TranslatePipe],
   templateUrl: './quote-card.html',
   styleUrl: './quote-card.css',
 })
