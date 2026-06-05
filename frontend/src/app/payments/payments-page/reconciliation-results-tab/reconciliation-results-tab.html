@@ -1,24 +1,28 @@
 <div>
   <div class="mb-8 flex items-center justify-between">
-    <h3 class="text-lg font-semibold text-zinc-800">Results</h3>
+    <h3 class="text-lg font-semibold text-zinc-800">{{ 'common.messages.results' | translate }}</h3>
     <button
       class="cursor-pointer rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:border-gray-400 hover:bg-gray-50"
       (click)="onNewReconciliation()"
     >
-      New Reconciliation
+      {{ 'payments.actions.new-reconciliation' | translate }}
     </button>
   </div>
 
   <div class="mb-8 grid grid-cols-1 gap-6 text-center md:grid-cols-2 lg:grid-cols-4">
     <!-- Total invoices -->
     <div>
-      <p class="mb-1 text-xs font-medium tracking-wide text-zinc-500 uppercase">Total Invoices</p>
+      <p class="mb-1 text-xs font-medium tracking-wide text-zinc-500 uppercase">
+        {{ 'payments.messages.total-invoices' | translate }}
+      </p>
       <p class="text-2xl font-semibold text-zinc-900">{{ results.totalInvoices }}</p>
     </div>
 
     <!-- Matched -->
     <div>
-      <p class="mb-1 text-xs font-medium tracking-wide text-zinc-500 uppercase">Matched</p>
+      <p class="mb-1 text-xs font-medium tracking-wide text-zinc-500 uppercase">
+        {{ 'common.messages.matched' | translate }}
+      </p>
       <p class="text-success text-2xl font-semibold">
         {{ results.matchedInvoices }}
       </p>
@@ -26,7 +30,9 @@
 
     <!-- Unmatched -->
     <div>
-      <p class="mb-1 text-xs font-medium tracking-wide text-zinc-500 uppercase">Unmatched</p>
+      <p class="mb-1 text-xs font-medium tracking-wide text-zinc-500 uppercase">
+        {{ 'common.messages.unmatched' | translate }}
+      </p>
       <p class="text-danger text-2xl font-semibold">
         {{ results.unmatchedInvoices }}
       </p>
@@ -35,7 +41,7 @@
     <!-- Matched transactions -->
     <div>
       <p class="mb-1 text-xs font-medium tracking-wide text-zinc-500 uppercase">
-        Bank Transactions Matched
+        {{ 'payments.messages.bank-matched-tx' | translate }}
       </p>
       <p class="text-2xl font-semibold text-zinc-900">{{ results.matchedTransactions }}</p>
     </div>
@@ -43,29 +49,35 @@
 
   <!-- Breakdown -->
   <div class="mb-8 rounded border border-zinc-200 bg-zinc-50 px-6 py-5">
-    <h4 class="mb-4 text-sm font-semibold text-zinc-700">Invoice Breakdown</h4>
+    <h4 class="mb-4 text-sm font-semibold text-zinc-700">
+      {{ 'payments.messages.invoices-breakdown' | translate }}
+    </h4>
     <div class="grid grid-cols-1 items-center text-center md:grid-cols-2 lg:grid-cols-4">
       <!-- Paid -->
       <div class="flex items-center justify-center gap-4">
-        <p class="text-xs text-zinc-500">Paid</p>
+        <p class="text-xs text-zinc-500">{{ 'metadata.invoices-statuses.paid' | translate }}</p>
         <p class="text-success text-lg font-semibold">{{ results.paidInvoices }}</p>
       </div>
 
       <!-- Partially Paid -->
       <div class="flex items-center justify-center gap-4">
-        <p class="text-xs text-zinc-500">Partially Paid</p>
-        <p class="text-warning text-lg font-semibold">{{ results.paidInvoices }}</p>
+        <p class="text-xs text-zinc-500">
+          {{ 'metadata.invoices-statuses.partially_paid' | translate }}
+        </p>
+        <p class="text-warning text-lg font-semibold">{{ results.partiallyPaidInvoice }}</p>
       </div>
 
       <!-- Outstanding -->
       <div class="flex items-center justify-center gap-4">
-        <p class="text-xs text-zinc-500">Oustanding</p>
-        <p class="text-danger text-lg font-semibold">{{ results.paidInvoices }}</p>
+        <p class="text-xs text-zinc-500">
+          {{ 'metadata.invoices-statuses.outstanding' | translate }}
+        </p>
+        <p class="text-danger text-lg font-semibold">{{ results.outstandingInvoices }}</p>
       </div>
 
       <!-- Disputed -->
       <div class="flex items-center justify-center gap-4">
-        <p class="text-xs text-zinc-500">Disputed</p>
+        <p class="text-xs text-zinc-500">{{ 'metadata.invoices-statuses.disputed' | translate }}</p>
         <p class="text-lg font-semibold text-zinc-500">{{ results.disputedInvoices }}</p>
       </div>
     </div>
@@ -73,17 +85,23 @@
 
   <!-- Report details -->
   <div class="mb-8 rounded border border-zinc-200 bg-zinc-50 px-6 py-5">
-    <h4 class="mb-4 text-sm font-semibold text-zinc-700">Report Details</h4>
+    <h4 class="mb-4 text-sm font-semibold text-zinc-700">
+      {{ 'common.messages.report-details' | translate }}
+    </h4>
     <div class="grid grid-cols-1 gap-6 text-center md:grid-cols-2 lg:grid-cols-3">
       <!-- Report name -->
       <div>
-        <p class="mb-1 text-sm tracking-wide text-zinc-500 uppercase">Report Name</p>
+        <p class="mb-1 text-sm tracking-wide text-zinc-500 uppercase">
+          {{ 'common.messages.report-name' | translate }}
+        </p>
         <p class="text-sm font-medium break-all text-zinc-800">{{ results.reportSummary.name }}</p>
       </div>
 
       <!-- Period -->
       <div>
-        <p class="mb-1 text-sm tracking-wide text-zinc-500 uppercase">Period</p>
+        <p class="mb-1 text-sm tracking-wide text-zinc-500 uppercase">
+          {{ 'common.messages.period' | translate }}
+        </p>
         <p class="text-sm font-medium text-zinc-800">
           {{ results.reportSummary.fromDate | date }} -
           {{ results.reportSummary.toDate | date }}
@@ -92,14 +110,19 @@
 
       <!-- Created at -->
       <div>
-        <p class="mb-1 text-sm tracking-wide text-zinc-500 uppercase">Created At</p>
+        <p class="mb-1 text-sm tracking-wide text-zinc-500 uppercase">
+          {{ 'common.fields.created-at' | translate }}
+        </p>
         <p class="text-sm font-medium text-zinc-800">
-          {{ results.reportSummary.createdAt | date }}
+          {{ results.reportSummary.createdAt | date: 'dd/MM/yyyy' }}
         </p>
       </div>
     </div>
   </div>
   <div class="mx-auto mt-2 max-w-sm">
-    <app-primary-button value="Download Report" (click)="downloadReport()" />
+    <app-primary-button
+      [value]="'common.actions.download-report' | translate"
+      (click)="downloadReport()"
+    />
   </div>
 </div>

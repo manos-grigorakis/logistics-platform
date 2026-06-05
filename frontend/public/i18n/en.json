@@ -11,6 +11,7 @@
       "edit": "Edit",
       "delete": "Delete",
       "download": "Download",
+      "download-report": "Download Report",
       "send-via-mail": "Send via Mail",
       "action": "Action",
       "back-to-login": "Back to Login",
@@ -24,7 +25,9 @@
     },
     "errors": {
       "server": "Server error. Please try again later",
-      "generic": "An error occurred. Please try again"
+      "generic": "An error occurred. Please try again",
+      "files-processing": "Failed to process the uploaded files. Please try again",
+      "no-results": "No results"
     },
     "validation": {
       "required": "{{field}} is required",
@@ -79,7 +82,16 @@
     "messages": {
       "from": "From",
       "to": "To",
-      "cannot-undone": "This action is permanent and cannot be undone"
+      "cannot-undone": "This action is permanent and cannot be undone",
+      "matched": "Matched",
+      "unmatched": "Unmatched",
+      "report-details": "Report Details",
+      "report-name": "Report Name",
+      "period": "Period",
+      "results": "Results"
+    },
+    "banks": {
+      "nbg": "National Bank Greece"
     }
   },
 
@@ -366,6 +378,58 @@
   "quotes": {
     "filters": {
       "search-by-number-or-company-name": "Search by Number or Company Name"
+    }
+  },
+
+  "payments": {
+    "title": "Payment Reconciliation",
+    "subtitle": "Match bank transactions against outstanding invoices for a customer.",
+    "stepper": {
+      "one": {
+        "title": "Select Customer & Upload",
+        "description": "Choose a customer and upload files"
+      },
+      "two": {
+        "title": "Processing",
+        "description": "Matching Transactions"
+      },
+      "three": {
+        "title": "Results",
+        "description": "Download results"
+      }
+    },
+    "fields": {
+      "customer": "Customer",
+      "invoices": "Invoices",
+      "bank-statement": "Bank Statement",
+
+      "placeholders": {
+        "search-customer": "Search a customer"
+      }
+    },
+    "actions": {
+      "start-process": "Start Reconciliation Process",
+      "new-reconciliation": "New Reconciliation"
+    },
+    "errors": {
+      "fetch-customers": "Failed to fetch customers",
+      "no-invoices-found-in-file": "No invoices were found in the uploaded file",
+      "tin-missmatch": "The selected customer's TIN number doesn't match the invoices file",
+      "duplicate-report": "A report already exists for this invoice range",
+      "already-exists-in-system": "All invoices already exist in the system"
+    },
+    "messages": {
+      "reconciliation-note-one": "The system will match transactions to invoices using invoice number detection and amount combination matching.",
+      "reconciliation-note-two": "All invoices are saved, along with their matched transactions.",
+      "required-customer": "Customer is required",
+      "required-invoice-file": "Invoice file is required",
+      "required-bank-statement-file": "Bank Statement file is required",
+      "loading-customers": "Loading customers",
+      "running-matching-algo": "Running Matching Algorithm",
+      "analyzing-tx-combinations": "Analyzing transaction combinations",
+      "total-invoices": "Total Invoices",
+      "bank-matched-tx": "Bank Transactions Matched",
+      "invoices-breakdown": "Invoice Breakdown"
     }
   }
 }

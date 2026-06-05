@@ -1,7 +1,7 @@
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CustomersService } from '../../customers/customers.service';
 import { Customer } from '../../customers/models/customer';
-import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Subject, Subscription, take } from 'rxjs';
 import { DetailedStepper } from '../../shared/ui/detailed-stepper/detailed-stepper';
 import { FormBuilder, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { PaymentsService } from '../payments.service';
@@ -11,6 +11,8 @@ import { ReconciliationProcessResponse } from '../models/reconciliation-process-
 import { ReconciliationForm } from './reconciliation-form/reconciliation-form';
 import { ReconciliationResultsTab } from './reconciliation-results-tab/reconciliation-results-tab';
 import { ReconciliationProcessTab } from './reconciliation-process-tab/reconciliation-process-tab';
+import { TranslatePipe } from '@ngx-translate/core';
+import { LanguageService } from '../../shared/services/language.service';
 
 @Component({
   selector: 'app-payments-page',
@@ -20,18 +22,15 @@ import { ReconciliationProcessTab } from './reconciliation-process-tab/reconcili
     ReconciliationForm,
     ReconciliationProcessTab,
     ReconciliationResultsTab,
+    TranslatePipe,
   ],
   templateUrl: './payments-page.html',
   styleUrl: './payments-page.css',
 })
-export class PaymentsPage implements OnInit {
+export class PaymentsPage implements OnInit, OnDestroy {
   // Stepper
   public activeStep: number = 0;
-  public stepperData: { title: string; description: string }[] = [
-    { title: 'Select Customer & Upload', description: 'Choose a customer and upload files' },
-    { title: 'Processing', description: 'Matching Transactions' },
-    { title: 'Results', description: 'Download results' },
-  ];
+  public stepperData: { title: string; description: string }[] = [];
 
   public results?: ReconciliationProcessResponse;
 
@@ -44,6 +43,7 @@ export class PaymentsPage implements OnInit {
   // Services
   private customersService = inject(CustomersService);
   private paymentService = inject(PaymentsService);
+  private languageService = inject(LanguageService);
 
   // Form
   public isFormValid: boolean = false;
@@ -55,13 +55,20 @@ export class PaymentsPage implements OnInit {
     bankStatementFile: new FormControl<File | null>(null, Validators.required),
   });
 
+  private langChangeSub?: Subscription;
+
   ngOnInit(): void {
     // Debouncer
     this.customerSearch$.pipe(debounceTime(300), distinctUntilChanged()).subscribe((name) => {
       this.fetchCustomers(name);
     });
 
+    this.langChangeSub = this.languageService.onLangChange.subscribe(() => this.setStepperValues());
     this.fetchCustomers('');
+  }
+
+  ngOnDestroy(): void {
+    this.langChangeSub?.unsubscribe();
   }
 
   public onFormSubmit(): void {
@@ -103,28 +110,28 @@ export class PaymentsPage implements OnInit {
         switch (err.status) {
           case 400:
             if (errorCode === 'NO_INVOICES_FOUND') {
-              toast.error('No invoices were found in the uploaded file');
+              this.languageService.toastError('payments.errors.no-invoices-found-in-file');
             } else {
-              toast.error('Failed to process the uploaded files. Please try again');
+              this.languageService.toastError('common.errors.files-processing');
             }
             break;
           case 404:
-            toast.error('Failed to process the uploaded files. Please try again');
+            this.languageService.toastError('common.errors.files-processing');
             break;
           case 409:
             if (errorCode === 'CUSTOMER_TIN_MISMATCH') {
-              toast.error("The selected customer's TIN number doesn't match the invoices file");
+              this.languageService.toastError('payments.errors.tin-missmatch');
             } else if (errorCode === 'DUPLICATE_REPORT_NAME') {
-              toast.error('A report already exists for this invoice range');
+              this.languageService.toastError('payments.errors.duplicate-report');
             } else if (errorCode === 'INVOICES_ALREADY_EXIST') {
-              toast.error('All invoices already exist in the system');
+              this.languageService.toastError('payments.errors.already-exists-in-system');
             }
             break;
           case 500:
-            toast.error('Server error. Please try again');
+            this.languageService.toastError('common.errors.server');
             break;
           default:
-            toast.error('An error occurred. Please try again');
+            this.languageService.toastError('common.errors.generic');
         }
       },
     });
@@ -145,10 +152,35 @@ export class PaymentsPage implements OnInit {
         this.customersLoading = false;
         this.customersList = res.data.content;
       },
-      error: (err) => {
+      error: () => {
         this.customersLoading = false;
-        this.customersErrorMessage = 'Failed to fetch Customers';
+        this.customersErrorMessage = 'payments.errors.fetch-customers';
       },
     });
+  }
+
+  /**
+   * Sets the stepper values using keys from translation
+   */
+  private setStepperValues(): void {
+    const keys = [
+      'payments.stepper.one.title',
+      'payments.stepper.one.description',
+      'payments.stepper.two.title',
+      'payments.stepper.two.description',
+      'payments.stepper.three.title',
+      'payments.stepper.three.description',
+    ];
+
+    this.languageService
+      .translateKeyAsync(keys)
+      .pipe(take(1))
+      .subscribe((translations: any) => {
+        this.stepperData = [
+          { title: translations[keys[0]], description: translations[keys[1]] },
+          { title: translations[keys[2]], description: translations[keys[3]] },
+          { title: translations[keys[4]], description: translations[keys[5]] },
+        ];
+      });
   }
 }

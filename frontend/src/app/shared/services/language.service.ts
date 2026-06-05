@@ -27,6 +27,10 @@ export class LanguageService {
     return this.translate.getCurrentLang() || 'en';
   }
 
+  get onLangChange() {
+    return this.translate.onLangChange;
+  }
+
   /**
    * Creates a toast error with the provided key to be translated
    * @param key The key to be used for translation
@@ -73,7 +77,7 @@ export class LanguageService {
     return this.translate.instant(key, params);
   }
 
-  translateKeyAsync(key: string, params?: object): Observable<string> {
+  translateKeyAsync(key: string | string[], params?: object): Observable<string> {
     return this.translate.stream(key, params);
   }
 }

@@ -2,17 +2,17 @@
   <!-- Customer Dropdown -->
   <div class="my-8">
     <label for="customerId" (click)="onClickFocusCustomersSelect()" class="mb-2 block font-medium">
-      <span class="text-danger mr-1 text-sm">*</span>Customer
+      <span class="text-danger mr-1 text-sm">*</span>{{ 'payments.fields.customer' | translate }}
     </label>
     <ng-select
       #customerSelect
       class="tw-select"
-      placeholder="Search a customer"
+      [placeholder]="'payments.fields.placeholders.search-customer' | translate"
       bindLabel="companyName"
       bindValue="id"
       formControlName="customerId"
-      loadingText="Loading customers..."
-      notFoundText="No results"
+      [loadingText]="('payments.messages.loading-customers' | translate) + '...'"
+      [notFoundText]="'common.errors.no-results' | translate"
       [items]="customersList"
       [loading]="customersLoading"
       [typeahead]="customerSearch$"
@@ -22,7 +22,9 @@
     @if (customerId.invalid && (customerId.dirty || customerId.touched)) {
       <div>
         @if (customerId.hasError('required')) {
-          <span class="text-danger mt-1 ml-1 text-sm">Customer is required</span>
+          <span class="text-danger mt-1 ml-1 text-sm">{{
+            'payments.messages.required-customer' | translate
+          }}</span>
         }
       </div>
     }
@@ -33,8 +35,13 @@
     <!-- Invoice -->
     <div>
       <div class="flex items-center justify-between">
-        <h3 class="mb-2 font-medium"><span class="text-danger mr-1 text-sm">*</span>Invoices</h3>
-        <span class="text-sm text-zinc-500">From Epsilon Smart</span>
+        <h3 class="mb-2 font-medium">
+          <span class="text-danger mr-1 text-sm">*</span
+          >{{ 'payments.fields.invoices' | translate }}
+        </h3>
+        <span class="text-sm text-zinc-500"
+          >{{ 'common.messages.from' | translate }} Epsilon Smart</span
+        >
       </div>
       <app-file-dropzone
         [showMaxFileSize]="false"
@@ -44,7 +51,9 @@
       @if (invoiceFile.invalid && (invoiceFile.dirty || invoiceFile.touched)) {
         <div>
           @if (invoiceFile.hasError('required')) {
-            <span class="text-danger mt-1 ml-1 text-sm">Invoice file is required</span>
+            <span class="text-danger mt-1 ml-1 text-sm">{{
+              'payments.messages.required-invoice-file' | translate
+            }}</span>
           }
         </div>
       }
@@ -54,9 +63,12 @@
     <div>
       <div class="flex items-center justify-between">
         <h3 class="mb-2 font-medium">
-          <span class="text-danger mr-1 text-sm">*</span>Bank Statement
+          <span class="text-danger mr-1 text-sm">*</span
+          >{{ 'payments.fields.bank-statement' | translate }}
         </h3>
-        <span class="text-sm text-zinc-500">From National Bank Greece</span>
+        <span class="text-sm text-zinc-500"
+          >{{ 'common.messages.from' | translate }} {{ 'common.banks.nbg' | translate }}</span
+        >
       </div>
       <app-file-dropzone
         [showMaxFileSize]="false"
@@ -66,7 +78,9 @@
       @if (bankStatementFile.invalid && (bankStatementFile.dirty || bankStatementFile.touched)) {
         <div>
           @if (bankStatementFile.hasError('required')) {
-            <span class="text-danger mt-1 ml-1 text-sm">Bank Statement file is required</span>
+            <span class="text-danger mt-1 ml-1 text-sm">{{
+              'payments.messages.required-bank-statement-file' | translate
+            }}</span>
           }
         </div>
       }
@@ -81,13 +95,12 @@
 
     <div class="text-sm leading-relaxed text-zinc-600">
       <p>
-        The system will match transactions to invoices using invoice number detection and amount
-        combination matching.
+        {{ 'payments.messages.reconciliation-note-one' | translate }}
       </p>
-      <p>All invoices are saved, along with their matched transactions.</p>
+      <p>{{ 'payments.messages.reconciliation-note-two' | translate }}</p>
     </div>
   </div>
 
   <!-- Process Button -->
-  <app-primary-button value="Start Reconciliation Process" />
+  <app-primary-button [value]="'payments.actions.start-process' | translate" />
 </form>
