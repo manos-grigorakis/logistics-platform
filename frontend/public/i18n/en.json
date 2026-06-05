@@ -106,7 +106,7 @@
       "item": "Item"
     },
     "banks": {
-      "nbg": "National Bank Greece"
+      "nbg": "National Bank of Greece"
     }
   },
 
@@ -341,7 +341,7 @@
     },
     "messages": {
       "select-customer-type": "Select a customer type",
-      "no-customer-types-availble": "No customer types available",
+      "no-customer-types-available": "No customer types available",
       "customer-type-required": "Customer Type is required",
       "success-creation": "Customer created successfully",
       "success-update": "Customer updated successfully",
@@ -539,7 +539,7 @@
     "errors": {
       "fetch-customers": "Failed to fetch customers",
       "no-invoices-found-in-file": "No invoices were found in the uploaded file",
-      "tin-missmatch": "The selected customer's TIN number doesn't match the invoices file",
+      "tin-mismatch": "The selected customer's TIN number doesn't match the invoices file",
       "duplicate-report": "A report already exists for this invoice range",
       "already-exists-in-system": "All invoices already exist in the system"
     },

@@ -120,7 +120,7 @@ export class PaymentsPage implements OnInit, OnDestroy {
             break;
           case 409:
             if (errorCode === 'CUSTOMER_TIN_MISMATCH') {
-              this.languageService.toastError('payments.errors.tin-missmatch');
+              this.languageService.toastError('payments.errors.tin-mismatch');
             } else if (errorCode === 'DUPLICATE_REPORT_NAME') {
               this.languageService.toastError('payments.errors.duplicate-report');
             } else if (errorCode === 'INVOICES_ALREADY_EXIST') {
