@@ -22,14 +22,17 @@
       @if (isFileSelected) {
         <ng-icon name="lucideCheckCircle2" size="30" color="#059669" />
         <p class="my-2 w-100 truncate text-center">{{ fileName }}</p>
-        <p class="underline hover:cursor-pointer" (click)="fileInput.click()">Replace file</p>
+        <p class="underline hover:cursor-pointer" (click)="fileInput.click()">
+          {{ 'common.actions.replace-file' | translate }}
+        </p>
       } @else {
         <ng-icon name="lucideUpload" size="30" color="#9f9fa9" />
-        <p class="my-2 text-sm">Drop or Click the button below to upload</p>
+        <p class="my-2 text-sm">{{ 'common.actions.drop-or-click-to-upload' | translate }}</p>
 
         @if (showMaxFileSize) {
           <p class="text-xs">
-            Max File Size: <span class="font-semibold">{{ maxFileSizeInMB }} mb</span>
+            {{ 'common.validation.max-file-size' | translate }}:
+            <span class="font-semibold">{{ maxFileSizeInMB }} mb</span>
           </p>
         }
 
@@ -39,10 +42,12 @@
           [disabled]="isFileLoading"
         >
           <ng-icon name="lucideSearch" size="14" />
-          Browse file
+          {{ 'common.actions.browse-file' | translate }}
         </button>
 
-        <p class="text-xs">Supported files: {{ supportedFiles }}</p>
+        <p class="text-xs">
+          {{ 'common.validation.supported-files' | translate }}: {{ supportedFiles }}
+        </p>
       }
     </div>
   </div>
@@ -52,7 +57,7 @@
     <div
       class="bg-primary-500/10 pointer-events-none absolute inset-0 z-10 flex items-center justify-center rounded backdrop-blur-sm"
     >
-      <p class="text-sm font-medium">Drop file here</p>
+      <p class="text-sm font-medium">{{ 'common.actions.drop-file-here' | translate }}</p>
     </div>
   }
 

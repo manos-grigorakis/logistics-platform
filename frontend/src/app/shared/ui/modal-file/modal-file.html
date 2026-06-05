@@ -38,7 +38,7 @@
         <!-- Modal body -->
         <div class="overflow-x-auto">
           <div class="border-secondary-200 flex justify-between border-b pb-2">
-            <h2 class="text-2xl font-medium">PDF Preview:</h2>
+            <h2 class="text-2xl font-medium">{{ 'common.pdf.preview' | translate }}:</h2>
             <div class="flex gap-2">
               <!-- Download PDF -->
               <button
@@ -50,7 +50,8 @@
                 (click)="downloadPdf()"
                 [disabled]="!pdfUrl"
               >
-                <ng-icon name="lucideDownload" size="16" /> Download
+                <ng-icon name="lucideDownload" size="16" />
+                {{ 'common.actions.download' | translate }}
               </button>
 
               <!-- Send via Mail -->
@@ -64,7 +65,8 @@
                   (click)="onSendMailClick()"
                   [disabled]="!pdfUrl"
                 >
-                  <ng-icon name="lucideMail" size="16" /> Send via Mail
+                  <ng-icon name="lucideMail" size="16" />
+                  {{ 'common.actions.send-via-mail' | translate }}
                 </button>
               }
             </div>
@@ -78,7 +80,9 @@
               style="height: 700px; width: 100%"
             />
           } @else {
-            <span class="block pt-4 text-center text-lg">PDF cannot be previewed</span>
+            <span class="block pt-4 text-center text-lg">{{
+              'common.pdf.errors.preview' | translate
+            }}</span>
           }
         </div>
       </div>

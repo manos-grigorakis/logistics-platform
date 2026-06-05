@@ -10,9 +10,17 @@
       "save": "Save",
       "edit": "Edit",
       "delete": "Delete",
+      "download": "Download",
+      "send-via-mail": "Send via Mail",
       "action": "Action",
       "back-to-login": "Back to Login",
-      "back-to-dashboard": "Back to Dashboard"
+      "back-to-dashboard": "Back to Dashboard",
+      "yes-sure": "Yes, I'm sure",
+      "no-cancel": "No, cancel",
+      "browse-file": "Browse file",
+      "replace-file": "Replace file",
+      "drop-or-click-to-upload": "Drop or Click the button below to upload",
+      "drop-file-here": "Drop file here"
     },
     "errors": {
       "server": "Server error. Please try again later",
@@ -22,16 +30,35 @@
       "required": "{{field}} is required",
       "email": "Invalid email address",
       "invalid-format": "{{field}} has an invalid format",
-      "8-chars-long": "must be 8 characters long"
+      "8-chars-long": "must be 8 characters long",
+      "supported-files": "Supported files",
+      "max-file-size": "Max File Size",
+      "file-too-large": "File is too large",
+      "unsupported-file-type": "Unsupported file type"
     },
     "filters": {
       "search": "Search",
       "sort-by": "Sort By",
+      "filter-by": "Filter By",
       "all": "All"
     },
     "fields": {
       "status": "Status",
       "created-at": "Created At"
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "showing": "Showing",
+      "to": "to",
+      "of": "of",
+      "results": "results"
+    },
+    "pdf": {
+      "preview": "PDF Preview",
+      "errors": {
+        "preview": "PDF cannot be previewed"
+      }
     }
   },
 

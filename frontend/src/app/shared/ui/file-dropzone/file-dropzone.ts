@@ -1,11 +1,13 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { NgIcon } from '@ng-icons/core';
 import { NgClass } from '@angular/common';
 import { toast } from 'ngx-sonner';
+import { TranslatePipe } from '@ngx-translate/core';
+import { LanguageService } from '../../services/language.service';
 
 @Component({
   selector: 'app-file-dropzone',
-  imports: [NgIcon, NgClass],
+  imports: [NgIcon, NgClass, TranslatePipe],
   templateUrl: './file-dropzone.html',
   styleUrl: './file-dropzone.css',
 })
@@ -20,6 +22,8 @@ export class FileDropzone {
   public isDropzoneHovered: boolean = false;
   public error: boolean = false;
   public fileName?: string = undefined;
+
+  private languageService = inject(LanguageService);
 
   // === Handle File ===
   public onFileSelected(event: Event): void {
@@ -92,13 +96,13 @@ export class FileDropzone {
 
     if (!this.validateFileSize(file.size)) {
       this.error = true;
-      toast.error('File too large');
+      this.languageService.toastError('common.validation.file-too-large');
       return false;
     }
 
     if (!this.validateFileType(file)) {
       this.error = true;
-      toast.error('Unsupported file type');
+      this.languageService.toastError('common.validation.unsupported-file-type');
       return false;
     }
     return true;

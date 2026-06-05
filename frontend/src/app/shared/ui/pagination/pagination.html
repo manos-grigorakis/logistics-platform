@@ -10,7 +10,7 @@
         (click)="prevPage()"
         [disabled]="currentPage === 0"
       >
-        Previous
+        {{ 'common.pagination.previous' | translate }}
       </button>
     </li>
 
@@ -38,13 +38,14 @@
         (click)="nextPage()"
         [disabled]="currentPage === totalPages - 1"
       >
-        Next
+        {{ 'common.pagination.next' | translate }}
       </button>
     </li>
   </ul>
   <div class="mb-3 text-sm text-gray-600">
-    Showing <span class="font-medium">{{ startItem }}</span> to
-    <span class="font-medium">{{ endItem }}</span> of
-    <span class="font-medium">{{ totalElements }}</span> results
+    {{ 'common.pagination.showing' | translate }} <span class="font-medium">{{ startItem }}</span>
+    {{ 'common.pagination.to' | translate }} <span class="font-medium">{{ endItem }}</span>
+    {{ 'common.pagination.of' | translate }} <span class="font-medium">{{ totalElements }}</span>
+    {{ 'common.pagination.results' | translate }}
   </div>
 </nav>
