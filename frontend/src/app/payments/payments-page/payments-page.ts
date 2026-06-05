@@ -63,6 +63,7 @@ export class PaymentsPage implements OnInit, OnDestroy {
       this.fetchCustomers(name);
     });
 
+    this.setStepperValues();
     this.langChangeSub = this.languageService.onLangChange.subscribe(() => this.setStepperValues());
     this.fetchCustomers('');
   }
