@@ -1,12 +1,12 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { KpiCard } from './kpi-card/kpi-card';
 import { CurrencyPipe } from '@angular/common';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartData, ChartOptions } from 'chart.js';
-import { formatEnumLabel } from '../../shared/utils/format-enum-label.util';
 import { AnalyticsService } from '../analytics.service';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LanguageService } from '../../shared/services/language.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-main-dashboard',
@@ -14,7 +14,7 @@ import { LanguageService } from '../../shared/services/language.service';
   templateUrl: './main-dashboard.html',
   styleUrl: './main-dashboard.css',
 })
-export class MainDashboard implements OnInit {
+export class MainDashboard implements OnInit, OnDestroy {
   private analyticsService = inject(AnalyticsService);
   private languageService = inject(LanguageService);
 
@@ -57,7 +57,22 @@ export class MainDashboard implements OnInit {
     plugins: { legend: { position: 'bottom' } },
   };
 
+  private langChangeSub?: Subscription;
+
   ngOnInit(): void {
+    this.loadAll();
+
+    this.langChangeSub = this.languageService.onLangChange.subscribe(() => this.loadAll());
+  }
+
+  ngOnDestroy(): void {
+    this.langChangeSub?.unsubscribe();
+  }
+
+  /**
+   * Fetches all the analytics
+   */
+  private loadAll(): void {
     this.loadTotalCustomers();
     this.loadTotalShipments();
     this.loadTotalOutstandingAmount();
