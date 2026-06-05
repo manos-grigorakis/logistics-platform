@@ -365,7 +365,7 @@
 
   "quotes": {
     "filters": {
-      "search-by-number-or-company-name": "Search by Number or Company Name"
+      "search-by-number-or-company-name": "Αναζήτηση βάσει Αριθμού ή Επωνυμίας Εταιρείας"
     }
   }
 }

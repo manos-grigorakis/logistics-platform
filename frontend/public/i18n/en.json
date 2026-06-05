@@ -361,5 +361,11 @@
     "filters": {
       "search-by-shipment-number": "Search"
     }
+  },
+
+  "quotes": {
+    "filters": {
+      "search-by-number-or-company-name": "Search by Number or Company Name"
+    }
   }
 }
