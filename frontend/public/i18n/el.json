@@ -38,7 +38,10 @@
       "supported-files": "Υποστηριζόμενα αρχεία",
       "max-file-size": "Μέγιστο μέγεθος αρχείου",
       "file-too-large": "Το αρχείο είναι πολύ μεγάλο",
-      "unsupported-file-type": "Μη υποστηριζόμενος τύπος αρχείου"
+      "unsupported-file-type": "Μη υποστηριζόμενος τύπος αρχείου",
+      "from-before-to": "Η ημερομηνία «Από» πρέπει να είναι προγενέστερη της ημερομηνίας «Προς»",
+      "required-fields": "Τα πεδία με αστερίσκο (*) είναι υποχρεωτικά",
+      "must-be-number": "πρέπει να είναι αριθμός"
     },
     "filters": {
       "search": "Αναζήτηση",
@@ -58,6 +61,9 @@
       "updated-at": "Ημ. Τροποποίησης",
       "issue-date": "Ημ. Έκδοσης",
       "unassigned": "Μη ανατεθειμένο",
+      "signed-by": "Υπογράφηκε από",
+      "signed-at": "Υπογράφηκε στις",
+      "document": "Έγγραφο",
       "placeholders": {
         "first-name": "π.χ. Γιάννης",
         "last-name": "π.χ. Παπαδόπουλος",
@@ -88,7 +94,8 @@
       "report-details": "Στοιχεία Αναφοράς",
       "report-name": "Όνομα Αναφοράς",
       "period": "Περίοδος",
-      "results": "Αποτελέσματα"
+      "results": "Αποτελέσματα",
+      "basic-info": "Βασικές Πληροφορίες"
     },
     "banks": {
       "nbg": "Εθνική Τράπεζα της Ελλάδος"
@@ -202,6 +209,11 @@
       "active": "Ενεργός",
       "invited": "Προσκεκλημένος",
       "suspended": "Ανασταλμένος"
+    },
+    "cmr-document-statuses": {
+      "generated": "Δημιουργήθηκε",
+      "signed": "Υπογράφηκε",
+      "cancelled": "Ακυρώθηκε"
     }
   },
 
@@ -364,14 +376,78 @@
   },
 
   "shipments": {
+    "empty-state": "Δεν υπάρχουν μεταφορές",
+    "cmr-document-empty-state": "Δεν υπάρχει έγγραφο CMR",
+    "units-empty-state": "Δεν υπάρχουν διαθέσιμες μονάδες",
+    "actions": {
+      "create": "Δημιουργία Μεταφοράς",
+      "update": "Ενημέρωση Μεταφοράς"
+    },
     "fields": {
+      "shipment-number": "Αριθμός Μεταφοράς",
       "pickup": "Παραλαβή",
       "driver": "Οδηγός",
+      "truck": "Φορτηγό",
+      "trailer": "Ρυμουλκούμενο",
+      "quote": "Προσφορά",
       "truck-plate": "Πινακίδα Φορτηγού",
-      "trailer-plate": "Πινακίδα Ρυμουλκούμενου"
+      "trailer-plate": "Πινακίδα Ρυμουλκούμενου",
+      "quote-number": "Αριθμός Προσφοράς",
+      "cargo-items": {
+        "empty-state": "Δεν υπάρχουν εμπορεύματα",
+        "title": "Εμπορεύματα",
+        "description": "Περιγραφή",
+        "unit": "Μονάδα",
+        "quantity": "Ποσότητα",
+        "weight": "Βάρος",
+        "volume": "Όγκος"
+      },
+      "notes": {
+        "empty-state": "Δεν υπάρχουν διαθέσιμες σημειώσεις",
+        "title": "Σημειώσεις"
+      },
+      "placeholders": {}
     },
     "filters": {
-      "search-by-shipment-number": "Αναζήτηση"
+      "search-by-shipment-number": "Αναζήτηση",
+      "search-quote": "Αναζήτηση Προσφοράς",
+      "search-driver": "Αναζήτηση Οδηγού",
+      "search-truck": "Αναζήτηση Φορτηγού",
+      "search-trailer": "Αναζήτηση Ρυμουλκούμενου"
+    },
+    "messages": {
+      "success-creation": "Η μεταφορά δημιουργήθηκε με επιτυχία",
+      "success-update": "Η μεταφορά ενημερώθηκε με επιτυχία",
+      "not-found": "Η μεταφορά δεν βρέθηκε",
+      "fleet-assignment": "Ανάθεση Στόλου",
+      "quotes": {
+        "loading": "Φόρτωση Προσφορών",
+        "required": "Η προσφορά είναι υποχρεωτική"
+      },
+      "loading-drivers": "Φόρτωση Οδηγών",
+      "loading-trucks": "Φόρτωση Φορτηγών",
+      "loading-trailers": "Φόρτωση Ρυμουλκούμενων",
+      "select-unit": "Επιλέξτε μια μονάδα"
+    },
+    "view-shipment": {
+      "quote-number": "Αριθμος Προσφορας",
+      "driver": "Οδηγος",
+      "truck": "Φορτηγο",
+      "trailer": "Ρυμουλκομενο",
+      "action": "Ενεργεια",
+      "cargos": "Εμπορευματα",
+      "description": "Περιγραφη",
+      "unit": "Μοναδα",
+      "quantity": "Ποσοτητα",
+      "weight": "Βαρος",
+      "volume": "Ογκος",
+      "notes": "Σημειωσεις",
+      "document": "Εγγραφο",
+      "status": "Κατασταση",
+      "signed-by": "Υπογραφηκε απο",
+      "signed-at": "Υπογραφηκε στις",
+      "created-at": "Ημ. Δημιουργιας",
+      "number": "Αριθμος"
     }
   },
 

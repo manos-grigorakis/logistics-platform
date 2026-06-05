@@ -4,14 +4,16 @@
   }
   <thead class="text-body bg-secondary-700 text-sm text-white">
     <tr>
-      <th scope="col" class="px-2 py-3 font-medium">Number</th>
-      <th scope="col" class="px-2 py-3 font-medium">Pickup</th>
-      <th scope="col" class="px-2 py-3 font-medium">Status</th>
-      <th scope="col" class="px-2 py-3 font-medium">Quote</th>
-      <th scope="col" class="px-2 py-3 font-medium">Driver</th>
-      <th scope="col" class="px-2 py-3 font-medium">Truck</th>
-      <th scope="col" class="px-2 py-3 font-medium">Trailer</th>
-      <th scope="col" class="px-2 py-3 font-medium">Action</th>
+      <th scope="col" class="px-2 py-3 font-medium">{{ 'common.fields.number' | translate }}</th>
+      <th scope="col" class="px-2 py-3 font-medium">{{ 'shipments.fields.pickup' | translate }}</th>
+      <th scope="col" class="px-2 py-3 font-medium">{{ 'common.fields.status' | translate }}</th>
+      <th scope="col" class="px-2 py-3 font-medium">{{ 'shipments.fields.quote' | translate }}</th>
+      <th scope="col" class="px-2 py-3 font-medium">{{ 'shipments.fields.driver' | translate }}</th>
+      <th scope="col" class="px-2 py-3 font-medium">{{ 'shipments.fields.truck' | translate }}</th>
+      <th scope="col" class="px-2 py-3 font-medium">
+        {{ 'shipments.fields.trailer' | translate }}
+      </th>
+      <th scope="col" class="px-2 py-3 font-medium">{{ 'common.actions.action' | translate }}</th>
     </tr>
   </thead>
   <tbody>
@@ -23,13 +25,14 @@
           }}</a>
         </td>
 
-        <td class="px-2 py-4">{{ shipment.pickup | date: 'medium' }}</td>
+        <td class="px-2 py-4">{{ shipment.pickup | date: 'dd/MM/yyyy - h:mm a' }}</td>
         <td class="px-2 py-4">
           <span
             class="rounded border px-2 capitalize"
             [ngClass]="shipmentStatusBadgeColor(shipment.status.label)"
-            >{{ shipment.status.label }}</span
           >
+            {{ 'metadata.shipments-statuses.' + shipment.status.label.toLowerCase() | translate }}
+          </span>
         </td>
         <td class="px-2 py-4">{{ shipment.quote.number }}</td>
         <td class="px-2 py-4">{{ shipment.driver?.fullName || '-' }}</td>
@@ -41,7 +44,7 @@
             <a
               [routerLink]="['edit-shipment', shipment.id]"
               class="text-fg-brand font-medium hover:underline"
-              >Edit</a
+              >{{ 'common.actions.edit' | translate }}</a
             >
           } @else {
             <span class="text-gray-400">-</span>
@@ -56,7 +59,7 @@
               errorMessage
             }}</span>
           } @else {
-            There are no shipments
+            {{ 'shipments.empty-state' | translate }}
           }
         </td>
       </tr>

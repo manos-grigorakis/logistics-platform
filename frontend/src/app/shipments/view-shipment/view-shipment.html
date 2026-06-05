@@ -3,7 +3,7 @@
 }
 
 @if (errorMessage) {
-  <app-error-alert [errorMessage]="errorMessage" />
+  <app-error-alert [errorMessage]="errorMessage | translate" />
 }
 
 <!-- Quote Modal -->
@@ -29,18 +29,22 @@
     <div class="flex flex-wrap items-center justify-between gap-4">
       <div>
         <h2 class="text-2xl leading-loose font-black sm:text-3xl lg:text-4xl">
-          Shipment Number: {{ shipment.number }}
+          {{ 'shipments.fields.shipment-number' | translate }}: {{ shipment.number }}
         </h2>
         <p>
-          <span class="font-light text-zinc-500">Pickup --</span>
-          {{ shipment.pickup | date: 'EEEE, MMM d, y · h:mm a' }}
+          <span class="font-light text-zinc-500"
+            >{{ 'shipments.fields.pickup' | translate }} --</span
+          >
+          {{ shipment.pickup | date: 'dd/MM/yyyy · h:mm a' }}
         </p>
       </div>
       <div>
         <span
           class="rounded border p-2 capitalize"
           [ngClass]="shipmentStatusBadgeColor(shipment.status.label)"
-          >{{ shipment.status.label }}</span
+          >{{
+            'metadata.shipments-statuses.' + shipment.status.label.toLowerCase() | translate
+          }}</span
         >
       </div>
     </div>
@@ -51,25 +55,35 @@
       class="grid grid-cols-1 divide-x divide-zinc-300 overflow-hidden rounded border border-zinc-300 sm:grid-cols-2 lg:grid-cols-5"
     >
       <div class="border-b border-zinc-300 p-5 text-center lg:border-b-0">
-        <p class="mb-1 text-sm text-zinc-500 uppercase">Quote Number</p>
+        <p class="mb-1 text-sm text-zinc-500 uppercase">
+          {{ 'shipments.view-shipment.quote-number' | translate }}
+        </p>
         <p class="cursor-pointer hover:underline" (click)="openQuoteModal()">
           {{ shipment.quote.number }}
         </p>
       </div>
       <div class="border-b border-zinc-300 p-5 text-center lg:border-b-0">
-        <p class="mb-1 text-sm text-zinc-500 uppercase">Driver</p>
-        <p>{{ shipment.driver?.fullName || '- Unassigned' }}</p>
+        <p class="mb-1 text-sm text-zinc-500 uppercase">
+          {{ 'shipments.view-shipment.driver' | translate }}
+        </p>
+        <p>{{ shipment.driver?.fullName || ('common.fields.unassigned' | translate) }}</p>
       </div>
       <div class="border-b border-zinc-300 p-5 text-center lg:border-b-0">
-        <p class="mb-1 text-sm text-zinc-500 uppercase">Truck</p>
-        <p>{{ shipment.truck?.plate || '- Unassigned' }}</p>
+        <p class="mb-1 text-sm text-zinc-500 uppercase">
+          {{ 'shipments.view-shipment.truck' | translate }}
+        </p>
+        <p>{{ shipment.truck?.plate || ('common.fields.unassigned' | translate) }}</p>
       </div>
       <div class="border-b border-zinc-300 p-5 text-center lg:border-b-0">
-        <p class="mb-1 text-sm text-zinc-500 uppercase">Trailer</p>
-        <p>{{ shipment.trailer?.plate || '- Unassigned' }}</p>
+        <p class="mb-1 text-sm text-zinc-500 uppercase">
+          {{ 'shipments.view-shipment.trailer' | translate }}
+        </p>
+        <p>{{ shipment.trailer?.plate || ('common.fields.unassigned' | translate) }}</p>
       </div>
       <div class="border-b border-zinc-300 p-5 text-center lg:border-b-0">
-        <p class="mb-1 text-sm text-zinc-500 uppercase">Action</p>
+        <p class="mb-1 text-sm text-zinc-500 uppercase">
+          {{ 'shipments.view-shipment.action' | translate }}
+        </p>
         <div class="flex justify-center">
           <app-rounded-icon-button icon="lucideEye" iconSize="14" (clicked)="openQuoteModal()" />
         </div>
@@ -79,7 +93,9 @@
     <!-- Cargo Items -->
     <div class="mt-4">
       <div class="mb-3 flex items-center gap-4">
-        <h3 class="text-zinc-500 uppercase">Cargo Items</h3>
+        <h3 class="text-zinc-500 uppercase">
+          {{ 'shipments.view-shipment.cargos' | translate }}
+        </h3>
         <div class="bg-primary-500 h-0.5 w-1/2 sm:w-1/4"></div>
       </div>
 
@@ -88,11 +104,21 @@
           <thead class="bg-zinc-50 text-xs text-zinc-500 uppercase">
             <tr>
               <th class="px-4 py-3 text-left">#</th>
-              <th class="px-4 py-3 text-left">Description</th>
-              <th class="px-4 py-3 text-left">Unit</th>
-              <th class="px-4 py-3 text-left">Quantity</th>
-              <th class="px-4 py-3 text-left">Weight (KG)</th>
-              <th class="px-4 py-3 text-left">Volume (m³)</th>
+              <th class="px-4 py-3 text-left">
+                {{ 'shipments.view-shipment.description' | translate }}
+              </th>
+              <th class="px-4 py-3 text-left">
+                {{ 'shipments.view-shipment.unit' | translate }}
+              </th>
+              <th class="px-4 py-3 text-left">
+                {{ 'shipments.view-shipment.quantity' | translate }}
+              </th>
+              <th class="px-4 py-3 text-left">
+                {{ 'shipments.view-shipment.weight' | translate }} (KG)
+              </th>
+              <th class="px-4 py-3 text-left">
+                {{ 'shipments.view-shipment.volume' | translate }} (m³)
+              </th>
             </tr>
           </thead>
           <tbody class="divide-y divide-zinc-200">
@@ -107,7 +133,9 @@
               </tr>
             } @empty {
               <tr>
-                <td colspan="6" class="px-4 py-6 text-center text-zinc-400">No cargo items</td>
+                <td colspan="6" class="px-4 py-6 text-center text-zinc-400">
+                  {{ 'shipments.fields.cargo-items.empty-state' | translate }}
+                </td>
               </tr>
             }
           </tbody>
@@ -118,7 +146,7 @@
     <!-- Notes -->
     <div class="mt-4">
       <div class="mb-1 flex items-center gap-4">
-        <h3 class="text-zinc-500 uppercase">Notes</h3>
+        <h3 class="text-zinc-500 uppercase">{{ 'shipments.view-shipment.notes' | translate }}</h3>
         <div class="bg-primary-500 h-0.5 w-1/2 sm:w-1/4"></div>
       </div>
 
@@ -126,14 +154,16 @@
         class="w-full max-w-lg rounded border border-zinc-300 py-2 pl-2"
         [ngClass]="{ 'text-zinc-400': !shipment.notes }"
       >
-        {{ shipment.notes || 'No notes available' }}
+        {{ shipment.notes || ('shipments.fields.notes.empty-state' | translate) }}
       </p>
     </div>
 
     <!-- CMR Document -->
     <div class="mt-4">
       <div class="mb-3 flex items-center gap-4">
-        <h3 class="text-zinc-500 uppercase">CMR Document</h3>
+        <h3 class="text-zinc-500 uppercase">
+          CMR {{ 'shipments.view-shipment.document' | translate }}
+        </h3>
         <div class="bg-primary-500 h-0.5 w-1/2 sm:w-1/6"></div>
       </div>
       @if (cmrDocument) {
@@ -141,34 +171,48 @@
           class="grid grid-cols-1 divide-x divide-zinc-300 overflow-hidden rounded border border-zinc-300 sm:grid-cols-2 lg:grid-cols-6"
         >
           <div class="border-b border-zinc-300 p-5 text-center lg:border-b-0">
-            <p class="mb-1 text-sm text-zinc-500 uppercase">CMR Number</p>
+            <p class="mb-1 text-sm text-zinc-500 uppercase">
+              CMR {{ 'shipments.view-shipment.number' | translate }}
+            </p>
             <p class="cursor-pointer hover:underline" (click)="openCmrDocument()">
               {{ cmrDocument.number }}
             </p>
           </div>
           <div class="border-b border-zinc-300 p-5 text-center lg:border-b-0">
-            <p class="mb-1 text-sm text-zinc-500 uppercase">Status</p>
+            <p class="mb-1 text-sm text-zinc-500 uppercase">
+              {{ 'shipments.view-shipment.status' | translate }}
+            </p>
             <span
               class="rounded border p-1 text-sm capitalize"
               [ngClass]="cmrDocumentStatusBadgeColor(cmrDocument.status)"
-              >{{ cmrDocument.status }}
+              >{{
+                'metadata.cmr-document-statuses.' + cmrDocument.status.toLowerCase() | translate
+              }}
             </span>
           </div>
           <div class="border-b border-zinc-300 p-5 text-center lg:border-b-0">
-            <p class="mb-1 text-sm text-zinc-500 uppercase">Signed By</p>
+            <p class="mb-1 text-sm text-zinc-500 uppercase">
+              {{ 'shipments.view-shipment.signed-by' | translate }}
+            </p>
             <p>{{ cmrDocument.signedBy || '-' }}</p>
           </div>
           <div class="border-b border-zinc-300 p-5 text-center lg:border-b-0">
-            <p class="mb-1 text-sm text-zinc-500 uppercase">Signed At</p>
-            <p>{{ (cmrDocument.signedAt | date) || '-' }}</p>
+            <p class="mb-1 text-sm text-zinc-500 uppercase">
+              {{ 'shipments.view-shipment.signed-at' | translate }}
+            </p>
+            <p>{{ (cmrDocument.signedAt | date: 'dd/MM/yyyy') || '-' }}</p>
           </div>
           <div class="border-b border-zinc-300 p-5 text-center lg:border-b-0">
-            <p class="mb-1 text-sm text-zinc-500 uppercase">Created At</p>
-            <p>{{ cmrDocument.createdAt | date }}</p>
+            <p class="mb-1 text-sm text-zinc-500 uppercase">
+              {{ 'shipments.view-shipment.created-at' | translate }}
+            </p>
+            <p>{{ cmrDocument.createdAt | date: 'dd/MM/yyyy' }}</p>
           </div>
 
           <div class="border-b border-zinc-300 p-5 text-center lg:border-b-0">
-            <p class="mb-1 text-sm text-zinc-500 uppercase">Action</p>
+            <p class="mb-1 text-sm text-zinc-500 uppercase">
+              {{ 'shipments.view-shipment.action' | translate }}
+            </p>
             <div class="flex justify-center">
               <app-rounded-icon-button
                 icon="lucideEye"
@@ -179,7 +223,9 @@
           </div>
         </div>
       } @else {
-        <p class="rounded border border-zinc-300 p-4 text-center text-zinc-400">No CMR Document</p>
+        <p class="rounded border border-zinc-300 p-4 text-center text-zinc-400">
+          {{ 'shipments.cmr-document-empty-state' | translate }}
+        </p>
       }
     </div>
   </section>

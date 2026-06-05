@@ -11,6 +11,7 @@ import { CmrDocumentSummaryResponse } from '../models/cmr-document-summary-respo
 import { ModalFile } from '../../shared/ui/modal-file/modal-file';
 import { RoundedIconButton } from '../../shared/forms/rounded-icon-button/rounded-icon-button';
 import { QuotesService } from '../../quotes/quotes.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-view-shipment',
@@ -22,6 +23,7 @@ import { QuotesService } from '../../quotes/quotes.service';
     DecimalPipe,
     ModalFile,
     RoundedIconButton,
+    TranslatePipe,
   ],
   templateUrl: './view-shipment.html',
   styleUrl: './view-shipment.css',
@@ -103,11 +105,11 @@ export class ViewShipment implements OnInit {
         this.isLoading = false;
 
         if (err.status === 404) {
-          this.errorMessage = "Shipment doesn't exist";
+          this.errorMessage = 'shipments.messages.not-found';
         } else if (err.status === 500) {
-          this.errorMessage = 'Server error. Please try again';
+          this.errorMessage = 'common.errors.server';
         } else {
-          this.errorMessage = 'An error occurred. Please try again';
+          this.errorMessage = 'common.errors.generic';
         }
       },
     });
@@ -128,7 +130,7 @@ export class ViewShipment implements OnInit {
         },
         error: (err) => {
           if (err.status === 500) {
-            this.errorMessage = 'Server error. Please try again';
+            this.errorMessage = 'common.errors.server';
           }
         },
       });
@@ -148,7 +150,7 @@ export class ViewShipment implements OnInit {
         },
         error: (err) => {
           if (err.status === 500) {
-            this.errorMessage = 'Server error. Please try again';
+            this.errorMessage = 'common.errors.server';
           }
         },
       });

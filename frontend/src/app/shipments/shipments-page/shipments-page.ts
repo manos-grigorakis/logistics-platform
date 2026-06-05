@@ -7,13 +7,14 @@ import { ShipmentParams } from '../models/shipment-params';
 import { FiltersWrapper } from '../../shared/ui/filters-wrapper/filters-wrapper';
 import { ShipmentsFilters } from '../shipments-filters/shipments-filters';
 import { MetadataService } from '../../metadata/metadata.service';
-import { debounceTime, distinctUntilChanged, Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Subject, Subscription, take } from 'rxjs';
 import { ShipmentStatus } from '../models/shipment-status';
-import { toast } from 'ngx-sonner';
+import { LanguageService } from '../../shared/services/language.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-shipments-page',
-  imports: [ShipmentsTable, Pagination, FiltersWrapper, ShipmentsFilters],
+  imports: [ShipmentsTable, Pagination, FiltersWrapper, ShipmentsFilters, TranslatePipe],
   templateUrl: './shipments-page.html',
   styleUrl: './shipments-page.css',
 })
@@ -47,11 +48,13 @@ export class ShipmentsPage implements OnInit, OnDestroy {
   // Services
   private shipmentsService = inject(ShipmentsService);
   private metadataService = inject(MetadataService);
+  private languageService = inject(LanguageService);
 
-  private currentParams: ShipmentParams = {
-    page: 0,
-  };
+  private currentParams: ShipmentParams = { page: 0 };
 
+  private langChangeSub?: Subscription;
+
+  // Lifecycle
   ngOnInit(): void {
     this.fetchShipments();
     this.metadataService.fetchShipmentsStatuses();
@@ -62,10 +65,14 @@ export class ShipmentsPage implements OnInit, OnDestroy {
     this.searchChanged$
       .pipe(debounceTime(400), distinctUntilChanged())
       .subscribe((value) => this.onSearch(value));
+
+    this.setLabels();
+    this.langChangeSub = this.languageService.onLangChange.subscribe(() => this.setLabels());
   }
 
   ngOnDestroy(): void {
     this.statusesSub?.unsubscribe();
+    this.langChangeSub?.unsubscribe();
   }
 
   public onPageChange(page: number): void {
@@ -114,23 +121,23 @@ export class ShipmentsPage implements OnInit, OnDestroy {
   public onSort(value: string): void {
     switch (value) {
       case 'sort-all':
-        this.sortLabel = 'Sort by';
+        this.sortLabel = this.languageService.translateKey('common.filters.sort-by');
         this.fetchShipments({ page: 0, sortBy: undefined, sortDirection: undefined });
         break;
       case 'sort-asc-by-number':
-        this.sortLabel = 'Number (A-Z)';
+        this.sortLabel = `${this.languageService.translateKey('common.fields.number')} (A-Z)`;
         this.fetchShipments({ page: 0, sortBy: 'number', sortDirection: 'asc' });
         break;
       case 'sort-desc-by-number':
-        this.sortLabel = 'Number (Z-A)';
+        this.sortLabel = `${this.languageService.translateKey('common.fields.number')} (Z-A)`;
         this.fetchShipments({ page: 0, sortBy: 'number', sortDirection: 'desc' });
         break;
       case 'sort-asc-by-pickup':
-        this.sortLabel = 'Pickup (A-Z)';
+        this.sortLabel = `${this.languageService.translateKey('shipments.fields.pickup')} (A-Z)`;
         this.fetchShipments({ page: 0, sortBy: 'pickup', sortDirection: 'asc' });
         break;
       case 'sort-desc-by-pickup':
-        this.sortLabel = 'Pickup (Z-A)';
+        this.sortLabel = `${this.languageService.translateKey('shipments.fields.pickup')} (Z-A)`;
         this.fetchShipments({ page: 0, sortBy: 'pickup', sortDirection: 'desc' });
         break;
     }
@@ -138,7 +145,7 @@ export class ShipmentsPage implements OnInit, OnDestroy {
 
   public onFilter(value: string): void {
     if (value === 'filter-by-all') {
-      this.filterLabel = 'Filter by';
+      this.filterLabel = this.languageService.translateKey('common.filters.filter-by');
       this.fetchShipments({ page: 0, status: undefined, sortDirection: undefined });
       return;
     }
@@ -147,7 +154,9 @@ export class ShipmentsPage implements OnInit, OnDestroy {
 
     if (value.startsWith(prefix)) {
       const status = value.slice(prefix.length);
-      this.filterLabel = status.charAt(0).toUpperCase() + status.slice(1);
+      this.filterLabel = this.languageService.translateKey(
+        `metadata.shipments-statuses.${status.toLowerCase()}`,
+      );
       this.fetchShipments({ status: status.toUpperCase() });
     }
   }
@@ -171,7 +180,7 @@ export class ShipmentsPage implements OnInit, OnDestroy {
       const toDate = new Date(to);
 
       if (fromDate > toDate) {
-        toast.error('From must be before To');
+        this.languageService.toastError('common.validation.from-before-to');
         return;
       }
     }
@@ -212,9 +221,9 @@ export class ShipmentsPage implements OnInit, OnDestroy {
         this.isLoading = false;
 
         if (err.status === 500) {
-          this.errorMessage = 'Server error. Please try again';
+          this.errorMessage = 'common.errors.server';
         } else {
-          this.errorMessage = 'An error occured. Please try again';
+          this.errorMessage = 'common.errors.generic';
         }
       },
     });
@@ -227,5 +236,16 @@ export class ShipmentsPage implements OnInit, OnDestroy {
       },
       error: (err) => console.error(err),
     });
+  }
+
+  private setLabels(): void {
+    this.languageService
+      .translateKeyAsync('common.filters.sort-by')
+      .pipe(take(1))
+      .subscribe((val) => (this.sortLabel = val));
+    this.languageService
+      .translateKeyAsync('common.filters.filter-by')
+      .pipe(take(1))
+      .subscribe((val) => (this.filterLabel = val));
   }
 }

@@ -38,7 +38,10 @@
       "supported-files": "Supported files",
       "max-file-size": "Max File Size",
       "file-too-large": "File is too large",
-      "unsupported-file-type": "Unsupported file type"
+      "unsupported-file-type": "Unsupported file type",
+      "from-before-to": "From must be before To",
+      "required-fields": "The fields with asterisk (*) are required",
+      "must-be-number": "must be a number"
     },
     "filters": {
       "search": "Search",
@@ -58,6 +61,9 @@
       "updated-at": "Updated At",
       "issue-date": "Issue Date",
       "unassigned": "Unassigned",
+      "signed-by": "Signed by",
+      "signed-at": "Signed at",
+      "document": "Document",
       "placeholders": {
         "first-name": "e.g. John",
         "last-name": "e.g. Doe",
@@ -88,7 +94,8 @@
       "report-details": "Report Details",
       "report-name": "Report Name",
       "period": "Period",
-      "results": "Results"
+      "results": "Results",
+      "basic-info": "Basic Information"
     },
     "banks": {
       "nbg": "National Bank Greece"
@@ -202,6 +209,11 @@
       "active": "Active",
       "invited": "Invited",
       "suspended": "Suspended"
+    },
+    "cmr-document-statuses": {
+      "generated": "Generated",
+      "signed": "Signed",
+      "cancelled": "Cancelled"
     }
   },
 
@@ -364,14 +376,78 @@
   },
 
   "shipments": {
+    "empty-state": "There are no shipments",
+    "cmr-document-empty-state": "No CMR document",
+    "units-empty-state": "No units are available",
+    "actions": {
+      "create": "Create a Shipment",
+      "update": "Update Shipment"
+    },
     "fields": {
+      "shipment-number": "Shipment Number",
       "pickup": "Pickup",
       "driver": "Driver",
+      "truck": "Truck",
+      "trailer": "Trailer",
+      "quote": "Quote",
       "truck-plate": "Truck Plate",
-      "trailer-plate": "Trailer Plate"
+      "trailer-plate": "Trailer Plate",
+      "quote-number": "Quote Number",
+      "cargo-items": {
+        "empty-state": "No cargo items",
+        "title": "Cargo Items",
+        "description": "Description",
+        "unit": "Unit",
+        "quantity": "Quantity",
+        "weight": "Weight",
+        "volume": "Volume"
+      },
+      "notes": {
+        "empty-state": "No notes available",
+        "title": "Notes"
+      },
+      "placeholders": {}
     },
     "filters": {
-      "search-by-shipment-number": "Search"
+      "search-by-shipment-number": "Search",
+      "search-quote": "Search a Quote",
+      "search-driver": "Search a Driver",
+      "search-truck": "Search a Truck",
+      "search-trailer": "Search a Trailer"
+    },
+    "messages": {
+      "success-creation": "Shipment created successfully",
+      "success-update": "Shipment updated successfully",
+      "not-found": "Shipment not found",
+      "fleet-assignment": "Fleet Assignment",
+      "quotes": {
+        "loading": "Loading Quotes",
+        "required": "Quote is required"
+      },
+      "loading-drivers": "Loading Drivers",
+      "loading-trucks": "Loading Trucks",
+      "loading-trailers": "Loading Trailers",
+      "select-unit": "Select a unit"
+    },
+    "view-shipment": {
+      "quote-number": "Quote Number",
+      "driver": "Driver",
+      "truck": "Truck",
+      "trailer": "Trailer",
+      "action": "Action",
+      "cargos": "Cargo Items",
+      "description": "Description",
+      "unit": "Unit",
+      "quantity": "Quantity",
+      "weight": "Weight",
+      "volume": "Volume",
+      "notes": "Notes",
+      "document": "Document",
+      "status": "Status",
+      "signed-by": "Signed By",
+      "signed-at": "Signed At",
+      "created-at": "Created At",
+      "number": "Number"
     }
   },
 

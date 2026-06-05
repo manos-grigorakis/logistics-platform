@@ -1,5 +1,5 @@
 <app-shipments-form
   formUsage="create"
-  [errorMessage]="errorMessage"
+  [errorMessage]="errorMessage | translate"
   (onSubmit)="onSubmit($event)"
 />
