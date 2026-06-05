@@ -1,7 +1,7 @@
 <div [formGroup]="parentForm">
   <!-- Header -->
   <div class="mb-4 flex justify-between">
-    <h3 class="text-lg font-semibold">Services & Items</h3>
+    <h3 class="text-lg font-semibold">{{ 'quotes.fields.services-items' | translate }}</h3>
     <app-rounded-icon-button
       icon="lucidePlus"
       color="success"
@@ -14,7 +14,9 @@
       <div [formGroupName]="i" class="bg-secondary-100 rounded border border-gray-200 p-8">
         <!-- Card Header -->
         <div class="mb-2 flex justify-between">
-          <h4 class="font-light text-gray-700">#Item {{ i + 1 }}</h4>
+          <h4 class="font-light text-gray-700">
+            #{{ 'common.messages.item' | translate }} {{ i + 1 }}
+          </h4>
 
           <app-rounded-icon-button
             type="button"
@@ -27,8 +29,8 @@
         <!-- Fields -->
         <app-main-input
           formControlName="name"
-          label="Name"
-          placeholder="Service/Item Name"
+          [label]="'common.fields.name' | translate"
+          [placeholder]="'quotes.fields.placeholders.service-name' | translate"
           type="text"
           [showRequiredStar]="true"
         />
@@ -37,35 +39,42 @@
         <div class="my-6 flex gap-2">
           <app-main-input
             formControlName="price"
-            label="Price"
-            placeholder="0.00"
+            [label]="'common.fields.price' | translate"
+            [placeholder]="'common.fields.placeholders.price' | translate"
             type="text"
             [showRequiredStar]="true"
-            patternErrorMessage="must by a number"
+            [patternErrorMessage]="'common.validation.must-be-number' | translate"
           />
           <app-main-input
             formControlName="quantity"
-            label="Quantity"
-            placeholder="1"
+            [label]="'common.fields.quantity' | translate"
+            [placeholder]="'common.fields.placeholders.quantity' | translate"
             type="number"
             [showRequiredStar]="true"
-            patternErrorMessage="must by a number"
+            [patternErrorMessage]="'common.validation.must-be-number' | translate"
           />
 
           <!-- Units -->
           <div>
-            <label [for]="'unit' + i"><span class="text-danger mr-1 text-sm">*</span>Unit</label>
+            <label [for]="'unit' + i"
+              ><span class="text-danger mr-1 text-sm">*</span
+              >{{ 'quotes.fields.unit' | translate }}</label
+            >
             <select
               formControlName="unit"
               [id]="'unit' + i"
               class="focus:ring-primary-200 w-full rounded border border-gray-300 px-4 py-2 text-gray-700 focus:ring focus:outline-none"
             >
-              <option [ngValue]="null" disabled>Select a unit</option>
+              <option [ngValue]="null" disabled>
+                {{ 'quotes.messages.select-unit' | translate }}
+              </option>
 
               @for (unit of quoteItemUnits; track $index) {
-                <option [ngValue]="unit | lowercase">{{ unit | titlecase }}</option>
+                <option [ngValue]="unit | lowercase">
+                  {{ 'metadata.quotes-item-units.' + unit.toLowerCase() | translate }}
+                </option>
               } @empty {
-                <option disabled>No units are available</option>
+                <option disabled>{{ 'quotes.empty-state-units' | translate }}</option>
               }
             </select>
             @if (
@@ -73,7 +82,9 @@
             ) {
               <div>
                 @if (getUnitControl(i).hasError('required')) {
-                  <span class="text-danger ml-1 text-sm">Unit is required</span>
+                  <span class="text-danger ml-1 text-sm">{{
+                    'quotes.messages.required-unit' | translate
+                  }}</span>
                 }
               </div>
             }
@@ -82,10 +93,10 @@
 
         <!-- Description -->
         <div class="flex flex-col">
-          <label [for]="'description' + i">Description</label>
+          <label [for]="'description' + i">{{ 'common.fields.description' | translate }}</label>
           <textarea
             [id]="'description' + i"
-            placeholder="Description goes here..."
+            [placeholder]="('common.fields.placeholders.description' | translate) + '...'"
             class="focus:ring-primary-200 w-full resize-none rounded border border-gray-300 px-4 py-2 text-gray-700 placeholder-gray-700 focus:ring focus:outline-none"
             formControlName="description"
           ></textarea>

@@ -1,19 +1,19 @@
 <div [formGroup]="parentForm">
-  <h3 class="mb-4 text-lg font-semibold">Basic Information</h3>
+  <h3 class="mb-4 text-lg font-semibold">{{ 'common.messages.basic-info' | translate }}</h3>
   <!-- Customer Search -->
   <div class="mb-6">
     <label for="customerId" (click)="onClickFocusCustomersSelect()" class="mb-1 block">
-      <span class="text-danger mr-1 text-sm">*</span>Customer
+      <span class="text-danger mr-1 text-sm">*</span>{{ 'quotes.fields.customer' | translate }}
     </label>
     <ng-select
       #customerSelect
       class="tw-select"
-      placeholder="Search a customer"
+      [placeholder]="'quotes.filters.search-customer' | translate"
       bindLabel="companyName"
       bindValue="id"
       formControlName="customerId"
-      loadingText="Loading customers..."
-      notFoundText="No results"
+      [loadingText]="('quotes.messages.loading-customers' | translate) + '...'"
+      [notFoundText]="'common.errors.no-results' | translate"
       [items]="customersList"
       [loading]="customersLoading"
       [typeahead]="customerSearch$"
@@ -23,7 +23,9 @@
     @if (customerId.invalid && (customerId.dirty || customerId.touched)) {
       <div>
         @if (customerId.hasError('required')) {
-          <span class="text-danger mt-1 ml-1 text-sm">Customer is required</span>
+          <span class="text-danger mt-1 ml-1 text-sm">{{
+            'quotes.messages.required-customer' | translate
+          }}</span>
         }
       </div>
     }
@@ -32,8 +34,8 @@
   <div class="mb-6 flex gap-2">
     <app-main-input
       formControlName="origin"
-      label="Origin"
-      placeholder="Origin"
+      [label]="'quotes.fields.origin' | translate"
+      [placeholder]="'quotes.fields.placeholders.origin' | translate"
       type="text"
       [showRequiredStar]="true"
       class="flex-1"
@@ -41,8 +43,8 @@
 
     <app-main-input
       formControlName="destination"
-      label="Destination"
-      placeholder="Destination"
+      [label]="'quotes.fields.destination' | translate"
+      [placeholder]="'quotes.fields.placeholders.destination' | translate"
       type="text"
       [showRequiredStar]="true"
       class="flex-1"
@@ -51,11 +53,11 @@
   <div class="mb-6">
     <app-main-input
       formControlName="validityDays"
-      label="Validity Days"
-      placeholder="Validity Days"
+      [label]="'quotes.fields.validity-days' | translate"
+      [placeholder]="'quotes.fields.placeholders.validity-days' | translate"
       type="text"
       [showRequiredStar]="true"
-      patternErrorMessage="must by a number"
+      [patternErrorMessage]="'common.validation.must-be-number' | translate"
     />
   </div>
 </div>

@@ -1,9 +1,9 @@
 <div class="mx-auto mt-6 max-w-3xl rounded-lg bg-white p-6 shadow-lg shadow-black/10">
   <h2 class="mb-4 text-center text-3xl font-semibold">
     @if (formUsage === 'create') {
-      Create a Quote
+      {{ 'quotes.actions.create' | translate }}
     } @else {
-      Update Quote
+      {{ 'quotes.actions.update' | translate }}
     }
   </h2>
 
@@ -18,12 +18,12 @@
   </div>
   <div class="mb-5">
     @if (itemsErrorMessage) {
-      <app-error-alert [errorMessage]="itemsErrorMessage" />
+      <app-error-alert [errorMessage]="itemsErrorMessage | translate" />
     }
   </div>
   <div class="mb-5">
     @if (customerErrorMessage) {
-      <app-error-alert [errorMessage]="customerErrorMessage" />
+      <app-error-alert [errorMessage]="customerErrorMessage | translate" />
     }
   </div>
 
@@ -60,9 +60,9 @@
 
     <!-- Button -->
     @if (formUsage === 'create') {
-      <app-primary-button value="Create Quote" [isDisabled]="isLoading" />
+      <app-primary-button [value]="'quotes.actions.create' | translate" [isDisabled]="isLoading" />
     } @else {
-      <app-primary-button value="Update Quote" [isDisabled]="isLoading" />
+      <app-primary-button [value]="'quotes.actions.update' | translate" [isDisabled]="isLoading" />
     }
   </form>
 </div>

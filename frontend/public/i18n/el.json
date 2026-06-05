@@ -57,6 +57,10 @@
       "number": "Αριθμός",
       "phone": "Τηλέφωνο",
       "date": "Ημερομηνία",
+      "name": "Όνομα",
+      "price": "Τιμή",
+      "description": "Περιγραφή",
+      "quantity": "Ποσότητα",
       "created-at": "Ημ. Δημιουργίας",
       "updated-at": "Ημ. Τροποποίησης",
       "issue-date": "Ημ. Έκδοσης",
@@ -68,7 +72,10 @@
         "first-name": "π.χ. Γιάννης",
         "last-name": "π.χ. Παπαδόπουλος",
         "email": "π.χ. john.papadopoulos@example.com",
-        "phone": "π.χ. +30 210 123 4567"
+        "phone": "π.χ. +30 210 123 4567",
+        "price": "π.χ. 10.00",
+        "quantity": "π.χ. 2",
+        "description": "Η περιγραφή συμπληρώνεται εδώ"
       }
     },
     "pagination": {
@@ -95,7 +102,8 @@
       "report-name": "Όνομα Αναφοράς",
       "period": "Περίοδος",
       "results": "Αποτελέσματα",
-      "basic-info": "Βασικές Πληροφορίες"
+      "basic-info": "Βασικές Πληροφορίες",
+      "item": "Είδος"
     },
     "banks": {
       "nbg": "Εθνική Τράπεζα της Ελλάδος"
@@ -452,8 +460,49 @@
   },
 
   "quotes": {
+    "empty-state": "Δεν υπάρχουν προσφορές",
+    "empty-state-units": "Δεν υπάρχουν διαθέσιμες μονάδες",
+    "actions": {
+      "create": "Δημιουργία Προσφοράς",
+      "update": "Ενημέρωση Προσφοράς"
+    },
+    "fields": {
+      "customer": "Πελάτης",
+      "company-name": "Επωνυμία Εταιρείας",
+      "gross-price": "Μικτή Τιμή",
+      "special-terms": "Ειδικοί Όροι",
+      "notes": "Σημειώσεις",
+      "unit": "Μονάδα",
+      "validity-days": "Ημέρες Ισχύος",
+      "destination": "Προορισμός",
+      "services-items": "Υπηρεσίες & Είδη",
+      "origin": "Σημείο Αναχώρησης",
+      "placeholders": {
+        "special-terms": "Προσθέστε ειδικούς όρους",
+        "notes": "Προσθέστε σημειώσεις",
+        "validity-days": "π.χ. 30",
+        "origin": "π.χ. Αθήνα",
+        "destination": "π.χ. Πάτρα",
+        "service-name": "Όνομα Υπηρεσίας/Είδους"
+      }
+    },
     "filters": {
-      "search-by-number-or-company-name": "Αναζήτηση βάσει Αριθμού ή Επωνυμίας Εταιρείας"
+      "search-by-number-or-company-name": "Αναζήτηση βάσει Αριθμού ή Επωνυμίας Εταιρείας",
+      "search-customer": "Αναζήτηση πελάτη"
+    },
+    "messages": {
+      "success-creation": "Η προσφορά δημιουργήθηκε με επιτυχία",
+      "success-update": "Η προσφορά ενημερώθηκε με επιτυχία",
+      "not-found-customer-or-user": "Ο πελάτης ή ο χρήστης δεν βρέθηκε",
+      "not-found-with-id": "Η προσφορά με ID: {{id}} δεν βρέθηκε",
+      "warning-draft-status-update": "Μπορείτε να ενημερώσετε μόνο προσφορές που βρίσκονται σε κατάσταση ΠΡΟΣΧΕΔΙΟΥ",
+      "loading-customers": "Φόρτωση πελατών",
+      "required-customer": "Ο πελάτης είναι υποχρεωτικός",
+      "select-unit": "Επιλέξτε μια μονάδα",
+      "required-unit": "Η μονάδα είναι υποχρεωτική",
+      "required-service-items": "Οι υπηρεσίες/είδη είναι υποχρεωτικά",
+      "failed-to-fetch-customers": "Αποτυχία ανάκτησης πελατών",
+      "additional-info": "Πρόσθετες Πληροφορίες"
     }
   },
 

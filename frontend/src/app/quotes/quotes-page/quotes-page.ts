@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { QuotesService } from '../quotes.service';
 import { QuotesTable } from '../quotes-table/quotes-table';
 import { QuotesListItem } from '../models/quotes-list-item';
@@ -6,15 +6,17 @@ import { ModalFile } from '../../shared/ui/modal-file/modal-file';
 import { QuotesFilters } from '../quotes-filters/quotes-filters';
 import { FetchQuotesParameters } from '../models/fetch-quotes-parameters';
 import { Pagination } from '../../shared/ui/pagination/pagination';
-import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Subject, Subscription, take } from 'rxjs';
+import { LanguageService } from '../../shared/services/language.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-quotes-page',
-  imports: [QuotesTable, ModalFile, QuotesFilters, Pagination],
+  imports: [QuotesTable, ModalFile, QuotesFilters, Pagination, TranslatePipe],
   templateUrl: './quotes-page.html',
   styleUrl: './quotes-page.css',
 })
-export class QuotesPage implements OnInit {
+export class QuotesPage implements OnInit, OnDestroy {
   private quotesService: QuotesService = inject(QuotesService);
   private searchChanged$ = new Subject<string>(); // Stream
   private currentParams: FetchQuotesParameters = {
@@ -29,8 +31,9 @@ export class QuotesPage implements OnInit {
   public showModal: boolean = false;
 
   // Filters
-  public activeSortLabel: string = 'Sort by';
-  public activeFilterLabel: string = 'Filter by';
+  public searchPlaceholder: string = '';
+  public activeSortLabel: string = '';
+  public activeFilterLabel: string = '';
 
   // Pagination
   public currentPage: number = 0;
@@ -39,6 +42,10 @@ export class QuotesPage implements OnInit {
   public isFirstPage: boolean = false;
   public pageSize: number = 0;
 
+  private languageService = inject(LanguageService);
+  private langChangeSub?: Subscription;
+
+  // Lifecycle
   ngOnInit(): void {
     this.fetchQuotes();
 
@@ -46,6 +53,13 @@ export class QuotesPage implements OnInit {
     this.searchChanged$
       .pipe(debounceTime(400), distinctUntilChanged())
       .subscribe((value) => this.onSearch(value));
+
+    this.setLabels();
+    this.langChangeSub = this.languageService.onLangChange.subscribe(() => this.setLabels());
+  }
+
+  ngOnDestroy(): void {
+    this.langChangeSub?.unsubscribe();
   }
 
   public onSearchChanged(value: string): void {
@@ -66,23 +80,23 @@ export class QuotesPage implements OnInit {
 
     switch (query) {
       case 'sort-all':
-        this.activeSortLabel = 'Sort by';
+        this.activeSortLabel = this.languageService.translateKey('common.filters.sort-by');
         this.fetchQuotes({ page: 0, sortBy: undefined, sortDirection: undefined });
         break;
       case 'sort-asc-by-number':
-        this.activeSortLabel = 'Number 0 → 9';
+        this.activeSortLabel = `${this.languageService.translateKey('common.fields.number')} 0 → 9`;
         this.fetchQuotes({ page: 0, sortBy: 'number', sortDirection: 'asc' });
         break;
       case 'sort-desc-by-number':
-        this.activeSortLabel = 'Number 9 → 0';
+        this.activeSortLabel = `${this.languageService.translateKey('common.fields.number')} 9 → 0`;
         this.fetchQuotes({ page: 0, sortBy: 'number', sortDirection: 'desc' });
         break;
       case 'sort-asc-by-issue-date':
-        this.activeSortLabel = 'Date 0 → 9';
+        this.activeSortLabel = `${this.languageService.translateKey('common.fields.date')} 0 → 9`;
         this.fetchQuotes({ page: 0, sortBy: 'issueDate', sortDirection: 'asc' });
         break;
       case 'sort-desc-by-issue-date':
-        this.activeSortLabel = 'Date 9 → 0';
+        this.activeSortLabel = `${this.languageService.translateKey('common.fields.date')} 9 → 0`;
         this.fetchQuotes({ page: 0, sortBy: 'issueDate', sortDirection: 'desc' });
         break;
     }
@@ -93,31 +107,41 @@ export class QuotesPage implements OnInit {
 
     switch (query) {
       case 'filter-by-all':
-        this.activeFilterLabel = 'Filter by';
+        this.activeFilterLabel = this.languageService.translateKey('common.filters.filter-by');
         this.fetchQuotes({ page: 0, quoteStatus: undefined, sortDirection: undefined });
         break;
       case 'filter-by-quote-status-draft':
-        this.activeFilterLabel = 'Draft';
+        this.activeFilterLabel = this.languageService.translateKey(
+          'metadata.quotes-statuses.draft',
+        );
         this.fetchQuotes({ page: 0, quoteStatus: 'DRAFT' });
         break;
       case 'filter-by-quote-status-sent':
-        this.activeFilterLabel = 'Sent';
+        this.activeFilterLabel = this.languageService.translateKey('metadata.quotes-statuses.sent');
         this.fetchQuotes({ page: 0, quoteStatus: 'SENT' });
         break;
       case 'filter-by-quote-status-accepted':
-        this.activeFilterLabel = 'Accepted';
+        this.activeFilterLabel = this.languageService.translateKey(
+          'metadata.quotes-statuses.accepted',
+        );
         this.fetchQuotes({ page: 0, quoteStatus: 'ACCEPTED' });
         break;
       case 'filter-by-quote-status-rejected':
-        this.activeFilterLabel = 'Rejected';
+        this.activeFilterLabel = this.languageService.translateKey(
+          'metadata.quotes-statuses.rejected',
+        );
         this.fetchQuotes({ page: 0, quoteStatus: 'REJECTED' });
         break;
       case 'filter-by-quote-status-expired':
-        this.activeFilterLabel = 'Expired';
+        this.activeFilterLabel = this.languageService.translateKey(
+          'metadata.quotes-statuses.expired',
+        );
         this.fetchQuotes({ page: 0, quoteStatus: 'EXPIRED' });
         break;
       case 'filter-by-quote-status-cancelled':
-        this.activeFilterLabel = 'Cancelled';
+        this.activeFilterLabel = this.languageService.translateKey(
+          'metadata.quotes-statuses.cancelled',
+        );
         this.fetchQuotes({ page: 0, quoteStatus: 'CANCELLED' });
         break;
     }
@@ -149,8 +173,7 @@ export class QuotesPage implements OnInit {
       return;
     }
 
-    this.activeFilterLabel = 'Filter by';
-    this.activeSortLabel = 'Sort by';
+    this.setLabels();
 
     const minSearchByNumber = 5;
     const normalized = param.toUpperCase();
@@ -209,9 +232,9 @@ export class QuotesPage implements OnInit {
         this.isLoading = false;
 
         if (err.status === 500) {
-          this.errorMessage = 'Server error. Please try again';
+          this.errorMessage = 'common.errors.server';
         } else {
-          this.errorMessage = 'An error occured. Please try again later';
+          this.errorMessage = 'common.errors.generic';
         }
       },
     });
@@ -231,13 +254,32 @@ export class QuotesPage implements OnInit {
       error: (err) => {
         this.isLoading = false;
         if (err.status === 404) {
-          this.errorMessage = `Quote with id ${id} not exist`;
+          this.errorMessage = this.languageService.translateKey(
+            'quotes.messages.not-found-with-id',
+            { id: id },
+          );
         } else if (err.status === 500) {
-          this.errorMessage = 'Server error. Please try again';
+          this.errorMessage = 'common.errors.server';
         } else {
-          this.errorMessage = 'An error occured. Please try again later';
+          this.errorMessage = 'common.errors.generic';
         }
       },
     });
+  }
+
+  private setLabels(): void {
+    this.languageService
+      .translateKeyAsync('quotes.filters.search-by-number-or-company-name')
+      .pipe(take(1))
+      .subscribe((val) => (this.searchPlaceholder = val));
+
+    this.languageService
+      .translateKeyAsync('common.filters.sort-by')
+      .pipe(take(1))
+      .subscribe((val) => (this.activeSortLabel = val));
+    this.languageService
+      .translateKeyAsync('common.filters.filter-by')
+      .pipe(take(1))
+      .subscribe((val) => (this.activeFilterLabel = val));
   }
 }

@@ -57,6 +57,10 @@
       "number": "Number",
       "phone": "Phone",
       "date": "Date",
+      "name": "Name",
+      "price": "Price",
+      "description": "Description",
+      "quantity": "Quantity",
       "created-at": "Created At",
       "updated-at": "Updated At",
       "issue-date": "Issue Date",
@@ -68,7 +72,10 @@
         "first-name": "e.g. John",
         "last-name": "e.g. Doe",
         "email": "e.g. john.doe@example.com",
-        "phone": "e.g. +30 210 123 4567"
+        "phone": "e.g. +30 210 123 4567",
+        "price": "e.g. 10.00",
+        "quantity": "e.g. 2",
+        "description": "Description goes here"
       }
     },
     "pagination": {
@@ -95,7 +102,8 @@
       "report-name": "Report Name",
       "period": "Period",
       "results": "Results",
-      "basic-info": "Basic Information"
+      "basic-info": "Basic Information",
+      "item": "Item"
     },
     "banks": {
       "nbg": "National Bank Greece"
@@ -452,8 +460,49 @@
   },
 
   "quotes": {
+    "empty-state": "There are no quotes",
+    "empty-state-units": "There are no units available",
+    "actions": {
+      "create": "Create a Quote",
+      "update": "Update Quote"
+    },
+    "fields": {
+      "customer": "Customer",
+      "company-name": "Company Name",
+      "gross-price": "Gross Price",
+      "special-terms": "Special Terms",
+      "notes": "Notes",
+      "unit": "Unit",
+      "validity-days": "Validity Days",
+      "destination": "Destination",
+      "services-items": "Services & Items",
+      "origin": "Origin",
+      "placeholders": {
+        "special-terms": "Add some special terms",
+        "notes": "Add some notes",
+        "validity-days": "e.g. 30",
+        "origin": "e.g. Athens",
+        "destination": "e.g. Patra",
+        "service-name": "Service/Item Name"
+      }
+    },
     "filters": {
-      "search-by-number-or-company-name": "Search by Number or Company Name"
+      "search-by-number-or-company-name": "Search by Number or Company Name",
+      "search-customer": "Search a customer"
+    },
+    "messages": {
+      "success-creation": "Quote created successfully",
+      "success-update": "Quote updated successfully",
+      "not-found-customer-or-user": "Customer or user not found",
+      "not-found-with-id": "Quote not found with id: {{id}}",
+      "warning-draft-status-update": "You can only update quotes in DRAFT status",
+      "loading-customers": "Loading customers",
+      "required-customer": "Customer is required",
+      "select-unit": "Select a unit",
+      "required-unit": "Unit is required",
+      "required-service-items": "Service/Items are required",
+      "failed-to-fetch-customers": "Failed to fetch Customers",
+      "additional-info": "Additional Information"
     }
   },
 

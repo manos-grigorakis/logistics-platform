@@ -3,6 +3,7 @@
     <app-quotes-filters
       [sortLabel]="activeSortLabel"
       [filterLabel]="activeFilterLabel"
+      [searchPlaceholder]="searchPlaceholder"
       (searchChanged)="onSearchChanged($event)"
       (refresh)="onRefresh()"
       (sortBy)="onSort($event)"
@@ -21,7 +22,7 @@
     <app-quotes-table
       [isLoading]="isLoading"
       [quotes]="quotes"
-      [errorMessage]="errorMessage"
+      [errorMessage]="errorMessage | translate"
       (onViewQuote)="onViewQuoteClick($event)"
     />
   </div>

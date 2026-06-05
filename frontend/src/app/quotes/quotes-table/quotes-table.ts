@@ -5,10 +5,11 @@ import { RouterLink } from '@angular/router';
 import { QuotesListItem } from '../models/quotes-list-item';
 import { NgClass, DatePipe } from '@angular/common';
 import { quoteStatusBadgeColor } from '../utils/quotes-status-badge-color';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-quotes-table',
-  imports: [LoadingSpinner, CurrencyPipe, RouterLink, DatePipe, NgClass],
+  imports: [LoadingSpinner, CurrencyPipe, RouterLink, DatePipe, NgClass, TranslatePipe],
   templateUrl: './quotes-table.html',
   styleUrl: './quotes-table.css',
 })

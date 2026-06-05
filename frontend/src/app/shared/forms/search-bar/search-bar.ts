@@ -33,6 +33,9 @@ export class SearchBar implements OnInit, OnDestroy {
   }
 
   private setPlaceholder(): void {
+    // If placeholder has been passed through input
+    if (this.placeholder) return;
+
     this.languageService
       .translateKeyAsync('common.filters.search')
       .pipe(take(1))

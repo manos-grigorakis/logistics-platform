@@ -30,6 +30,7 @@ import { Quote } from '../models/quote';
 import { QuoteItems } from '../models/quote-items';
 import { QuoteFormPayload } from '../models/quote-form-payload';
 import { ErrorAlert } from '../../shared/ui/error-alert/error-alert';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-quotes-form',
@@ -41,6 +42,7 @@ import { ErrorAlert } from '../../shared/ui/error-alert/error-alert';
     BasicInformation,
     ServicesAndItems,
     ErrorAlert,
+    TranslatePipe,
   ],
   templateUrl: './quotes-form.html',
   styleUrl: './quotes-form.css',
@@ -171,7 +173,7 @@ export class QuotesForm implements OnInit, AfterViewInit {
     if (this.items.length === 0) {
       this.onClickAddItem();
       this.markFormGroupRecursive(this.quoteForm);
-      this.itemsErrorMessage = 'Service/Items are required';
+      this.itemsErrorMessage = 'quotes.messages.required-service-items';
       return;
     }
 
@@ -215,9 +217,9 @@ export class QuotesForm implements OnInit, AfterViewInit {
         this.customersLoading = false;
         this.customersList = res.data.content;
       },
-      error: (err) => {
+      error: () => {
         this.customersLoading = false;
-        this.customerErrorMessage = 'Failed to fetch Customers';
+        this.customerErrorMessage = 'quotes.messages.failed-to-fetch-customers';
       },
     });
   }

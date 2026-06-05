@@ -6,12 +6,19 @@ import {
   FormControl,
   AbstractControl,
 } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Editor, Toolbar, NgxEditorMenuComponent, NgxEditorComponent, toHTML } from 'ngx-editor';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-additional-information',
-  imports: [FormsModule, ReactiveFormsModule, NgxEditorMenuComponent, NgxEditorComponent],
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    NgxEditorMenuComponent,
+    NgxEditorComponent,
+    TranslatePipe,
+  ],
   templateUrl: './additional-information.html',
   styleUrl: './additional-information.css',
 })

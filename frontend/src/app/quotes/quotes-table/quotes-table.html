@@ -4,12 +4,18 @@
   }
   <thead class="text-body bg-secondary-700 text-sm text-white">
     <tr>
-      <th scope="col" class="px-2 py-3 font-medium">Number</th>
-      <th scope="col" class="px-2 py-3 font-medium">Company Name</th>
-      <th scope="col" class="truncate px-2 py-3 font-medium">Gross Price</th>
-      <th scope="col" class="px-2 py-3 font-medium">Status</th>
-      <th scope="col" class="px-2 py-3 font-medium">Issue Date</th>
-      <th scope="col" class="px-2 py-3 font-medium">Action</th>
+      <th scope="col" class="px-2 py-3 font-medium">{{ 'common.fields.number' | translate }}</th>
+      <th scope="col" class="px-2 py-3 font-medium">
+        {{ 'quotes.fields.company-name' | translate }}
+      </th>
+      <th scope="col" class="truncate px-2 py-3 font-medium">
+        {{ 'quotes.fields.gross-price' | translate }}
+      </th>
+      <th scope="col" class="px-2 py-3 font-medium">{{ 'common.fields.status' | translate }}</th>
+      <th scope="col" class="px-2 py-3 font-medium">
+        {{ 'common.fields.issue-date' | translate }}
+      </th>
+      <th scope="col" class="px-2 py-3 font-medium">{{ 'common.actions.action' | translate }}</th>
     </tr>
   </thead>
   <tbody>
@@ -23,16 +29,16 @@
             class="rounded border px-2 capitalize"
             [ngClass]="quoteStatusBadgeColor(quote.status)"
           >
-            {{ quote.status }}
+            {{ 'metadata.quotes-statuses.' + quote.status.toLowerCase() | translate }}
           </span>
         </td>
-        <td class="px-2 py-4">{{ quote.issueDate | date }}</td>
+        <td class="px-2 py-4">{{ quote.issueDate | date: 'dd/MM/yyyy' }}</td>
         @if (quote.status === 'draft') {
           <td class="px-2 py-4">
             <a
               [routerLink]="['edit-quote', quote.id]"
               class="text-fg-brand cursor-pointer font-medium hover:underline"
-              >Edit</a
+              >{{ 'common.actions.edit' | translate }}</a
             >
           </td>
         } @else {
@@ -47,7 +53,7 @@
               errorMessage
             }}</span>
           } @else {
-            There are no quotes
+            {{ 'quotes.empty-state' | translate }}
           }
         </td>
       </tr>
