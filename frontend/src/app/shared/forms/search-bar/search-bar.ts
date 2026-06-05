@@ -1,8 +1,8 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { NgIcon } from '@ng-icons/core';
 import { FormsModule } from '@angular/forms';
 import { LanguageService } from '../../services/language.service';
-import { take } from 'rxjs';
+import { Subscription, take } from 'rxjs';
 
 @Component({
   selector: 'app-search-bar',
@@ -10,24 +10,32 @@ import { take } from 'rxjs';
   templateUrl: './search-bar.html',
   styleUrl: './search-bar.css',
 })
-export class SearchBar implements OnInit {
+export class SearchBar implements OnInit, OnDestroy {
   @Input() placeholder: string = '';
   @Input() value: string = '';
   @Output() valueChange = new EventEmitter<string>();
 
   private languageService = inject(LanguageService);
+  private langChangeSub?: Subscription;
 
   ngOnInit(): void {
-    if (!this.placeholder) {
-      this.languageService
-        .translateKeyAsync('common.filters.search')
-        .pipe(take(1))
-        .subscribe((val) => (this.placeholder = val + '...'));
-    }
+    this.setPlaceholder();
+    this.langChangeSub = this.languageService.onLangChange.subscribe(() => this.setPlaceholder());
+  }
+
+  ngOnDestroy(): void {
+    this.langChangeSub?.unsubscribe();
   }
 
   public onInputChange(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
     this.valueChange.emit(value);
+  }
+
+  private setPlaceholder(): void {
+    this.languageService
+      .translateKeyAsync('common.filters.search')
+      .pipe(take(1))
+      .subscribe((val) => (this.placeholder = val + '...'));
   }
 }

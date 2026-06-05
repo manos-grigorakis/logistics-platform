@@ -1,11 +1,11 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { CustomersService } from '../customers.service';
 import { Customer } from '../models/customer';
 import { CustomersTable } from '../customers-table/customers-table';
 import { Pagination } from '../../shared/ui/pagination/pagination';
 import { CustomersFilters } from '../customers-filters/customers-filters';
 import { FetchCustomersParameters } from '../models/fetch-customers-parameters';
-import { debounceTime, distinctUntilChanged, forkJoin, Subject, take } from 'rxjs';
+import { debounceTime, distinctUntilChanged, forkJoin, Subject, Subscription, take } from 'rxjs';
 import { Modal } from '../../shared/ui/modal/modal';
 import { toast } from 'ngx-sonner';
 import { MetadataService } from '../../metadata/metadata.service';
@@ -19,7 +19,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   templateUrl: './customers-page.html',
   styleUrl: './customers-page.css',
 })
-export class CustomersPage implements OnInit {
+export class CustomersPage implements OnInit, OnDestroy {
   private customersService: CustomersService = inject(CustomersService);
   private metadataService: MetadataService = inject(MetadataService);
   private languageService = inject(LanguageService);
@@ -53,16 +53,26 @@ export class CustomersPage implements OnInit {
   public isFirstPage: boolean = false;
   public pageSize: number = 0;
 
+  private langChangeSub?: Subscription;
+
+  // Lifecycle
   ngOnInit(): void {
     this.fetchCustomers();
     this.fetchCustomerTypes();
+    this.setFilteringLabels();
 
     // Add debouncer to search bar
     this.searchChanged$
       .pipe(debounceTime(400), distinctUntilChanged())
       .subscribe((value) => this.onSearch(value));
 
-    this.setFilteringLabels();
+    this.langChangeSub = this.languageService.onLangChange.subscribe(() =>
+      this.setFilteringLabels(),
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.langChangeSub?.unsubscribe();
   }
 
   public toggleCustomerSelection(customerId: number): void {

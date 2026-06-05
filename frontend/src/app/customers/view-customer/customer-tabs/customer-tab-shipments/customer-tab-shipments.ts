@@ -75,6 +75,9 @@ export class CustomerTabShipments implements OnInit, OnDestroy {
   private metadataService = inject(MetadataService);
   private languageService = inject(LanguageService);
 
+  // Subs
+  private langChangeSub?: Subscription;
+
   ngOnInit(): void {
     let tempId = this.route.parent?.snapshot.paramMap.get('id');
     if (!tempId) return;
@@ -93,11 +96,13 @@ export class CustomerTabShipments implements OnInit, OnDestroy {
       .subscribe((value) => this.onSearch(value));
 
     this.setLabels();
+    this.langChangeSub = this.languageService.onLangChange.subscribe(() => this.setLabels());
   }
 
   ngOnDestroy(): void {
     this.statusesSub?.unsubscribe();
     this.subSearch$?.unsubscribe();
+    this.langChangeSub?.unsubscribe();
   }
 
   public onPageChange(page: number): void {

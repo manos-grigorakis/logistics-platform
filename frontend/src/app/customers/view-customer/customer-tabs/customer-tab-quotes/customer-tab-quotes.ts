@@ -88,19 +88,21 @@ export class CustomerTabQuotes implements OnInit, OnDestroy {
   private quotesStatuses$?: Subscription;
   private quotesReqSub$?: Subscription;
   private subSearch$?: Subscription;
+  private langChangeSub?: Subscription;
 
   // Lifecycle
   ngOnInit(): void {
     this.fetchQuotesPerCustomer({ size: this.quotesToShow });
     this.metadataService.fetchQuotesStatuses();
     this.subscribeToQuotesStatuses();
+    this.setLabels();
 
     // Debouncer on search
     this.subSearch$ = this.searchChanged$
       .pipe(debounceTime(400), distinctUntilChanged())
       .subscribe((value) => this.onSearch(value));
 
-    this.setLabels();
+    this.langChangeSub = this.languageService.onLangChange.subscribe(() => this.setLabels());
   }
 
   ngOnDestroy(): void {
@@ -108,6 +110,7 @@ export class CustomerTabQuotes implements OnInit, OnDestroy {
     this.quotesStatuses$?.unsubscribe();
     this.subSearch$?.unsubscribe();
     this.quotesReqSub$?.unsubscribe();
+    this.langChangeSub?.unsubscribe();
   }
 
   public onSearchChanged(value: string): void {

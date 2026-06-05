@@ -1,9 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { UsersTable } from '../users-table/users-table';
 import { UsersService } from '../users.service';
 import { UserResponse } from '../models/user-response';
 import { UsersFilters } from '../users-filters/users-filters';
-import { forkJoin, take } from 'rxjs';
+import { forkJoin, Subscription, take } from 'rxjs';
 import { Modal } from '../../shared/ui/modal/modal';
 import { AuthService } from '../../auth/services/auth.service';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -15,7 +15,7 @@ import { LanguageService } from '../../shared/services/language.service';
   templateUrl: './users-page.html',
   styleUrl: './users-page.css',
 })
-export class UsersPage implements OnInit {
+export class UsersPage implements OnInit, OnDestroy {
   public isLoading: boolean = false;
   public users: UserResponse[] = [];
   public displayedUsers: UserResponse[] = [];
@@ -34,16 +34,18 @@ export class UsersPage implements OnInit {
   private authService: AuthService = inject(AuthService);
   private languageService = inject(LanguageService);
 
+  private langChangeSub?: Subscription;
+
   ngOnInit(): void {
     this.loadUsers();
     this.currentUserId = this.authService.getUserId();
 
-    if (!this.sortLabel) {
-      this.languageService
-        .translateKeyAsync('common.filters.sort-by')
-        .pipe(take(1))
-        .subscribe((val) => (this.sortLabel = val));
-    }
+    this.setLabels();
+    this.langChangeSub = this.languageService.onLangChange.subscribe(() => this.setLabels());
+  }
+
+  ngOnDestroy(): void {
+    this.langChangeSub?.unsubscribe();
   }
 
   public loadUsers(): void {
@@ -171,5 +173,12 @@ export class UsersPage implements OnInit {
         );
         break;
     }
+  }
+
+  private setLabels(): void {
+    this.languageService
+      .translateKeyAsync('common.filters.sort-by')
+      .pipe(take(1))
+      .subscribe((val) => (this.sortLabel = val));
   }
 }
