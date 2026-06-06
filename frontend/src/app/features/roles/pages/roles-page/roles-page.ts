@@ -1,12 +1,12 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { RolesTable } from '../roles-table/roles-table';
-import { Role } from '../models/role';
-import { RolesService } from '../roles.service';
-import { Modal } from '../../shared/ui/modal/modal';
+import { RolesTable } from '../../components/roles-table/roles-table';
+import { Role } from '../../models/role';
+import { RolesService } from '../../roles.service';
+import { Modal } from '../../../../shared/ui/modal/modal';
 import { RouterLink } from '@angular/router';
-import { PrimaryButton } from '../../shared/ui/primary-button/primary-button';
+import { PrimaryButton } from '../../../../shared/ui/primary-button/primary-button';
 import { TranslatePipe } from '@ngx-translate/core';
-import { LanguageService } from '../../core/services/language.service';
+import { LanguageService } from '../../../../core/services/language.service';
 
 @Component({
   selector: 'app-roles-page',

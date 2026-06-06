@@ -1,11 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { RolesService } from '../roles.service';
+import { RolesService } from '../../roles.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Role } from '../models/role';
-import { RoleRequest } from '../models/role-request';
-import { RoleForm } from '../role-form/role-form';
+import { Role } from '../../models/role';
+import { RoleRequest } from '../../models/role-request';
+import { RoleForm } from '../../components/role-form/role-form';
 import { TranslatePipe } from '@ngx-translate/core';
-import { LanguageService } from '../../core/services/language.service';
+import { LanguageService } from '../../../../core/services/language.service';
 
 @Component({
   selector: 'app-edit-role',

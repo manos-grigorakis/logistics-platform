@@ -10,9 +10,9 @@ import { MainDashboard } from './features/dashboard/main-dashboard/main-dashboar
 import { UsersPage } from './users/users-page/users-page';
 import { CreateUserPage } from './users/create-user-page/create-user-page';
 import { EditUserPage } from './users/edit-user-page/edit-user-page';
-import { RolesPage } from './roles/roles-page/roles-page';
-import { CreateRole } from './roles/create-role/create-role';
-import { EditRole } from './roles/edit-role/edit-role';
+import { RolesPage } from './features/roles/pages/roles-page/roles-page';
+import { CreateRole } from './features/roles/pages/create-role/create-role';
+import { EditRole } from './features/roles/pages/edit-role/edit-role';
 import { roleGuard } from './core/guards/role-guard';
 import { CustomersPage } from './customers/customers-page/customers-page';
 import { CreateCustomer } from './customers/create-customer/create-customer';

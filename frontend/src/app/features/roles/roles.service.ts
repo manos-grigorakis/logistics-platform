@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { Role } from './models/role';
 import { RoleRequest } from './models/role-request';
-import { ApiResponse } from '../shared/models/api-response.interface';
+import { ApiResponse } from '../../shared/models/api-response.interface';
 
 @Injectable({
   providedIn: 'root',

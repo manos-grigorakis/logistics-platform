@@ -1,11 +1,11 @@
 import { Component, inject } from '@angular/core';
-import { RoleForm } from '../role-form/role-form';
-import { RolesService } from '../roles.service';
+import { RoleForm } from '../../components/role-form/role-form';
+import { RolesService } from '../../roles.service';
 import { Router } from '@angular/router';
 import { toast } from 'ngx-sonner';
-import { RoleRequest } from '../models/role-request';
+import { RoleRequest } from '../../models/role-request';
 import { TranslatePipe } from '@ngx-translate/core';
-import { LanguageService } from '../../core/services/language.service';
+import { LanguageService } from '../../../../core/services/language.service';
 
 @Component({
   selector: 'app-create-role',

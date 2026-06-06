@@ -1,11 +1,11 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
-import { PrimaryButton } from '../../shared/ui/primary-button/primary-button';
-import { MainInput } from '../../shared/forms/main-input/main-input';
-import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
-import { RoleRequest } from '../models/role-request';
+import { PrimaryButton } from '../../../../shared/ui/primary-button/primary-button';
+import { MainInput } from '../../../../shared/forms/main-input/main-input';
+import { LoadingSpinner } from '../../../../shared/ui/loading-spinner/loading-spinner';
+import { RoleRequest } from '../../models/role-request';
 import { ReactiveFormsModule, FormBuilder, FormControl, Validators } from '@angular/forms';
-import { Role } from '../models/role';
-import { ErrorAlert } from '../../shared/ui/error-alert/error-alert';
+import { Role } from '../../models/role';
+import { ErrorAlert } from '../../../../shared/ui/error-alert/error-alert';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({

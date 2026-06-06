@@ -3,8 +3,8 @@ import { FormBuilder, FormControl, Validators, ReactiveFormsModule } from '@angu
 import { PrimaryButton } from '../../shared/ui/primary-button/primary-button';
 import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
 import { MainInput } from '../../shared/forms/main-input/main-input';
-import { RolesService } from '../../roles/roles.service';
-import { Role } from '../../roles/models/role';
+import { RolesService } from '../../features/roles/roles.service';
+import { Role } from '../../features/roles/models/role';
 import { UserResponse } from '../models/user-response';
 import { UserRequest } from '../models/user-request';
 import { ErrorAlert } from '../../shared/ui/error-alert/error-alert';
