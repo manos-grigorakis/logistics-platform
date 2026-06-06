@@ -128,13 +128,15 @@
     }
   },
 
-  "not-found-page": {
-    "title": "Page not found",
-    "subtitle": "The page you are trying to access does not exist or has been moved."
-  },
-  "forbidden-page": {
-    "title": "Forbidden Page",
-    "subtitle": "You don't have permission to this page"
+  "pages": {
+    "not-found": {
+      "title": "Page not found",
+      "subtitle": "The page you are trying to access does not exist or has been moved."
+    },
+    "forbidden": {
+      "title": "Forbidden Page",
+      "subtitle": "You don't have permission to this page"
+    }
   },
 
   "auth": {

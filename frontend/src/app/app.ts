@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { toast, NgxSonnerToaster } from 'ngx-sonner';
-import { LanguageService } from './shared/services/language.service';
+import { LanguageService } from './core/services/language.service';
 
 @Component({
   selector: 'app-root',

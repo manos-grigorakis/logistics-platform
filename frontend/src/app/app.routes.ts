@@ -1,37 +1,37 @@
 import { Routes } from '@angular/router';
-import { LoginForm } from './auth/login-form/login-form';
-import { authGuard } from './guards/auth-guard';
-import { NotFoundPage } from './not-found-page/not-found-page';
-import { ForgotPasswordForm } from './auth/forgot-password-form/forgot-password-form';
-import { ResetPasswordForm } from './auth/reset-password-form/reset-password-form';
-import { SetupPasswordForm } from './auth/setup-password-form/setup-password-form';
-import { MainLayout } from './layout/main-layout/main-layout';
-import { MainDashboard } from './dashboard/main-dashboard/main-dashboard';
-import { UsersPage } from './users/users-page/users-page';
-import { CreateUserPage } from './users/create-user-page/create-user-page';
-import { EditUserPage } from './users/edit-user-page/edit-user-page';
-import { RolesPage } from './roles/roles-page/roles-page';
-import { CreateRole } from './roles/create-role/create-role';
-import { EditRole } from './roles/edit-role/edit-role';
-import { roleGuard } from './guards/role-guard';
-import { CustomersPage } from './customers/customers-page/customers-page';
-import { CreateCustomer } from './customers/create-customer/create-customer';
-import { EditCustomer } from './customers/edit-customer/edit-customer';
-import { ViewCustomer } from './customers/view-customer/view-customer';
-import { QuotesPage } from './quotes/quotes-page/quotes-page';
-import { CreateQuote } from './quotes/create-quote/create-quote';
-import { EditQuote } from './quotes/edit-quote/edit-quote';
-import { ForbiddenPage } from './forbidden-page/forbidden-page';
-import { CustomerTabQuotes } from './customers/view-customer/customer-tabs/customer-tab-quotes/customer-tab-quotes';
-import { VehiclesPage } from './vehicles/vehicles-page/vehicles-page';
-import { CreateVehicle } from './vehicles/create-vehicle/create-vehicle';
-import { EditVehicle } from './vehicles/edit-vehicle/edit-vehicle';
-import { ShipmentsPage } from './shipments/shipments-page/shipments-page';
-import { CreateShipment } from './shipments/create-shipment/create-shipment';
-import { EditShipment } from './shipments/edit-shipment/edit-shipment';
-import { ViewShipment } from './shipments/view-shipment/view-shipment';
-import { CustomerTabShipments } from './customers/view-customer/customer-tabs/customer-tab-shipments/customer-tab-shipments';
-import { PaymentsPage } from './payments/payments-page/payments-page';
+import { LoginForm } from './core/auth/login-form/login-form';
+import { authGuard } from './core/guards/auth-guard';
+import { NotFound } from './pages/not-found/not-found';
+import { ForgotPasswordForm } from './core/auth/forgot-password-form/forgot-password-form';
+import { ResetPasswordForm } from './core/auth/reset-password-form/reset-password-form';
+import { SetupPasswordForm } from './core/auth/setup-password-form/setup-password-form';
+import { MainLayout } from './core/layout/main-layout/main-layout';
+import { MainDashboard } from './features/dashboard/pages/main-dashboard/main-dashboard';
+import { UsersPage } from './features/users/pages/users-page/users-page';
+import { CreateUser } from './features/users/pages/create-user/create-user';
+import { EditUser } from './features/users/pages/edit-user/edit-user';
+import { RolesPage } from './features/roles/pages/roles-page/roles-page';
+import { CreateRole } from './features/roles/pages/create-role/create-role';
+import { EditRole } from './features/roles/pages/edit-role/edit-role';
+import { roleGuard } from './core/guards/role-guard';
+import { CustomersPage } from './features/customers/pages/customers-page/customers-page';
+import { CreateCustomer } from './features/customers/pages/create-customer/create-customer';
+import { EditCustomer } from './features/customers/pages/edit-customer/edit-customer';
+import { ViewCustomer } from './features/customers/pages/view-customer/view-customer';
+import { QuotesPage } from './features/quotes/pages/quotes-page/quotes-page';
+import { CreateQuote } from './features/quotes/pages/create-quote/create-quote';
+import { EditQuote } from './features/quotes/pages/edit-quote/edit-quote';
+import { Forbidden } from './pages/forbidden/forbidden';
+import { CustomerTabQuotes } from './features/customers/pages/view-customer/customer-tabs/customers-tab-quotes/customer-tab-quotes';
+import { VehiclesPage } from './features/vehicles/pages/vehicles-page/vehicles-page';
+import { CreateVehicle } from './features/vehicles/pages/create-vehicle/create-vehicle';
+import { EditVehicle } from './features/vehicles/pages/edit-vehicle/edit-vehicle';
+import { ShipmentsPage } from './features/shipments/pages/shipments-page/shipments-page';
+import { CreateShipment } from './features/shipments/pages/create-shipment/create-shipment';
+import { EditShipment } from './features/shipments/pages/edit-shipment/edit-shipment';
+import { ViewShipment } from './features/shipments/pages/view-shipment/view-shipment';
+import { CustomerTabShipments } from './features/customers/pages/view-customer/customer-tabs/customers-tab-shipments/customer-tab-shipments';
+import { PaymentsPage } from './features/payments/payments-page/payments-page';
 
 export const routes: Routes = [
   {
@@ -47,8 +47,8 @@ export const routes: Routes = [
         canActivate: [roleGuard],
         children: [
           { path: '', component: UsersPage, title: 'Users' },
-          { path: 'create-user', component: CreateUserPage, title: 'Create User' },
-          { path: 'edit-user/:id', component: EditUserPage, title: 'Edit User' },
+          { path: 'create-user', component: CreateUser, title: 'Create User' },
+          { path: 'edit-user/:id', component: EditUser, title: 'Edit User' },
         ],
       },
       {
@@ -130,10 +130,10 @@ export const routes: Routes = [
     component: SetupPasswordForm,
     title: 'Setup Password',
   },
-  { path: 'forbidden', component: ForbiddenPage, title: '403 Forbidden' },
+  { path: 'forbidden', component: Forbidden, title: '403 Forbidden' },
   {
     path: '**',
-    component: NotFoundPage,
+    component: NotFound,
     title: '404 Not Found',
   },
 ];
