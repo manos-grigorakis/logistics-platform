@@ -1,18 +1,18 @@
 import { Component, inject } from '@angular/core';
-import { UsersService } from '../users.service';
-import { UserRequest } from '../models/user-request';
+import { UsersService } from '../../users.service';
+import { UserRequest } from '../../models/user-request';
 import { Router } from '@angular/router';
-import { UserForm } from '../user-form/user-form';
+import { UserForm } from '../../components/user-form/user-form';
 import { TranslatePipe } from '@ngx-translate/core';
-import { LanguageService } from '../../core/services/language.service';
+import { LanguageService } from '../../../../core/services/language.service';
 
 @Component({
-  selector: 'app-create-user-page',
+  selector: 'app-create-user',
   imports: [UserForm, TranslatePipe],
-  templateUrl: './create-user-page.html',
-  styleUrl: './create-user-page.css',
+  templateUrl: './create-user.html',
+  styleUrl: './create-user.css',
 })
-export class CreateUserPage {
+export class CreateUser {
   private userService: UsersService = inject(UsersService);
   private languageService = inject(LanguageService);
   private router = inject(Router);

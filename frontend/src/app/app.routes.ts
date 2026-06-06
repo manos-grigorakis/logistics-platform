@@ -7,9 +7,9 @@ import { ResetPasswordForm } from './core/auth/reset-password-form/reset-passwor
 import { SetupPasswordForm } from './core/auth/setup-password-form/setup-password-form';
 import { MainLayout } from './core/layout/main-layout/main-layout';
 import { MainDashboard } from './features/dashboard/main-dashboard/main-dashboard';
-import { UsersPage } from './users/users-page/users-page';
-import { CreateUserPage } from './users/create-user-page/create-user-page';
-import { EditUserPage } from './users/edit-user-page/edit-user-page';
+import { UsersPage } from './features/users/pages/users-page/users-page';
+import { CreateUser } from './features/users/pages/create-user/create-user';
+import { EditUser } from './features/users/pages/edit-user/edit-user';
 import { RolesPage } from './features/roles/pages/roles-page/roles-page';
 import { CreateRole } from './features/roles/pages/create-role/create-role';
 import { EditRole } from './features/roles/pages/edit-role/edit-role';
@@ -47,8 +47,8 @@ export const routes: Routes = [
         canActivate: [roleGuard],
         children: [
           { path: '', component: UsersPage, title: 'Users' },
-          { path: 'create-user', component: CreateUserPage, title: 'Create User' },
-          { path: 'edit-user/:id', component: EditUserPage, title: 'Edit User' },
+          { path: 'create-user', component: CreateUser, title: 'Create User' },
+          { path: 'edit-user/:id', component: EditUser, title: 'Edit User' },
         ],
       },
       {

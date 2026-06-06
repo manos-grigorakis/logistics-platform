@@ -2,10 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UserResponse } from './models/user-response';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { User } from './models/user';
 import { UserRequest } from './models/user-request';
-import { ApiResponse } from '../shared/models/api-response.interface';
+import { ApiResponse } from '../../shared/models/api-response.interface';
 
 @Injectable({
   providedIn: 'root',

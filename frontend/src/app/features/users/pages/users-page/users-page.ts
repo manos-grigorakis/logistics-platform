@@ -1,13 +1,13 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { UsersTable } from '../users-table/users-table';
-import { UsersService } from '../users.service';
-import { UserResponse } from '../models/user-response';
-import { UsersFilters } from '../users-filters/users-filters';
+import { UsersTable } from '../../components/users-table/users-table';
+import { UsersService } from '../../users.service';
+import { UserResponse } from '../../models/user-response';
+import { UsersFilters } from '../../components/users-filters/users-filters';
 import { forkJoin, Subscription, take } from 'rxjs';
-import { Modal } from '../../shared/ui/modal/modal';
-import { AuthService } from '../../core/auth/services/auth.service';
+import { Modal } from '../../../../shared/ui/modal/modal';
+import { AuthService } from '../../../../core/auth/services/auth.service';
 import { TranslatePipe } from '@ngx-translate/core';
-import { LanguageService } from '../../core/services/language.service';
+import { LanguageService } from '../../../../core/services/language.service';
 
 @Component({
   selector: 'app-users-page',

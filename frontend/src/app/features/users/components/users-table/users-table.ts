@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
-import { UserResponse } from '../models/user-response';
+import { LoadingSpinner } from '../../../../shared/ui/loading-spinner/loading-spinner';
+import { UserResponse } from '../../models/user-response';
 import { NgClass } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 

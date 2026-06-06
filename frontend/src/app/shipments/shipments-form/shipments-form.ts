@@ -15,7 +15,7 @@ import { debounceTime, distinctUntilChanged, finalize, map, Subject, switchMap, 
 import { QuoteSummary } from '../models/quote-summary';
 import { QuotesService } from '../../quotes/quotes.service';
 import { DriversSummary } from '../models/drivers-summary';
-import { UsersService } from '../../users/users.service';
+import { UsersService } from '../../features/users/users.service';
 import { VehiclesSummary } from '../models/vehicles-summary';
 import { VehiclesService } from '../../vehicles/vehicles.service';
 import { PrimaryButton } from '../../shared/ui/primary-button/primary-button';

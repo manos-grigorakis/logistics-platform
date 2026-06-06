@@ -1,19 +1,19 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { UsersService } from '../users.service';
+import { UsersService } from '../../users.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UserResponse } from '../models/user-response';
-import { UserRequest } from '../models/user-request';
-import { UserForm } from '../user-form/user-form';
+import { UserResponse } from '../../models/user-response';
+import { UserRequest } from '../../models/user-request';
+import { UserForm } from '../../components/user-form/user-form';
 import { TranslatePipe } from '@ngx-translate/core';
-import { LanguageService } from '../../core/services/language.service';
+import { LanguageService } from '../../../../core/services/language.service';
 
 @Component({
   selector: 'app-edit-user',
   imports: [UserForm, TranslatePipe],
-  templateUrl: './edit-user-page.html',
-  styleUrl: './edit-user-page.css',
+  templateUrl: './edit-user.html',
+  styleUrl: './edit-user.css',
 })
-export class EditUserPage implements OnInit {
+export class EditUser implements OnInit {
   private userService: UsersService = inject(UsersService);
   private languageService = inject(LanguageService);
   private route: ActivatedRoute = inject(ActivatedRoute);
