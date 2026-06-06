@@ -172,13 +172,6 @@ export class CustomerTabQuotes implements OnInit, OnDestroy {
     this.editingQuoteId = quote.id;
     this.pendingStatus = newStatus;
 
-    const translatedCurrentStatus = this.languageService.translateKey(
-      `metadata.quotes-statuses.${quote.status.toLowerCase()}`,
-    );
-    const translatedNewStatus = this.languageService.translateKey(
-      `metadata.quotes-statuses.${newStatus.toLowerCase()}`,
-    );
-
     // Setup and enable modal
     this.quoteStatusModalHeader = this.languageService.translateKey(
       'customers.actions.update-quote-status',
@@ -187,8 +180,8 @@ export class CustomerTabQuotes implements OnInit, OnDestroy {
       'customers.messages.quotes.status-modal-message',
       {
         number: quote.number,
-        currentStatus: translatedCurrentStatus,
-        newStatus: translatedNewStatus,
+        currentStatus: this.translateStatus(quote.status),
+        newStatus: this.translateStatus(newStatus),
       },
     );
     this.isQuotesStatusModalEnabled = true;
@@ -386,14 +379,14 @@ export class CustomerTabQuotes implements OnInit, OnDestroy {
         this.editingQuoteId = undefined;
         this.pendingStatus = undefined;
 
-        let errorMessage = err.error;
+        let errorMessage = err.error.error;
         let currentStatus = errorMessage?.details?.currentStatus;
         let desiredStatus = errorMessage?.details?.desiredStatus;
 
         if (err.status === 409 && currentStatus && desiredStatus) {
           this.languageService.toastError('customers.messages.quotes.status-violation', {
-            currentStatus: currentStatus.toUpperCase(),
-            desiredStatus: desiredStatus.toUpperCase(),
+            currentStatus: this.translateStatus(currentStatus),
+            desiredStatus: this.translateStatus(desiredStatus),
           });
 
           return;
@@ -463,5 +456,14 @@ export class CustomerTabQuotes implements OnInit, OnDestroy {
       .translateKeyAsync('common.filters.filter-by')
       .pipe(take(1))
       .subscribe((val) => (this.activeFilterLabel = val));
+  }
+
+  /**
+   * Translates the status of Quote
+   * @param status The status to be translated
+   * @returns The translated status
+   */
+  private translateStatus(status: string): string {
+    return this.languageService.translateKey(`metadata.quotes-statuses.${status.toLowerCase()}`);
   }
 }
