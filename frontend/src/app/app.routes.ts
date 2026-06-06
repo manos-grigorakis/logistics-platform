@@ -6,7 +6,7 @@ import { ForgotPasswordForm } from './core/auth/forgot-password-form/forgot-pass
 import { ResetPasswordForm } from './core/auth/reset-password-form/reset-password-form';
 import { SetupPasswordForm } from './core/auth/setup-password-form/setup-password-form';
 import { MainLayout } from './core/layout/main-layout/main-layout';
-import { MainDashboard } from './features/dashboard/main-dashboard/main-dashboard';
+import { MainDashboard } from './features/dashboard/pages/main-dashboard/main-dashboard';
 import { UsersPage } from './features/users/pages/users-page/users-page';
 import { CreateUser } from './features/users/pages/create-user/create-user';
 import { EditUser } from './features/users/pages/edit-user/edit-user';
