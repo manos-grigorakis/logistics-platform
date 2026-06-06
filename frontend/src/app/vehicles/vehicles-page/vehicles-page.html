@@ -17,7 +17,7 @@
   <app-vehicles-table
     [isLoading]="isLoading"
     [vehicles]="vehicles"
-    [errorMessage]="errorMessage"
+    [errorMessage]="errorMessage | translate"
     (onDeleteVehicle)="onDeleteVehicleClick($event)"
   />
 </div>

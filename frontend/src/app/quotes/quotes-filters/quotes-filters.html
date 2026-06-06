@@ -3,7 +3,7 @@
     [placeholder]="searchPlaceholder"
     [value]="searchTerm"
     (valueChange)="onSearchChange($event)"
-  ></app-search-bar>
+  />
 
   <div class="flex items-center gap-6">
     <div class="flex items-center gap-4">
@@ -13,7 +13,7 @@
           (clicked)="onCreateQuoteClick()"
           icon="lucidePlus"
           color="success"
-        ></app-rounded-icon-button>
+        />
       }
 
       <!-- Refresh -->
@@ -22,48 +22,48 @@
         [isDisabled]="isLoading"
         icon="lucideRefreshCcw"
         color="info"
-      ></app-rounded-icon-button>
+      />
     </div>
 
     <!-- Sort -->
     <app-dropdown-button [label]="sortLabel">
-      <ng-icon name="lucideFilter" size="16" dropdown-left-icon></ng-icon>
-      <ng-icon name="lucideChevronDown" size="16" dropdown-right-icon></ng-icon>
+      <ng-icon name="lucideFilter" size="16" dropdown-left-icon />
+      <ng-icon name="lucideChevronDown" size="16" dropdown-right-icon />
 
       <!-- Menu Items -->
       <li dropdown-menu-item>
         <a
           class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
           (click)="onSortByFieldClick('sort-all')"
-          >All</a
+          >{{ 'common.filters.all' | translate }}</a
         >
       </li>
       <li dropdown-menu-item>
         <a
           class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
           (click)="onSortByFieldClick('sort-asc-by-number')"
-          >Number (A → Z)</a
+          >{{ 'common.fields.number' | translate }} (A → Z)</a
         >
       </li>
       <li dropdown-menu-item>
         <a
           class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
           (click)="onSortByFieldClick('sort-desc-by-number')"
-          >Number (Z → A)</a
+          >{{ 'common.fields.number' | translate }} (Z → A)</a
         >
       </li>
       <li dropdown-menu-item>
         <a
           class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
           (click)="onSortByFieldClick('sort-asc-by-issue-date')"
-          >Issue Date (0 → 9)</a
+          >{{ 'common.fields.issue-date' | translate }} (0 → 9)</a
         >
       </li>
       <li dropdown-menu-item>
         <a
           class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
           (click)="onSortByFieldClick('sort-desc-by-issue-date')"
-          >Issue Date (9 → 0)</a
+          >{{ 'common.fields.issue-date' | translate }} (9 → 0)</a
         >
       </li>
     </app-dropdown-button>
@@ -76,7 +76,7 @@
         <a
           class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
           (click)="onFilterByFieldClick('filter-by-all')"
-          >All</a
+          >{{ 'common.filters.all' | translate }}</a
         >
       </li>
 
@@ -85,7 +85,7 @@
           class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
           (click)="onFilterByFieldClick('filter-by-quote-status-draft')"
         >
-          Draft
+          {{ 'metadata.quotes-statuses.draft' | translate }}
         </a>
       </li>
       <li dropdown-menu-item>
@@ -93,7 +93,7 @@
           class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
           (click)="onFilterByFieldClick('filter-by-quote-status-sent')"
         >
-          Sent
+          {{ 'metadata.quotes-statuses.sent' | translate }}
         </a>
       </li>
       <li dropdown-menu-item>
@@ -101,7 +101,7 @@
           class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
           (click)="onFilterByFieldClick('filter-by-quote-status-accepted')"
         >
-          Accepted
+          {{ 'metadata.quotes-statuses.accepted' | translate }}
         </a>
       </li>
       <li dropdown-menu-item>
@@ -109,7 +109,7 @@
           class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
           (click)="onFilterByFieldClick('filter-by-quote-status-rejected')"
         >
-          Rejected
+          {{ 'metadata.quotes-statuses.rejected' | translate }}
         </a>
       </li>
       <li dropdown-menu-item>
@@ -117,7 +117,7 @@
           class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
           (click)="onFilterByFieldClick('filter-by-quote-status-expired')"
         >
-          Expired
+          {{ 'metadata.quotes-statuses.expired' | translate }}
         </a>
       </li>
       <li dropdown-menu-item>
@@ -125,7 +125,7 @@
           class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
           (click)="onFilterByFieldClick('filter-by-quote-status-cancelled')"
         >
-          Cancelled
+          {{ 'metadata.quotes-statuses.cancelled' | translate }}
         </a>
       </li>
     </app-dropdown-button>

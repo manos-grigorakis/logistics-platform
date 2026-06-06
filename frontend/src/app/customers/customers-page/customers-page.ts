@@ -1,25 +1,28 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { CustomersService } from '../customers.service';
 import { Customer } from '../models/customer';
 import { CustomersTable } from '../customers-table/customers-table';
 import { Pagination } from '../../shared/ui/pagination/pagination';
 import { CustomersFilters } from '../customers-filters/customers-filters';
 import { FetchCustomersParameters } from '../models/fetch-customers-parameters';
-import { debounceTime, distinctUntilChanged, forkJoin, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, forkJoin, Subject, Subscription, take } from 'rxjs';
 import { Modal } from '../../shared/ui/modal/modal';
 import { toast } from 'ngx-sonner';
 import { MetadataService } from '../../metadata/metadata.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { LanguageService } from '../../shared/services/language.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-customers-page',
-  imports: [CustomersTable, Pagination, CustomersFilters, Modal],
+  imports: [CustomersTable, Pagination, CustomersFilters, Modal, TranslatePipe],
   templateUrl: './customers-page.html',
   styleUrl: './customers-page.css',
 })
-export class CustomersPage implements OnInit {
+export class CustomersPage implements OnInit, OnDestroy {
   private customersService: CustomersService = inject(CustomersService);
   private metadataService: MetadataService = inject(MetadataService);
+  private languageService = inject(LanguageService);
   private searchChanged$ = new Subject<string>(); // Stream
   private currentParams: FetchCustomersParameters = {
     page: 0,
@@ -40,8 +43,8 @@ export class CustomersPage implements OnInit {
   // Filters
   public isFilterActive: boolean = false;
   public customerTypes: string[] = [];
-  public activeFilterLabel: string = 'Filter by';
-  public activeSortLabel: string = 'Sort by';
+  public activeFilterLabel: string = '';
+  public activeSortLabel: string = '';
 
   // Pagination
   public currentPage: number = 0;
@@ -50,14 +53,26 @@ export class CustomersPage implements OnInit {
   public isFirstPage: boolean = false;
   public pageSize: number = 0;
 
+  private langChangeSub?: Subscription;
+
+  // Lifecycle
   ngOnInit(): void {
     this.fetchCustomers();
     this.fetchCustomerTypes();
+    this.setFilteringLabels();
 
     // Add debouncer to search bar
     this.searchChanged$
       .pipe(debounceTime(400), distinctUntilChanged())
       .subscribe((value) => this.onSearch(value));
+
+    this.langChangeSub = this.languageService.onLangChange.subscribe(() =>
+      this.setFilteringLabels(),
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.langChangeSub?.unsubscribe();
   }
 
   public toggleCustomerSelection(customerId: number): void {
@@ -104,8 +119,7 @@ export class CustomersPage implements OnInit {
 
     this.isFilterActive = true;
     // Reset labels
-    this.activeSortLabel = 'Sort by';
-    this.activeFilterLabel = 'Filter by';
+    this.setFilteringLabels();
 
     if (tinRegex.test(param)) {
       this.fetchCustomers({
@@ -135,8 +149,8 @@ export class CustomersPage implements OnInit {
   }
 
   public onCustomerDeleteClick(): void {
-    this.modalHeader = 'Delete Selected Customer(s)';
-    this.modalMessage = 'This action is permanent and cannot be undone';
+    this.modalHeader = 'customers.messages.delete-customers-title';
+    this.modalMessage = 'common.messages.cannot-undone';
     this.showModal = true;
   }
 
@@ -159,7 +173,7 @@ export class CustomersPage implements OnInit {
 
     switch (query) {
       case 'sort-all':
-        this.activeSortLabel = 'Sort by';
+        this.activeSortLabel = this.languageService.translateKey('common.filters.sort-by');
         this.fetchCustomers({ page: 0, sortBy: undefined, sortDirection: undefined });
         break;
       case 'sort-asc-by-company-name':
@@ -182,15 +196,19 @@ export class CustomersPage implements OnInit {
 
     switch (query) {
       case 'filter-by-all':
-        this.activeFilterLabel = 'Filter by';
+        this.activeFilterLabel = this.languageService.translateKey('common.filters.filter-by');
         this.fetchCustomers({ page: 0, customerType: undefined });
         break;
       case 'filter-by-customer-type-company':
-        this.activeFilterLabel = 'Company';
+        this.activeFilterLabel = this.languageService.translateKey(
+          'metadata.customers-types.company',
+        );
         this.fetchCustomers({ page: 0, customerType: 'COMPANY' });
         break;
       case 'filter-by-customer-type-individual':
-        this.activeFilterLabel = 'Individual';
+        this.activeFilterLabel = this.languageService.translateKey(
+          'metadata.customers-types.individual',
+        );
         this.fetchCustomers({ page: 0, customerType: 'INDIVIDUAL' });
         break;
     }
@@ -240,7 +258,7 @@ export class CustomersPage implements OnInit {
     forkJoin(deleteCustomers).subscribe({
       next: (res) => {
         this.isLoading = false;
-        toast.success('Customer(s) deleted successfully');
+        this.languageService.toastSuccess('customers.messages.success-deletion');
         this.selectCustomerIds.clear();
         this.disableDeleteButton = true;
         this.fetchCustomers();
@@ -270,9 +288,21 @@ export class CustomersPage implements OnInit {
   // Helper method that handles error status from HTTP request
   private handleError(err: HttpErrorResponse): void {
     if (err.status === 500) {
-      this.errorMessage = 'Server error. Please try again';
+      this.errorMessage = 'common.errors.server';
     } else {
-      this.errorMessage = 'An error occured. Please try again later';
+      this.errorMessage = 'common.errors.generic';
     }
+  }
+
+  private setFilteringLabels(): void {
+    // Translate
+    this.languageService
+      .translateKeyAsync('common.filters.filter-by')
+      .pipe(take(1))
+      .subscribe((val) => (this.activeFilterLabel = val));
+    this.languageService
+      .translateKeyAsync('common.filters.sort-by')
+      .pipe(take(1))
+      .subscribe((val) => (this.activeSortLabel = val));
   }
 }

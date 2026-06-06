@@ -15,11 +15,13 @@
         (ngModelChange)="onStatusChange(shipment, $event)"
       >
         <option [value]="shipment.status.label" selected disabled hidden>
-          {{ shipment.status.label | titlecase }}
+          {{ 'metadata.shipments-statuses.' + shipment.status.label.toLowerCase() | translate }}
         </option>
         @for (status of shipmentStatuses; track $index) {
           @if (status.label.toLowerCase() !== shipment.status.label.toLowerCase()) {
-            <option [value]="status.label">{{ status.label | titlecase }}</option>
+            <option [value]="status.label">
+              {{ 'metadata.shipments-statuses.' + status.label.toLowerCase() | translate }}
+            </option>
           }
         }
       </select>
@@ -28,7 +30,7 @@
         class="block rounded border px-2 capitalize"
         [ngClass]="shipmentStatusBadgeColor(shipment.status.label)"
       >
-        {{ shipment.status.label }}
+        {{ 'metadata.shipments-statuses.' + shipment.status.label.toLowerCase() | translate }}
       </span>
     }
   </div>
@@ -36,8 +38,8 @@
   <!-- Pickup -->
   <div>
     <p class="mt-2 text-sm">
-      <span class="text-zinc-500">Pickup -- </span>
-      {{ shipment.pickup | date: 'EEEE, MMM d, y · h:mm a' }}
+      <span class="text-zinc-500">{{ 'shipments.fields.pickup' | translate }} -- </span>
+      {{ shipment.pickup | date: 'dd/MM/yyyy · h:mm a' }}
     </p>
     <div class="rounde mt-1 h-px w-full bg-zinc-300"></div>
   </div>
@@ -45,14 +47,16 @@
   <!-- Extra Details -->
   <div class="mt-2 grid grid-cols-1 gap-1 sm:grid-cols-3">
     <p class="text-sm">
-      <span class="text-zinc-500">Driver: </span>{{ shipment.driver?.fullName || 'Unassigned' }}
+      <span class="text-zinc-500">{{ 'shipments.fields.driver' | translate }}: </span
+      >{{ shipment.driver?.fullName || ('common.fields.unassigned' | translate) }}
     </p>
     <p class="text-sm">
-      <span class="text-zinc-500">Truck Plate: </span>{{ shipment.truck?.plate || 'Unassigned' }}
+      <span class="text-zinc-500">{{ 'shipments.fields.truck-plate' | translate }}: </span
+      >{{ shipment.truck?.plate || ('common.fields.unassigned' | translate) }}
     </p>
     <p class="text-sm">
-      <span class="text-zinc-500">Trailer Plate: </span
-      >{{ shipment.trailer?.plate || 'Unassigned' }}
+      <span class="text-zinc-500">{{ 'shipments.fields.trailer-plate' | translate }}: </span
+      >{{ shipment.trailer?.plate || ('common.fields.unassigned' | translate) }}
     </p>
   </div>
 </div>

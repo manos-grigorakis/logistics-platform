@@ -4,11 +4,11 @@ import { DropdownButton } from '../../shared/ui/dropdown-button/dropdown-button'
 import { NgIcon } from '@ng-icons/core';
 import { Router } from '@angular/router';
 import { SearchBar } from '../../shared/forms/search-bar/search-bar';
-import { TitleCasePipe } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-customers-filters',
-  imports: [RoundedIconButton, DropdownButton, NgIcon, SearchBar, TitleCasePipe],
+  imports: [RoundedIconButton, DropdownButton, NgIcon, SearchBar, TranslatePipe],
   templateUrl: './customers-filters.html',
   styleUrl: './customers-filters.css',
 })

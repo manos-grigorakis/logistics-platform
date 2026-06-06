@@ -6,10 +6,19 @@ import { RouterLink } from '@angular/router';
 import { DropdownButton } from '../../shared/ui/dropdown-button/dropdown-button';
 import { ShipmentStatus } from '../models/shipment-status';
 import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-shipments-filters',
-  imports: [SearchBar, RoundedIconButton, DropdownButton, NgIcon, RouterLink, FormsModule],
+  imports: [
+    SearchBar,
+    RoundedIconButton,
+    DropdownButton,
+    NgIcon,
+    RouterLink,
+    FormsModule,
+    TranslatePipe,
+  ],
   templateUrl: './shipments-filters.html',
   styleUrl: './shipments-filters.css',
 })

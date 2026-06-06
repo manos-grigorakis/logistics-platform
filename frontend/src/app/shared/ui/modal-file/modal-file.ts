@@ -10,10 +10,11 @@ import {
 import { NgClass } from '@angular/common';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { NgIcon } from '@ng-icons/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-modal-file',
-  imports: [NgClass, PdfViewerModule, NgIcon],
+  imports: [NgClass, PdfViewerModule, NgIcon, TranslatePipe],
   templateUrl: './modal-file.html',
   styleUrl: './modal-file.css',
 })

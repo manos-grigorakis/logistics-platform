@@ -4,10 +4,11 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NgSelectComponent } from '@ng-select/ng-select';
 import { Subject } from 'rxjs';
 import { CustomerSummary } from '../../models/customer-summary';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-basic-information',
-  imports: [MainInput, ReactiveFormsModule, NgSelectComponent],
+  imports: [MainInput, ReactiveFormsModule, NgSelectComponent, TranslatePipe],
   templateUrl: './basic-information.html',
   styleUrl: './basic-information.css',
 })

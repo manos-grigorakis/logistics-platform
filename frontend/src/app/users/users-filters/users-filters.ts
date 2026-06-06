@@ -4,10 +4,11 @@ import { SearchBar } from '../../shared/forms/search-bar/search-bar';
 import { RoundedIconButton } from '../../shared/forms/rounded-icon-button/rounded-icon-button';
 import { DropdownButton } from '../../shared/ui/dropdown-button/dropdown-button';
 import { Router } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-users-filters',
-  imports: [NgIcon, SearchBar, RoundedIconButton, DropdownButton],
+  imports: [NgIcon, SearchBar, RoundedIconButton, DropdownButton, TranslatePipe],
   templateUrl: './users-filters.html',
   styleUrl: './users-filters.css',
 })

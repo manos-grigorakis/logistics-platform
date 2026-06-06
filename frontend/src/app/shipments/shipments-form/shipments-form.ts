@@ -24,9 +24,10 @@ import { ShipmentPayload } from '../models/shipment-payload';
 import { AuthService } from '../../auth/services/auth.service';
 import { Shipment } from '../models/shipment';
 import { MetadataService } from '../../metadata/metadata.service';
-import { LowerCasePipe, TitleCasePipe, NgClass } from '@angular/common';
+import { LowerCasePipe, NgClass } from '@angular/common';
 import { RoundedIconButton } from '../../shared/forms/rounded-icon-button/rounded-icon-button';
 import { CargoItems } from '../models/cargo-items';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-shipments-form',
@@ -38,9 +39,9 @@ import { CargoItems } from '../models/cargo-items';
     PrimaryButton,
     MainInput,
     LowerCasePipe,
-    TitleCasePipe,
     RoundedIconButton,
     NgClass,
+    TranslatePipe,
   ],
   templateUrl: './shipments-form.html',
   styleUrl: './shipments-form.css',
@@ -262,9 +263,9 @@ export class ShipmentsForm implements OnInit {
         this.quotesLoading = false;
 
         if (err.status === 500) {
-          this.uiErrorMessage = 'Server error. Please try again';
+          this.uiErrorMessage = 'common.errors.server';
         } else {
-          this.uiErrorMessage = 'An error occurred. Please try again';
+          this.uiErrorMessage = 'common.errors.generic';
         }
       },
     });
@@ -291,9 +292,9 @@ export class ShipmentsForm implements OnInit {
         next: (res) => (this.quotesList = [...res.data.content]),
         error: (err) => {
           if (err.status === 500) {
-            this.uiErrorMessage = 'Server error. Please try again';
+            this.uiErrorMessage = 'common.errors.server';
           } else {
-            this.uiErrorMessage = 'An error occurred. Please try again';
+            this.uiErrorMessage = 'common.errors.generic';
           }
         },
       });
@@ -319,9 +320,9 @@ export class ShipmentsForm implements OnInit {
           this.driverLoading = false;
 
           if (err.status === 500) {
-            this.uiErrorMessage = 'Server error. Please try again';
+            this.uiErrorMessage = 'common.errors.server';
           } else {
-            this.uiErrorMessage = 'An error occurred. Please try again';
+            this.uiErrorMessage = 'common.errors.generic';
           }
         },
       });
@@ -352,9 +353,9 @@ export class ShipmentsForm implements OnInit {
           this.trailerLoading = false;
 
           if (err.status === 500) {
-            this.uiErrorMessage = 'Server error. Please try again';
+            this.uiErrorMessage = 'common.errors.server';
           } else {
-            this.uiErrorMessage = 'An error occurred. Please try again';
+            this.uiErrorMessage = 'common.errors.generic';
           }
         },
       });

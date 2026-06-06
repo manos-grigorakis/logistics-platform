@@ -2,6 +2,6 @@
   formUsage="update"
   [customerData]="customer"
   [isLoading]="isLoading"
-  [errorMessage]="errorMessage"
+  [errorMessage]="errorMessage | translate"
   (onFormSubmit)="onSubmit($event)"
 />

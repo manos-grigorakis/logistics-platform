@@ -1,4 +1,9 @@
 @if (isLoading) {
   <app-loading-spinner />
 }
-<app-shipments-form formUsage="edit" (onSubmit)="onSubmit($event)" [shipmentsData]="shipment" />
+<app-shipments-form
+  formUsage="edit"
+  [errorMessage]="errorMessage | translate"
+  (onSubmit)="onSubmit($event)"
+  [shipmentsData]="shipment"
+/>

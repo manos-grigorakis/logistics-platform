@@ -18,10 +18,12 @@
 @if (withErrors() && displayErrors()) {
   <div>
     @if (control?.errors?.['required']) {
-      <span class="text-danger ml-1 text-sm">{{ label() }} is required</span>
+      <span class="text-danger ml-1 text-sm">
+        {{ 'common.validation.required' | translate: { field: label() } }}
+      </span>
     }
     @if (control?.errors?.['email']) {
-      <span class="text-danger ml-1 text-sm">Invalid email</span>
+      <span class="text-danger ml-1 text-sm">{{ 'common.validation.email' | translate }}</span>
     }
     @if (control?.errors?.['pattern']) {
       <span class="text-danger ml-1 text-sm"> {{ label() }} {{ patternErrorMessage() }} </span>

@@ -1,13 +1,16 @@
 <div>
   <!-- KPIs -->
   <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
-    <app-kpi-card label="Total Customers" [value]="totalCustomers" />
-    <app-kpi-card label="Total Shipments" [value]="totalShipments" />
+    <app-kpi-card [label]="'dashboard.total-customers' | translate" [value]="totalCustomers" />
+    <app-kpi-card [label]="'dashboard.total-shipments' | translate" [value]="totalShipments" />
     <app-kpi-card
-      label="Total Outstanding Amount"
+      [label]="'dashboard.total-outstanding-amount' | translate"
       [value]="(totalOutstandingAmount | currency: 'EUR') || '-'"
     />
-    <app-kpi-card label="Total Pending Shipments (Next 24hours)" [value]="totalPendingShipments" />
+    <app-kpi-card
+      [label]="'dashboard.total-pending-shipments' | translate"
+      [value]="totalPendingShipments"
+    />
   </div>
 
   <!-- Charts -->
@@ -15,14 +18,18 @@
     <div
       class="col-span-1 rounded-md border border-gray-100 bg-white px-4 py-4 shadow-sm md:col-span-3"
     >
-      <p class="mb-2 text-sm font-medium text-gray-600">Quotes by Status</p>
+      <p class="mb-2 text-sm font-medium text-gray-600">
+        {{ 'dashboard.quotes-by-status' | translate }}
+      </p>
       <canvas baseChart [data]="quotesByStatusChartData" [type]="'bar'"></canvas>
     </div>
 
     <div
       class="col-span-1 flex flex-col rounded-md border border-gray-100 bg-white px-4 py-4 shadow-sm"
     >
-      <p class="mb-2 text-sm font-medium text-gray-600">Shipments by Status</p>
+      <p class="mb-2 text-sm font-medium text-gray-600">
+        {{ 'dashboard.shipments-by-status' | translate }}
+      </p>
       <div class="flex flex-1 items-center justify-center">
         <canvas
           baseChart
@@ -36,7 +43,9 @@
     <div
       class="col-span-1 flex flex-col rounded-md border border-gray-100 bg-white px-4 py-4 shadow-sm"
     >
-      <p class="mb-2 text-sm font-medium text-gray-600">Invoices by Status</p>
+      <p class="mb-2 text-sm font-medium text-gray-600">
+        {{ 'dashboard.invoices-by-status' | translate }}
+      </p>
 
       <div class="flex flex-1 items-center justify-center">
         <canvas

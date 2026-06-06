@@ -6,10 +6,18 @@ import { RoleRequest } from '../models/role-request';
 import { ReactiveFormsModule, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Role } from '../models/role';
 import { ErrorAlert } from '../../shared/ui/error-alert/error-alert';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-role-form',
-  imports: [ReactiveFormsModule, PrimaryButton, MainInput, LoadingSpinner, ErrorAlert],
+  imports: [
+    ReactiveFormsModule,
+    PrimaryButton,
+    MainInput,
+    LoadingSpinner,
+    ErrorAlert,
+    TranslatePipe,
+  ],
   templateUrl: './role-form.html',
   styleUrl: './role-form.css',
 })

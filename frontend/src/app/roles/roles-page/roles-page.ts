@@ -3,18 +3,22 @@ import { RolesTable } from '../roles-table/roles-table';
 import { Role } from '../models/role';
 import { RolesService } from '../roles.service';
 import { Modal } from '../../shared/ui/modal/modal';
-import { toast } from 'ngx-sonner';
 import { RouterLink } from '@angular/router';
 import { PrimaryButton } from '../../shared/ui/primary-button/primary-button';
+import { TranslatePipe } from '@ngx-translate/core';
+import { LanguageService } from '../../shared/services/language.service';
 
 @Component({
   selector: 'app-roles-page',
-  imports: [RolesTable, Modal, RouterLink, PrimaryButton],
+  imports: [RolesTable, Modal, RouterLink, PrimaryButton, TranslatePipe],
   templateUrl: './roles-page.html',
   styleUrl: './roles-page.css',
 })
 export class RolesPage implements OnInit {
+  // Services
   private rolesService: RolesService = inject(RolesService);
+  private languageService = inject(LanguageService);
+
   private selectedIdForDelete: number | null = null;
 
   public isLoading: boolean = false;
@@ -38,9 +42,9 @@ export class RolesPage implements OnInit {
       error: (err) => {
         this.isLoading = false;
         if (err.status === 500) {
-          this.errorMessage = 'Server error. Please try again later';
+          this.errorMessage = 'common.errors.server';
         } else {
-          this.errorMessage = 'An error occured. Please try again';
+          this.errorMessage = 'common.errors.generic';
         }
       },
     });
@@ -58,22 +62,22 @@ export class RolesPage implements OnInit {
     this.isLoading = true;
 
     this.rolesService.deleteRole(this.selectedIdForDelete).subscribe({
-      next: (res) => {
+      next: () => {
         this.isLoading = false;
-        this.selectedIdForDelete === null;
-        toast.success('Role deleted successfully');
+        this.selectedIdForDelete = null;
+        this.languageService.toastSuccess('roles.messages.success-deletion');
         this.fetchRoles();
       },
       error: (err) => {
         this.isLoading = false;
-        this.selectedIdForDelete === null;
+        this.selectedIdForDelete = null;
 
         if (err.status === 409) {
-          toast.error('This role cannot be deleted because it is assigned to existing users.');
+          this.languageService.toastWarning('roles.messages.assigned-users');
         } else if (err.status === 500) {
-          toast.error('Server error. Please try again');
+          this.languageService.toastError('common.errors.server');
         } else {
-          toast.error('An error has occured. Please try again');
+          this.languageService.toastError('common.errors.generic');
         }
       },
     });
@@ -84,8 +88,8 @@ export class RolesPage implements OnInit {
   }
 
   private openDeleteModal(): void {
-    this.modalHeader = 'Delete Selected Role';
-    this.modalMessage = 'This action is permanent and cannot be undone';
+    this.modalHeader = 'roles.messages.modal.title';
+    this.modalMessage = 'roles.messages.modal.message';
     this.showModal = true;
   }
 }

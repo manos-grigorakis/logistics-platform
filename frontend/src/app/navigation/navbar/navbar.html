@@ -29,9 +29,9 @@
         </button>
         <a routerLink="/dashboard" class="ms-2 flex md:me-24">
           <!-- <img src="" class="h-6 me-3" alt="Logo" /> -->
-          <span class="self-center text-lg font-semibold whitespace-nowrap text-white"
-            >Logistics Platform</span
-          >
+          <span class="self-center text-lg font-semibold whitespace-nowrap text-white">{{
+            'app.title' | translate
+          }}</span>
         </a>
       </div>
 
@@ -48,23 +48,23 @@
         <app-dropdown-menu-item
           dropdown-menu-item
           route="#"
-          label="Account"
+          [label]="'nav.top-nav.account' | translate"
           icon="lucideUserCircle"
-        ></app-dropdown-menu-item>
+        />
 
         <app-dropdown-menu-item
           dropdown-menu-item
           route="#"
-          label="Settings"
+          [label]="'nav.top-nav.settings' | translate"
           icon="lucideCog"
-        ></app-dropdown-menu-item>
+        />
 
         <app-dropdown-menu-item
           dropdown-menu-item
           (click)="logout()"
-          label="Logout"
+          [label]="'nav.top-nav.logout' | translate"
           icon="lucideLogOut"
-        ></app-dropdown-menu-item>
+        />
       </app-dropdown-button>
     </div>
   </div>

@@ -3,17 +3,19 @@ import { UsersService } from '../users.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserResponse } from '../models/user-response';
 import { UserRequest } from '../models/user-request';
-import { toast } from 'ngx-sonner';
 import { UserForm } from '../user-form/user-form';
+import { TranslatePipe } from '@ngx-translate/core';
+import { LanguageService } from '../../shared/services/language.service';
 
 @Component({
   selector: 'app-edit-user',
-  imports: [UserForm],
+  imports: [UserForm, TranslatePipe],
   templateUrl: './edit-user-page.html',
   styleUrl: './edit-user-page.css',
 })
 export class EditUserPage implements OnInit {
   private userService: UsersService = inject(UsersService);
+  private languageService = inject(LanguageService);
   private route: ActivatedRoute = inject(ActivatedRoute);
   private router: Router = inject(Router);
   private id: number = 0;
@@ -36,19 +38,21 @@ export class EditUserPage implements OnInit {
     this.isLoading = true;
 
     this.userService.updateUser(this.id, data).subscribe({
-      next: (res) => {
+      next: () => {
         this.isLoading = false;
-        toast.success('User updated successfully');
+        this.languageService.toastSuccess('users.messages.success-update');
         this.router.navigate(['/users']);
       },
       error: (err) => {
         this.isLoading = false;
         if (err.status === 409) {
-          this.errorMessage = `User already exists with email ${data.email}`;
+          this.errorMessage = this.languageService.translateKey('users.messages.email-exists', {
+            email: data.email,
+          });
         } else if (err.status === 500) {
-          this.errorMessage = 'Server error. Please try again later';
+          this.errorMessage = 'common.errors.server';
         } else {
-          this.errorMessage = 'An error occured. Please try again';
+          this.errorMessage = 'common.errors.generic';
         }
       },
     });
@@ -62,11 +66,11 @@ export class EditUserPage implements OnInit {
       },
       error: (err) => {
         if (err.status === 404) {
-          this.errorMessage = "User doesn't exists";
+          this.errorMessage = 'users.messages.not-found';
         } else if (err.status === 500) {
-          this.errorMessage = 'Server error. Please try again';
+          this.errorMessage = 'common.errors.server';
         } else {
-          this.errorMessage = 'An error has occured. Please try again';
+          this.errorMessage = 'common.errors.generic';
         }
       },
     });

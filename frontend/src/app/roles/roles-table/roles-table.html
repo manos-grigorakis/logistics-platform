@@ -5,9 +5,13 @@
 
   <thead class="text-body bg-secondary-700 text-sm text-white">
     <tr>
-      <th scope="col" class="px-4 py-3 font-medium">Name</th>
-      <th scope="col" class="px-2 py-3 font-medium">Description</th>
-      <th scope="col" class="px-2 py-3 text-center font-medium">Actions</th>
+      <th scope="col" class="px-4 py-3 font-medium">{{ 'roles.fields.name' | translate }}</th>
+      <th scope="col" class="px-2 py-3 font-medium">
+        {{ 'roles.fields.description' | translate }}
+      </th>
+      <th scope="col" class="px-2 py-3 text-center font-medium">
+        {{ 'common.actions.action' | translate }}
+      </th>
     </tr>
   </thead>
   <tbody>
@@ -21,26 +25,28 @@
             <a
               [routerLink]="['edit-role', role.id]"
               class="text-info-dark hover:bg-info-light cursor-pointer rounded-md px-3 py-1 text-sm font-medium"
-              >Edit</a
+              >{{ 'common.actions.edit' | translate }}</a
             >
             <button
               class="text-danger-dark hover:bg-danger-light cursor-pointer rounded-md px-3 py-1 text-sm font-medium"
               (click)="onDeleteRole(role.id)"
             >
-              Delete
+              {{ 'common.actions.delete' | translate }}
             </button>
           </td>
         } @else {
           <td class="flex justify-center px-2 py-4">
-            <span class="border-warning bg-warning-light text-warning-dark rounded border px-2"
-              >Protected Role</span
-            >
+            <span class="border-warning bg-warning-light text-warning-dark rounded border px-2">{{
+              'roles.protected-role' | translate
+            }}</span>
           </td>
         }
       </tr>
     } @empty {
       <tr>
-        <td class="w-full py-4 text-center text-lg" colspan="7">There are no roles</td>
+        <td class="w-full py-4 text-center text-lg" colspan="7">
+          {{ 'roles.empty-state' | translate }}
+        </td>
       </tr>
     }
   </tbody>

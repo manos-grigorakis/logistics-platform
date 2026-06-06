@@ -15,7 +15,7 @@
             class="rounded border px-2 capitalize"
             [ngClass]="quoteStatusBadgeColor(quote.status)"
           >
-            {{ quote.status }}
+            {{ 'metadata.quotes-statuses.' + quote.status.toLowerCase() | translate }}
           </span>
         } @else {
           <select
@@ -25,11 +25,13 @@
             (ngModelChange)="onStatusChange(quote, $event)"
           >
             <option [value]="quote.status" selected disabled hidden>
-              {{ quote.status | titlecase }}
+              {{ 'metadata.quotes-statuses.' + quote.status.toLowerCase() | translate }}
             </option>
             @for (status of quotesStatuses; track $index) {
               @if (status.toLowerCase() !== quote.status.toLowerCase()) {
-                <option [value]="status">{{ status | titlecase }}</option>
+                <option [value]="status">
+                  {{ 'metadata.quotes-statuses.' + status.toLowerCase() | translate }}
+                </option>
               }
             }
           </select>
@@ -39,6 +41,9 @@
     <span class="font-medium">{{ quote.grossPrice | currency: 'EUR' }}</span>
   </div>
   <div class="mt-2">
-    <span class="text-secondary-500 font-light">Issue Date: {{ quote.issueDate | date }}</span>
+    <span class="text-secondary-500 font-light"
+      >{{ 'common.fields.issue-date' | translate }}:
+      {{ quote.issueDate | date: 'dd/MM/yyyy' }}</span
+    >
   </div>
 </div>

@@ -3,33 +3,35 @@ import { ShipmentsForm } from '../shipments-form/shipments-form';
 import { ShipmentPayload } from '../models/shipment-payload';
 import { ShipmentsService } from '../shipments.service';
 import { Router } from '@angular/router';
-import { toast } from 'ngx-sonner';
+import { LanguageService } from '../../shared/services/language.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-create-shipment',
-  imports: [ShipmentsForm],
+  imports: [ShipmentsForm, TranslatePipe],
   templateUrl: './create-shipment.html',
   styleUrl: './create-shipment.css',
 })
 export class CreateShipment {
-  private shipmentsService = inject(ShipmentsService);
-
   public router = inject(Router);
   public errorMessage?: string = undefined;
+
+  private shipmentsService = inject(ShipmentsService);
+  private languageService = inject(LanguageService);
 
   public onSubmit(payload: ShipmentPayload): void {
     this.errorMessage = undefined;
 
     this.shipmentsService.createShipment(payload).subscribe({
-      next: (res) => {
-        toast.success('Shipment created successfully');
+      next: () => {
+        this.languageService.toastSuccess('shipments.messages.success-creation');
         this.router.navigate(['shipments']);
       },
       error: (err) => {
         if (err.status === 500) {
-          this.errorMessage = 'Server error. Please try again';
+          this.errorMessage = 'common.errors.server';
         } else {
-          this.errorMessage = 'An error occurred. Please try again';
+          this.errorMessage = 'common.errors.generic';
         }
       },
     });

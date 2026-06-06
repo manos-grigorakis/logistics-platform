@@ -15,8 +15,8 @@
     </div>
   } @else {
     @if (errorMessage) {
-      <span>{{ errorMessage }}</span>
+      <span>{{ errorMessage | translate }}</span>
     }
-    <h2>Customer not found</h2>
+    <h2>{{ 'customers.messages.not-found' | translate }}</h2>
   }
 </section>

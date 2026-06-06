@@ -6,10 +6,18 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NgSelectComponent } from '@ng-select/ng-select';
 import { Customer } from '../../../customers/models/customer';
 import { Subject } from 'rxjs';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-reconciliation-form',
-  imports: [PrimaryButton, NgIcon, FileDropzone, NgSelectComponent, ReactiveFormsModule],
+  imports: [
+    PrimaryButton,
+    NgIcon,
+    FileDropzone,
+    NgSelectComponent,
+    ReactiveFormsModule,
+    TranslatePipe,
+  ],
   templateUrl: './reconciliation-form.html',
   styleUrl: './reconciliation-form.css',
 })

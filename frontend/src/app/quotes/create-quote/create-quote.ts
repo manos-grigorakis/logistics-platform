@@ -2,13 +2,14 @@ import { Component, inject, OnInit } from '@angular/core';
 import { QuotesForm } from '../quotes-form/quotes-form';
 import { QuotesService } from '../quotes.service';
 import { Router } from '@angular/router';
-import { toast } from 'ngx-sonner';
 import { QuoteRequest } from '../models/quote-request';
 import { AuthService } from '../../auth/services/auth.service';
+import { LanguageService } from '../../shared/services/language.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-create-quote',
-  imports: [QuotesForm],
+  imports: [QuotesForm, TranslatePipe],
   templateUrl: './create-quote.html',
   styleUrl: './create-quote.css',
 })
@@ -16,10 +17,13 @@ export class CreateQuote implements OnInit {
   public isLoading: boolean = false;
   public errorMessage?: string = undefined;
 
+  private userId?: number | null;
+  private router: Router = inject(Router);
+
+  // Services
   private quotesService: QuotesService = inject(QuotesService);
   private authService: AuthService = inject(AuthService);
-  private router: Router = inject(Router);
-  private userId?: number | null;
+  private languageService = inject(LanguageService);
 
   ngOnInit(): void {
     let tempId = this.authService.getUserId();
@@ -49,20 +53,20 @@ export class CreateQuote implements OnInit {
     };
 
     this.quotesService.createQuote(formattedData).subscribe({
-      next: (res) => {
+      next: () => {
         this.isLoading = false;
         this.errorMessage = undefined;
-        toast.success('Quote created successfully');
+        this.languageService.toastSuccess('quotes.messages.success-creation');
         this.router.navigate(['quotes']);
       },
       error: (err) => {
         this.isLoading = false;
         if (err.status === 404) {
-          this.errorMessage = 'Customer or user not found';
+          this.errorMessage = 'quotes.messages.not-found-customer-or-user';
         } else if (err.status === 500) {
-          this.errorMessage = 'Server error. Please try again';
+          this.errorMessage = 'common.errors.server';
         } else {
-          this.errorMessage = 'An unexpected error occurred. Please try again';
+          this.errorMessage = 'common.errors.generic';
         }
       },
     });

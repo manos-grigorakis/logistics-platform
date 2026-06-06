@@ -1,5 +1,5 @@
 <aside
-  class="bg-secondary-900 fixed left-0 z-40 h-full w-full text-white sm:w-64"
+  class="bg-secondary-900 fixed top-0 left-0 z-40 h-screen pt-16 text-white sm:w-64"
   [class.-translate-x-full]="!isOpen"
   [class.translate-x-0]="isOpen"
   [class.transition-none]="disableSidebarTransition"
@@ -7,7 +7,7 @@
   [class.duration-200]="!disableSidebarTransition"
   aria-label="Sidebar"
 >
-  <div class="h-full overflow-y-auto px-3 py-4">
+  <div class="flex h-full flex-col justify-between overflow-y-auto px-3 py-4">
     <ul class="flex flex-col gap-2 font-medium">
       <app-sidebar-menu-item
         route="/dashboard"
@@ -19,46 +19,50 @@
         <app-sidebar-menu-item
           route="/users"
           icon="lucideUsers"
-          label="Users"
+          [label]="'nav.side-bar.users' | translate"
           (onItemClick)="closeOnMobile()"
         />
         <app-sidebar-menu-item
           route="/roles"
           icon="lucideUserCog"
-          label="Roles"
+          [label]="'nav.side-bar.roles' | translate"
           (onItemClick)="closeOnMobile()"
         />
       }
       <app-sidebar-menu-item
         route="/customers"
         icon="lucideBuilding"
-        label="Customers"
+        [label]="'nav.side-bar.customers' | translate"
         (onItemClick)="closeOnMobile()"
       />
       <app-sidebar-menu-item
         route="/vehicles"
         icon="lucideTruck"
-        label="Vehicles"
+        [label]="'nav.side-bar.vehicles' | translate"
         (onItemClick)="closeOnMobile()"
       />
       <app-sidebar-menu-item
         route="/quotes"
         icon="lucideFileText"
-        label="Quotes"
+        [label]="'nav.side-bar.quotes' | translate"
         (onItemClick)="closeOnMobile()"
       />
       <app-sidebar-menu-item
         route="/shipments"
         icon="lucideFileBox"
-        label="Shipments"
+        [label]="'nav.side-bar.shipments' | translate"
         (onItemClick)="closeOnMobile()"
       />
       <app-sidebar-menu-item
         route="/payments-tracking"
         icon="lucideScale"
-        label="Payments Tracking"
+        [label]="'nav.side-bar.payment-tracking' | translate"
         (onItemClick)="closeOnMobile()"
       />
     </ul>
+
+    <div class="border-t border-white/10 pt-4">
+      <app-language-switcher variant="dark" />
+    </div>
   </div>
 </aside>

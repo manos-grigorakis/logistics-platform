@@ -16,10 +16,11 @@
   (cancelClick)="onQuotesStatusModalCancelClick()"
   (closeModalClick)="onQuotesStatusModalCancelClick()"
 />
+
 <!-- Filters -->
 <div>
   <app-quotes-filters
-    searchPlaceholder="Search by Number"
+    [searchPlaceholder]="'common.filters.search-by-number' | translate"
     [createButton]="false"
     [sortLabel]="activeSortLabel"
     [filterLabel]="activeFilterLabel"
@@ -33,16 +34,18 @@
 <div class="flex flex-col" [ngClass]="{ 'min-h-[630px]': quotes.length > 0 }">
   <!-- Errors -->
   @if (errorMessage) {
-    <app-error-alert [errorMessage]="errorMessage" />
+    <app-error-alert [errorMessage]="errorMessage | translate" />
   }
 
   @if (quotesErrorMessage) {
-    <app-error-alert [errorMessage]="quotesErrorMessage" />
+    <app-error-alert [errorMessage]="quotesErrorMessage | translate" />
   }
 
   <!-- Cards -->
   @if (!isQuotesLoading && !errorMessage && quotes.length === 0) {
-    <div class="text-secondary-500 p-6 text-center">No quotes yet</div>
+    <div class="text-secondary-500 p-6 text-center">
+      {{ 'customers.messages.quotes.empty-state' | translate }}
+    </div>
   } @else {
     <div class="flex flex-1 flex-col gap-4 px-2">
       @for (quote of quotes; track quote.id) {

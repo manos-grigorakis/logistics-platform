@@ -4,10 +4,11 @@ import { NgIcon } from '@ng-icons/core';
 import { RoundedIconButton } from '../../shared/forms/rounded-icon-button/rounded-icon-button';
 import { SearchBar } from '../../shared/forms/search-bar/search-bar';
 import { Router } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-quotes-filters',
-  imports: [DropdownButton, NgIcon, RoundedIconButton, SearchBar],
+  imports: [DropdownButton, NgIcon, RoundedIconButton, SearchBar, TranslatePipe],
   templateUrl: './quotes-filters.html',
   styleUrl: './quotes-filters.css',
 })
@@ -20,7 +21,7 @@ export class QuotesFilters {
   @Input() isLoading: boolean = false;
   @Input() sortLabel?: string;
   @Input() filterLabel?: string;
-  @Input() searchPlaceholder: string = 'Search by Number or Company Name';
+  @Input() searchPlaceholder: string = '';
   @Input() createButton: boolean = true;
 
   public searchTerm: string = '';

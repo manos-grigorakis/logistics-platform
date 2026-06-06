@@ -1,19 +1,22 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { KpiCard } from './kpi-card/kpi-card';
 import { CurrencyPipe } from '@angular/common';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartData, ChartOptions } from 'chart.js';
-import { formatEnumLabel } from '../../shared/utils/format-enum-label.util';
 import { AnalyticsService } from '../analytics.service';
+import { TranslatePipe } from '@ngx-translate/core';
+import { LanguageService } from '../../shared/services/language.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-main-dashboard',
-  imports: [KpiCard, CurrencyPipe, BaseChartDirective],
+  imports: [KpiCard, CurrencyPipe, BaseChartDirective, TranslatePipe],
   templateUrl: './main-dashboard.html',
   styleUrl: './main-dashboard.css',
 })
-export class MainDashboard implements OnInit {
+export class MainDashboard implements OnInit, OnDestroy {
   private analyticsService = inject(AnalyticsService);
+  private languageService = inject(LanguageService);
 
   public totalCustomers: number = 0;
   public totalShipments: number = 0;
@@ -25,7 +28,7 @@ export class MainDashboard implements OnInit {
     datasets: [
       {
         data: [],
-        label: 'Quotes',
+        label: this.languageService.translateKey('dashboard.quotes-label'),
       },
     ],
   };
@@ -35,7 +38,7 @@ export class MainDashboard implements OnInit {
     datasets: [
       {
         data: [],
-        label: 'Shipments',
+        label: this.languageService.translateKey('dashboard.shipments-label'),
       },
     ],
   };
@@ -45,7 +48,7 @@ export class MainDashboard implements OnInit {
     datasets: [
       {
         data: [],
-        label: 'Invoices',
+        label: this.languageService.translateKey('dashboard.invoices-label'),
       },
     ],
   };
@@ -54,7 +57,22 @@ export class MainDashboard implements OnInit {
     plugins: { legend: { position: 'bottom' } },
   };
 
+  private langChangeSub?: Subscription;
+
   ngOnInit(): void {
+    this.loadAll();
+
+    this.langChangeSub = this.languageService.onLangChange.subscribe(() => this.loadAll());
+  }
+
+  ngOnDestroy(): void {
+    this.langChangeSub?.unsubscribe();
+  }
+
+  /**
+   * Fetches all the analytics
+   */
+  private loadAll(): void {
     this.loadTotalCustomers();
     this.loadTotalShipments();
     this.loadTotalOutstandingAmount();
@@ -104,11 +122,15 @@ export class MainDashboard implements OnInit {
     this.analyticsService.fetchQuotesByStatus().subscribe({
       next: (res) => {
         this.quotesByStatusChartData = {
-          labels: res.data.map((item) => formatEnumLabel(item.status)),
+          labels: res.data.map((item) =>
+            this.languageService.translateKey(
+              `metadata.quotes-statuses.${item.status.toLowerCase()}`,
+            ),
+          ),
           datasets: [
             {
               data: res.data.map((item) => item.count),
-              label: 'Quotes',
+              label: this.languageService.translateKey('dashboard.quotes-label'),
             },
           ],
         };
@@ -121,11 +143,15 @@ export class MainDashboard implements OnInit {
     this.analyticsService.fetchShipmentsByStatus().subscribe({
       next: (res) => {
         this.shipmentsByStatusChartData = {
-          labels: res.data.map((item) => formatEnumLabel(item.status)),
+          labels: res.data.map((item) =>
+            this.languageService.translateKey(
+              `metadata.shipments-statuses.${item.status.toLowerCase()}`,
+            ),
+          ),
           datasets: [
             {
               data: res.data.map((item) => item.count),
-              label: 'Shipments',
+              label: this.languageService.translateKey('dashboard.shipments-label'),
             },
           ],
         };
@@ -138,11 +164,15 @@ export class MainDashboard implements OnInit {
     this.analyticsService.fetchInvoicesByStatus().subscribe({
       next: (res) => {
         this.invoicesByStatusChartData = {
-          labels: res.data.map((item) => formatEnumLabel(item.status)),
+          labels: res.data.map((item) =>
+            this.languageService.translateKey(
+              `metadata.invoices-statuses.${item.status.toLowerCase()}`,
+            ),
+          ),
           datasets: [
             {
               data: res.data.map((item) => item.count),
-              label: 'Invoices',
+              label: this.languageService.translateKey('dashboard.invoices-label'),
             },
           ],
         };

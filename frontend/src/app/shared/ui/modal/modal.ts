@@ -1,6 +1,16 @@
-import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  HostListener,
+  inject,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { NgClass } from '@angular/common';
 import { NgIcon } from '@ng-icons/core';
+import { LanguageService } from '../../services/language.service';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-modal',
@@ -8,7 +18,7 @@ import { NgIcon } from '@ng-icons/core';
   templateUrl: './modal.html',
   styleUrl: './modal.css',
 })
-export class Modal {
+export class Modal implements OnInit {
   @Input() isEnabled?: boolean;
   @Input() icon: string = 'lucideInfo';
   @Input() iconSize: string = '28';
@@ -16,13 +26,31 @@ export class Modal {
   @Input() confirmButtonColor: 'info' | 'success' | 'warning' | 'danger' = 'danger';
   @Input() header?: string;
   @Input() message?: string;
-  @Input() confirmButtonText: string = "Yes, I'm sure";
-  @Input() cancelButtonText: string = 'No, cancel';
+  @Input() confirmButtonText: string = '';
+  @Input() cancelButtonText: string = '';
   @Input() showCancelButton: boolean = true;
 
   @Output() closeModalClick = new EventEmitter<void>();
   @Output() confirmClick = new EventEmitter<void>();
   @Output() cancelClick = new EventEmitter<void>();
+
+  private languageService = inject(LanguageService);
+
+  ngOnInit(): void {
+    if (!this.confirmButtonText) {
+      this.languageService
+        .translateKeyAsync('common.actions.yes-sure')
+        .pipe(take(1))
+        .subscribe((val) => (this.confirmButtonText = val));
+    }
+
+    if (!this.cancelButtonText) {
+      this.languageService
+        .translateKeyAsync('common.actions.no-cancel')
+        .pipe(take(1))
+        .subscribe((val) => (this.cancelButtonText = val));
+    }
+  }
 
   public onCloseModalClick(): void {
     this.closeModalClick.emit();

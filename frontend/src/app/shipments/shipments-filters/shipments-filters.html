@@ -1,6 +1,6 @@
 <div class="flex items-center justify-between space-x-4 p-4">
   <app-search-bar
-    placeholder="Search by shipment number"
+    [placeholder]="'shipments.filters.search-by-shipment-number' | translate"
     [value]="searchTerm"
     (valueChange)="onSearchChange($event)"
   />
@@ -9,11 +9,7 @@
     <div class="flex items-center gap-4">
       @if (showCreateButton) {
         <!-- Add -->
-        <app-rounded-icon-button
-          routerLink="create-shipment"
-          icon="lucidePlus"
-          color="success"
-        ></app-rounded-icon-button>
+        <app-rounded-icon-button routerLink="create-shipment" icon="lucidePlus" color="success" />
       }
 
       <!-- Refresh -->
@@ -22,48 +18,48 @@
         [isDisabled]="isLoading"
         icon="lucideRefreshCcw"
         color="info"
-      ></app-rounded-icon-button>
+      />
     </div>
 
     <!-- Sort -->
     <app-dropdown-button [label]="sortLabel">
-      <ng-icon name="lucideFilter" size="16" dropdown-left-icon></ng-icon>
-      <ng-icon name="lucideChevronDown" size="16" dropdown-right-icon></ng-icon>
+      <ng-icon name="lucideFilter" size="16" dropdown-left-icon />
+      <ng-icon name="lucideChevronDown" size="16" dropdown-right-icon />
 
       <!-- Menu Items -->
       <li dropdown-menu-item>
         <a
           class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
           (click)="onSortByFieldClick('sort-all')"
-          >All</a
+          >{{ 'common.filters.all' | translate }}</a
         >
       </li>
       <li dropdown-menu-item>
         <a
           class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
           (click)="onSortByFieldClick('sort-asc-by-number')"
-          >Number (A → Z)</a
+          >{{ 'common.fields.number' | translate }} (A → Z)</a
         >
       </li>
       <li dropdown-menu-item>
         <a
           class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
           (click)="onSortByFieldClick('sort-desc-by-number')"
-          >Number (Z → A)</a
+          >{{ 'common.fields.number' | translate }} (Z → A)</a
         >
       </li>
       <li dropdown-menu-item>
         <a
           class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
           (click)="onSortByFieldClick('sort-asc-by-pickup')"
-          >Pickup (A → Z)</a
+          >{{ 'shipments.fields.pickup' | translate }} (A → Z)</a
         >
       </li>
       <li dropdown-menu-item>
         <a
           class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
           (click)="onSortByFieldClick('sort-desc-by-pickup')"
-          >Pickup (Z → A)</a
+          >{{ 'shipments.fields.pickup' | translate }} (Z → A)</a
         >
       </li>
     </app-dropdown-button>
@@ -76,7 +72,7 @@
         <a
           class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
           (click)="onFilterByFieldClick('filter-by-all')"
-          >All</a
+          >{{ 'common.filters.all' | translate }}</a
         >
       </li>
       @for (status of shipmentStatuses; track $index) {
@@ -85,7 +81,7 @@
             class="inline-flex w-full items-center p-2 text-sm text-gray-600 capitalize hover:cursor-pointer hover:text-black"
             (click)="onFilterByFieldClick(`filter-by-shipment-status-${status.label}`)"
           >
-            {{ status.label }}
+            {{ 'metadata.shipments-statuses.' + status.label.toLowerCase() | translate }}
           </a>
         </li>
       }
@@ -95,7 +91,7 @@
       <!-- Date Pickers -->
       <div class="flex gap-4">
         <div class="flex items-center gap-2">
-          <label for="pickup-from">From</label>
+          <label for="pickup-from">{{ 'common.messages.from' | translate }}</label>
           <input
             id="pickup-from"
             type="datetime-local"
@@ -105,7 +101,7 @@
           />
         </div>
         <div class="flex items-center gap-2">
-          <label for="pickup-to">To</label>
+          <label for="pickup-to">{{ 'common.messages.to' | translate }}</label>
           <input
             id="pickup-to"
             type="datetime-local"

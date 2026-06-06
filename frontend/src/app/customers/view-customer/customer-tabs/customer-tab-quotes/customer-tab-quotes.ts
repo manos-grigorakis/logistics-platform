@@ -1,6 +1,6 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { CustomersService } from '../../../customers.service';
-import { debounceTime, distinctUntilChanged, filter, map, Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map, Subject, Subscription, take } from 'rxjs';
 import { NgClass } from '@angular/common';
 import { ModalFile } from '../../../../shared/ui/modal-file/modal-file';
 import { QuotesService } from '../../../../quotes/quotes.service';
@@ -15,6 +15,8 @@ import { LoadingSpinner } from '../../../../shared/ui/loading-spinner/loading-sp
 import { QuotesPerCustomerParameters } from '../../../models/quotes-per-customer-parameters';
 import { ErrorAlert } from '../../../../shared/ui/error-alert/error-alert';
 import { QuoteCard } from '../quote-card/quote-card';
+import { TranslatePipe } from '@ngx-translate/core';
+import { LanguageService } from '../../../../shared/services/language.service';
 
 @Component({
   selector: 'app-customer-tab-quotes',
@@ -28,6 +30,7 @@ import { QuoteCard } from '../quote-card/quote-card';
     LoadingSpinner,
     ErrorAlert,
     QuoteCard,
+    TranslatePipe,
   ],
   templateUrl: './customer-tab-quotes.html',
   styleUrl: './customer-tab-quotes.css',
@@ -78,23 +81,28 @@ export class CustomerTabQuotes implements OnInit, OnDestroy {
   private customersService = inject(CustomersService);
   private quotesService = inject(QuotesService);
   private metadataService = inject(MetadataService);
+  private languageService = inject(LanguageService);
 
   // Subscriptions
   private sub$?: Subscription;
   private quotesStatuses$?: Subscription;
   private quotesReqSub$?: Subscription;
   private subSearch$?: Subscription;
+  private langChangeSub?: Subscription;
 
   // Lifecycle
   ngOnInit(): void {
     this.fetchQuotesPerCustomer({ size: this.quotesToShow });
     this.metadataService.fetchQuotesStatuses();
     this.subscribeToQuotesStatuses();
+    this.setLabels();
 
     // Debouncer on search
     this.subSearch$ = this.searchChanged$
       .pipe(debounceTime(400), distinctUntilChanged())
       .subscribe((value) => this.onSearch(value));
+
+    this.langChangeSub = this.languageService.onLangChange.subscribe(() => this.setLabels());
   }
 
   ngOnDestroy(): void {
@@ -102,6 +110,7 @@ export class CustomerTabQuotes implements OnInit, OnDestroy {
     this.quotesStatuses$?.unsubscribe();
     this.subSearch$?.unsubscribe();
     this.quotesReqSub$?.unsubscribe();
+    this.langChangeSub?.unsubscribe();
   }
 
   public onSearchChanged(value: string): void {
@@ -164,11 +173,17 @@ export class CustomerTabQuotes implements OnInit, OnDestroy {
     this.pendingStatus = newStatus;
 
     // Setup and enable modal
-    this.quoteStatusModalHeader = `Update quote status`;
-    this.quoteStatusModalMessage =
-      `You are about to update the status of quote ${quote.number}. ` +
-      `This action cannot be undone. ` +
-      `Current: ${quote.status.toUpperCase()} → New: ${newStatus.toUpperCase()}`;
+    this.quoteStatusModalHeader = this.languageService.translateKey(
+      'customers.actions.update-quote-status',
+    );
+    this.quoteStatusModalMessage = this.languageService.translateKey(
+      'customers.messages.quotes.status-modal-message',
+      {
+        number: quote.number,
+        currentStatus: this.translateStatus(quote.status),
+        newStatus: this.translateStatus(newStatus),
+      },
+    );
     this.isQuotesStatusModalEnabled = true;
   }
 
@@ -190,23 +205,23 @@ export class CustomerTabQuotes implements OnInit, OnDestroy {
 
     switch (query) {
       case 'sort-all':
-        this.activeSortLabel = 'Sort by';
+        this.activeSortLabel = this.languageService.translateKey('common.filters.sort-by');
         this.fetchQuotesPerCustomer({ page: 0, sortBy: undefined, sortDirection: undefined });
         break;
       case 'sort-asc-by-number':
-        this.activeSortLabel = 'Number 0 → 9';
+        this.activeSortLabel = `${this.languageService.translateKey('common.fields.number')} 0 → 9`;
         this.fetchQuotesPerCustomer({ page: 0, sortBy: 'number', sortDirection: 'asc' });
         break;
       case 'sort-desc-by-number':
-        this.activeSortLabel = 'Number 9 → 0';
+        this.activeSortLabel = `${this.languageService.translateKey('common.fields.number')} 9 → 0`;
         this.fetchQuotesPerCustomer({ page: 0, sortBy: 'number', sortDirection: 'desc' });
         break;
       case 'sort-asc-by-issue-date':
-        this.activeSortLabel = 'Date 0 → 9';
+        this.activeSortLabel = `${this.languageService.translateKey('common.fields.date')} 0 → 9`;
         this.fetchQuotesPerCustomer({ page: 0, sortBy: 'issueDate', sortDirection: 'asc' });
         break;
       case 'sort-desc-by-issue-date':
-        this.activeSortLabel = 'Date 9 → 0';
+        this.activeSortLabel = `${this.languageService.translateKey('common.fields.date')} 9 → 0`;
         this.fetchQuotesPerCustomer({ page: 0, sortBy: 'issueDate', sortDirection: 'desc' });
         break;
     }
@@ -223,31 +238,41 @@ export class CustomerTabQuotes implements OnInit, OnDestroy {
 
     switch (query) {
       case 'filter-by-all':
-        this.activeFilterLabel = 'Filter by';
+        this.activeFilterLabel = this.languageService.translateKey('common.filters.filter-by');
         this.fetchQuotesPerCustomer({ page: 0, quoteStatus: undefined, sortDirection: undefined });
         break;
       case 'filter-by-quote-status-draft':
-        this.activeFilterLabel = 'Draft';
+        this.activeFilterLabel = this.languageService.translateKey(
+          'metadata.quotes-statuses.draft',
+        );
         this.fetchQuotesPerCustomer({ page: 0, quoteStatus: 'DRAFT' });
         break;
       case 'filter-by-quote-status-sent':
-        this.activeFilterLabel = 'Sent';
+        this.activeFilterLabel = this.languageService.translateKey('metadata.quotes-statuses.sent');
         this.fetchQuotesPerCustomer({ page: 0, quoteStatus: 'SENT' });
         break;
       case 'filter-by-quote-status-accepted':
-        this.activeFilterLabel = 'Accepted';
+        this.activeFilterLabel = this.languageService.translateKey(
+          'metadata.quotes-statuses.accepted',
+        );
         this.fetchQuotesPerCustomer({ page: 0, quoteStatus: 'ACCEPTED' });
         break;
       case 'filter-by-quote-status-rejected':
-        this.activeFilterLabel = 'Rejected';
+        this.activeFilterLabel = this.languageService.translateKey(
+          'metadata.quotes-statuses.rejected',
+        );
         this.fetchQuotesPerCustomer({ page: 0, quoteStatus: 'REJECTED' });
         break;
       case 'filter-by-quote-status-expired':
-        this.activeFilterLabel = 'Expired';
+        this.activeFilterLabel = this.languageService.translateKey(
+          'metadata.quotes-statuses.expired',
+        );
         this.fetchQuotesPerCustomer({ page: 0, quoteStatus: 'EXPIRED' });
         break;
       case 'filter-by-quote-status-cancelled':
-        this.activeFilterLabel = 'Cancelled';
+        this.activeFilterLabel = this.languageService.translateKey(
+          'metadata.quotes-statuses.cancelled',
+        );
         this.fetchQuotesPerCustomer({ page: 0, quoteStatus: 'CANCELLED' });
         break;
     }
@@ -288,9 +313,9 @@ export class CustomerTabQuotes implements OnInit, OnDestroy {
         error: (err) => {
           this.isQuotesLoading = false;
           if (err.status === 500) {
-            this.errorMessage = 'Server error. Please try again';
+            this.errorMessage = 'common.errors.server';
           } else {
-            this.errorMessage = 'An error occured. Please try again';
+            this.errorMessage = 'common.errors.generic';
           }
         },
       });
@@ -313,11 +338,14 @@ export class CustomerTabQuotes implements OnInit, OnDestroy {
       error: (err) => {
         this.isQuotePdfLoading = false;
         if (err.status === 404) {
-          this.quotesErrorMessage = `Quote with id ${id} not exist`;
+          this.quotesErrorMessage = this.languageService.translateKey(
+            'customers.messages.quotes.not-found-id',
+            { id: id },
+          );
         } else if (err.status === 500) {
-          this.quotesErrorMessage = 'Server error. Please try again';
+          this.quotesErrorMessage = 'common.errors.server';
         } else {
-          this.quotesErrorMessage = 'An error occured. Please try again later';
+          this.quotesErrorMessage = 'common.errors.generic';
         }
       },
     });
@@ -343,7 +371,7 @@ export class CustomerTabQuotes implements OnInit, OnDestroy {
       next: () => {
         this.editingQuoteId = undefined;
         this.pendingStatus = undefined;
-        toast.success('Quote status updated successfully');
+        this.languageService.toastSuccess('customers.messages.quotes.success-status-update');
       },
       error: (err) => {
         // Reset to previous value
@@ -351,23 +379,25 @@ export class CustomerTabQuotes implements OnInit, OnDestroy {
         this.editingQuoteId = undefined;
         this.pendingStatus = undefined;
 
-        let errorMessage = err.error;
+        let errorMessage = err.error.error;
         let currentStatus = errorMessage?.details?.currentStatus;
         let desiredStatus = errorMessage?.details?.desiredStatus;
 
         if (err.status === 409 && currentStatus && desiredStatus) {
-          toast.error(
-            `You can't update from ${currentStatus.toUpperCase()} to ${desiredStatus.toUpperCase()}`,
-          );
+          this.languageService.toastError('customers.messages.quotes.status-violation', {
+            currentStatus: this.translateStatus(currentStatus),
+            desiredStatus: this.translateStatus(desiredStatus),
+          });
+
           return;
         }
 
         if (err.status === 404) {
-          toast.error('Quote not found');
+          this.languageService.toastError('customers.messages.quotes.not-found');
         } else if (err.status === 500) {
-          toast.error('Server error. Please try again');
+          this.languageService.toastError('common.errors.server');
         } else {
-          toast.error('An error occurred. Please try again');
+          this.languageService.toastError('common.errors.generic');
         }
       },
     });
@@ -412,8 +442,28 @@ export class CustomerTabQuotes implements OnInit, OnDestroy {
       return;
     }
 
-    this.activeFilterLabel = 'Filter by';
-    this.activeSortLabel = 'Sort by';
+    this.activeFilterLabel = this.languageService.translateKey('common.filters.filter-by');
+    this.activeSortLabel = this.languageService.translateKey('common.filters.sort-by');
     this.fetchQuotesPerCustomer({ size: this.quotesToShow, number: param });
+  }
+
+  private setLabels(): void {
+    this.languageService
+      .translateKeyAsync('common.filters.sort-by')
+      .pipe(take(1))
+      .subscribe((val) => (this.activeSortLabel = val));
+    this.languageService
+      .translateKeyAsync('common.filters.filter-by')
+      .pipe(take(1))
+      .subscribe((val) => (this.activeFilterLabel = val));
+  }
+
+  /**
+   * Translates the status of Quote
+   * @param status The status to be translated
+   * @returns The translated status
+   */
+  private translateStatus(status: string): string {
+    return this.languageService.translateKey(`metadata.quotes-statuses.${status.toLowerCase()}`);
   }
 }

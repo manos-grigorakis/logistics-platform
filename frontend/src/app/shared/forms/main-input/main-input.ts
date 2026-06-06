@@ -8,11 +8,12 @@ import {
   Validator,
 } from '@angular/forms';
 import { NgClass } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-main-input',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgClass],
+  imports: [NgClass, TranslatePipe],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

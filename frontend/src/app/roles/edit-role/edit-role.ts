@@ -3,17 +3,19 @@ import { RolesService } from '../roles.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Role } from '../models/role';
 import { RoleRequest } from '../models/role-request';
-import { toast } from 'ngx-sonner';
 import { RoleForm } from '../role-form/role-form';
+import { TranslatePipe } from '@ngx-translate/core';
+import { LanguageService } from '../../shared/services/language.service';
 
 @Component({
   selector: 'app-edit-role',
-  imports: [RoleForm],
+  imports: [RoleForm, TranslatePipe],
   templateUrl: './edit-role.html',
   styleUrl: './edit-role.css',
 })
 export class EditRole implements OnInit {
   private rolesService: RolesService = inject(RolesService);
+  private languageService = inject(LanguageService);
   private route: ActivatedRoute = inject(ActivatedRoute);
   private router: Router = inject(Router);
   private id: number = 0;
@@ -26,7 +28,7 @@ export class EditRole implements OnInit {
     let tempId = this.route.snapshot.paramMap.get('id');
 
     if (!tempId) {
-      toast.error('Invalid role id');
+      this.languageService.toastError('roles.messages.invalid-role-id');
       this.router.navigate(['/roles']);
       return;
     }
@@ -40,18 +42,19 @@ export class EditRole implements OnInit {
     this.errorMessage = undefined;
 
     this.rolesService.updateRole(this.id, data).subscribe({
-      next: (res) => {
+      next: () => {
         this.isLoading = false;
+        this.languageService.toastSuccess('roles.messages.success-update');
         this.router.navigate(['/roles']);
       },
       error: (err) => {
         this.isLoading = false;
         if (err.status === 403) {
-          this.errorMessage = 'Role is protected and cannot be edited';
+          this.errorMessage = 'roles.messages.protected-role';
         } else if (err.status === 500) {
-          this.errorMessage = 'Server error. Please try again later';
+          this.errorMessage = 'common.errors.server';
         } else {
-          this.errorMessage = 'An error occured. Please try again';
+          this.errorMessage = 'common.errors.generic';
         }
       },
     });
@@ -66,7 +69,7 @@ export class EditRole implements OnInit {
         this.errorMessage = undefined;
 
         if (!res.data.editable) {
-          toast.warning('This role is protected');
+          this.languageService.toastWarning('roles.messages.protected-role');
           this.router.navigate(['/roles']);
           return;
         }
@@ -77,11 +80,11 @@ export class EditRole implements OnInit {
         this.isLoading = false;
 
         if (err.status === 404) {
-          this.errorMessage = 'Role not found';
+          this.errorMessage = 'roles.messages.not-found';
         } else if (err.status === 500) {
-          this.errorMessage = 'Server error. Please try again';
+          this.errorMessage = 'common.errors.server';
         } else {
-          this.errorMessage = 'An error has occured. Please try again';
+          this.errorMessage = 'common.errors.generic';
         }
       },
     });

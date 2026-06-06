@@ -2,11 +2,12 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { RoundedIconButton } from '../../../shared/forms/rounded-icon-button/rounded-icon-button';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MainInput } from '../../../shared/forms/main-input/main-input';
-import { TitleCasePipe, LowerCasePipe } from '@angular/common';
+import { LowerCasePipe } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-services-and-items',
-  imports: [RoundedIconButton, ReactiveFormsModule, MainInput, TitleCasePipe, LowerCasePipe],
+  imports: [RoundedIconButton, ReactiveFormsModule, MainInput, LowerCasePipe, TranslatePipe],
   templateUrl: './services-and-items.html',
   styleUrl: './services-and-items.css',
 })

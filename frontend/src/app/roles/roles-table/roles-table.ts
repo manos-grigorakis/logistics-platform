@@ -2,10 +2,11 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Role } from '../models/role';
 import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-roles-table',
-  imports: [RouterLink, LoadingSpinner],
+  imports: [RouterLink, LoadingSpinner, TranslatePipe],
   templateUrl: './roles-table.html',
   styleUrl: './roles-table.css',
 })

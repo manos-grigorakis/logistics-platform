@@ -5,12 +5,13 @@ import { QuotesService } from '../quotes.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { QuoteRequest } from '../models/quote-request';
 import { Quote } from '../models/quote';
-import { toast } from 'ngx-sonner';
 import { QuoteFormPayload } from '../models/quote-form-payload';
+import { TranslatePipe } from '@ngx-translate/core';
+import { LanguageService } from '../../shared/services/language.service';
 
 @Component({
   selector: 'app-edit-quote',
-  imports: [QuotesForm],
+  imports: [QuotesForm, TranslatePipe],
   templateUrl: './edit-quote.html',
   styleUrl: './edit-quote.css',
 })
@@ -19,13 +20,16 @@ export class EditQuote implements OnInit {
   public errorMessage?: string = undefined;
   public quote!: Quote;
 
-  private authService: AuthService = inject(AuthService);
-  private quotesService: QuotesService = inject(QuotesService);
+  private quoteId?: number;
+  private userId?: number;
+
   private route: ActivatedRoute = inject(ActivatedRoute);
   private router: Router = inject(Router);
 
-  private quoteId?: number;
-  private userId?: number;
+  // Services
+  private authService: AuthService = inject(AuthService);
+  private quotesService: QuotesService = inject(QuotesService);
+  private languageService = inject(LanguageService);
 
   ngOnInit(): void {
     let tempQuoteId = this.route.snapshot.paramMap.get('id');
@@ -57,21 +61,21 @@ export class EditQuote implements OnInit {
     };
 
     this.quotesService.updateQuoteById(this.quoteId, formattedData).subscribe({
-      next: (res) => {
+      next: () => {
         this.isLoading = false;
         this.errorMessage = undefined;
-        toast.success('Quote updated successfully');
+        this.languageService.toastSuccess('quotes.messages.success-update');
         this.router.navigate(['quotes']);
       },
       error: (err) => {
         console.error(err);
         this.isLoading = false;
         if (err.status === 404) {
-          this.errorMessage = 'Quote or Customer not found';
+          this.errorMessage = 'quotes.messages.not-found-customer-or-user';
         } else if (err.status === 500) {
-          this.errorMessage = 'Server error. Please try again';
+          this.errorMessage = 'common.errors.server';
         } else {
-          this.errorMessage = 'An error occured. Please try again';
+          this.errorMessage = 'common.errors.generic';
         }
       },
     });
@@ -88,18 +92,21 @@ export class EditQuote implements OnInit {
         this.quote = res.data;
 
         if (this.quote.quoteStatus !== 'draft') {
-          toast.warning('You can only update quotes in DRAFT status');
+          this.languageService.toastWarning('quotes.messages.warning-draft-status-update');
           this.router.navigate(['quotes']);
           return;
         }
       },
       error: (err) => {
         if (err.status === 404) {
-          this.errorMessage = `Quote not found with id: ${id}`;
+          this.errorMessage = this.languageService.translateKey(
+            'quotes.messages.not-found-with-id',
+            { id: id },
+          );
         } else if (err.status === 500) {
-          this.errorMessage = 'Server error. Please try again';
+          this.errorMessage = 'common.errors.server';
         } else {
-          this.errorMessage = 'An error occured. Please try again';
+          this.errorMessage = 'common.errors.generic';
         }
       },
     });

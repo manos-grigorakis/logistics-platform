@@ -5,12 +5,19 @@ import { ErrorAlert } from '../../shared/ui/error-alert/error-alert';
 import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
 import { FormBuilder, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { VehicleRequest } from '../models/vehicle-request';
-import { Vehicle } from '../models/vehicle';
 import { VehicleResponse } from '../models/vehicle-response';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-vehicle-form',
-  imports: [PrimaryButton, MainInput, ErrorAlert, LoadingSpinner, ReactiveFormsModule],
+  imports: [
+    PrimaryButton,
+    MainInput,
+    ErrorAlert,
+    LoadingSpinner,
+    ReactiveFormsModule,
+    TranslatePipe,
+  ],
   templateUrl: './vehicle-form.html',
   styleUrl: './vehicle-form.css',
 })

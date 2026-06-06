@@ -1,9 +1,9 @@
 <div class="mx-auto mt-6 max-w-6xl rounded-lg bg-white p-6 shadow-lg shadow-black/10">
   <h2 class="mb-4 text-center text-3xl font-semibold">
     @if (formUsage === 'create') {
-      Create a Shipment
+      {{ 'shipments.actions.create' | translate }}
     } @else {
-      Update Shipment
+      {{ 'shipments.actions.update' | translate }}
     }
   </h2>
 
@@ -13,13 +13,13 @@
 
   <div class="mb-5">
     @if (errorMessage) {
-      <app-error-alert [errorMessage]="errorMessage" />
+      <app-error-alert [errorMessage]="errorMessage | translate" />
     }
   </div>
 
   <div class="mb-5">
     @if (uiErrorMessage) {
-      <app-error-alert [errorMessage]="uiErrorMessage" />
+      <app-error-alert [errorMessage]="uiErrorMessage | translate" />
     }
   </div>
 
@@ -27,23 +27,24 @@
     <!-- Basic Information -->
     <div>
       <!-- Header -->
-      <h3 class="mb-4 text-lg text-zinc-600">Basic Information</h3>
+      <h3 class="mb-4 text-lg text-zinc-600">{{ 'common.messages.basic-info' | translate }}</h3>
 
       <div class="flex gap-2">
         <!-- Quote Dropdown -->
         <div class="flex-1">
           <label for="quoteId" (click)="onClickFocusQuoteIdSelect()" class="">
-            <span class="text-danger mr-1 text-sm">*</span>Quote
+            <span class="text-danger mr-1 text-sm">*</span
+            >{{ 'shipments.fields.quote' | translate }}
           </label>
           <ng-select
             #quoteIdSelect
             class="tw-select"
-            placeholder="Search a Quote"
+            [placeholder]="'shipments.filters.search-quote' | translate"
             bindLabel="number"
             bindValue="id"
             formControlName="quoteId"
-            loadingText="Loading Quotes..."
-            notFoundText="No results"
+            [loadingText]="('shipments.messages.quotes.loading' | translate) + '...'"
+            [notFoundText]="'common.errors.no-results' | translate"
             [items]="quotesList"
             [loading]="quotesLoading"
             [typeahead]="quoteSearch$"
@@ -54,7 +55,9 @@
           @if (quoteId.invalid && (quoteId.dirty || quoteId.touched)) {
             <div>
               @if (quoteId.hasError('required')) {
-                <span class="text-danger mt-1 ml-1 text-sm">Quote is required</span>
+                <span class="text-danger mt-1 ml-1 text-sm">{{
+                  'shipments.messages.quotes.required' | translate
+                }}</span>
               }
             </div>
           }
@@ -65,7 +68,7 @@
           <app-main-input
             type="datetime-local"
             formControlName="pickup"
-            label="Pickup"
+            [label]="'shipments.fields.pickup' | translate"
             [showRequiredStar]="true"
           />
         </div>
@@ -75,22 +78,24 @@
     <!-- Fleet Assignment -->
     <div>
       <!-- Header -->
-      <h3 class="mb-2 text-lg text-zinc-600">Fleet Assignment</h3>
+      <h3 class="mb-2 text-lg text-zinc-600">
+        {{ 'shipments.messages.fleet-assignment' | translate }}
+      </h3>
       <div class="flex gap-2">
         <!-- Driver -->
         <div class="flex-1">
           <label for="driverId" (click)="onClickFocusDriverIdSelect()" class="mb-1 block">
-            Driver
+            {{ 'shipments.fields.driver' | translate }}
           </label>
           <ng-select
             #driverIdSelect
             class="tw-select w-full"
-            placeholder="Search a Driver"
+            [placeholder]="'shipments.filters.search-driver' | translate"
             bindLabel="fullName"
             bindValue="id"
             formControlName="driverId"
-            loadingText="Loading Drivers..."
-            notFoundText="No results"
+            [loadingText]="('shipments.messages.loading-drivers' | translate) + '...'"
+            [notFoundText]="'common.errors.no-results' | translate"
             [items]="driversList"
             [loading]="driverLoading"
             [typeahead]="driverSearch$"
@@ -102,17 +107,17 @@
         <!-- Truck -->
         <div class="flex-1">
           <label for="truckId" (click)="onClickFocusTruckIdSelect()" class="mb-1 block">
-            Truck
+            {{ 'shipments.fields.truck' | translate }}
           </label>
           <ng-select
             #truckIdSelect
             class="tw-select w-full"
-            placeholder="Search a Truck"
+            [placeholder]="'shipments.filters.search-truck' | translate"
             bindLabel="plate"
             bindValue="id"
             formControlName="truckId"
-            loadingText="Loading Trucks..."
-            notFoundText="No results"
+            [loadingText]="('shipments.messages.loading-trucks' | translate) + '...'"
+            [notFoundText]="'common.errors.no-results' | translate"
             [items]="truckList"
             [loading]="truckLoading"
             [typeahead]="truckSearch$"
@@ -124,17 +129,17 @@
         <!-- Trailer -->
         <div class="flex-1">
           <label for="trailerId" (click)="onClickFocusTrailerIdSelect()" class="mb-1 block">
-            Trailer
+            {{ 'shipments.fields.trailer' | translate }}
           </label>
           <ng-select
             #trailerIdSelect
             class="tw-select w-full"
-            placeholder="Search a Trailer"
+            [placeholder]="'shipments.filters.search-trailer' | translate"
             bindLabel="plate"
             bindValue="id"
             formControlName="trailerId"
-            loadingText="Loading Trailer..."
-            notFoundText="No results"
+            [loadingText]="('shipments.messages.loading-trailers' | translate) + '...'"
+            [notFoundText]="'common.errors.no-results' | translate"
             [items]="trailerList"
             [loading]="trailerLoading"
             [typeahead]="trailerSearch$"
@@ -149,7 +154,9 @@
     <div>
       <div class="mb-2 flex justify-between">
         <!-- Header -->
-        <h3 class="text-lg text-zinc-600">Cargo Items</h3>
+        <h3 class="text-lg text-zinc-600">
+          {{ 'shipments.fields.cargo-items.title' | translate }}
+        </h3>
 
         <!-- Cargo Item Add Button -->
         <app-rounded-icon-button
@@ -165,7 +172,7 @@
         @if (cargoItems.length > 0) {
           @if (isFormSubmitted && cargoItems.length > 0 && hasCargoItemsErrors()) {
             <div class="mb-3 max-w-sm">
-              <app-error-alert errorMessage="The fields with asterisk (*) are required" />
+              <app-error-alert [errorMessage]="'common.validation.required-fields' | translate" />
             </div>
           }
 
@@ -175,14 +182,26 @@
               <thead class="bg-zinc-50 text-xs text-zinc-500 uppercase">
                 <tr>
                   <th class="w-20 py-2">#</th>
-                  <th class="px-4"><span class="text-danger mr-1 text-sm">*</span>Description</th>
-                  <th class="w-40 py-2"><span class="text-danger mr-1 text-sm">*</span>Unit</th>
-                  <th class="w-32 py-2"><span class="text-danger mr-1 text-sm">*</span>Quantity</th>
-                  <th class="w-40 py-2">
-                    <span class="text-danger mr-1 text-sm">*</span>Weight (KG)
+                  <th class="px-4">
+                    <span class="text-danger mr-1 text-sm">*</span
+                    >{{ 'shipments.fields.cargo-items.description' | translate }}
                   </th>
-                  <th class="w-40 py-2">Volume (m³)</th>
-                  <th class="w-40 py-2">Delete</th>
+                  <th class="w-40 py-2">
+                    <span class="text-danger mr-1 text-sm">*</span
+                    >{{ 'shipments.fields.cargo-items.unit' | translate }}
+                  </th>
+                  <th class="w-32 py-2">
+                    <span class="text-danger mr-1 text-sm">*</span
+                    >{{ 'shipments.fields.cargo-items.quantity' | translate }}
+                  </th>
+                  <th class="w-40 py-2">
+                    <span class="text-danger mr-1 text-sm">*</span
+                    >{{ 'shipments.fields.cargo-items.weight' | translate }} (KG)
+                  </th>
+                  <th class="w-40 py-2">
+                    {{ 'shipments.fields.cargo-items.volume' | translate }} (m³)
+                  </th>
+                  <th class="w-40 py-2">{{ 'common.actions.delete' | translate }}</th>
                 </tr>
               </thead>
 
@@ -197,7 +216,7 @@
                     <td class="px-3 py-2 text-center">
                       <app-main-input
                         formControlName="description"
-                        placeholder="Pallet"
+                        [placeholder]="'metadata.cargo-items-units.pallet' | translate"
                         type="text"
                         [displayErrors]="false"
                         [highlightBorders]="true"
@@ -217,12 +236,16 @@
                             : 'border-gray-300'
                         "
                       >
-                        <option [ngValue]="null" disabled selected>Select a unit</option>
+                        <option [ngValue]="null" disabled selected>
+                          {{ 'shipments.messages.select-unit' | translate }}
+                        </option>
 
                         @for (unit of cargoItemsUnits; track $index) {
-                          <option [ngValue]="unit | lowercase">{{ unit | titlecase }}</option>
+                          <option [ngValue]="unit | lowercase">
+                            {{ 'metadata.cargo-items-units.' + unit.toLowerCase() | translate }}
+                          </option>
                         } @empty {
-                          <option disabled>No units are available</option>
+                          <option disabled>{{ 'shipments.units-empty-state' | translate }}</option>
                         }
                       </select>
                     </td>
@@ -234,7 +257,7 @@
                         placeholder="1"
                         type="number"
                         min="1"
-                        patternErrorMessage="must by a number"
+                        [patternErrorMessage]="'common.validation.must-be-number' | translate"
                         [displayErrors]="false"
                         [highlightBorders]="true"
                       />
@@ -246,7 +269,7 @@
                         formControlName="weightKg"
                         placeholder="200"
                         type="text"
-                        patternErrorMessage="must by a number"
+                        [patternErrorMessage]="'common.validation.must-be-number' | translate"
                         [displayErrors]="false"
                         [highlightBorders]="true"
                       />
@@ -258,7 +281,7 @@
                         formControlName="volumeM3"
                         placeholder="200"
                         type="text"
-                        patternErrorMessage="must by a number"
+                        [patternErrorMessage]="'common.validation.must-be-number' | translate"
                         [displayErrors]="false"
                         [highlightBorders]="true"
                       />
@@ -286,7 +309,7 @@
 
     <!-- Notes -->
     <div>
-      <label for="notes" class="mb-1 block">Notes</label>
+      <label for="notes" class="mb-1 block">{{ 'shipments.fields.notes.title' | translate }}</label>
       <textarea
         formControlName="notes"
         id="notes"
@@ -298,9 +321,9 @@
 
     <!-- Button -->
     @if (formUsage === 'create') {
-      <app-primary-button value="Create Shipment" />
+      <app-primary-button [value]="'shipments.actions.create' | translate" />
     } @else {
-      <app-primary-button value="Update Shipment" />
+      <app-primary-button [value]="'shipments.actions.update' | translate" />
     }
   </form>
 </div>

@@ -1,6 +1,6 @@
 <app-vehicle-form
   formUsage="create"
   [isLoading]="isLoading"
-  [errorMessage]="errorMessage"
+  [errorMessage]="errorMessage | translate"
   (onSubmit)="onSubmit($event)"
 />

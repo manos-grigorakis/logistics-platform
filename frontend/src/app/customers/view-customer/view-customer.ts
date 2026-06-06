@@ -1,34 +1,38 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CustomersService } from '../customers.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { toast } from 'ngx-sonner';
 import { Customer } from '../models/customer';
 import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
 import { CustomerHeader } from './customer-header/customer-header';
 import { CustomerSidebar } from './customer-sidebar/customer-sidebar';
 import { CustomerTabs } from './customer-tabs/customer-tabs';
+import { LanguageService } from '../../shared/services/language.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-view-customer',
-  imports: [LoadingSpinner, CustomerHeader, CustomerSidebar, CustomerTabs],
+  imports: [LoadingSpinner, CustomerHeader, CustomerSidebar, CustomerTabs, TranslatePipe],
   templateUrl: './view-customer.html',
   styleUrl: './view-customer.css',
 })
 export class ViewCustomer implements OnInit {
-  private customersService: CustomersService = inject(CustomersService);
+  public isLoading: boolean = false;
+  public customer?: Customer;
+  public errorMessage?: string = undefined;
+
   private route: ActivatedRoute = inject(ActivatedRoute);
   private router: Router = inject(Router);
   private id: number = 0;
 
-  public isLoading: boolean = false;
-  public customer?: Customer;
-  public errorMessage?: string = undefined;
+  // Services
+  private customersService: CustomersService = inject(CustomersService);
+  private languageService = inject(LanguageService);
 
   ngOnInit(): void {
     let tempId = this.route.snapshot.paramMap.get('id');
 
     if (!tempId) {
-      toast.error('Invalid role id');
+      this.languageService.toastError('customers.messages.invalid-role-id');
       this.router.navigate(['/customers']);
       return;
     }
@@ -60,12 +64,12 @@ export class ViewCustomer implements OnInit {
         this.isLoading = false;
 
         if (err.status === 404) {
-          toast.error(`Customer with id: ${this.id} not found`);
+          this.languageService.toastError('customers.messages.not-found-with-id', { id: this.id });
           this.router.navigate(['/customers']);
         } else if (err.status === 500) {
-          this.errorMessage = 'Server error. Please try again';
+          this.errorMessage = 'common.errors.server';
         } else {
-          this.errorMessage = 'An error occured. Please try again';
+          this.errorMessage = 'common.errors.generic';
         }
       },
     });

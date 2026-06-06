@@ -8,10 +8,18 @@ import { Role } from '../../roles/models/role';
 import { UserResponse } from '../models/user-response';
 import { UserRequest } from '../models/user-request';
 import { ErrorAlert } from '../../shared/ui/error-alert/error-alert';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-user-form',
-  imports: [ReactiveFormsModule, PrimaryButton, LoadingSpinner, MainInput, ErrorAlert],
+  imports: [
+    ReactiveFormsModule,
+    PrimaryButton,
+    LoadingSpinner,
+    MainInput,
+    ErrorAlert,
+    TranslatePipe,
+  ],
   templateUrl: './user-form.html',
   styleUrl: './user-form.css',
 })
@@ -120,9 +128,9 @@ export class UserForm implements OnInit {
         this.roleIsLoading = false;
 
         if (err.status === 500) {
-          this.roleErrorMessage = 'Server error. Please try again later';
+          this.roleErrorMessage = 'common.errors.server';
         } else {
-          this.roleErrorMessage = 'An error occured. Please try again';
+          this.roleErrorMessage = 'common.errors.generic';
         }
       },
     });
