@@ -1,10 +1,10 @@
 import { Routes } from '@angular/router';
-import { LoginForm } from './auth/login-form/login-form';
+import { LoginForm } from './core/auth/login-form/login-form';
 import { authGuard } from './core/guards/auth-guard';
 import { NotFound } from './pages/not-found/not-found';
-import { ForgotPasswordForm } from './auth/forgot-password-form/forgot-password-form';
-import { ResetPasswordForm } from './auth/reset-password-form/reset-password-form';
-import { SetupPasswordForm } from './auth/setup-password-form/setup-password-form';
+import { ForgotPasswordForm } from './core/auth/forgot-password-form/forgot-password-form';
+import { ResetPasswordForm } from './core/auth/reset-password-form/reset-password-form';
+import { SetupPasswordForm } from './core/auth/setup-password-form/setup-password-form';
 import { MainLayout } from './core/layout/main-layout/main-layout';
 import { MainDashboard } from './dashboard/main-dashboard/main-dashboard';
 import { UsersPage } from './users/users-page/users-page';

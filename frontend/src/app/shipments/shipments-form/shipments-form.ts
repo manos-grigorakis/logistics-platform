@@ -21,7 +21,7 @@ import { VehiclesService } from '../../vehicles/vehicles.service';
 import { PrimaryButton } from '../../shared/ui/primary-button/primary-button';
 import { MainInput } from '../../shared/forms/main-input/main-input';
 import { ShipmentPayload } from '../models/shipment-payload';
-import { AuthService } from '../../auth/services/auth.service';
+import { AuthService } from '../../core/auth/services/auth.service';
 import { Shipment } from '../models/shipment';
 import { MetadataService } from '../../core/metadata/metadata.service';
 import { LowerCasePipe, NgClass } from '@angular/common';

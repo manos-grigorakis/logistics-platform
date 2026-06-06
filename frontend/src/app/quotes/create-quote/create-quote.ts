@@ -3,7 +3,7 @@ import { QuotesForm } from '../quotes-form/quotes-form';
 import { QuotesService } from '../quotes.service';
 import { Router } from '@angular/router';
 import { QuoteRequest } from '../models/quote-request';
-import { AuthService } from '../../auth/services/auth.service';
+import { AuthService } from '../../core/auth/services/auth.service';
 import { LanguageService } from '../../shared/services/language.service';
 import { TranslatePipe } from '@ngx-translate/core';
 

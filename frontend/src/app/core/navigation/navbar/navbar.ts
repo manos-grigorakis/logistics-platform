@@ -1,8 +1,8 @@
 import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../../auth/services/auth.service';
+import { AuthService } from '../../auth/services/auth.service';
 import { DropdownMenuItem } from '../dropdown-menu-item/dropdown-menu-item';
-import { User } from '../../../auth/models/User';
+import { User } from '../../auth/models/User';
 import { DropdownButton } from '../../../shared/ui/dropdown-button/dropdown-button';
 import { NgIcon } from '@ng-icons/core';
 import { TranslatePipe } from '@ngx-translate/core';

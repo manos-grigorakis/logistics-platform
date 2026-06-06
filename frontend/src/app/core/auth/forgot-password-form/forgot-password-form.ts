@@ -1,11 +1,11 @@
 import { Component, inject } from '@angular/core';
-import { PrimaryButton } from '../../shared/ui/primary-button/primary-button';
+import { PrimaryButton } from '../../../shared/ui/primary-button/primary-button';
 import { FormControl, Validators, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
-import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
+import { LoadingSpinner } from '../../../shared/ui/loading-spinner/loading-spinner';
 import { RouterLink } from '@angular/router';
-import { MainInput } from '../../shared/forms/main-input/main-input';
-import { ErrorAlert } from '../../shared/ui/error-alert/error-alert';
+import { MainInput } from '../../../shared/forms/main-input/main-input';
+import { ErrorAlert } from '../../../shared/ui/error-alert/error-alert';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({

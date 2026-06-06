@@ -1,6 +1,5 @@
 import {
   ApplicationConfig,
-  inject,
   provideBrowserGlobalErrorListeners,
   provideZoneChangeDetection,
 } from '@angular/core';
@@ -41,7 +40,7 @@ import {
   lucideUpload,
   lucideCheckCircle2,
 } from '@ng-icons/lucide';
-import { JwtHeadersInterceptor } from './auth/interceptors/jwt-headers.interceptor';
+import { JwtHeadersInterceptor } from './core/interceptors/jwt-headers.interceptor';
 
 import { provideCharts } from 'ng2-charts';
 import {

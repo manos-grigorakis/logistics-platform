@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { QuotesForm } from '../quotes-form/quotes-form';
-import { AuthService } from '../../auth/services/auth.service';
+import { AuthService } from '../../core/auth/services/auth.service';
 import { QuotesService } from '../quotes.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { QuoteRequest } from '../models/quote-request';

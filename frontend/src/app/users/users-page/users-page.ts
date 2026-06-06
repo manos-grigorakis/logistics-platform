@@ -5,7 +5,7 @@ import { UserResponse } from '../models/user-response';
 import { UsersFilters } from '../users-filters/users-filters';
 import { forkJoin, Subscription, take } from 'rxjs';
 import { Modal } from '../../shared/ui/modal/modal';
-import { AuthService } from '../../auth/services/auth.service';
+import { AuthService } from '../../core/auth/services/auth.service';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LanguageService } from '../../shared/services/language.service';
 

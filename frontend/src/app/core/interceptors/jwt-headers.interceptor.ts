@@ -7,7 +7,7 @@ import {
 } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../auth/services/auth.service';
 import { SKIP_AUTH } from './auth-http.context';
 import { Router } from '@angular/router';
 

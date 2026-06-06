@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { PrimaryButton } from '../../shared/ui/primary-button/primary-button';
-import { AuthService } from '../../auth/services/auth.service';
+import { AuthService } from '../../core/auth/services/auth.service';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({

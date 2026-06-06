@@ -1,14 +1,14 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { PrimaryButton } from '../../shared/ui/primary-button/primary-button';
-import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
+import { PrimaryButton } from '../../../shared/ui/primary-button/primary-button';
+import { LoadingSpinner } from '../../../shared/ui/loading-spinner/loading-spinner';
 import { AuthService } from '../services/auth.service';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SetupPasswordRequest } from '../models/setup-password-request';
-import { MainInput } from '../../shared/forms/main-input/main-input';
-import { ErrorAlert } from '../../shared/ui/error-alert/error-alert';
+import { MainInput } from '../../../shared/forms/main-input/main-input';
+import { ErrorAlert } from '../../../shared/ui/error-alert/error-alert';
 import { TranslatePipe } from '@ngx-translate/core';
-import { LanguageService } from '../../shared/services/language.service';
+import { LanguageService } from '../../../shared/services/language.service';
 
 @Component({
   selector: 'app-setup-password-form',

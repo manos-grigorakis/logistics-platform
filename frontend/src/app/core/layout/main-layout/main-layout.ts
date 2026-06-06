@@ -1,5 +1,5 @@
 import { Component, HostListener, inject, OnInit } from '@angular/core';
-import { AuthService } from '../../../auth/services/auth.service';
+import { AuthService } from '../../auth/services/auth.service';
 import { Navbar } from '../../navigation/navbar/navbar';
 import { Sidebar } from '../../navigation/sidebar/sidebar';
 import { RouterOutlet } from '@angular/router';

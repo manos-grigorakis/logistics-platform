@@ -1,7 +1,7 @@
 import { HttpClient, HttpContext, HttpResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { LoginResponse } from '../models/login-response';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 import { User } from '../models/User';
 import { LoginRequest } from '../models/login-request';
 import { delay, Observable, Subscription, tap, of, map } from 'rxjs';
@@ -11,10 +11,10 @@ import { toast } from 'ngx-sonner';
 import { ValidateResetPasswordTokenResponse } from '../models/validate-reset-password-token-response';
 import { ResetPasswordRequest } from '../models/reset-password-request';
 import { SetupPasswordRequest } from '../models/setup-password-request';
-import { SKIP_AUTH } from '../interceptors/auth-http.context';
+import { SKIP_AUTH } from '../../interceptors/auth-http.context';
 import { JwtPayload } from '../models/jwt-payload';
-import { ApiResponse } from '../../shared/models/api-response.interface';
-import { MessageResponse } from '../../shared/models/message-response.interface';
+import { ApiResponse } from '../../../shared/models/api-response.interface';
+import { MessageResponse } from '../../../shared/models/message-response.interface';
 
 @Injectable({
   providedIn: 'root',

@@ -2,13 +2,13 @@ import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, Validators, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PrimaryButton } from '../../shared/ui/primary-button/primary-button';
-import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
+import { PrimaryButton } from '../../../shared/ui/primary-button/primary-button';
+import { LoadingSpinner } from '../../../shared/ui/loading-spinner/loading-spinner';
 import { ResetPasswordRequest } from '../models/reset-password-request';
-import { MainInput } from '../../shared/forms/main-input/main-input';
-import { ErrorAlert } from '../../shared/ui/error-alert/error-alert';
+import { MainInput } from '../../../shared/forms/main-input/main-input';
+import { ErrorAlert } from '../../../shared/ui/error-alert/error-alert';
 import { TranslatePipe } from '@ngx-translate/core';
-import { LanguageService } from '../../shared/services/language.service';
+import { LanguageService } from '../../../shared/services/language.service';
 
 @Component({
   selector: 'app-reset-password-form',
