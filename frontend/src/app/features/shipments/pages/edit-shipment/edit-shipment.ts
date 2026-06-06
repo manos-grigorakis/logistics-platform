@@ -1,10 +1,10 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { ShipmentsForm } from '../shipments-form/shipments-form';
-import { ShipmentsService } from '../shipments.service';
+import { ShipmentsForm } from '../../components/shipments-form/shipments-form';
+import { ShipmentsService } from '../../shipments.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Shipment } from '../models/shipment';
-import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
-import { LanguageService } from '../../core/services/language.service';
+import { Shipment } from '../../models/shipment';
+import { LoadingSpinner } from '../../../../shared/ui/loading-spinner/loading-spinner';
+import { LanguageService } from '../../../../core/services/language.service';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({

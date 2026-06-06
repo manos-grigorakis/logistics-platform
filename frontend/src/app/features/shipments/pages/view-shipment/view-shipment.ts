@@ -1,16 +1,16 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ShipmentsService } from '../shipments.service';
-import { Shipment } from '../models/shipment';
+import { ShipmentsService } from '../../shipments.service';
+import { Shipment } from '../../models/shipment';
 import { DatePipe, NgClass, DecimalPipe } from '@angular/common';
-import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
-import { shipmentStatusBadgeColor } from '../utils/shipment-status-badge-color.utils';
-import { ErrorAlert } from '../../shared/ui/error-alert/error-alert';
+import { LoadingSpinner } from '../../../../shared/ui/loading-spinner/loading-spinner';
+import { shipmentStatusBadgeColor } from '../../utils/shipment-status-badge-color.utils';
+import { ErrorAlert } from '../../../../shared/ui/error-alert/error-alert';
 import { finalize } from 'rxjs';
-import { CmrDocumentSummaryResponse } from '../models/cmr-document-summary-response';
-import { ModalFile } from '../../shared/ui/modal-file/modal-file';
-import { RoundedIconButton } from '../../shared/forms/rounded-icon-button/rounded-icon-button';
-import { QuotesService } from '../../quotes/quotes.service';
+import { CmrDocumentSummaryResponse } from '../../models/cmr-document-summary-response';
+import { ModalFile } from '../../../../shared/ui/modal-file/modal-file';
+import { RoundedIconButton } from '../../../../shared/forms/rounded-icon-button/rounded-icon-button';
+import { QuotesService } from '../../../../quotes/quotes.service';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({

@@ -1,15 +1,15 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { ShipmentsService } from '../shipments.service';
-import { Shipment } from '../models/shipment';
-import { ShipmentsTable } from '../shipments-table/shipments-table';
-import { Pagination } from '../../shared/ui/pagination/pagination';
-import { ShipmentParams } from '../models/shipment-params';
-import { FiltersWrapper } from '../../shared/ui/filters-wrapper/filters-wrapper';
-import { ShipmentsFilters } from '../shipments-filters/shipments-filters';
-import { MetadataService } from '../../core/metadata/metadata.service';
+import { ShipmentsService } from '../../shipments.service';
+import { Shipment } from '../../models/shipment';
+import { ShipmentsTable } from '../../components/shipments-table/shipments-table';
+import { Pagination } from '../../../../shared/ui/pagination/pagination';
+import { ShipmentParams } from '../../models/shipment-params';
+import { FiltersWrapper } from '../../../../shared/ui/filters-wrapper/filters-wrapper';
+import { ShipmentsFilters } from '../../../../shared/components/shipments-filters/shipments-filters';
+import { MetadataService } from '../../../../core/metadata/metadata.service';
 import { debounceTime, distinctUntilChanged, Subject, Subscription, take } from 'rxjs';
-import { ShipmentStatus } from '../models/shipment-status';
-import { LanguageService } from '../../core/services/language.service';
+import { ShipmentStatus } from '../../models/shipment-status';
+import { LanguageService } from '../../../../core/services/language.service';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({

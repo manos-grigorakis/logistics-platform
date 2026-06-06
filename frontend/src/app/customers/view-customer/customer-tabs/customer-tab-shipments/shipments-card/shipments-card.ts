@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Shipment } from '../../../../../shipments/models/shipment';
-import { shipmentStatusBadgeColor } from '../../../../../shipments/utils/shipment-status-badge-color.utils';
+import { Shipment } from '../../../../../features/shipments/models/shipment';
+import { shipmentStatusBadgeColor } from '../../../../../features/shipments/utils/shipment-status-badge-color.utils';
 import { NgClass, DatePipe } from '@angular/common';
-import { ShipmentStatus } from '../../../../../shipments/models/shipment-status';
+import { ShipmentStatus } from '../../../../../features/shipments/models/shipment-status';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 

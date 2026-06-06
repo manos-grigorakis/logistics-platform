@@ -2,13 +2,13 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ShipmentsResponse } from './models/shipments-response';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { ShipmentParams } from './models/shipment-params';
-import { addHttpParam } from '../shared/utils/add-http-params.util';
+import { addHttpParam } from '../../shared/utils/add-http-params.util';
 import { ShipmentPayload } from './models/shipment-payload';
 import { Shipment } from './models/shipment';
 import { CmrDocumentSummaryResponse } from './models/cmr-document-summary-response';
-import { ApiResponse } from '../shared/models/api-response.interface';
+import { ApiResponse } from '../../shared/models/api-response.interface';
 
 @Injectable({
   providedIn: 'root',

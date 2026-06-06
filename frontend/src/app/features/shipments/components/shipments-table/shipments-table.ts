@@ -1,9 +1,9 @@
 import { Component, Input } from '@angular/core';
-import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
+import { LoadingSpinner } from '../../../../shared/ui/loading-spinner/loading-spinner';
 import { NgClass, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { Shipment } from '../models/shipment';
-import { shipmentStatusBadgeColor } from '../utils/shipment-status-badge-color.utils';
+import { Shipment } from '../../models/shipment';
+import { shipmentStatusBadgeColor } from '../../utils/shipment-status-badge-color.utils';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({

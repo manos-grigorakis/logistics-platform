@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { SearchBar } from '../../shared/forms/search-bar/search-bar';
-import { RoundedIconButton } from '../../shared/forms/rounded-icon-button/rounded-icon-button';
+import { SearchBar } from '../../forms/search-bar/search-bar';
+import { RoundedIconButton } from '../../forms/rounded-icon-button/rounded-icon-button';
 import { NgIcon } from '@ng-icons/core';
 import { RouterLink } from '@angular/router';
-import { DropdownButton } from '../../shared/ui/dropdown-button/dropdown-button';
-import { ShipmentStatus } from '../models/shipment-status';
+import { DropdownButton } from '../../ui/dropdown-button/dropdown-button';
+import { ShipmentStatus } from '../../../features/shipments/models/shipment-status';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { ShipmentStatus } from '../../shipments/models/shipment-status';
+import { ShipmentStatus } from '../../features/shipments/models/shipment-status';
 import { ApiResponse } from '../../shared/models/api-response.interface';
 
 @Injectable({

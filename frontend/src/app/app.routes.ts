@@ -26,10 +26,10 @@ import { CustomerTabQuotes } from './customers/view-customer/customer-tabs/custo
 import { VehiclesPage } from './features/vehicles/pages/vehicles-page/vehicles-page';
 import { CreateVehicle } from './features/vehicles/pages/create-vehicle/create-vehicle';
 import { EditVehicle } from './features/vehicles/pages/edit-vehicle/edit-vehicle';
-import { ShipmentsPage } from './shipments/shipments-page/shipments-page';
-import { CreateShipment } from './shipments/create-shipment/create-shipment';
-import { EditShipment } from './shipments/edit-shipment/edit-shipment';
-import { ViewShipment } from './shipments/view-shipment/view-shipment';
+import { ShipmentsPage } from './features/shipments/pages/shipments-page/shipments-page';
+import { CreateShipment } from './features/shipments/pages/create-shipment/create-shipment';
+import { EditShipment } from './features/shipments/pages/edit-shipment/edit-shipment';
+import { ViewShipment } from './features/shipments/pages/view-shipment/view-shipment';
 import { CustomerTabShipments } from './customers/view-customer/customer-tabs/customer-tab-shipments/customer-tab-shipments';
 import { PaymentsPage } from './payments/payments-page/payments-page';
 
