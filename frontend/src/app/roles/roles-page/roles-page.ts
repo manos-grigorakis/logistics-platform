@@ -6,7 +6,7 @@ import { Modal } from '../../shared/ui/modal/modal';
 import { RouterLink } from '@angular/router';
 import { PrimaryButton } from '../../shared/ui/primary-button/primary-button';
 import { TranslatePipe } from '@ngx-translate/core';
-import { LanguageService } from '../../shared/services/language.service';
+import { LanguageService } from '../../core/services/language.service';
 
 @Component({
   selector: 'app-roles-page',

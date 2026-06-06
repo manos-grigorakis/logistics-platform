@@ -6,7 +6,7 @@ import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner'
 import { RoundedIconButton } from '../../shared/forms/rounded-icon-button/rounded-icon-button';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { LanguageService } from '../../shared/services/language.service';
+import { LanguageService } from '../../core/services/language.service';
 
 @Component({
   selector: 'app-vehicles-page',

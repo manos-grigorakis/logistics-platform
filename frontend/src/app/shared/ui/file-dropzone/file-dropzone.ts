@@ -3,7 +3,7 @@ import { NgIcon } from '@ng-icons/core';
 import { NgClass } from '@angular/common';
 import { toast } from 'ngx-sonner';
 import { TranslatePipe } from '@ngx-translate/core';
-import { LanguageService } from '../../services/language.service';
+import { LanguageService } from '../../../core/services/language.service';
 
 @Component({
   selector: 'app-file-dropzone',

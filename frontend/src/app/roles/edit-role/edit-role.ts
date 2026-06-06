@@ -5,7 +5,7 @@ import { Role } from '../models/role';
 import { RoleRequest } from '../models/role-request';
 import { RoleForm } from '../role-form/role-form';
 import { TranslatePipe } from '@ngx-translate/core';
-import { LanguageService } from '../../shared/services/language.service';
+import { LanguageService } from '../../core/services/language.service';
 
 @Component({
   selector: 'app-edit-role',

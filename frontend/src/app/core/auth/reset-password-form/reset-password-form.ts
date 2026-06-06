@@ -8,7 +8,7 @@ import { ResetPasswordRequest } from '../models/reset-password-request';
 import { MainInput } from '../../../shared/forms/main-input/main-input';
 import { ErrorAlert } from '../../../shared/ui/error-alert/error-alert';
 import { TranslatePipe } from '@ngx-translate/core';
-import { LanguageService } from '../../../shared/services/language.service';
+import { LanguageService } from '../../services/language.service';
 
 @Component({
   selector: 'app-reset-password-form',

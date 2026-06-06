@@ -3,7 +3,7 @@ import { VehicleForm } from '../vehicle-form/vehicle-form';
 import { VehicleRequest } from '../models/vehicle-request';
 import { VehiclesService } from '../vehicles.service';
 import { Router } from '@angular/router';
-import { LanguageService } from '../../shared/services/language.service';
+import { LanguageService } from '../../core/services/language.service';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({

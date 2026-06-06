@@ -3,7 +3,7 @@ import { CustomersForm } from '../customers-form/customers-form';
 import { CustomersService } from '../customers.service';
 import { Router } from '@angular/router';
 import { CustomerRequest } from '../models/customer-request';
-import { LanguageService } from '../../shared/services/language.service';
+import { LanguageService } from '../../core/services/language.service';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({

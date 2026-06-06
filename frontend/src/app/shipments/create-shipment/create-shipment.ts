@@ -3,7 +3,7 @@ import { ShipmentsForm } from '../shipments-form/shipments-form';
 import { ShipmentPayload } from '../models/shipment-payload';
 import { ShipmentsService } from '../shipments.service';
 import { Router } from '@angular/router';
-import { LanguageService } from '../../shared/services/language.service';
+import { LanguageService } from '../../core/services/language.service';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({

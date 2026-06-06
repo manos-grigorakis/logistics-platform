@@ -7,7 +7,7 @@ import { QuotesFilters } from '../quotes-filters/quotes-filters';
 import { FetchQuotesParameters } from '../models/fetch-quotes-parameters';
 import { Pagination } from '../../shared/ui/pagination/pagination';
 import { debounceTime, distinctUntilChanged, Subject, Subscription, take } from 'rxjs';
-import { LanguageService } from '../../shared/services/language.service';
+import { LanguageService } from '../../core/services/language.service';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({

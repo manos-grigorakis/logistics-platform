@@ -7,7 +7,7 @@ import { QuoteRequest } from '../models/quote-request';
 import { Quote } from '../models/quote';
 import { QuoteFormPayload } from '../models/quote-form-payload';
 import { TranslatePipe } from '@ngx-translate/core';
-import { LanguageService } from '../../shared/services/language.service';
+import { LanguageService } from '../../core/services/language.service';
 
 @Component({
   selector: 'app-edit-quote',

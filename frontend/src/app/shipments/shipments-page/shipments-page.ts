@@ -9,7 +9,7 @@ import { ShipmentsFilters } from '../shipments-filters/shipments-filters';
 import { MetadataService } from '../../core/metadata/metadata.service';
 import { debounceTime, distinctUntilChanged, Subject, Subscription, take } from 'rxjs';
 import { ShipmentStatus } from '../models/shipment-status';
-import { LanguageService } from '../../shared/services/language.service';
+import { LanguageService } from '../../core/services/language.service';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({

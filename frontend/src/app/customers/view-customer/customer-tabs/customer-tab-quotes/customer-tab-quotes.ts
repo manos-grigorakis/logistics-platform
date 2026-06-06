@@ -16,7 +16,7 @@ import { QuotesPerCustomerParameters } from '../../../models/quotes-per-customer
 import { ErrorAlert } from '../../../../shared/ui/error-alert/error-alert';
 import { QuoteCard } from '../quote-card/quote-card';
 import { TranslatePipe } from '@ngx-translate/core';
-import { LanguageService } from '../../../../shared/services/language.service';
+import { LanguageService } from '../../../../core/services/language.service';
 
 @Component({
   selector: 'app-customer-tab-quotes',

@@ -7,7 +7,7 @@ import { forkJoin, Subscription, take } from 'rxjs';
 import { Modal } from '../../shared/ui/modal/modal';
 import { AuthService } from '../../core/auth/services/auth.service';
 import { TranslatePipe } from '@ngx-translate/core';
-import { LanguageService } from '../../shared/services/language.service';
+import { LanguageService } from '../../core/services/language.service';
 
 @Component({
   selector: 'app-users-page',

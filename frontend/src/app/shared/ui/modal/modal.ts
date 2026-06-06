@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { NgIcon } from '@ng-icons/core';
-import { LanguageService } from '../../services/language.service';
+import { LanguageService } from '../../../core/services/language.service';
 import { take } from 'rxjs';
 
 @Component({

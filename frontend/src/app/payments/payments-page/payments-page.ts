@@ -12,7 +12,7 @@ import { ReconciliationForm } from './reconciliation-form/reconciliation-form';
 import { ReconciliationResultsTab } from './reconciliation-results-tab/reconciliation-results-tab';
 import { ReconciliationProcessTab } from './reconciliation-process-tab/reconciliation-process-tab';
 import { TranslatePipe } from '@ngx-translate/core';
-import { LanguageService } from '../../shared/services/language.service';
+import { LanguageService } from '../../core/services/language.service';
 
 @Component({
   selector: 'app-payments-page',

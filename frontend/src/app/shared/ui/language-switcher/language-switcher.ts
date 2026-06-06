@@ -1,5 +1,5 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
-import { LanguageService } from '../../services/language.service';
+import { LanguageService } from '../../../core/services/language.service';
 import { NgClass } from '@angular/common';
 
 @Component({

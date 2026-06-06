@@ -1,7 +1,7 @@
 import { Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { NgIcon } from '@ng-icons/core';
 import { FormsModule } from '@angular/forms';
-import { LanguageService } from '../../services/language.service';
+import { LanguageService } from '../../../core/services/language.service';
 import { Subscription, take } from 'rxjs';
 
 @Component({

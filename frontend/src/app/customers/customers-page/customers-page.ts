@@ -10,7 +10,7 @@ import { Modal } from '../../shared/ui/modal/modal';
 import { toast } from 'ngx-sonner';
 import { MetadataService } from '../../core/metadata/metadata.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { LanguageService } from '../../shared/services/language.service';
+import { LanguageService } from '../../core/services/language.service';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({

@@ -4,7 +4,7 @@ import { UserRequest } from '../models/user-request';
 import { Router } from '@angular/router';
 import { UserForm } from '../user-form/user-form';
 import { TranslatePipe } from '@ngx-translate/core';
-import { LanguageService } from '../../shared/services/language.service';
+import { LanguageService } from '../../core/services/language.service';
 
 @Component({
   selector: 'app-create-user-page',

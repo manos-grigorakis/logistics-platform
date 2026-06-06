@@ -5,7 +5,7 @@ import { UserResponse } from '../models/user-response';
 import { UserRequest } from '../models/user-request';
 import { UserForm } from '../user-form/user-form';
 import { TranslatePipe } from '@ngx-translate/core';
-import { LanguageService } from '../../shared/services/language.service';
+import { LanguageService } from '../../core/services/language.service';
 
 @Component({
   selector: 'app-edit-user',

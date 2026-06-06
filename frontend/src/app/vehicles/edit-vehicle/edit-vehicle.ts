@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { VehicleResponse } from '../models/vehicle-response';
 import { VehicleRequest } from '../models/vehicle-request';
 import { TranslatePipe } from '@ngx-translate/core';
-import { LanguageService } from '../../shared/services/language.service';
+import { LanguageService } from '../../core/services/language.service';
 
 @Component({
   selector: 'app-edit-vehicle',

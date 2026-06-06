@@ -4,7 +4,7 @@ import { CustomersService } from '../customers.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Customer } from '../models/customer';
 import { CustomerRequest } from '../models/customer-request';
-import { LanguageService } from '../../shared/services/language.service';
+import { LanguageService } from '../../core/services/language.service';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({

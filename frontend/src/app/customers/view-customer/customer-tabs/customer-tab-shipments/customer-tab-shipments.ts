@@ -14,7 +14,7 @@ import { ShipmentStatus } from '../../../../shipments/models/shipment-status';
 import { ShipmentParams } from '../../../../shipments/models/shipment-params';
 import { Modal } from '../../../../shared/ui/modal/modal';
 import { TranslatePipe } from '@ngx-translate/core';
-import { LanguageService } from '../../../../shared/services/language.service';
+import { LanguageService } from '../../../../core/services/language.service';
 
 @Component({
   selector: 'app-customer-tab-shipments',

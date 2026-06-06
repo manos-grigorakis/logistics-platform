@@ -6,7 +6,7 @@ import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner'
 import { CustomerHeader } from './customer-header/customer-header';
 import { CustomerSidebar } from './customer-sidebar/customer-sidebar';
 import { CustomerTabs } from './customer-tabs/customer-tabs';
-import { LanguageService } from '../../shared/services/language.service';
+import { LanguageService } from '../../core/services/language.service';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({

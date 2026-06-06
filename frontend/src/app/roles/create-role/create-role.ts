@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { toast } from 'ngx-sonner';
 import { RoleRequest } from '../models/role-request';
 import { TranslatePipe } from '@ngx-translate/core';
-import { LanguageService } from '../../shared/services/language.service';
+import { LanguageService } from '../../core/services/language.service';
 
 @Component({
   selector: 'app-create-role',
