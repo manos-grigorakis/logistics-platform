@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NotFoundPage } from './not-found-page';
+import { Forbidden } from './forbidden';
 
-describe('NotFoundPage', () => {
-  let component: NotFoundPage;
-  let fixture: ComponentFixture<NotFoundPage>;
+describe('Forbidden', () => {
+  let component: Forbidden;
+  let fixture: ComponentFixture<Forbidden>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NotFoundPage]
+      imports: [Forbidden]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(NotFoundPage);
+    fixture = TestBed.createComponent(Forbidden);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

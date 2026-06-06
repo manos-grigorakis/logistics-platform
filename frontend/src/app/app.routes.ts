@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { LoginForm } from './auth/login-form/login-form';
 import { authGuard } from './guards/auth-guard';
-import { NotFoundPage } from './not-found-page/not-found-page';
+import { NotFound } from './pages/not-found/not-found';
 import { ForgotPasswordForm } from './auth/forgot-password-form/forgot-password-form';
 import { ResetPasswordForm } from './auth/reset-password-form/reset-password-form';
 import { SetupPasswordForm } from './auth/setup-password-form/setup-password-form';
@@ -21,7 +21,7 @@ import { ViewCustomer } from './customers/view-customer/view-customer';
 import { QuotesPage } from './quotes/quotes-page/quotes-page';
 import { CreateQuote } from './quotes/create-quote/create-quote';
 import { EditQuote } from './quotes/edit-quote/edit-quote';
-import { ForbiddenPage } from './forbidden-page/forbidden-page';
+import { Forbidden } from './pages/forbidden/forbidden';
 import { CustomerTabQuotes } from './customers/view-customer/customer-tabs/customer-tab-quotes/customer-tab-quotes';
 import { VehiclesPage } from './vehicles/vehicles-page/vehicles-page';
 import { CreateVehicle } from './vehicles/create-vehicle/create-vehicle';
@@ -130,10 +130,10 @@ export const routes: Routes = [
     component: SetupPasswordForm,
     title: 'Setup Password',
   },
-  { path: 'forbidden', component: ForbiddenPage, title: '403 Forbidden' },
+  { path: 'forbidden', component: Forbidden, title: '403 Forbidden' },
   {
     path: '**',
-    component: NotFoundPage,
+    component: NotFound,
     title: '404 Not Found',
   },
 ];
