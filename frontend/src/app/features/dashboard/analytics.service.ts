@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ApiResponse } from '../shared/models/api-response.interface';
-import { ValueResponse } from '../shared/models/value-response';
-import { environment } from '../../environments/environment';
+import { ApiResponse } from '../../shared/models/api-response.interface';
+import { ValueResponse } from '../../shared/models/value-response';
+import { environment } from '../../../environments/environment';
 import { ValueByStatusResponse } from './models/value-by-status-response.interface';
 
 @Injectable({
