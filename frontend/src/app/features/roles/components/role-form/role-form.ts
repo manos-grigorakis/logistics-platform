@@ -1,6 +1,6 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { PrimaryButton } from '../../../../shared/ui/primary-button/primary-button';
-import { MainInput } from '../../../../shared/forms/main-input/main-input';
+import { MainInput } from '../../../../shared/components/forms/main-input/main-input';
 import { LoadingSpinner } from '../../../../shared/ui/loading-spinner/loading-spinner';
 import { RoleRequest } from '../../models/role-request';
 import { ReactiveFormsModule, FormBuilder, FormControl, Validators } from '@angular/forms';

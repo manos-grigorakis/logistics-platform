@@ -1,6 +1,6 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
-import { MainInput } from '../../shared/forms/main-input/main-input';
+import { MainInput } from '../../shared/components/forms/main-input/main-input';
 import { FormBuilder, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CustomerRequest } from '../models/customer-request';
 import { PrimaryButton } from '../../shared/ui/primary-button/primary-button';

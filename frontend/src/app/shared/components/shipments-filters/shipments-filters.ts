@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { SearchBar } from '../../forms/search-bar/search-bar';
-import { RoundedIconButton } from '../../forms/rounded-icon-button/rounded-icon-button';
+import { SearchBar } from '../forms/search-bar/search-bar';
+import { RoundedIconButton } from '../forms/rounded-icon-button/rounded-icon-button';
 import { NgIcon } from '@ng-icons/core';
 import { RouterLink } from '@angular/router';
 import { DropdownButton } from '../../ui/dropdown-button/dropdown-button';

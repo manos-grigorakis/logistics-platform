@@ -9,7 +9,7 @@ import { ErrorAlert } from '../../../../shared/ui/error-alert/error-alert';
 import { finalize } from 'rxjs';
 import { CmrDocumentSummaryResponse } from '../../models/cmr-document-summary-response';
 import { ModalFile } from '../../../../shared/ui/modal-file/modal-file';
-import { RoundedIconButton } from '../../../../shared/forms/rounded-icon-button/rounded-icon-button';
+import { RoundedIconButton } from '../../../../shared/components/forms/rounded-icon-button/rounded-icon-button';
 import { QuotesService } from '../../../../quotes/quotes.service';
 import { TranslatePipe } from '@ngx-translate/core';
 

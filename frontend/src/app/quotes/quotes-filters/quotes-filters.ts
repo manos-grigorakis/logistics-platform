@@ -1,8 +1,8 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { DropdownButton } from '../../shared/ui/dropdown-button/dropdown-button';
 import { NgIcon } from '@ng-icons/core';
-import { RoundedIconButton } from '../../shared/forms/rounded-icon-button/rounded-icon-button';
-import { SearchBar } from '../../shared/forms/search-bar/search-bar';
+import { RoundedIconButton } from '../../shared/components/forms/rounded-icon-button/rounded-icon-button';
+import { SearchBar } from '../../shared/components/forms/search-bar/search-bar';
 import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 

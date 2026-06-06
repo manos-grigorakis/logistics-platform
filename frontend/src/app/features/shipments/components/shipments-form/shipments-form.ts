@@ -19,13 +19,13 @@ import { UsersService } from '../../../users/users.service';
 import { VehiclesSummary } from '../../models/vehicles-summary';
 import { VehiclesService } from '../../../vehicles/vehicles.service';
 import { PrimaryButton } from '../../../../shared/ui/primary-button/primary-button';
-import { MainInput } from '../../../../shared/forms/main-input/main-input';
+import { MainInput } from '../../../../shared/components/forms/main-input/main-input';
 import { ShipmentPayload } from '../../models/shipment-payload';
 import { AuthService } from '../../../../core/auth/services/auth.service';
 import { Shipment } from '../../models/shipment';
 import { MetadataService } from '../../../../core/metadata/metadata.service';
 import { LowerCasePipe, NgClass } from '@angular/common';
-import { RoundedIconButton } from '../../../../shared/forms/rounded-icon-button/rounded-icon-button';
+import { RoundedIconButton } from '../../../../shared/components/forms/rounded-icon-button/rounded-icon-button';
 import { CargoItems } from '../../models/cargo-items';
 import { TranslatePipe } from '@ngx-translate/core';
 

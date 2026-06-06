@@ -2,7 +2,7 @@ import { Component, EventEmitter, inject, OnInit, Input, Output } from '@angular
 import { FormBuilder, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { PrimaryButton } from '../../../../shared/ui/primary-button/primary-button';
 import { LoadingSpinner } from '../../../../shared/ui/loading-spinner/loading-spinner';
-import { MainInput } from '../../../../shared/forms/main-input/main-input';
+import { MainInput } from '../../../../shared/components/forms/main-input/main-input';
 import { RolesService } from '../../../roles/roles.service';
 import { Role } from '../../../roles/models/role';
 import { UserResponse } from '../../models/user-response';

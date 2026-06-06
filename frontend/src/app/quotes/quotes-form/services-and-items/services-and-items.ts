@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { RoundedIconButton } from '../../../shared/forms/rounded-icon-button/rounded-icon-button';
+import { RoundedIconButton } from '../../../shared/components/forms/rounded-icon-button/rounded-icon-button';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { MainInput } from '../../../shared/forms/main-input/main-input';
+import { MainInput } from '../../../shared/components/forms/main-input/main-input';
 import { LowerCasePipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 

@@ -1,5 +1,5 @@
 import { Component, Input, ViewChild } from '@angular/core';
-import { MainInput } from '../../../shared/forms/main-input/main-input';
+import { MainInput } from '../../../shared/components/forms/main-input/main-input';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NgSelectComponent } from '@ng-select/ng-select';
 import { Subject } from 'rxjs';

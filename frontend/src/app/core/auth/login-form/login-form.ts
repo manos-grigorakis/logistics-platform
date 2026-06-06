@@ -5,7 +5,7 @@ import { AuthService } from '../services/auth.service';
 import { LoginRequest } from '../models/login-request';
 import { Router, RouterLink } from '@angular/router';
 import { LoadingSpinner } from '../../../shared/ui/loading-spinner/loading-spinner';
-import { MainInput } from '../../../shared/forms/main-input/main-input';
+import { MainInput } from '../../../shared/components/forms/main-input/main-input';
 import { ErrorAlert } from '../../../shared/ui/error-alert/error-alert';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LanguageSwitcher } from '../../../shared/ui/language-switcher/language-switcher';
