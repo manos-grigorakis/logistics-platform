@@ -5,7 +5,7 @@ import { NotFound } from './pages/not-found/not-found';
 import { ForgotPasswordForm } from './auth/forgot-password-form/forgot-password-form';
 import { ResetPasswordForm } from './auth/reset-password-form/reset-password-form';
 import { SetupPasswordForm } from './auth/setup-password-form/setup-password-form';
-import { MainLayout } from './layout/main-layout/main-layout';
+import { MainLayout } from './core/layout/main-layout/main-layout';
 import { MainDashboard } from './dashboard/main-dashboard/main-dashboard';
 import { UsersPage } from './users/users-page/users-page';
 import { CreateUserPage } from './users/create-user-page/create-user-page';

@@ -1,7 +1,7 @@
 import { Component, HostListener, inject, OnInit } from '@angular/core';
-import { AuthService } from '../../auth/services/auth.service';
-import { Navbar } from '../../core/navigation/navbar/navbar';
-import { Sidebar } from '../../core/navigation/sidebar/sidebar';
+import { AuthService } from '../../../auth/services/auth.service';
+import { Navbar } from '../../navigation/navbar/navbar';
+import { Sidebar } from '../../navigation/sidebar/sidebar';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
