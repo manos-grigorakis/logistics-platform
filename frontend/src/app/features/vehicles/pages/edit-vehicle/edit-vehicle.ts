@@ -1,11 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { VehicleForm } from '../vehicle-form/vehicle-form';
-import { VehiclesService } from '../vehicles.service';
+import { VehicleForm } from '../../components/vehicle-form/vehicle-form';
+import { VehiclesService } from '../../vehicles.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { VehicleResponse } from '../models/vehicle-response';
-import { VehicleRequest } from '../models/vehicle-request';
+import { VehicleResponse } from '../../models/vehicle-response';
+import { VehicleRequest } from '../../models/vehicle-request';
 import { TranslatePipe } from '@ngx-translate/core';
-import { LanguageService } from '../../core/services/language.service';
+import { LanguageService } from '../../../../core/services/language.service';
 
 @Component({
   selector: 'app-edit-vehicle',

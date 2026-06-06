@@ -1,11 +1,11 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
-import { PrimaryButton } from '../../shared/ui/primary-button/primary-button';
-import { MainInput } from '../../shared/forms/main-input/main-input';
-import { ErrorAlert } from '../../shared/ui/error-alert/error-alert';
-import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
+import { PrimaryButton } from '../../../../shared/ui/primary-button/primary-button';
+import { MainInput } from '../../../../shared/forms/main-input/main-input';
+import { ErrorAlert } from '../../../../shared/ui/error-alert/error-alert';
+import { LoadingSpinner } from '../../../../shared/ui/loading-spinner/loading-spinner';
 import { FormBuilder, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
-import { VehicleRequest } from '../models/vehicle-request';
-import { VehicleResponse } from '../models/vehicle-response';
+import { VehicleRequest } from '../../models/vehicle-request';
+import { VehicleResponse } from '../../models/vehicle-response';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({

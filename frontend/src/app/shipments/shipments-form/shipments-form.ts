@@ -17,7 +17,7 @@ import { QuotesService } from '../../quotes/quotes.service';
 import { DriversSummary } from '../models/drivers-summary';
 import { UsersService } from '../../features/users/users.service';
 import { VehiclesSummary } from '../models/vehicles-summary';
-import { VehiclesService } from '../../vehicles/vehicles.service';
+import { VehiclesService } from '../../features/vehicles/vehicles.service';
 import { PrimaryButton } from '../../shared/ui/primary-button/primary-button';
 import { MainInput } from '../../shared/forms/main-input/main-input';
 import { ShipmentPayload } from '../models/shipment-payload';

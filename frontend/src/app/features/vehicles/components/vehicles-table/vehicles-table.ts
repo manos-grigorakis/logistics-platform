@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
-import { VehicleResponse } from '../models/vehicle-response';
+import { LoadingSpinner } from '../../../../shared/ui/loading-spinner/loading-spinner';
+import { VehicleResponse } from '../../models/vehicle-response';
 import { RouterLink } from '@angular/router';
 import { NgClass, DatePipe } from '@angular/common';
 import { NgIcon } from '@ng-icons/core';

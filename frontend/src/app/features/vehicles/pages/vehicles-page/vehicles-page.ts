@@ -1,12 +1,12 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { VehiclesService } from '../vehicles.service';
-import { VehicleResponse } from '../models/vehicle-response';
-import { VehiclesTable } from '../vehicles-table/vehicles-table';
-import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
-import { RoundedIconButton } from '../../shared/forms/rounded-icon-button/rounded-icon-button';
+import { VehiclesService } from '../../vehicles.service';
+import { VehicleResponse } from '../../models/vehicle-response';
+import { VehiclesTable } from '../../components/vehicles-table/vehicles-table';
+import { LoadingSpinner } from '../../../../shared/ui/loading-spinner/loading-spinner';
+import { RoundedIconButton } from '../../../../shared/forms/rounded-icon-button/rounded-icon-button';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { LanguageService } from '../../core/services/language.service';
+import { LanguageService } from '../../../../core/services/language.service';
 
 @Component({
   selector: 'app-vehicles-page',
