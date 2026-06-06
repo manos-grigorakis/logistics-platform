@@ -1,13 +1,13 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { QuotesService } from '../quotes.service';
-import { QuotesTable } from '../quotes-table/quotes-table';
-import { QuotesListItem } from '../models/quotes-list-item';
-import { ModalFile } from '../../shared/ui/modal-file/modal-file';
-import { QuotesFilters } from '../quotes-filters/quotes-filters';
-import { FetchQuotesParameters } from '../models/fetch-quotes-parameters';
-import { Pagination } from '../../shared/ui/pagination/pagination';
+import { QuotesService } from '../../quotes.service';
+import { QuotesTable } from '../../components/quotes-table/quotes-table';
+import { QuotesListItem } from '../../models/quotes-list-item';
+import { ModalFile } from '../../../../shared/ui/modal-file/modal-file';
+import { QuotesFilters } from '../../../../shared/components/quotes-filters/quotes-filters';
+import { FetchQuotesParameters } from '../../models/fetch-quotes-parameters';
+import { Pagination } from '../../../../shared/ui/pagination/pagination';
 import { debounceTime, distinctUntilChanged, Subject, Subscription, take } from 'rxjs';
-import { LanguageService } from '../../core/services/language.service';
+import { LanguageService } from '../../../../core/services/language.service';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({

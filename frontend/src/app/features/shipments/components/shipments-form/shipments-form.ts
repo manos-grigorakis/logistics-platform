@@ -13,7 +13,7 @@ import {
 import { NgSelectComponent } from '@ng-select/ng-select';
 import { debounceTime, distinctUntilChanged, finalize, map, Subject, switchMap, tap } from 'rxjs';
 import { QuoteSummary } from '../../models/quote-summary';
-import { QuotesService } from '../../../../quotes/quotes.service';
+import { QuotesService } from '../../../quotes/quotes.service';
 import { DriversSummary } from '../../models/drivers-summary';
 import { UsersService } from '../../../users/users.service';
 import { VehiclesSummary } from '../../models/vehicles-summary';

@@ -2,12 +2,12 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { FetchQuotesResponse } from './models/fetch-quotes-response';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { QuoteResponse } from './models/quote-response';
 import { FetchQuotesParameters } from './models/fetch-quotes-parameters';
 import { QuoteRequest } from './models/quote-request';
 import { CreatedQuoteResponse } from './models/created-quote-response';
-import { ApiResponse } from '../shared/models/api-response.interface';
+import { ApiResponse } from '../../shared/models/api-response.interface';
 
 @Injectable({
   providedIn: 'root',

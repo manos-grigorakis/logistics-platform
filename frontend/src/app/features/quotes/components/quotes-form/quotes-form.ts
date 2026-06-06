@@ -15,21 +15,21 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
-import { PrimaryButton } from '../../shared/ui/primary-button/primary-button';
+import { LoadingSpinner } from '../../../../shared/ui/loading-spinner/loading-spinner';
+import { PrimaryButton } from '../../../../shared/ui/primary-button/primary-button';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MetadataService } from '../../core/metadata/metadata.service';
-import { CustomersService } from '../../customers/customers.service';
+import { MetadataService } from '../../../../core/metadata/metadata.service';
+import { CustomersService } from '../../../../customers/customers.service';
 import { debounceTime, Subject } from 'rxjs';
 import { AdditionalInformation } from './additional-information/additional-information';
 import { BasicInformation } from './basic-information/basic-information';
 import { ServicesAndItems } from './services-and-items/services-and-items';
-import { CustomerSummary } from '../models/customer-summary';
+import { CustomerSummary } from '../../models/customer-summary';
 import { toDoc } from 'ngx-editor';
-import { Quote } from '../models/quote';
-import { QuoteItems } from '../models/quote-items';
-import { QuoteFormPayload } from '../models/quote-form-payload';
-import { ErrorAlert } from '../../shared/ui/error-alert/error-alert';
+import { Quote } from '../../models/quote';
+import { QuoteItems } from '../../models/quote-items';
+import { QuoteFormPayload } from '../../models/quote-form-payload';
+import { ErrorAlert } from '../../../../shared/ui/error-alert/error-alert';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({

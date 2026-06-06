@@ -1,10 +1,10 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { QuotesForm } from '../quotes-form/quotes-form';
-import { QuotesService } from '../quotes.service';
+import { QuotesForm } from '../../components/quotes-form/quotes-form';
+import { QuotesService } from '../../quotes.service';
 import { Router } from '@angular/router';
-import { QuoteRequest } from '../models/quote-request';
-import { AuthService } from '../../core/auth/services/auth.service';
-import { LanguageService } from '../../core/services/language.service';
+import { QuoteRequest } from '../../models/quote-request';
+import { AuthService } from '../../../../core/auth/services/auth.service';
+import { LanguageService } from '../../../../core/services/language.service';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({

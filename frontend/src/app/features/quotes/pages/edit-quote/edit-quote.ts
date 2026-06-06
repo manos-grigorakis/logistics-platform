@@ -1,13 +1,13 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { QuotesForm } from '../quotes-form/quotes-form';
-import { AuthService } from '../../core/auth/services/auth.service';
-import { QuotesService } from '../quotes.service';
+import { QuotesForm } from '../../components/quotes-form/quotes-form';
+import { AuthService } from '../../../../core/auth/services/auth.service';
+import { QuotesService } from '../../quotes.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { QuoteRequest } from '../models/quote-request';
-import { Quote } from '../models/quote';
-import { QuoteFormPayload } from '../models/quote-form-payload';
+import { QuoteRequest } from '../../models/quote-request';
+import { Quote } from '../../models/quote';
+import { QuoteFormPayload } from '../../models/quote-form-payload';
 import { TranslatePipe } from '@ngx-translate/core';
-import { LanguageService } from '../../core/services/language.service';
+import { LanguageService } from '../../../../core/services/language.service';
 
 @Component({
   selector: 'app-edit-quote',

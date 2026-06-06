@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
+import { LoadingSpinner } from '../../../../shared/ui/loading-spinner/loading-spinner';
 import { CurrencyPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { QuotesListItem } from '../models/quotes-list-item';
+import { QuotesListItem } from '../../models/quotes-list-item';
 import { NgClass, DatePipe } from '@angular/common';
-import { quoteStatusBadgeColor } from '../utils/quotes-status-badge-color';
+import { quoteStatusBadgeColor } from '../../utils/quotes-status-badge-color';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
