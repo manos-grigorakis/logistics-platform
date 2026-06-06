@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ProgressBar } from '../../../shared/ui/progress-bar/progress-bar';
+import { ProgressBar } from '../../../../shared/ui/progress-bar/progress-bar';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({

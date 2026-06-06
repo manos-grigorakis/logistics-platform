@@ -2,9 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ReconciliationProcessRequest } from './models/reconciliaton-process-request';
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { ReconciliationProcessResponse } from './models/reconciliation-process-response';
-import { ApiResponse } from '../shared/models/api-response.interface';
+import { ApiResponse } from '../../shared/models/api-response.interface';
 
 @Injectable({
   providedIn: 'root',

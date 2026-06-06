@@ -1,8 +1,8 @@
 import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { CustomersService } from '../../customers/customers.service';
-import { Customer } from '../../customers/models/customer';
+import { CustomersService } from '../../../customers/customers.service';
+import { Customer } from '../../../customers/models/customer';
 import { debounceTime, distinctUntilChanged, Subject, Subscription, take } from 'rxjs';
-import { DetailedStepper } from '../../shared/ui/detailed-stepper/detailed-stepper';
+import { DetailedStepper } from '../../../shared/ui/detailed-stepper/detailed-stepper';
 import { FormBuilder, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { PaymentsService } from '../payments.service';
 import { ReconciliationProcessRequest } from '../models/reconciliaton-process-request';
@@ -12,7 +12,7 @@ import { ReconciliationForm } from './reconciliation-form/reconciliation-form';
 import { ReconciliationResultsTab } from './reconciliation-results-tab/reconciliation-results-tab';
 import { ReconciliationProcessTab } from './reconciliation-process-tab/reconciliation-process-tab';
 import { TranslatePipe } from '@ngx-translate/core';
-import { LanguageService } from '../../core/services/language.service';
+import { LanguageService } from '../../../core/services/language.service';
 
 @Component({
   selector: 'app-payments-page',

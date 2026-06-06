@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { PrimaryButton } from '../../../shared/ui/primary-button/primary-button';
+import { PrimaryButton } from '../../../../shared/ui/primary-button/primary-button';
 import { NgIcon } from '@ng-icons/core';
-import { FileDropzone } from '../../../shared/ui/file-dropzone/file-dropzone';
+import { FileDropzone } from '../../../../shared/ui/file-dropzone/file-dropzone';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NgSelectComponent } from '@ng-select/ng-select';
-import { Customer } from '../../../customers/models/customer';
+import { Customer } from '../../../../customers/models/customer';
 import { Subject } from 'rxjs';
 import { TranslatePipe } from '@ngx-translate/core';
 

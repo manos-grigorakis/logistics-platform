@@ -31,7 +31,7 @@ import { CreateShipment } from './features/shipments/pages/create-shipment/creat
 import { EditShipment } from './features/shipments/pages/edit-shipment/edit-shipment';
 import { ViewShipment } from './features/shipments/pages/view-shipment/view-shipment';
 import { CustomerTabShipments } from './customers/view-customer/customer-tabs/customer-tab-shipments/customer-tab-shipments';
-import { PaymentsPage } from './payments/payments-page/payments-page';
+import { PaymentsPage } from './features/payments/payments-page/payments-page';
 
 export const routes: Routes = [
   {
