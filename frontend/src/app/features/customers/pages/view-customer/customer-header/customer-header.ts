@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { Customer } from '../../models/customer';
+import { Customer } from '../../../models/customer';
 import { NgClass } from '@angular/common';
-import { customerTypeBadgeColor } from '../../utils/customer-type-color.utils';
+import { customerTypeBadgeColor } from '../../../utils/customer-type-color.utils';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({

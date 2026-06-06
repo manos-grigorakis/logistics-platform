@@ -1,12 +1,12 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { CustomersService } from '../customers.service';
+import { CustomersService } from '../../customers.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Customer } from '../models/customer';
-import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
+import { Customer } from '../../models/customer';
+import { LoadingSpinner } from '../../../../shared/ui/loading-spinner/loading-spinner';
 import { CustomerHeader } from './customer-header/customer-header';
 import { CustomerSidebar } from './customer-sidebar/customer-sidebar';
 import { CustomerTabs } from './customer-tabs/customer-tabs';
-import { LanguageService } from '../../core/services/language.service';
+import { LanguageService } from '../../../../core/services/language.service';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({

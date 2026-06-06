@@ -1,10 +1,10 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { CustomersForm } from '../customers-form/customers-form';
-import { CustomersService } from '../customers.service';
+import { CustomersForm } from '../../components/customers-form/customers-form';
+import { CustomersService } from '../../customers.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Customer } from '../models/customer';
-import { CustomerRequest } from '../models/customer-request';
-import { LanguageService } from '../../core/services/language.service';
+import { Customer } from '../../models/customer';
+import { CustomerRequest } from '../../models/customer-request';
+import { LanguageService } from '../../../../core/services/language.service';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({

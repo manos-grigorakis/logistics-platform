@@ -1,20 +1,20 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { ShipmentsFilters } from '../../../../shared/components/shipments-filters/shipments-filters';
+import { ShipmentsFilters } from '../../../../../../shared/components/shipments-filters/shipments-filters';
 import { ShipmentsCard } from './shipments-card/shipments-card';
-import { Shipment } from '../../../../features/shipments/models/shipment';
-import { ShipmentsService } from '../../../../features/shipments/shipments.service';
-import { ErrorAlert } from '../../../../shared/ui/error-alert/error-alert';
-import { LoadingSpinner } from '../../../../shared/ui/loading-spinner/loading-spinner';
-import { Pagination } from '../../../../shared/ui/pagination/pagination';
+import { Shipment } from '../../../../../shipments/models/shipment';
+import { ShipmentsService } from '../../../../../shipments/shipments.service';
+import { ErrorAlert } from '../../../../../../shared/ui/error-alert/error-alert';
+import { LoadingSpinner } from '../../../../../../shared/ui/loading-spinner/loading-spinner';
+import { Pagination } from '../../../../../../shared/ui/pagination/pagination';
 import { ActivatedRoute } from '@angular/router';
 import { NgClass } from '@angular/common';
-import { MetadataService } from '../../../../core/metadata/metadata.service';
+import { MetadataService } from '../../../../../../core/metadata/metadata.service';
 import { debounceTime, distinctUntilChanged, Subject, Subscription, take } from 'rxjs';
-import { ShipmentStatus } from '../../../../features/shipments/models/shipment-status';
-import { ShipmentParams } from '../../../../features/shipments/models/shipment-params';
-import { Modal } from '../../../../shared/ui/modal/modal';
+import { ShipmentStatus } from '../../../../../shipments/models/shipment-status';
+import { ShipmentParams } from '../../../../../shipments/models/shipment-params';
+import { Modal } from '../../../../../../shared/ui/modal/modal';
 import { TranslatePipe } from '@ngx-translate/core';
-import { LanguageService } from '../../../../core/services/language.service';
+import { LanguageService } from '../../../../../../core/services/language.service';
 
 @Component({
   selector: 'app-customer-tab-shipments',

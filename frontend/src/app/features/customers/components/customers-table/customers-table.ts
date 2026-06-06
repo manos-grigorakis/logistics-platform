@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Customer } from '../models/customer';
+import { Customer } from '../../models/customer';
 import { RouterLink } from '@angular/router';
-import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
+import { LoadingSpinner } from '../../../../shared/ui/loading-spinner/loading-spinner';
 import { NgClass } from '@angular/common';
-import { customerTypeBadgeColor } from '../utils/customer-type-color.utils';
+import { customerTypeBadgeColor } from '../../utils/customer-type-color.utils';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({

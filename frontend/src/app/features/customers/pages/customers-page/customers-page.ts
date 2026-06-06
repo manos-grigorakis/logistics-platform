@@ -1,16 +1,16 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { CustomersService } from '../customers.service';
-import { Customer } from '../models/customer';
-import { CustomersTable } from '../customers-table/customers-table';
-import { Pagination } from '../../shared/ui/pagination/pagination';
-import { CustomersFilters } from '../customers-filters/customers-filters';
-import { FetchCustomersParameters } from '../models/fetch-customers-parameters';
+import { CustomersService } from '../../customers.service';
+import { Customer } from '../../models/customer';
+import { CustomersTable } from '../../components/customers-table/customers-table';
+import { Pagination } from '../../../../shared/ui/pagination/pagination';
+import { CustomersFilters } from '../../components/customers-filters/customers-filters';
+import { FetchCustomersParameters } from '../../models/fetch-customers-parameters';
 import { debounceTime, distinctUntilChanged, forkJoin, Subject, Subscription, take } from 'rxjs';
-import { Modal } from '../../shared/ui/modal/modal';
+import { Modal } from '../../../../shared/ui/modal/modal';
 import { toast } from 'ngx-sonner';
-import { MetadataService } from '../../core/metadata/metadata.service';
+import { MetadataService } from '../../../../core/metadata/metadata.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { LanguageService } from '../../core/services/language.service';
+import { LanguageService } from '../../../../core/services/language.service';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({

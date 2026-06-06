@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Customer } from '../../models/customer';
+import { Customer } from '../../../models/customer';
 import { NgIcon } from '@ng-icons/core';
 import { DatePipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';

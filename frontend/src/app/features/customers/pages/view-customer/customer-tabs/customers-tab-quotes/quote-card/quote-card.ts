@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { QuotePerCustomer } from '../../../models/quotes-per-customer';
-import { quoteStatusBadgeColor } from '../../../../features/quotes/utils/quotes-status-badge-color';
+import { QuotePerCustomer } from '../../../../../models/quotes-per-customer';
+import { quoteStatusBadgeColor } from '../../../../../../quotes/utils/quotes-status-badge-color';
 import { NgClass, CurrencyPipe, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';

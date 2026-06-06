@@ -14,15 +14,15 @@ import { RolesPage } from './features/roles/pages/roles-page/roles-page';
 import { CreateRole } from './features/roles/pages/create-role/create-role';
 import { EditRole } from './features/roles/pages/edit-role/edit-role';
 import { roleGuard } from './core/guards/role-guard';
-import { CustomersPage } from './customers/customers-page/customers-page';
-import { CreateCustomer } from './customers/create-customer/create-customer';
-import { EditCustomer } from './customers/edit-customer/edit-customer';
-import { ViewCustomer } from './customers/view-customer/view-customer';
+import { CustomersPage } from './features/customers/pages/customers-page/customers-page';
+import { CreateCustomer } from './features/customers/pages/create-customer/create-customer';
+import { EditCustomer } from './features/customers/pages/edit-customer/edit-customer';
+import { ViewCustomer } from './features/customers/pages/view-customer/view-customer';
 import { QuotesPage } from './features/quotes/pages/quotes-page/quotes-page';
 import { CreateQuote } from './features/quotes/pages/create-quote/create-quote';
 import { EditQuote } from './features/quotes/pages/edit-quote/edit-quote';
 import { Forbidden } from './pages/forbidden/forbidden';
-import { CustomerTabQuotes } from './customers/view-customer/customer-tabs/customer-tab-quotes/customer-tab-quotes';
+import { CustomerTabQuotes } from './features/customers/pages/view-customer/customer-tabs/customers-tab-quotes/customer-tab-quotes';
 import { VehiclesPage } from './features/vehicles/pages/vehicles-page/vehicles-page';
 import { CreateVehicle } from './features/vehicles/pages/create-vehicle/create-vehicle';
 import { EditVehicle } from './features/vehicles/pages/edit-vehicle/edit-vehicle';
@@ -30,7 +30,7 @@ import { ShipmentsPage } from './features/shipments/pages/shipments-page/shipmen
 import { CreateShipment } from './features/shipments/pages/create-shipment/create-shipment';
 import { EditShipment } from './features/shipments/pages/edit-shipment/edit-shipment';
 import { ViewShipment } from './features/shipments/pages/view-shipment/view-shipment';
-import { CustomerTabShipments } from './customers/view-customer/customer-tabs/customer-tab-shipments/customer-tab-shipments';
+import { CustomerTabShipments } from './features/customers/pages/view-customer/customer-tabs/customers-tab-shipments/customer-tab-shipments';
 import { PaymentsPage } from './features/payments/payments-page/payments-page';
 
 export const routes: Routes = [

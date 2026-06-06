@@ -1,14 +1,14 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { FetchCustomersResponse } from './models/fetch-customers-response';
 import { FetchCustomersParameters } from './models/fetch-customers-parameters';
 import { Customer } from './models/customer';
 import { CustomerRequest } from './models/customer-request';
 import { QuotePerCustomerResponse } from './models/quote-per-customer-response';
 import { QuotesPerCustomerParameters } from './models/quotes-per-customer-parameters';
-import { ApiResponse } from '../shared/models/api-response.interface';
+import { ApiResponse } from '../../shared/models/api-response.interface';
 
 @Injectable({
   providedIn: 'root',
