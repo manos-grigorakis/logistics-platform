@@ -185,7 +185,9 @@ export class CustomerTabShipments implements OnInit, OnDestroy {
 
     if (value.startsWith(prefix)) {
       const status = value.slice(prefix.length);
-      this.filterLabel = status.charAt(0).toUpperCase() + status.slice(1);
+      this.filterLabel = this.languageService.translateKey(
+        `metadata.shipments-statuses.${status.toLowerCase()}`,
+      );
       this.fetchShipmentsByCustomer({ status: status.toUpperCase() });
     }
   }
