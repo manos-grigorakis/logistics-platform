@@ -6,7 +6,7 @@ import { ModalFile } from '../../../../shared/ui/modal-file/modal-file';
 import { QuotesService } from '../../../../quotes/quotes.service';
 import { QuotePerCustomer } from '../../../models/quotes-per-customer';
 import { Pagination } from '../../../../shared/ui/pagination/pagination';
-import { MetadataService } from '../../../../metadata/metadata.service';
+import { MetadataService } from '../../../../core/metadata/metadata.service';
 import { FormsModule } from '@angular/forms';
 import { toast } from 'ngx-sonner';
 import { Modal } from '../../../../shared/ui/modal/modal';

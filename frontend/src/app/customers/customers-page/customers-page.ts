@@ -8,7 +8,7 @@ import { FetchCustomersParameters } from '../models/fetch-customers-parameters';
 import { debounceTime, distinctUntilChanged, forkJoin, Subject, Subscription, take } from 'rxjs';
 import { Modal } from '../../shared/ui/modal/modal';
 import { toast } from 'ngx-sonner';
-import { MetadataService } from '../../metadata/metadata.service';
+import { MetadataService } from '../../core/metadata/metadata.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LanguageService } from '../../shared/services/language.service';
 import { TranslatePipe } from '@ngx-translate/core';

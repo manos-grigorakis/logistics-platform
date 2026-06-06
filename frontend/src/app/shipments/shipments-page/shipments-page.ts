@@ -6,7 +6,7 @@ import { Pagination } from '../../shared/ui/pagination/pagination';
 import { ShipmentParams } from '../models/shipment-params';
 import { FiltersWrapper } from '../../shared/ui/filters-wrapper/filters-wrapper';
 import { ShipmentsFilters } from '../shipments-filters/shipments-filters';
-import { MetadataService } from '../../metadata/metadata.service';
+import { MetadataService } from '../../core/metadata/metadata.service';
 import { debounceTime, distinctUntilChanged, Subject, Subscription, take } from 'rxjs';
 import { ShipmentStatus } from '../models/shipment-status';
 import { LanguageService } from '../../shared/services/language.service';

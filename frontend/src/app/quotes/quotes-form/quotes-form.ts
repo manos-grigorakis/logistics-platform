@@ -18,7 +18,7 @@ import {
 import { LoadingSpinner } from '../../shared/ui/loading-spinner/loading-spinner';
 import { PrimaryButton } from '../../shared/ui/primary-button/primary-button';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MetadataService } from '../../metadata/metadata.service';
+import { MetadataService } from '../../core/metadata/metadata.service';
 import { CustomersService } from '../../customers/customers.service';
 import { debounceTime, Subject } from 'rxjs';
 import { AdditionalInformation } from './additional-information/additional-information';

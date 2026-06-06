@@ -4,7 +4,7 @@ import { MainInput } from '../../shared/forms/main-input/main-input';
 import { FormBuilder, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CustomerRequest } from '../models/customer-request';
 import { PrimaryButton } from '../../shared/ui/primary-button/primary-button';
-import { MetadataService } from '../../metadata/metadata.service';
+import { MetadataService } from '../../core/metadata/metadata.service';
 import { Customer } from '../models/customer';
 import { ErrorAlert } from '../../shared/ui/error-alert/error-alert';
 import { TranslatePipe } from '@ngx-translate/core';

@@ -8,7 +8,7 @@ import { LoadingSpinner } from '../../../../shared/ui/loading-spinner/loading-sp
 import { Pagination } from '../../../../shared/ui/pagination/pagination';
 import { ActivatedRoute } from '@angular/router';
 import { NgClass } from '@angular/common';
-import { MetadataService } from '../../../../metadata/metadata.service';
+import { MetadataService } from '../../../../core/metadata/metadata.service';
 import { debounceTime, distinctUntilChanged, Subject, Subscription, take } from 'rxjs';
 import { ShipmentStatus } from '../../../../shipments/models/shipment-status';
 import { ShipmentParams } from '../../../../shipments/models/shipment-params';

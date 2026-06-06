@@ -23,7 +23,7 @@ import { MainInput } from '../../shared/forms/main-input/main-input';
 import { ShipmentPayload } from '../models/shipment-payload';
 import { AuthService } from '../../auth/services/auth.service';
 import { Shipment } from '../models/shipment';
-import { MetadataService } from '../../metadata/metadata.service';
+import { MetadataService } from '../../core/metadata/metadata.service';
 import { LowerCasePipe, NgClass } from '@angular/common';
 import { RoundedIconButton } from '../../shared/forms/rounded-icon-button/rounded-icon-button';
 import { CargoItems } from '../models/cargo-items';
