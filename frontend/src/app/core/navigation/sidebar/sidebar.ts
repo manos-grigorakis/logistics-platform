@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { SidebarMenuItem } from '../sidebar-menu-item/sidebar-menu-item';
-import { LanguageSwitcher } from '../../shared/ui/language-switcher/language-switcher';
+import { LanguageSwitcher } from '../../../shared/ui/language-switcher/language-switcher';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
