@@ -172,6 +172,13 @@ export class CustomerTabQuotes implements OnInit, OnDestroy {
     this.editingQuoteId = quote.id;
     this.pendingStatus = newStatus;
 
+    const translatedCurrentStatus = this.languageService.translateKey(
+      `metadata.quotes-statuses.${quote.status.toLowerCase()}`,
+    );
+    const translatedNewStatus = this.languageService.translateKey(
+      `metadata.quotes-statuses.${newStatus.toLowerCase()}`,
+    );
+
     // Setup and enable modal
     this.quoteStatusModalHeader = this.languageService.translateKey(
       'customers.actions.update-quote-status',
@@ -180,8 +187,8 @@ export class CustomerTabQuotes implements OnInit, OnDestroy {
       'customers.messages.quotes.status-modal-message',
       {
         number: quote.number,
-        currentStatus: quote.status.toUpperCase(),
-        newStatus: newStatus.toUpperCase(),
+        currentStatus: translatedCurrentStatus,
+        newStatus: translatedNewStatus,
       },
     );
     this.isQuotesStatusModalEnabled = true;

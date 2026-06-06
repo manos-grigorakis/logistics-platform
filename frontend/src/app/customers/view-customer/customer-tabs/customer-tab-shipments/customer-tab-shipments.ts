@@ -241,12 +241,19 @@ export class CustomerTabShipments implements OnInit, OnDestroy {
     let shipment: Shipment = event.shipment;
     let newStatus = event.newStatus;
 
+    const translatedCurrentStatus = this.languageService.translateKey(
+      `metadata.shipments-statuses.${shipment.status.label.toLocaleLowerCase()}`,
+    );
+    const translatedNewStatus = this.languageService.translateKey(
+      `metadata.shipments-statuses.${newStatus.toLocaleLowerCase()}`,
+    );
+
     this.confirmShipmentStatusModalMessage = this.languageService.translateKey(
       'customers.messages.shipments.modal.message',
       {
         number: shipment.number,
-        currentStatus: shipment.status.label.toUpperCase(),
-        newStatus: newStatus.toUpperCase(),
+        currentStatus: translatedCurrentStatus,
+        newStatus: translatedNewStatus,
       },
     );
 
