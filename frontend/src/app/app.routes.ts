@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { LoginForm } from './auth/login-form/login-form';
-import { authGuard } from './guards/auth-guard';
+import { authGuard } from './core/guards/auth-guard';
 import { NotFound } from './pages/not-found/not-found';
 import { ForgotPasswordForm } from './auth/forgot-password-form/forgot-password-form';
 import { ResetPasswordForm } from './auth/reset-password-form/reset-password-form';
@@ -13,7 +13,7 @@ import { EditUserPage } from './users/edit-user-page/edit-user-page';
 import { RolesPage } from './roles/roles-page/roles-page';
 import { CreateRole } from './roles/create-role/create-role';
 import { EditRole } from './roles/edit-role/edit-role';
-import { roleGuard } from './guards/role-guard';
+import { roleGuard } from './core/guards/role-guard';
 import { CustomersPage } from './customers/customers-page/customers-page';
 import { CreateCustomer } from './customers/create-customer/create-customer';
 import { EditCustomer } from './customers/edit-customer/edit-customer';
