@@ -153,6 +153,7 @@ public class CmrServiceTest {
         // Arrange
         CmrDocument cmrDocument = new CmrDocument();
         cmrDocument.setStatus(CmrStatus.GENERATED);
+        cmrDocument.setSignedBy("John Doe");
         when(cmrDocumentRepository.findById(1L)).thenReturn(Optional.of(cmrDocument));
 
         UpdateCmrDocumentStatusRequestDTO status = new UpdateCmrDocumentStatusRequestDTO();
