@@ -4,10 +4,11 @@ import { LoadingSpinner } from '../../../../shared/ui/loading-spinner/loading-sp
 import { TranslatePipe } from '@ngx-translate/core';
 import { DatePipe, NgClass } from '@angular/common';
 import { cmrDocumentStatusBadgeColor } from '../../../../shared/utils/cmr-document-status-badge-color.util';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-cmr-documents-table',
-  imports: [LoadingSpinner, TranslatePipe, DatePipe, NgClass],
+  imports: [LoadingSpinner, TranslatePipe, DatePipe, NgClass, FormsModule],
   templateUrl: './cmr-documents-table.html',
   styleUrl: './cmr-documents-table.css',
 })

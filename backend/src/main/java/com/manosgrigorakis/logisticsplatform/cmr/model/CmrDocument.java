@@ -137,4 +137,14 @@ public class CmrDocument {
 
         this.status = status;
     }
+
+    /**
+     * Verifies whether a CMR Document can be converted from {@link CmrStatus#GENERATED} -> {@link CmrStatus#SIGNED}
+     *
+     * @return Returns {@code true} if the current document status is {@link CmrStatus#GENERATED} and {@code signedBy}
+     * is not null, otherwise {@code false}
+     */
+    public Boolean canChangeStatusToSigned() {
+        return this.status.equals(CmrStatus.GENERATED) && this.signedBy != null;
+    }
 }

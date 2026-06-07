@@ -129,11 +129,18 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
     public void updateCmrDocumentStatus(Long id, UpdateCmrDocumentStatusRequestDTO dto) {
         CmrDocument cmrDocument = this.cmrDocumentRepository.findById(id)
                 .orElseThrow(() -> {
-                            log.warn("CMR Document not found with id {}", id);
-                            return new ResourceNotFoundException("CMR Document not found with id: " + id);
-                        }
+                                 log.warn("CMR Document not found with id {}", id);
+                                 return new ResourceNotFoundException("CMR Document not found with id: " + id);
+                             }
                 );
 
+        if (dto.getStatus().equals(CmrStatus.SIGNED) && !cmrDocument.canChangeStatusToSigned()) {
+            throw new ConflictException("CMR Document cannot converted to signed", "NOT_SIGNED", Map.of(
+                    "currentStatus", CmrStatus.GENERATED,
+                    "desiredStatus", CmrStatus.SIGNED
+            ));
+        }
+        
         CmrDocument oldCmrDocument = new CmrDocument(cmrDocument);
 
         try {
