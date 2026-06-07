@@ -558,5 +558,9 @@
       "bank-matched-tx": "Bank Transactions Matched",
       "invoices-breakdown": "Invoice Breakdown"
     }
+  },
+
+  "cmr-documents": {
+    "empty-state": "There are no CMR documents"
   }
 }

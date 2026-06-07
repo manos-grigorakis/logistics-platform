@@ -1,0 +1,50 @@
+<table class="text-body w-full text-left text-sm whitespace-nowrap rtl:text-right">
+  @if (isLoading) {
+    <app-loading-spinner />
+  }
+
+  <thead class="text-body bg-secondary-700 text-sm text-white">
+    <tr>
+      <th scope="col" class="px-2 py-3 font-medium">{{ 'common.fields.number' | translate }}</th>
+      <th scope="col" class="px-2 py-3 font-medium">{{ 'common.fields.status' | translate }}</th>
+      <th scope="col" class="px-2 py-3 font-medium">{{ 'common.fields.signed-by' | translate }}</th>
+      <th scope="col" class="px-2 py-3 font-medium">{{ 'common.fields.signed-at' | translate }}</th>
+      <th scope="col" class="px-2 py-3 font-medium">
+        {{ 'common.fields.created-at' | translate }}
+      </th>
+    </tr>
+  </thead>
+
+  <tbody>
+    @for (document of cmrDocuments; track document.id) {
+      <tr>
+        <td
+          class="px-2 py-4 hover:cursor-pointer hover:underline"
+          (click)="onDocumentClick(document.id)"
+        >
+          {{ document.number }}
+        </td>
+        <td class="px-2 py-4">
+          <span class="rounded border px-2" [ngClass]="applyCmrDocumentBadgeColor(document.status)">
+            {{ 'metadata.cmr-document-statuses.' + document.status.toLowerCase() | translate }}
+          </span>
+        </td>
+        <td class="px-2 py-4">{{ document.signedBy || '-' }}</td>
+        <td class="px-2 py-4">{{ (document.signedAt | date: 'dd/MM/yyyy') || '-' }}</td>
+        <td class="px-2 py-4">{{ document.createdAt | date: 'dd/MM/yyyy' }}</td>
+      </tr>
+    } @empty {
+      <tr>
+        <td class="w-full py-4 text-center text-lg" colspan="7">
+          @if (errorMessage) {
+            <span class="bg-danger-light text-danger-dark border-danger rounded border px-2">{{
+              errorMessage
+            }}</span>
+          } @else {
+            {{ 'cmr-documents.empty-state' | translate }}
+          }
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>

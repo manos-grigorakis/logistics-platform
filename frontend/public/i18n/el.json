@@ -558,5 +558,9 @@
       "bank-matched-tx": "Αντιστοιχισμένες Τραπεζικές Συναλλαγές",
       "invoices-breakdown": "Ανάλυση Τιμολογίων"
     }
+  },
+
+  "cmr-documents": {
+    "empty-state": "Δεν υπάρχουν CMR αρχεία"
   }
 }
