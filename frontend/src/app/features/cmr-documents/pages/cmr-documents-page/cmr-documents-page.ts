@@ -196,8 +196,7 @@ export class CmrDocumentsPage implements OnInit, OnDestroy {
           if (err.status === 404) {
             this.languageService.toastError('cmr-documents.messages.not-found');
           }
-
-          this.errorMessage = handleHttpErrors(err.status);
+          this.languageService.toastError(handleHttpErrors(err.status));
         },
       });
   }
