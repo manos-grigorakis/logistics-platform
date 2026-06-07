@@ -38,7 +38,7 @@ export class CmrDocumentsService {
   }
 
   public updateCmrDocumentStatus(id: number, status: string): Observable<void> {
-    return this.http.patch<void>(`${environment.apiUrl}/cmr-documents/${id}/status`, status);
+    return this.http.patch<void>(`${environment.apiUrl}/cmr-documents/${id}/status`, { status });
   }
 
   // prettier-ignore

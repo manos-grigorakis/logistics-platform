@@ -143,6 +143,10 @@ export class CmrDocumentsPage implements OnInit, OnDestroy {
     this.isModalOpen = true;
   }
 
+  public onStatusUpdateChange(event: { id: number; status: string }): void {
+    this.updateDocumentStatus(event.id, event.status);
+  }
+
   private fetchCmrDocuments(params: CmrDocumentFilterRequest = {}): void {
     this.isLoading = true;
     this.errorMessage = null;
@@ -194,6 +198,33 @@ export class CmrDocumentsPage implements OnInit, OnDestroy {
           }
 
           this.errorMessage = handleHttpErrors(err.status);
+        },
+      });
+  }
+
+  private updateDocumentStatus(id: number, status: string): void {
+    this.isLoading = true;
+    this.errorMessage = null;
+
+    this.cmrDocumentService
+      .updateCmrDocumentStatus(id, status)
+      .pipe(finalize(() => (this.isLoading = false)))
+      .subscribe({
+        next: () => {
+          this.errorMessage = null;
+          this.languageService.toastSuccess('cmr-documents.messages.status-update-success');
+          this.fetchCmrDocuments();
+        },
+        error: (err) => {
+          const status = err.status;
+
+          if (status === 404) {
+            this.languageService.toastError('cmr-documents.messages.not-found');
+          } else if (status === 409) {
+            this.languageService.toastError('cmr-documents.messages.status-update-violation');
+          } else {
+            handleHttpErrors(status);
+          }
         },
       });
   }

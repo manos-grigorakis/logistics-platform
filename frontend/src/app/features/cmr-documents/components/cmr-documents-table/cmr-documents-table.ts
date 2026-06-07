@@ -14,8 +14,14 @@ import { cmrDocumentStatusBadgeColor } from '../../../../shared/utils/cmr-docume
 export class CmrDocumentsTable {
   @Input() isLoading?: boolean;
   @Input() cmrDocuments?: CmrDocument[];
+  @Input() cmrDocumentsStatuses?: string[];
   @Input() errorMessage?: string;
   @Output() onDocument = new EventEmitter<number>();
+  @Output() onStatus = new EventEmitter<{ id: number; status: string }>();
+
+  get filteredStatuses(): string[] {
+    return this.cmrDocumentsStatuses?.filter((s) => s !== 'generated') ?? [];
+  }
 
   public onDocumentClick(id: number): void {
     this.onDocument.emit(id);
@@ -23,5 +29,14 @@ export class CmrDocumentsTable {
 
   public applyCmrDocumentBadgeColor(status: string): string {
     return cmrDocumentStatusBadgeColor(status);
+  }
+
+  public onSelectChange(id: number, event: Event): void {
+    const value = (event.target as HTMLSelectElement).value;
+    this.onStatusChange(id, value);
+  }
+
+  public onStatusChange(id: number, status: string): void {
+    this.onStatus.emit({ id, status });
   }
 }
