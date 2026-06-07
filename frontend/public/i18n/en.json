@@ -558,5 +558,14 @@
       "bank-matched-tx": "Bank Transactions Matched",
       "invoices-breakdown": "Invoice Breakdown"
     }
+  },
+
+  "cmr-documents": {
+    "empty-state": "There are no CMR documents",
+    "messages": {
+      "not-found": "CMR document not found",
+      "status-update-violation": "CMR document status cannot be updated to the desired due to violation",
+      "status-update-success": "CMR document status updated successfully"
+    }
   }
 }

@@ -1,0 +1,89 @@
+<div class="flex items-center justify-between space-x-4 p-4">
+  <app-search-bar
+    [placeholder]="searchPlaceholder"
+    [value]="searchTerm"
+    (valueChange)="onSearchChange($event)"
+  />
+
+  <div class="flex items-center space-x-4">
+    <!-- Refresh -->
+    <app-rounded-icon-button
+      icon="lucideRefreshCcw"
+      color="info"
+      [isDisabled]="isLoading"
+      (clicked)="onRefreshDocumentsClick()"
+    />
+
+    <!-- Sorting -->
+    <app-dropdown-button [label]="sortLabel">
+      <ng-icon name="lucideFilter" size="16" dropdown-left-icon />
+      <ng-icon name="lucideChevronDown" size="16" dropdown-right-icon />
+
+      <!-- Options -->
+      <li dropdown-menu-item>
+        <a
+          class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
+          (click)="onSortByFieldClick(undefined)"
+          >{{ 'common.filters.all' | translate }}</a
+        >
+      </li>
+      <li dropdown-menu-item>
+        <a
+          class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
+          (click)="onSortByFieldClick({ label: 'number', sortBy: 'number', sortDirection: 'asc' })"
+          >{{ 'common.fields.number' | translate }} (0 → 9)</a
+        >
+      </li>
+      <li dropdown-menu-item>
+        <a
+          class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
+          (click)="onSortByFieldClick({ label: 'number', sortBy: 'number', sortDirection: 'desc' })"
+          >{{ 'common.fields.number' | translate }} (9 → 0)</a
+        >
+      </li>
+      <li dropdown-menu-item>
+        <a
+          class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
+          (click)="
+            onSortByFieldClick({ label: 'signed-at', sortBy: 'signedAt', sortDirection: 'asc' })
+          "
+          >{{ 'common.fields.signed-at' | translate }} (0 → 9)</a
+        >
+      </li>
+      <li dropdown-menu-item>
+        <a
+          class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
+          (click)="
+            onSortByFieldClick({ label: 'signed-at', sortBy: 'signedAt', sortDirection: 'desc' })
+          "
+          >{{ 'common.fields.signed-at' | translate }} (9 → 0)</a
+        >
+      </li>
+    </app-dropdown-button>
+
+    <!-- Filtering -->
+    <app-dropdown-button [label]="filterLabel">
+      <ng-icon name="lucideFilter" size="16" dropdown-left-icon />
+      <ng-icon name="lucideChevronDown" size="16" dropdown-right-icon />
+
+      <!-- Options -->
+      <li dropdown-menu-item>
+        <a
+          class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
+          (click)="onFilterByFieldClick(undefined)"
+          >{{ 'common.filters.all' | translate }}</a
+        >
+      </li>
+
+      @for (option of filterOptions; track $index) {
+        <li dropdown-menu-item>
+          <a
+            class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
+            (click)="onFilterByFieldClick(option.toUpperCase())"
+            >{{ 'metadata.cmr-document-statuses.' + option.toLowerCase() | translate }}</a
+          >
+        </li>
+      }
+    </app-dropdown-button>
+  </div>
+</div>

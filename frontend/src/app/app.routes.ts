@@ -32,6 +32,7 @@ import { EditShipment } from './features/shipments/pages/edit-shipment/edit-ship
 import { ViewShipment } from './features/shipments/pages/view-shipment/view-shipment';
 import { CustomerTabShipments } from './features/customers/pages/view-customer/customer-tabs/customers-tab-shipments/customer-tab-shipments';
 import { PaymentsPage } from './features/payments/payments-page/payments-page';
+import { CmrDocumentsPage } from './features/cmr-documents/pages/cmr-documents-page/cmr-documents-page';
 
 export const routes: Routes = [
   {
@@ -107,6 +108,10 @@ export const routes: Routes = [
         path: 'payments-tracking',
         component: PaymentsPage,
         title: 'Payments Tracking',
+      },
+      {
+        path: 'cmr-documents',
+        children: [{ path: '', component: CmrDocumentsPage, title: 'CMR Documents' }],
       },
     ],
   },

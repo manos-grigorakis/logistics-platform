@@ -39,6 +39,7 @@ import {
   lucideScale,
   lucideUpload,
   lucideCheckCircle2,
+  lucideFileCheck,
 } from '@ng-icons/lucide';
 import { JwtHeadersInterceptor } from './core/interceptors/jwt-headers.interceptor';
 
@@ -98,6 +99,7 @@ export const appConfig: ApplicationConfig = {
       lucideScale,
       lucideUpload,
       lucideCheckCircle2,
+      lucideFileCheck,
     }),
 
     provideNgIconsConfig({

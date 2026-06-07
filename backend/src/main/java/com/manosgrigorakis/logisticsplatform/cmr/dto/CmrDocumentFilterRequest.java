@@ -2,9 +2,11 @@ package com.manosgrigorakis.logisticsplatform.cmr.dto;
 
 import com.manosgrigorakis.logisticsplatform.cmr.enums.CmrStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Getter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
+@Data
+@NoArgsConstructor
 public class CmrDocumentFilterRequest {
     @Schema(title = "CMR Document Number", description = "CMR document number", example = "CMR-2025-0004")
     private String number;
