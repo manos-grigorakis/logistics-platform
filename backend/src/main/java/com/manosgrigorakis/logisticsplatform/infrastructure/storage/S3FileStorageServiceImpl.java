@@ -1,5 +1,6 @@
 package com.manosgrigorakis.logisticsplatform.infrastructure.storage;
 
+import com.manosgrigorakis.logisticsplatform.common.exception.StorageServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,17 +44,16 @@ public class S3FileStorageServiceImpl implements FileStorageService {
                     .build();
 
             s3Client.putObject(request, RequestBody.fromBytes(content));
-
             log.info("Stored file: {}", key);
         } catch (S3Exception e) {
             log.error("S3 error while storing file: {}", key, e);
-            throw  new RuntimeException("Storage service error", e);
+            throw new StorageServiceException("Storage service error");
         } catch (SdkClientException e) {
             log.error("SDK client error while storing file: {}", key, e);
-            throw  new RuntimeException("Storage client error", e);
+            throw new StorageServiceException("Storage client error");
         } catch (Exception e) {
             log.error("Error while storing file: {}", key, e);
-            throw new RuntimeException("Error while storing file", e);
+            throw new StorageServiceException("Error while storing file");
         }
 
     }

@@ -175,4 +175,12 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(new ApiResponseWrapper<>(response), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    // Storage Service Exception - 503
+    @ExceptionHandler(StorageServiceException.class)
+    public ResponseEntity<ApiResponseWrapper<Void>> handleStorageServiceException(StorageServiceException exc) {
+        ErrorResponse response = new ErrorResponse(HttpStatus.SERVICE_UNAVAILABLE.value(), exc.getMessage(), null);
+
+        return new ResponseEntity<>(new ApiResponseWrapper<>(response), HttpStatus.SERVICE_UNAVAILABLE);
+    }
 }
