@@ -561,6 +561,9 @@
   },
 
   "cmr-documents": {
-    "empty-state": "Δεν υπάρχουν CMR αρχεία"
+    "empty-state": "Δεν υπάρχουν CMR αρχεία",
+    "messages": {
+      "not-found": "Το CMR αρχείο δεν βρέθηκε"
+    }
   }
 }

@@ -561,6 +561,9 @@
   },
 
   "cmr-documents": {
-    "empty-state": "There are no CMR documents"
+    "empty-state": "There are no CMR documents",
+    "messages": {
+      "not-found": "CMR document not found"
+    }
   }
 }

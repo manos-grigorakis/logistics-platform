@@ -1,0 +1,33 @@
+<div>
+  <div class="border-primary-500 mb-8 rounded border-b-5 shadow-md">
+    <!-- TODO: Filters -->
+  </div>
+
+  <app-modal-file
+    [isEnabled]="isModalOpen"
+    [pdfUrl]="documentUrl"
+    [pdfName]="documentNumber"
+    [showSendViaMailButton]="false"
+    (closeModal)="isModalOpen = false"
+  />
+
+  <div class="relative overflow-x-auto rounded-lg bg-white shadow-md">
+    <app-cmr-documents-table
+      [cmrDocuments]="documents"
+      [errorMessage]="errorMessage | translate"
+      (onDocument)="onDocumentClick($event)"
+    />
+  </div>
+
+  @if (documents.length > 0) {
+    <div class="mt-8">
+      <app-pagination
+        [currentPage]="currentPage"
+        [totalElements]="totalElements"
+        [totalPages]="totalPages"
+        [pageSize]="pageSize"
+        (pageChanged)="onPageChange($event)"
+      />
+    </div>
+  }
+</div>
