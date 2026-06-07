@@ -1,6 +1,16 @@
 <div>
   <div class="border-primary-500 mb-8 rounded border-b-5 shadow-md">
-    <!-- TODO: Filters -->
+    <app-cmr-documents-filters
+      [isLoading]="isLoading"
+      [searchPlaceholder]="searchPlaceholder"
+      [sortLabel]="activeSortLabel"
+      [filterLabel]="activeFilterLabel"
+      [filterOptions]="filterOptions"
+      (searchChanged)="onSearchChanged($event)"
+      (onRefreshDocuments)="onRefreshClick()"
+      (onSortByField)="onSortByField($event)"
+      (onFilterByField)="onFilterByField($event)"
+    />
   </div>
 
   <app-modal-file
@@ -13,6 +23,7 @@
 
   <div class="relative overflow-x-auto rounded-lg bg-white shadow-md">
     <app-cmr-documents-table
+      [isLoading]="isLoading"
       [cmrDocuments]="documents"
       [errorMessage]="errorMessage | translate"
       (onDocument)="onDocumentClick($event)"
