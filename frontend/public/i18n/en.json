@@ -565,6 +565,7 @@
     "messages": {
       "not-found": "CMR document not found",
       "status-update-violation": "CMR document status cannot be updated to the desired due to violation",
+      "status-update-not-signed": "CMR document cannot be updated to signed because it's not signed",
       "status-update-success": "CMR document status updated successfully"
     }
   }

@@ -208,18 +208,24 @@ export class CmrDocumentsPage implements OnInit, OnDestroy {
 
     this.cmrDocumentService
       .updateCmrDocumentStatus(id, status)
-      .pipe(finalize(() => (this.isLoading = false)))
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+          this.fetchCmrDocuments();
+        }),
+      )
       .subscribe({
         next: () => {
           this.errorMessage = null;
           this.languageService.toastSuccess('cmr-documents.messages.status-update-success');
-          this.fetchCmrDocuments();
         },
         error: (err) => {
           const status = err.status;
 
           if (status === 404) {
             this.languageService.toastError('cmr-documents.messages.not-found');
+          } else if (status === 409 && err.error.error.errorCode === 'NOT_SIGNED') {
+            this.languageService.toastError('cmr-documents.messages.status-update-not-signed');
           } else if (status === 409) {
             this.languageService.toastError('cmr-documents.messages.status-update-violation');
           } else {

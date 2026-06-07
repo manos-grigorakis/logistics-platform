@@ -27,13 +27,12 @@
         <td class="px-2 py-4">
           @if (document.status.toLowerCase() === 'generated') {
             <select
-              name=""
-              id=""
+              [(ngModel)]="document.status"
               (change)="onSelectChange(document.id, $event)"
               class="rounded border px-2 py-1 text-sm"
               [ngClass]="applyCmrDocumentBadgeColor(document.status)"
             >
-              <option [value]="null" selected disabled>
+              <option value="generated" selected disabled>
                 {{ 'metadata.cmr-document-statuses.generated' | translate }}
               </option>
 
