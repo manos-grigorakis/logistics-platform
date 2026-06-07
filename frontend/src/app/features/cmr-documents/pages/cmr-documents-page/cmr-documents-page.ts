@@ -229,7 +229,7 @@ export class CmrDocumentsPage implements OnInit, OnDestroy {
           } else if (status === 409) {
             this.languageService.toastError('cmr-documents.messages.status-update-violation');
           } else {
-            handleHttpErrors(status);
+            this.languageService.toastError(handleHttpErrors(status));
           }
         },
       });
