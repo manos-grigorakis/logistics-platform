@@ -129,10 +129,9 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
     public void updateCmrDocumentStatus(Long id, UpdateCmrDocumentStatusRequestDTO dto) {
         CmrDocument cmrDocument = this.cmrDocumentRepository.findById(id)
                 .orElseThrow(() -> {
-                                 log.warn("CMR Document not found with id {}", id);
-                                 return new ResourceNotFoundException("CMR Document not found with id: " + id);
-                             }
-                );
+                    log.warn("CMR Document not found with id {}", id);
+                    return new ResourceNotFoundException("CMR Document not found with id: " + id);
+                });
 
         if (dto.getStatus().equals(CmrStatus.SIGNED) && !cmrDocument.canChangeStatusToSigned()) {
             throw new ConflictException("CMR Document cannot converted to signed", "NOT_SIGNED", Map.of(
@@ -146,15 +145,17 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
         try {
             cmrDocument.changeStatusTo(dto.getStatus());
         } catch (IllegalStateException e) {
-            throw new ConflictException(
-                    e.getMessage(),
-                    Map.of("currentStatus", cmrDocument.getStatus(), "desiredStatus", dto.getStatus())
-            );
+            throw new ConflictException(e.getMessage(),
+                                        Map.of("currentStatus", cmrDocument.getStatus(),
+                                               "desiredStatus", dto.getStatus()));
         }
 
-        this.cmrDocumentRepository.save(cmrDocument);
-        log.info("CMR Document successfully updated with number: {}", cmrDocument.getNumber());
-        this.logCmrDocumentStatusUpdate(cmrDocument, oldCmrDocument.getStatus(), cmrDocument.getStatus());
+        // Regenerate file
+        regenerateCmrDocumentPdf(cmrDocument.getId());
+
+        cmrDocumentRepository.save(cmrDocument);
+        log.info("CMR Document successfully updated and stored to S3 with number: {}", cmrDocument.getNumber());
+        logCmrDocumentStatusUpdate(cmrDocument, oldCmrDocument.getStatus(), cmrDocument.getStatus());
     }
 
     @Override
@@ -260,5 +261,26 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
                         .changes(changes)
                         .build()
         );
+    }
+
+    /**
+     * Regenerates a CMR document file
+     *
+     * @param id The CMR document id used to perform query to find {@link Shipment}, {@link Quote}
+     */
+    private void regenerateCmrDocumentPdf(Long id) {
+        RegenerateCmrDocumentPdf response = cmrDocumentRepository.findCmrDocumentWithShipmentAndQuote(id)
+                .orElseThrow(() -> {
+                    log.warn("CMR Document not found with id {}", id);
+                    return new ResourceNotFoundException("CMR Document not found with id: " + id);
+                });
+
+        // Regenerate PDF
+        byte[] cmrDocumentPdf = cmrDocumentPdfGenerator.generatePdf(
+                new CmrDocumentPdfRequestDTO(response.quote(), response.shipment(), response.cmrDocument())
+        );
+
+        // Upload the regenerated PDF to S3
+        fileStorageService.store(bucketPathCmr + response.cmrDocument().getNumber(), cmrDocumentPdf, "application/pdf");
     }
 }
