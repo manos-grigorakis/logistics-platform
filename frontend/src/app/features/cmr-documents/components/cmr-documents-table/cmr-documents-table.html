@@ -7,8 +7,15 @@
     <tr>
       <th scope="col" class="px-2 py-3 font-medium">{{ 'common.fields.number' | translate }}</th>
       <th scope="col" class="px-2 py-3 font-medium">{{ 'common.fields.status' | translate }}</th>
-      <th scope="col" class="px-2 py-3 font-medium">{{ 'common.fields.signed-by' | translate }}</th>
-      <th scope="col" class="px-2 py-3 font-medium">{{ 'common.fields.signed-at' | translate }}</th>
+      <th scope="col" class="px-2 py-3 font-medium">
+        {{ 'cmr-documents.fields.sender-signed' | translate }}
+      </th>
+      <th scope="col" class="px-2 py-3 font-medium">
+        {{ 'cmr-documents.fields.carrier-signed' | translate }}
+      </th>
+      <th scope="col" class="px-2 py-3 font-medium">
+        {{ 'cmr-documents.fields.consignee-signed' | translate }}
+      </th>
       <th scope="col" class="px-2 py-3 font-medium">
         {{ 'common.fields.created-at' | translate }}
       </th>
@@ -51,8 +58,9 @@
             </span>
           }
         </td>
-        <td class="px-2 py-4">{{ document.signedBy || '-' }}</td>
-        <td class="px-2 py-4">{{ (document.signedAt | date: 'dd/MM/yyyy') || '-' }}</td>
+        <td class="px-2 py-4">{{ showSignedText(document.senderSigned) | translate }}</td>
+        <td class="px-2 py-4">{{ showSignedText(document.carrierSigned) | translate }}</td>
+        <td class="px-2 py-4">{{ showSignedText(document.consigneeSigned) | translate }}</td>
         <td class="px-2 py-4">{{ document.createdAt | date: 'dd/MM/yyyy' }}</td>
       </tr>
     } @empty {

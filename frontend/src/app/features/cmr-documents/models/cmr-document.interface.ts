@@ -4,8 +4,9 @@ export interface CmrDocument {
   number: string;
   status: string;
   fileUrl?: string;
-  signedAt: string | null;
-  signedBy: string | null;
+  senderSigned: boolean;
+  carrierSigned: boolean;
+  consigneeSigned: boolean;
   createdAt: string;
   updatedAt: string;
 }

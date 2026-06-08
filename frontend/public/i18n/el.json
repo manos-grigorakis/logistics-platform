@@ -566,6 +566,11 @@
 
   "cmr-documents": {
     "empty-state": "Δεν υπάρχουν έγγραφα CMR",
+    "fields": {
+      "sender-signed": "Αποστολέας Υπέγραψε",
+      "carrier-signed": "Μεταφορέας Υπέγραψε",
+      "consignee-signed": "Παραλήπτης Υπέγραψε"
+    },
     "messages": {
       "not-found": "Το έγγραφο CMR δεν βρέθηκε",
       "status-update-violation": "Η κατάσταση του εγγράφου CMR δεν μπορεί να ενημερωθεί στην επιθυμητή λόγω παραβίασης κανόνων",

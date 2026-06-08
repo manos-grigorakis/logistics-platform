@@ -567,6 +567,11 @@
 
   "cmr-documents": {
     "empty-state": "There are no CMR documents",
+    "fields": {
+      "sender-signed": "Sender Sign",
+      "carrier-signed": "Carrier Sign",
+      "consignee-signed": "Consignee Sign"
+    },
     "messages": {
       "not-found": "CMR document not found",
       "status-update-violation": "CMR document status cannot be updated to the desired due to violation",

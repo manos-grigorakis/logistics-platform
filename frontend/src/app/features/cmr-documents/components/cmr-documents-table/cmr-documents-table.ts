@@ -40,4 +40,8 @@ export class CmrDocumentsTable {
   public onStatusChange(id: number, status: string): void {
     this.onStatus.emit({ id, status });
   }
+
+  public showSignedText(value: boolean): string {
+    return value ? 'common.messages.yes' : 'common.messages.no';
+  }
 }
