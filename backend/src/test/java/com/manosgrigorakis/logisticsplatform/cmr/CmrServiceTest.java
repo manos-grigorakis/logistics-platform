@@ -2,6 +2,7 @@ package com.manosgrigorakis.logisticsplatform.cmr;
 
 import com.manosgrigorakis.logisticsplatform.audit.service.AuditService;
 import com.manosgrigorakis.logisticsplatform.cmr.dto.CmrDocumentResponseDTO;
+import com.manosgrigorakis.logisticsplatform.cmr.dto.RegenerateCmrDocumentPdf;
 import com.manosgrigorakis.logisticsplatform.cmr.dto.UpdateCmrDocumentStatusRequestDTO;
 import com.manosgrigorakis.logisticsplatform.cmr.dto.UploadCmrDocumentRequestDTO;
 import com.manosgrigorakis.logisticsplatform.cmr.enums.CmrStatus;
@@ -166,9 +167,13 @@ public class CmrServiceTest {
     public void updateCmrDocumentStatus_shouldUpdateCmrDocumentStatus() {
         // Arrange
         CmrDocument cmrDocument = new CmrDocument();
+        cmrDocument.setId(1L);
         cmrDocument.setStatus(CmrStatus.GENERATED);
         cmrDocument.setSignedBy("John Doe");
         when(cmrDocumentRepository.findById(1L)).thenReturn(Optional.of(cmrDocument));
+        when(cmrDocumentRepository.findCmrDocumentWithShipmentAndQuote(1L)).thenReturn(Optional.of(
+                new RegenerateCmrDocumentPdf(cmrDocument, new Shipment(), new Quote())
+        ));
 
         UpdateCmrDocumentStatusRequestDTO status = new UpdateCmrDocumentStatusRequestDTO();
         status.setStatus(CmrStatus.SIGNED);
