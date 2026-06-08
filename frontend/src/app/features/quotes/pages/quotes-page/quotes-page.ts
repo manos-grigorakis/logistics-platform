@@ -9,6 +9,7 @@ import { Pagination } from '../../../../shared/ui/pagination/pagination';
 import { debounceTime, distinctUntilChanged, Subject, Subscription, take } from 'rxjs';
 import { LanguageService } from '../../../../core/services/language.service';
 import { TranslatePipe } from '@ngx-translate/core';
+import { handleHttpErrors } from '../../../../shared/utils/handle-http-errors.util';
 
 @Component({
   selector: 'app-quotes-page',
@@ -230,12 +231,7 @@ export class QuotesPage implements OnInit, OnDestroy {
       },
       error: (err) => {
         this.isLoading = false;
-
-        if (err.status === 500) {
-          this.errorMessage = 'common.errors.server';
-        } else {
-          this.errorMessage = 'common.errors.generic';
-        }
+        this.errorMessage = handleHttpErrors(err.status);
       },
     });
   }
@@ -253,15 +249,15 @@ export class QuotesPage implements OnInit, OnDestroy {
       },
       error: (err) => {
         this.isLoading = false;
-        if (err.status === 404) {
+        const status = err.status;
+
+        if (status === 404) {
           this.errorMessage = this.languageService.translateKey(
             'quotes.messages.not-found-with-id',
             { id: id },
           );
-        } else if (err.status === 500) {
-          this.errorMessage = 'common.errors.server';
         } else {
-          this.errorMessage = 'common.errors.generic';
+          this.errorMessage = handleHttpErrors(status);
         }
       },
     });
