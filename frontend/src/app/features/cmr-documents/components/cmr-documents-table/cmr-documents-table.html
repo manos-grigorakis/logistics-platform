@@ -32,23 +32,32 @@
           {{ document.number }}
         </td>
         <td class="px-2 py-4">
-          @if (document.status.toLowerCase() === 'generated') {
-            <select
-              [(ngModel)]="document.status"
-              (change)="onSelectChange(document.id, $event)"
-              class="rounded border px-2 py-1 text-sm"
-              [ngClass]="applyCmrDocumentBadgeColor(document.status)"
-            >
-              <option value="generated" selected disabled>
-                {{ 'metadata.cmr-document-statuses.generated' | translate }}
-              </option>
-
-              @for (status of filteredStatuses; track $index) {
-                <option [value]="status">
-                  {{ 'metadata.cmr-document-statuses.' + status.toLowerCase() | translate }}
+          @if (isAdmin()) {
+            @if (document.status.toLowerCase() === 'generated') {
+              <select
+                [(ngModel)]="document.status"
+                (change)="onSelectChange(document.id, $event)"
+                class="rounded border px-2 py-1 text-sm"
+                [ngClass]="applyCmrDocumentBadgeColor(document.status)"
+              >
+                <option value="generated" selected disabled>
+                  {{ 'metadata.cmr-document-statuses.generated' | translate }}
                 </option>
-              }
-            </select>
+
+                @for (status of filteredStatuses; track $index) {
+                  <option [value]="status">
+                    {{ 'metadata.cmr-document-statuses.' + status.toLowerCase() | translate }}
+                  </option>
+                }
+              </select>
+            } @else {
+              <span
+                class="rounded border px-2"
+                [ngClass]="applyCmrDocumentBadgeColor(document.status)"
+              >
+                {{ 'metadata.cmr-document-statuses.' + document.status.toLowerCase() | translate }}
+              </span>
+            }
           } @else {
             <span
               class="rounded border px-2"
