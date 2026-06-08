@@ -6,6 +6,7 @@ import { QuoteRequest } from '../../models/quote-request';
 import { AuthService } from '../../../../core/auth/services/auth.service';
 import { LanguageService } from '../../../../core/services/language.service';
 import { TranslatePipe } from '@ngx-translate/core';
+import { handleHttpErrors } from '../../../../shared/utils/handle-http-errors.util';
 
 @Component({
   selector: 'app-create-quote',
@@ -61,12 +62,12 @@ export class CreateQuote implements OnInit {
       },
       error: (err) => {
         this.isLoading = false;
-        if (err.status === 404) {
+        const status = err.status;
+
+        if (status === 404) {
           this.errorMessage = 'quotes.messages.not-found-customer-or-user';
-        } else if (err.status === 500) {
-          this.errorMessage = 'common.errors.server';
         } else {
-          this.errorMessage = 'common.errors.generic';
+          this.errorMessage = handleHttpErrors(status);
         }
       },
     });

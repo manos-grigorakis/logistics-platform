@@ -8,6 +8,7 @@ import { Quote } from '../../models/quote';
 import { QuoteFormPayload } from '../../models/quote-form-payload';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LanguageService } from '../../../../core/services/language.service';
+import { handleHttpErrors } from '../../../../shared/utils/handle-http-errors.util';
 
 @Component({
   selector: 'app-edit-quote',
@@ -68,14 +69,13 @@ export class EditQuote implements OnInit {
         this.router.navigate(['quotes']);
       },
       error: (err) => {
-        console.error(err);
         this.isLoading = false;
-        if (err.status === 404) {
+        const status = err.status;
+
+        if (status === 404) {
           this.errorMessage = 'quotes.messages.not-found-customer-or-user';
-        } else if (err.status === 500) {
-          this.errorMessage = 'common.errors.server';
         } else {
-          this.errorMessage = 'common.errors.generic';
+          this.errorMessage = handleHttpErrors(status);
         }
       },
     });
@@ -98,15 +98,15 @@ export class EditQuote implements OnInit {
         }
       },
       error: (err) => {
-        if (err.status === 404) {
+        const status = err.status;
+
+        if (status === 404) {
           this.errorMessage = this.languageService.translateKey(
             'quotes.messages.not-found-with-id',
             { id: id },
           );
-        } else if (err.status === 500) {
-          this.errorMessage = 'common.errors.server';
         } else {
-          this.errorMessage = 'common.errors.generic';
+          this.errorMessage = handleHttpErrors(status);
         }
       },
     });
