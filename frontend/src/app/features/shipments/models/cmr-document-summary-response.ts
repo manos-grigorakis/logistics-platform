@@ -3,8 +3,9 @@ export interface CmrDocumentSummaryResponse {
   number: string;
   status: string;
   fileUrl: string;
-  signedBy: string;
-  signedAt: Date;
+  senderSigned: boolean;
+  carrierSigned: boolean;
+  consigneeSigned: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

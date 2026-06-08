@@ -90,6 +90,10 @@ export class ViewShipment implements OnInit {
     this.showQuoteModal = false;
   }
 
+  public showSignedText(isSigned: boolean): string {
+    return isSigned ? 'common.messages.yes' : 'common.messages.no';
+  }
+
   private fetchShipment(id: number): void {
     this.isLoading = true;
     this.errorMessage = undefined;
