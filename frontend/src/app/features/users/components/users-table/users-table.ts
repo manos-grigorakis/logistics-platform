@@ -4,6 +4,7 @@ import { LoadingSpinner } from '../../../../shared/ui/loading-spinner/loading-sp
 import { UserResponse } from '../../models/user-response';
 import { NgClass } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
+import { roleBadgeColor } from '../../utils/role-badge-color.util';
 
 @Component({
   selector: 'app-users-table',
@@ -33,5 +34,9 @@ export class UsersTable {
       return true;
     }
     return false;
+  }
+
+  public applyRoleBadgeColor(roleStatus: string): string {
+    return roleBadgeColor(roleStatus);
   }
 }

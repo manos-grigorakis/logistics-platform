@@ -7,6 +7,7 @@
       <th scope="col" class="p-4"></th>
       <th scope="col" class="px-2 py-3 font-medium">{{ 'users.fields.first-name' | translate }}</th>
       <th scope="col" class="px-2 py-3 font-medium">{{ 'users.fields.last-name' | translate }}</th>
+      <th scope="col" class="px-2 py-3 font-medium">{{ 'users.fields.role' | translate }}</th>
       <th scope="col" class="truncate px-2 py-3 font-medium">Email</th>
       <th scope="col" class="px-2 py-3 font-medium">{{ 'users.fields.phone' | translate }}</th>
       <th scope="col" class="px-2 py-3 font-medium">{{ 'common.fields.status' | translate }}</th>
@@ -43,6 +44,11 @@
 
         <td class="px-2 py-4 whitespace-nowrap">{{ user.firstName }}</td>
         <td class="px-2 py-4">{{ user.lastName }}</td>
+        <td class="px-2 py-4">
+          <span class="rounded border px-2" [ngClass]="applyRoleBadgeColor(user.roleName)">
+            {{ user.roleName }}
+          </span>
+        </td>
         <td class="px-2 py-4">{{ user.email }}</td>
         <td class="px-2 py-4">{{ user?.phone || '-' }}</td>
         <td class="px-2 py-4">
