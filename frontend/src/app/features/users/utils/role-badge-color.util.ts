@@ -6,6 +6,8 @@ export function roleBadgeColor(roleName: string): string {
       return 'bg-warning-light text-warning-dark';
     case 'EMPLOYEE':
       return 'bg-info-light text-info-dark';
+    case 'DRIVER':
+      return 'bg-success-light text-success-dark';
     default:
       return 'bg-secondary-light text-secondary-dark';
   }
