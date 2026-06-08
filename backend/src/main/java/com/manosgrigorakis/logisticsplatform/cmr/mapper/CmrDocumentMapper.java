@@ -12,8 +12,9 @@ public class CmrDocumentMapper {
         response.setNumber(cmrDocument.getNumber());
         response.setStatus(cmrDocument.getStatus());
         response.setFileUrl(cmrDocument.getFileUrl());
-        response.setSignedAt(cmrDocument.getSignedAt());
-        response.setSignedBy(cmrDocument.getSignedBy());
+        response.setSenderSigned(cmrDocument.isSenderSigned());
+        response.setCarriedSigned(cmrDocument.isCarrierSigned());
+        response.setConsigneeSigned(cmrDocument.isConsigneeSigned());
         response.setCreatedAt(cmrDocument.getCreatedAt());
         response.setUpdatedAt(cmrDocument.getUpdatedAt());
 
@@ -30,8 +31,9 @@ public class CmrDocumentMapper {
         response.setId(cmrDocument.getId());
         response.setNumber(cmrDocument.getNumber());
         response.setStatus(cmrDocument.getStatus());
-        response.setSignedAt(cmrDocument.getSignedAt());
-        response.setSignedBy(cmrDocument.getSignedBy());
+        response.setSenderSigned(cmrDocument.isSenderSigned());
+        response.setCarriedSigned(cmrDocument.isCarrierSigned());
+        response.setConsigneeSigned(cmrDocument.isConsigneeSigned());
         response.setCreatedAt(cmrDocument.getCreatedAt());
         response.setUpdatedAt(cmrDocument.getUpdatedAt());
 

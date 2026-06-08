@@ -136,20 +136,6 @@ public class CmrServiceTest {
     }
 
     @Test
-    public void updateCmrDocumentStatus_shouldThrowConflict_whenCmrDocumentCannotUpdatedToSigned() {
-        // Arrange
-        CmrDocument cmrDocument = new CmrDocument();
-        cmrDocument.setStatus(CmrStatus.GENERATED);
-        when(cmrDocumentRepository.findById(1L)).thenReturn(Optional.of(cmrDocument));
-
-        UpdateCmrDocumentStatusRequestDTO status = new UpdateCmrDocumentStatusRequestDTO();
-        status.setStatus(CmrStatus.SIGNED);
-
-        // Act & Assert
-        assertThrows(ConflictException.class, () -> cmrDocumentService.updateCmrDocumentStatus(1L, status));
-    }
-
-    @Test
     public void updateCmrDocumentStatus_shouldThrowConflict_whenCurrentStatusIsFinal() {
         // Arrange
         CmrDocument cmrDocument = new CmrDocument();
@@ -169,7 +155,6 @@ public class CmrServiceTest {
         CmrDocument cmrDocument = new CmrDocument();
         cmrDocument.setId(1L);
         cmrDocument.setStatus(CmrStatus.GENERATED);
-        cmrDocument.setSignedBy("John Doe");
         when(cmrDocumentRepository.findById(1L)).thenReturn(Optional.of(cmrDocument));
         when(cmrDocumentRepository.findCmrDocumentWithShipmentAndQuote(1L)).thenReturn(Optional.of(
                 new RegenerateCmrDocumentPdf(cmrDocument, new Shipment(), new Quote())

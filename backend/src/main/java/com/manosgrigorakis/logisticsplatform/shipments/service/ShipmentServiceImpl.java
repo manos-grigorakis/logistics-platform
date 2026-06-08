@@ -285,8 +285,9 @@ public class ShipmentServiceImpl implements ShipmentService {
                 cmrDocument.getNumber(),
                 cmrDocument.getStatus(),
                 presignedUrl,
-                cmrDocument.getSignedBy(),
-                cmrDocument.getSignedAt(),
+                cmrDocument.isSenderSigned(),
+                cmrDocument.isCarrierSigned(),
+                cmrDocument.isConsigneeSigned(),
                 cmrDocument.getCreatedAt(),
                 cmrDocument.getUpdatedAt()
         );

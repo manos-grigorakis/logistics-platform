@@ -13,8 +13,9 @@ public class CmrDocumentListResponseDTO {
     private Long shipmentId;
     private String number;
     private CmrStatus status;
-    private LocalDateTime signedAt;
-    private String signedBy;
+    private boolean senderSigned;
+    private boolean carriedSigned;
+    private boolean consigneeSigned;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

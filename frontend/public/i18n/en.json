@@ -104,7 +104,9 @@
       "period": "Period",
       "results": "Results",
       "basic-info": "Basic Information",
-      "item": "Item"
+      "item": "Item",
+      "yes": "Yes",
+      "no": "No"
     },
     "banks": {
       "nbg": "National Bank of Greece"
@@ -455,7 +457,9 @@
       "notes": "Notes",
       "document": "Document",
       "status": "Status",
-      "signed-by": "Signed By",
+      "sender-signed": "Sender Sign",
+      "carrier-signed": "Carrier Sign",
+      "consignee-signed": "Consignee Sign",
       "signed-at": "Signed At",
       "created-at": "Created At",
       "number": "Number"
@@ -563,6 +567,11 @@
 
   "cmr-documents": {
     "empty-state": "There are no CMR documents",
+    "fields": {
+      "sender-signed": "Sender Sign",
+      "carrier-signed": "Carrier Sign",
+      "consignee-signed": "Consignee Sign"
+    },
     "messages": {
       "not-found": "CMR document not found",
       "status-update-violation": "CMR document status cannot be updated to the desired due to violation",

@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { CmrDocument } from '../../models/cmr-document.interface';
 import { LoadingSpinner } from '../../../../shared/ui/loading-spinner/loading-spinner';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DatePipe, NgClass } from '@angular/common';
 import { cmrDocumentStatusBadgeColor } from '../../../../shared/utils/cmr-document-status-badge-color.util';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../../../core/auth/services/auth.service';
 
 @Component({
   selector: 'app-cmr-documents-table',
@@ -19,6 +20,8 @@ export class CmrDocumentsTable {
   @Input() errorMessage?: string;
   @Output() onDocument = new EventEmitter<number>();
   @Output() onStatus = new EventEmitter<{ id: number; status: string }>();
+
+  private authService = inject(AuthService);
 
   get filteredStatuses(): string[] {
     return this.cmrDocumentsStatuses?.filter((s) => s !== 'generated') ?? [];
@@ -39,5 +42,13 @@ export class CmrDocumentsTable {
 
   public onStatusChange(id: number, status: string): void {
     this.onStatus.emit({ id, status });
+  }
+
+  public showSignedText(value: boolean): string {
+    return value ? 'common.messages.yes' : 'common.messages.no';
+  }
+
+  public isAdmin(): boolean {
+    return this.authService.isAdmin();
   }
 }

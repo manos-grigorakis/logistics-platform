@@ -7,8 +7,15 @@
     <tr>
       <th scope="col" class="px-2 py-3 font-medium">{{ 'common.fields.number' | translate }}</th>
       <th scope="col" class="px-2 py-3 font-medium">{{ 'common.fields.status' | translate }}</th>
-      <th scope="col" class="px-2 py-3 font-medium">{{ 'common.fields.signed-by' | translate }}</th>
-      <th scope="col" class="px-2 py-3 font-medium">{{ 'common.fields.signed-at' | translate }}</th>
+      <th scope="col" class="px-2 py-3 font-medium">
+        {{ 'cmr-documents.fields.sender-signed' | translate }}
+      </th>
+      <th scope="col" class="px-2 py-3 font-medium">
+        {{ 'cmr-documents.fields.carrier-signed' | translate }}
+      </th>
+      <th scope="col" class="px-2 py-3 font-medium">
+        {{ 'cmr-documents.fields.consignee-signed' | translate }}
+      </th>
       <th scope="col" class="px-2 py-3 font-medium">
         {{ 'common.fields.created-at' | translate }}
       </th>
@@ -25,23 +32,32 @@
           {{ document.number }}
         </td>
         <td class="px-2 py-4">
-          @if (document.status.toLowerCase() === 'generated') {
-            <select
-              [(ngModel)]="document.status"
-              (change)="onSelectChange(document.id, $event)"
-              class="rounded border px-2 py-1 text-sm"
-              [ngClass]="applyCmrDocumentBadgeColor(document.status)"
-            >
-              <option value="generated" selected disabled>
-                {{ 'metadata.cmr-document-statuses.generated' | translate }}
-              </option>
-
-              @for (status of filteredStatuses; track $index) {
-                <option [value]="status">
-                  {{ 'metadata.cmr-document-statuses.' + status.toLowerCase() | translate }}
+          @if (isAdmin()) {
+            @if (document.status.toLowerCase() === 'generated') {
+              <select
+                [(ngModel)]="document.status"
+                (change)="onSelectChange(document.id, $event)"
+                class="rounded border px-2 py-1 text-sm"
+                [ngClass]="applyCmrDocumentBadgeColor(document.status)"
+              >
+                <option value="generated" selected disabled>
+                  {{ 'metadata.cmr-document-statuses.generated' | translate }}
                 </option>
-              }
-            </select>
+
+                @for (status of filteredStatuses; track $index) {
+                  <option [value]="status">
+                    {{ 'metadata.cmr-document-statuses.' + status.toLowerCase() | translate }}
+                  </option>
+                }
+              </select>
+            } @else {
+              <span
+                class="rounded border px-2"
+                [ngClass]="applyCmrDocumentBadgeColor(document.status)"
+              >
+                {{ 'metadata.cmr-document-statuses.' + document.status.toLowerCase() | translate }}
+              </span>
+            }
           } @else {
             <span
               class="rounded border px-2"
@@ -51,8 +67,9 @@
             </span>
           }
         </td>
-        <td class="px-2 py-4">{{ document.signedBy || '-' }}</td>
-        <td class="px-2 py-4">{{ (document.signedAt | date: 'dd/MM/yyyy') || '-' }}</td>
+        <td class="px-2 py-4">{{ showSignedText(document.senderSigned) | translate }}</td>
+        <td class="px-2 py-4">{{ showSignedText(document.carrierSigned) | translate }}</td>
+        <td class="px-2 py-4">{{ showSignedText(document.consigneeSigned) | translate }}</td>
         <td class="px-2 py-4">{{ document.createdAt | date: 'dd/MM/yyyy' }}</td>
       </tr>
     } @empty {
