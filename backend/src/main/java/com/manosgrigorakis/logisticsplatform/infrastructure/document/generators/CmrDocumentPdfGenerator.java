@@ -85,7 +85,8 @@ public final class CmrDocumentPdfGenerator extends BasePdfGenerator<CmrDocumentP
                 .replace("${cargoRows}", cargoItemsRows)
                 .replace("${issueDate}", formattedIssuedDate)
                 .replace("${cmrNumber}", cmrNumber)
-                .replace("${cmrStatus}", cmrStatus.toString());
+                .replace("${cmrStatus}", cmrStatus.toString())
+                .replace("${cmrStatusBadgeClass}", applyStatusBadgeColor(cmrStatus));
 
         return htmlTemplate;
     }
@@ -98,7 +99,7 @@ public final class CmrDocumentPdfGenerator extends BasePdfGenerator<CmrDocumentP
     /**
      * Builds the HTML table rows for each cargo item
      * @param shipment The shipment which will be used to display its cargo items
-     * @return A concatenated {@link Strinng} of table rows
+     * @return A concatenated {@link String} of table rows
      */
     private String buildCargoItemsRows(Shipment shipment) {
         StringBuilder rows = new StringBuilder();
@@ -119,5 +120,18 @@ public final class CmrDocumentPdfGenerator extends BasePdfGenerator<CmrDocumentP
                     .append("</tr>");
         }
         return rows.toString();
+    }
+
+    /**
+     * Applies CSS class for CMR Document status badge
+     *
+     * @param status The CMR Document
+     * @return The CSS class that will be applied in the template
+     */
+    private String applyStatusBadgeColor(CmrStatus status) {
+        if(status.equals(CmrStatus.GENERATED)) return "status-badge-generated";
+        else if (status.equals(CmrStatus.SIGNED)) return "status-badge-signed";
+        else if (status.equals(CmrStatus.CANCELLED)) return "status-badge-cancelled";
+        else return "status-badge-fallback";
     }
 }

@@ -27,6 +27,7 @@
       "server": "Server error. Please try again later",
       "generic": "An error occurred. Please try again",
       "files-processing": "Failed to process the uploaded files. Please try again",
+      "storage-unavailable": "Storage service is temporarily unavailable. Please try again later",
       "no-results": "No results"
     },
     "validation": {

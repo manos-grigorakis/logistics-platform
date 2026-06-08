@@ -196,8 +196,7 @@ export class CmrDocumentsPage implements OnInit, OnDestroy {
           if (err.status === 404) {
             this.languageService.toastError('cmr-documents.messages.not-found');
           }
-
-          this.errorMessage = handleHttpErrors(err.status);
+          this.languageService.toastError(handleHttpErrors(err.status));
         },
       });
   }
@@ -229,7 +228,7 @@ export class CmrDocumentsPage implements OnInit, OnDestroy {
           } else if (status === 409) {
             this.languageService.toastError('cmr-documents.messages.status-update-violation');
           } else {
-            handleHttpErrors(status);
+            this.languageService.toastError(handleHttpErrors(status));
           }
         },
       });

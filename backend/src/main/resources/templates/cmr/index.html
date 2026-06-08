@@ -257,7 +257,24 @@
     }
 
     /* ─── STATUS BADGE ─── */
-    .status-badge {
+    /* Status badge classes are being used dynamically from the PDF generator of the CMR Document */
+    /* DONT REMOVE THEM! */
+    .status-badge-base {
+      display: inline-block;
+      font-size: 8px;
+      font-weight: bold;
+      padding: 2px 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .status-badge-fallback {
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #94a3b8;
+    }
+
+    .status-badge-generated {
       display: inline-block;
       background: #e7f7ee;
       color: #1a7a3f;
@@ -269,8 +286,20 @@
       letter-spacing: 0.08em;
     }
 
+    .status-badge-signed {
+      background: #dbeafe;
+      color: #1e40af;
+      border: 1px solid #1e40af;
+    }
+
+    .status-badge-cancelled {
+      background: #fef3c7;
+      color: #b45309;
+      border: 1px solid #b45309;
+    }
+    /* END OF CMR DOCUMENT STATUS BADGES CLASSES */
+
     .text-right { text-align: right; }
-    .text-center { text-align: center; }
   </style>
 </head>
 <body>
@@ -310,7 +339,7 @@
           <div class="meta-value">${issueDate}</div>
         </td>
         <td width="15%" class="text-right">
-          <div class="status-badge">${cmrStatus}</div>
+          <div class="status-badge-base ${cmrStatusBadgeClass}">${cmrStatus}</div>
         </td>
       </tr>
     </table>
