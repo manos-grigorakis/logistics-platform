@@ -9,8 +9,9 @@ public record CmrDocumentSummary(
         String number,
         CmrStatus status,
         String fileUrl,
-        String signedBy,
-        LocalDateTime signedAt,
+        boolean senderSigned,
+        boolean carrierSigned,
+        boolean consigneeSigned,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {}

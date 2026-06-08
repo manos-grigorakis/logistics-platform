@@ -132,13 +132,6 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
                     log.warn("CMR Document not found with id {}", id);
                     return new ResourceNotFoundException("CMR Document not found with id: " + id);
                 });
-
-        if (dto.getStatus().equals(CmrStatus.SIGNED) && !cmrDocument.canChangeStatusToSigned()) {
-            throw new ConflictException("CMR Document cannot converted to signed", "NOT_SIGNED", Map.of(
-                    "currentStatus", CmrStatus.GENERATED,
-                    "desiredStatus", CmrStatus.SIGNED
-            ));
-        }
         
         CmrDocument oldCmrDocument = new CmrDocument(cmrDocument);
 
@@ -184,8 +177,6 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
         );
 
         cmrDocument.setStatus(CmrStatus.SIGNED);
-        cmrDocument.setSignedBy(dto.getSignedBy());
-        cmrDocument.setSignedAt(LocalDateTime.now());
         this.cmrDocumentRepository.save(cmrDocument);
         log.info("Signed CMR PDF successfully updated and stored");
         logSignedCmrDocument(cmrDocument);
@@ -249,16 +240,12 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
      * @param cmrDocument The CMR document uploaded
      */
     private void logSignedCmrDocument(CmrDocument cmrDocument) {
-        Map<String, Object> changes = new HashMap<>();
-        changes.put("signedBy", cmrDocument.getSignedBy());
-
         this.auditService.log(
                 AuditEventDTO.builder()
                         .entityType("CMR Document")
                         .entityId(cmrDocument.getId())
                         .notes("CMR Document Number: " + cmrDocument.getNumber())
                         .action(AuditAction.UPDATE)
-                        .changes(changes)
                         .build()
         );
     }

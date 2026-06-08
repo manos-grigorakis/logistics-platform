@@ -16,8 +16,9 @@ public class CmrDocumentResponseDTO {
     private String number;
     private CmrStatus status;
     private String fileUrl;
-    private LocalDateTime signedAt;
-    private String signedBy;
+    private boolean senderSigned;
+    private boolean carriedSigned;
+    private boolean consigneeSigned;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

@@ -31,11 +31,14 @@ public class CmrDocument {
     @Column(name = "file_url", length = 500, nullable = false)
     private String fileUrl;
 
-    @Column(name = "signed_at")
-    private LocalDateTime signedAt;
+    @Column(name = "sender_signed", nullable = false)
+    private boolean senderSigned;
 
-    @Column(name = "signed_by")
-    private String signedBy;
+    @Column(name = "carrier_signed", nullable = false)
+    private boolean carrierSigned;
+
+    @Column(name = "consignee_signed", nullable = false)
+    private boolean consigneeSigned;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
@@ -56,15 +59,17 @@ public class CmrDocument {
             CmrStatus status,
             String fileUrl,
             Shipment shipment,
-            LocalDateTime signedAt,
-            String signedBy
+            boolean senderSigned,
+            boolean carrierSigned,
+            boolean consigneeSigned
     ) {
         this.number = number;
         this.status = status;
         this.fileUrl = fileUrl;
         this.shipment = shipment;
-        this.signedAt = signedAt;
-        this.signedBy = signedBy;
+        this.senderSigned = senderSigned;
+        this.carrierSigned = carrierSigned;
+        this.consigneeSigned = consigneeSigned;
     }
 
     // Constructor overloading for Copy Constructor
@@ -73,15 +78,17 @@ public class CmrDocument {
             String number,
             CmrStatus status,
             String fileUrl,
-            LocalDateTime signedAt,
-            String signedBy
+            boolean senderSigned,
+            boolean carrierSigned,
+            boolean consigneeSigned
     ) {
         this.id = id;
         this.number = number;
         this.status = status;
         this.fileUrl = fileUrl;
-        this.signedAt = signedAt;
-        this.signedBy = signedBy;
+        this.senderSigned = senderSigned;
+        this.carrierSigned = carrierSigned;
+        this.consigneeSigned = consigneeSigned;
     }
 
     // Copy Constructor
@@ -91,8 +98,9 @@ public class CmrDocument {
                 another.number,
                 another.status,
                 another.fileUrl,
-                another.signedAt,
-                another.signedBy
+                another.senderSigned,
+                another.carrierSigned,
+                another.consigneeSigned
         );
     }
 
@@ -136,15 +144,5 @@ public class CmrDocument {
         }
 
         this.status = status;
-    }
-
-    /**
-     * Verifies whether a CMR Document can be converted from {@link CmrStatus#GENERATED} -> {@link CmrStatus#SIGNED}
-     *
-     * @return Returns {@code true} if the current document status is {@link CmrStatus#GENERATED} and {@code signedBy}
-     * is not null, otherwise {@code false}
-     */
-    public Boolean canChangeStatusToSigned() {
-        return this.status.equals(CmrStatus.GENERATED) && this.signedBy != null;
     }
 }
