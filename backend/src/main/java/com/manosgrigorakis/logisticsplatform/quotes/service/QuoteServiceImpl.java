@@ -147,18 +147,18 @@ public class QuoteServiceImpl implements QuoteService {
         quote.setNetPrice(netTotal.setScale(2, RoundingMode.HALF_UP));
         quote.setVatAmount(vatAmount.setScale(2, RoundingMode.HALF_UP));
         quote.setGrossPrice(grossTotal.setScale(2, RoundingMode.HALF_UP));
-        Quote savedQuote = quoteRepository.save(quote);
 
         // Generate PDF and store / upload it
         byte[] quotePdf = quotePdfGenerator.generatePdf(new QuotePdfRequestDTO(quote));
-        fileStorageService.store(this.bucketPathQuotes + savedQuote.getNumber(), quotePdf, "application/pdf");
+        fileStorageService.store(this.bucketPathQuotes + quote.getNumber(), quotePdf, "application/pdf");
 
-        String presignedUrl = fileStorageService.createPresignedUrl(quote.getNumber());
+        Quote savedQuote = quoteRepository.save(quote);
+        String presignedUrl = fileStorageService.createPresignedUrl(this.bucketPathQuotes + savedQuote.getNumber());
         QuoteCreatedResponseDTO response = QuoteMapper.toCreatedResponse(savedQuote);
         response.setPdfUrl(presignedUrl);
 
-        log.info("Quote created with number {}", quote.getNumber());
-        this.logCreatedQuote(quote);
+        log.info("Quote created and generated with number {}", savedQuote.getNumber());
+        this.logCreatedQuote(savedQuote);
         return response;
     }
 
@@ -209,12 +209,11 @@ public class QuoteServiceImpl implements QuoteService {
         quote.setVatAmount(vatAmount);
         quote.setGrossPrice(grossTotal);
 
-        Quote savedQuote = quoteRepository.save(quote);
-
         // Re-generate PDF and store / upload it
         byte[] quotePdf = quotePdfGenerator.generatePdf(new QuotePdfRequestDTO(quote));
-        fileStorageService.store(this.bucketPathQuotes + savedQuote.getNumber(), quotePdf, "application/pdf");
+        fileStorageService.store(this.bucketPathQuotes + quote.getNumber(), quotePdf, "application/pdf");
 
+        Quote savedQuote = quoteRepository.save(quote);
         log.info("Quote updated with number: {}", savedQuote.getNumber());
         this.logUpdatedQuote(oldQuote, quote);
 
