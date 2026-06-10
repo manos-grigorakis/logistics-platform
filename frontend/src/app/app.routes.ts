@@ -33,6 +33,7 @@ import { ViewShipment } from './features/shipments/pages/view-shipment/view-ship
 import { CustomerTabShipments } from './features/customers/pages/view-customer/customer-tabs/customers-tab-shipments/customer-tab-shipments';
 import { PaymentsPage } from './features/payments/payments-page/payments-page';
 import { CmrDocumentsPage } from './features/cmr-documents/pages/cmr-documents-page/cmr-documents-page';
+import { UploadSignedCmr } from './features/cmr-documents/pages/upload-signed-cmr/upload-signed-cmr';
 
 export const routes: Routes = [
   {
@@ -111,7 +112,14 @@ export const routes: Routes = [
       },
       {
         path: 'cmr-documents',
-        children: [{ path: '', component: CmrDocumentsPage, title: 'CMR Documents' }],
+        children: [
+          { path: '', component: CmrDocumentsPage, title: 'CMR Documents' },
+          {
+            path: 'upload-signed',
+            component: UploadSignedCmr,
+            title: 'Upload Signed CMR Document',
+          },
+        ],
       },
     ],
   },

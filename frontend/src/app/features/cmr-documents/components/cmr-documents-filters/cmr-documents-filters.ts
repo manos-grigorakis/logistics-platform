@@ -5,10 +5,11 @@ import { DropdownButton } from '../../../../shared/ui/dropdown-button/dropdown-b
 import { NgIcon } from '@ng-icons/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { SortOption } from '../../../../shared/models/sort-option.interface';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-cmr-documents-filters',
-  imports: [SearchBar, RoundedIconButton, DropdownButton, NgIcon, TranslatePipe],
+  imports: [SearchBar, RoundedIconButton, DropdownButton, NgIcon, TranslatePipe, RouterLink],
   templateUrl: './cmr-documents-filters.html',
   styleUrl: './cmr-documents-filters.css',
 })
