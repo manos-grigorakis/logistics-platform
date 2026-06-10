@@ -145,4 +145,20 @@ public class CmrDocument {
 
         this.status = status;
     }
+
+
+    /**
+     * Mark a CMR document as signed
+     *
+     * <ul>
+     *     <li>Sets: {@link #senderSigned}, {@link #carrierSigned} and {@link #consigneeSigned} to {@code true}</li>
+     *     <li>Update CMR document status to: {@link CmrStatus#SIGNED}</li>
+     * </ul>
+     */
+    public void markCmrDocumentAsSigned() {
+        this.senderSigned = true;
+        this.carrierSigned = true;
+        this.consigneeSigned = true;
+        this.status = CmrStatus.SIGNED;
+    }
 }

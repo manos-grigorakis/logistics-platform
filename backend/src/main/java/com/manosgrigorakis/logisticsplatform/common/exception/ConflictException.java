@@ -26,4 +26,10 @@ public class ConflictException extends RuntimeException {
         this.errorCode = errorCode != null ? errorCode : "";
         this.details = details != null ? Map.copyOf(details) : Map.of();
     }
+
+    public ConflictException(String message, String errorCode) {
+        super(message);
+        this.errorCode = errorCode != null ? errorCode : "";
+        this.details = Map.of();
+    }
 }
