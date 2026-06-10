@@ -27,4 +27,6 @@ public interface CmrDocumentRepository extends JpaRepository<CmrDocument, Long>,
             "INNER JOIN s.quote AS q" +
             " WHERE cd.id = :id")
     Optional<RegenerateCmrDocumentPdf> findCmrDocumentWithShipmentAndQuote(@Param("id") Long id);
+
+    Optional<CmrDocument> findCmrDocumentByNumber(String number);
 }

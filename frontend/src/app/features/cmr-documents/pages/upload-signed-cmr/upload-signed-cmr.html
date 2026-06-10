@@ -1,0 +1,67 @@
+<div class="mx-auto mt-6 max-w-6xl rounded-lg bg-white p-6 shadow-lg shadow-black/10">
+  <h2 class="mb-4 text-center text-3xl font-semibold">
+    {{ 'cmr-documents.actions.upload-signed' | translate }} CMR
+  </h2>
+
+  <form [formGroup]="form" (ngSubmit)="onFormSubmit()">
+    <!-- File Dropzone -->
+    <div>
+      <h3 class="mb-2 font-medium">
+        <span class="text-danger mr-1 text-sm">*</span
+        >{{ 'cmr-documents.fields.signed-document' | translate }}
+      </h3>
+      <app-file-dropzone
+        [showMaxFileSize]="false"
+        supportedFiles=".pdf"
+        (fileSelected)="onCmrDocumentFileSelected($event)"
+      />
+      @if (cmrFile.invalid && (cmrFile.dirty || cmrFile.touched)) {
+        <div>
+          @if (cmrFile.hasError('required')) {
+            <span class="text-danger mt-1 ml-1 text-sm"
+              >CMR {{ 'common.validation.required-document' | translate }}</span
+            >
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Info -->
+    <div
+      class="mt-8 mb-6 flex max-w-6xl items-start gap-2 rounded border border-blue-200 bg-blue-50 px-4 py-3 text-blue-800"
+    >
+      <ng-icon name="lucideInfo" color="#52525c" class="mt-0.5 shrink-0" />
+      <div class="text-sm leading-relaxed text-zinc-600">
+        <p>{{ 'cmr-documents.messages.signed-upload-info' | translate }}</p>
+      </div>
+    </div>
+
+    <!-- Signatures Checks -->
+    <div class="mb-8 flex w-full flex-col items-center justify-center gap-4 md:flex-row md:gap-8">
+      <app-main-input
+        type="checkbox"
+        formControlName="senderSigned"
+        [label]="'cmr-documents.fields.sender-signed' | translate"
+        [showRequiredStar]="true"
+      />
+
+      <app-main-input
+        type="checkbox"
+        formControlName="carrierSigned"
+        [label]="'cmr-documents.fields.carrier-signed' | translate"
+        [showRequiredStar]="true"
+      />
+
+      <app-main-input
+        type="checkbox"
+        formControlName="consigneeSigned"
+        [label]="'cmr-documents.fields.consignee-signed' | translate"
+        [showRequiredStar]="true"
+      />
+    </div>
+
+    <div class="mx-auto w-full md:w-sm">
+      <app-primary-button [value]="'common.actions.upload' | translate" [isDisabled]="isLoading" />
+    </div>
+  </form>
+</div>

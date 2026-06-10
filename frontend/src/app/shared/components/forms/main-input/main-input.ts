@@ -34,10 +34,10 @@ export class MainInput implements ControlValueAccessor, Validator {
   public readonly label = input<string>('');
   public readonly placeholder = input<string>('');
   public readonly type = input<
-    'text' | 'number' | 'email' | 'password' | 'date' | 'datetime-local'
+    'text' | 'number' | 'email' | 'password' | 'date' | 'datetime-local' | 'checkbox'
   >('text');
 
-  public readonly value = signal('');
+  public readonly value = signal<string | boolean>('');
   public readonly disabled = signal(false);
   public readonly withErrors = signal(false);
   public readonly patternErrorMessage = input<string>('');
@@ -46,14 +46,14 @@ export class MainInput implements ControlValueAccessor, Validator {
 
   public control: AbstractControl | null = null;
 
-  private onChange: (value: string) => void = () => {};
+  private onChange: (value: string | boolean) => void = () => {};
   private onTouched: () => void = () => {};
 
   public writeValue(value: string): void {
     this.value.set(value ?? '');
   }
 
-  public registerOnChange(fn: (value: string) => void): void {
+  public registerOnChange(fn: (value: string | boolean) => void): void {
     this.onChange = fn;
   }
 
@@ -67,6 +67,13 @@ export class MainInput implements ControlValueAccessor, Validator {
 
   public onInput(event: Event): void {
     const input = event.target as HTMLInputElement;
+
+    if (this.type() === 'checkbox') {
+      this.value.set(input.checked);
+      this.onChange(input.checked);
+      return;
+    }
+
     this.value.set(input.value);
     this.onChange(input.value);
   }

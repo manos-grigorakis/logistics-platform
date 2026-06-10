@@ -68,20 +68,19 @@ public class CmrDocumentRestController {
     }
 
     @Operation(
-            summary = "Uploads Signed CMR Document",
-            description = "Upload of the signed CMR document by ID"
+            summary = "Upload Signed CMR Document",
+            description = "Upload of the signed CMR document and marks the CMR document as signed after the validation"
     )
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "CMR signed document uploaded successfully"),
-            @ApiResponse(responseCode = "404", description = "CMR document id doesn't exist"),
-            @ApiResponse(responseCode = "409", description = "CMR document is already signed"),
+            @ApiResponse(responseCode = "400", description = "Failed to process the PDF or Invalid QR Code"),
+            @ApiResponse(responseCode = "404", description = "CMR document not found"),
+            @ApiResponse(responseCode = "409", description = "CMR document is already signed or Missing 3 signatures " +
+                    "or Status transition violation"),
     })
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PostMapping(value = "/{id}/signed-copy", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public void uploadSignedCmrDocument(
-            @PathVariable Long id,
-            @ModelAttribute @Valid UploadCmrDocumentRequestDTO dto
-    ) {
-        cmrDocumentService.uploadSignedCmrDocument(id, dto);
+    @PostMapping(value = "/signed-copy", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public void uploadSignedCmrDocument(@ModelAttribute @Valid UploadCmrDocumentRequestDTO dto) {
+        cmrDocumentService.uploadSignedCmrDocument(dto);
     }
 }

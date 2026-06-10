@@ -131,8 +131,9 @@ public class CmrDocument {
     }
 
     /**
-     * Change the CMR status to the given target status applying business rules.
-     * Uses {@link #canChangeStatusTo(CmrStatus)} to apply business rules
+     * Change the CMR status to the given target status applying business rules. Uses
+     * {@link #canChangeStatusTo(CmrStatus)} to apply business rules
+     *
      * @param status The status of the target
      * @throws IllegalStateException If business rules of status doesn't allow this action
      */
@@ -140,9 +141,24 @@ public class CmrDocument {
         if (!canChangeStatusTo(status)) {
             throw new IllegalStateException(
                     "Invalid status transition: " + this.status + " -> " + status
-                    );
+            );
         }
 
         this.status = status;
+    }
+
+    /**
+     * Mark a CMR document as signed
+     *
+     * <ul>
+     *     <li>Sets: {@link #senderSigned}, {@link #carrierSigned} and {@link #consigneeSigned} to {@code true}</li>
+     *     <li>Update CMR document status to: {@link CmrStatus#SIGNED}</li>
+     * </ul>
+     */
+    public void markCmrDocumentAsSigned() {
+        this.senderSigned = true;
+        this.carrierSigned = true;
+        this.consigneeSigned = true;
+        this.status = CmrStatus.SIGNED;
     }
 }

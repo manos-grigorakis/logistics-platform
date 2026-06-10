@@ -60,6 +60,15 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(new ApiResponseWrapper<>(response), HttpStatus.BAD_REQUEST);
     }
 
+    // Document Processing Exception - 400
+    @ExceptionHandler(DocumentProcessingException.class)
+    public ResponseEntity<ApiResponseWrapper<Void>> handleDocumentProcessingException(DocumentProcessingException exc) {
+        ErrorResponse response = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(), exc.getMessage(), exc.getErrorCode(), null);
+
+        return new ResponseEntity<>(new ApiResponseWrapper<>(response), HttpStatus.BAD_REQUEST);
+    }
+
     // Bad credentials - 401
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ApiResponseWrapper<Void>> handleBadCredentialsException(BadCredentialsException exc) {

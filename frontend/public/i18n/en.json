@@ -10,6 +10,7 @@
       "save": "Save",
       "edit": "Edit",
       "delete": "Delete",
+      "upload": "Upload",
       "download": "Download",
       "download-report": "Download Report",
       "send-via-mail": "Send via Mail",
@@ -42,7 +43,8 @@
       "unsupported-file-type": "Unsupported file type",
       "from-before-to": "From must be before To",
       "required-fields": "The fields with asterisk (*) are required",
-      "must-be-number": "must be a number"
+      "must-be-number": "must be a number",
+      "required-document": "Document is required"
     },
     "filters": {
       "search": "Search",
@@ -570,13 +572,21 @@
     "fields": {
       "sender-signed": "Sender Sign",
       "carrier-signed": "Carrier Sign",
-      "consignee-signed": "Consignee Sign"
+      "consignee-signed": "Consignee Sign",
+      "signed-document": "Signed CMR Document"
+    },
+    "actions": {
+      "upload-signed": "Upload Signed"
     },
     "messages": {
       "not-found": "CMR document not found",
-      "status-update-violation": "CMR document status cannot be updated to the desired due to violation",
+      "status-update-violation": "CMR document status cannot be updated to the desired status due to violation",
       "status-update-not-signed": "CMR document cannot be updated to signed because it's not signed",
-      "status-update-success": "CMR document status updated successfully"
+      "status-update-success": "CMR document status updated successfully",
+      "success-signed-upload": "Signed CMR document uploaded successfully",
+      "invalid-qr-code": "The uploaded CMR has invalid or missing QR Code",
+      "already-signed": "The uploaded CMR is already signed",
+      "signed-upload-info": "Before uploading, manually verify that the CMR document contains the required signatures. The checkboxes below confirm that each party has physically signed the document."
     }
   }
 }

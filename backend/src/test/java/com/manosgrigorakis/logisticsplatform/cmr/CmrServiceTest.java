@@ -22,7 +22,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.mock.web.MockMultipartFile;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -175,51 +174,14 @@ public class CmrServiceTest {
     }
 
     @Test
-    public void uploadCmrDocument_shouldUpdateCmrDocumentStatus() {
+    public void uploadCmrDocument_shouldThrowConflict_whenSignaturesAreMissing() {
         // Arrange
-        CmrDocument cmrDocument = new CmrDocument();
-        cmrDocument.setStatus(CmrStatus.GENERATED);
-
-        MockMultipartFile multipartFile = new MockMultipartFile(
-                "file", "signed-cmr.pdf", "application/pdf", new byte[0]);
-
         UploadCmrDocumentRequestDTO request = new UploadCmrDocumentRequestDTO();
-        request.setFile(multipartFile);
-        request.setSignedBy("John Doe");
+        request.setSenderSigned(true);
+        request.setCarrierSigned(true);
+        request.setConsigneeSigned(false);
 
-        when(cmrDocumentRepository.findById(1L)).thenReturn(Optional.of(cmrDocument));
-
-        // Act
-        cmrDocumentService.uploadSignedCmrDocument(1L, request);
-
-        // Assert
-        ArgumentCaptor<CmrDocument> argumentCaptor = ArgumentCaptor.forClass(CmrDocument.class);
-        verify(cmrDocumentRepository).save(argumentCaptor.capture());
-        CmrDocument uploaded = argumentCaptor.getValue();
-
-        assertEquals(CmrStatus.SIGNED, uploaded.getStatus());
-    }
-
-    @Test
-    public void uploadSignedCmrDocument_shouldThrowNotFound_whenIdDoesNotExist() {
-        // Arrange
-        when(cmrDocumentRepository.findById(1000L)).thenReturn(Optional.empty());
-
-        // Act & Assert
-        assertThrows(ResourceNotFoundException.class, () ->
-                cmrDocumentService.uploadSignedCmrDocument(1000L, new UploadCmrDocumentRequestDTO()));
-    }
-
-    @Test
-    public void uploadSignedCmrDocument_shouldThrowConflict_whenCmrDocumentStatusIsFinal() {
-        // Arrange
-        CmrDocument cmrDocument = new CmrDocument();
-        cmrDocument.setStatus(CmrStatus.CANCELLED);
-
-        when(cmrDocumentRepository.findById(1L)).thenReturn(Optional.of(cmrDocument));
-
-        // Act & Assert
-        assertThrows(ConflictException.class, () ->
-                cmrDocumentService.uploadSignedCmrDocument(1L, new UploadCmrDocumentRequestDTO()));
+        // Act & Arrange
+        assertThrows(ConflictException.class, () -> cmrDocumentService.uploadSignedCmrDocument(request));
     }
 }

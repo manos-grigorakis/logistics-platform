@@ -42,7 +42,13 @@ export class CmrDocumentsService {
   }
 
   // prettier-ignore
-  public uploadSignedCmrDocument(id: number, request: UploadSignedCmrDocumentRequest): Observable<void> {
-    return this.http.post<void>(`${environment.apiUrl}/cmr-documents/${id}/signed-copy`, request);
+  public uploadSignedCmrDocument(request: UploadSignedCmrDocumentRequest): Observable<void> {
+    let formData: FormData = new FormData();
+    formData.append('senderSigned', request.senderSigned.toString());
+    formData.append('carrierSigned', request.carrierSigned.toString());
+    formData.append('consigneeSigned', request.consigneeSigned.toString());
+    formData.append('file', request.file);
+
+    return this.http.post<void>(`${environment.apiUrl}/cmr-documents/signed-copy`, formData);
   }
 }

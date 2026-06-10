@@ -12,11 +12,13 @@ import com.manosgrigorakis.logisticsplatform.cmr.specs.CmrDocumentSpecs;
 import com.manosgrigorakis.logisticsplatform.common.dto.PageFilterRequest;
 import com.manosgrigorakis.logisticsplatform.common.dto.SortFilterRequest;
 import com.manosgrigorakis.logisticsplatform.common.exception.ConflictException;
+import com.manosgrigorakis.logisticsplatform.common.exception.DocumentProcessingException;
 import com.manosgrigorakis.logisticsplatform.common.exception.ResourceNotFoundException;
 import com.manosgrigorakis.logisticsplatform.common.generators.DocumentNumberGenerator;
 import com.manosgrigorakis.logisticsplatform.common.utils.SpecsUtils;
 import com.manosgrigorakis.logisticsplatform.infrastructure.document.generators.CmrDocumentPdfGenerator;
 import com.manosgrigorakis.logisticsplatform.infrastructure.document.dto.CmrDocumentPdfRequestDTO;
+import com.manosgrigorakis.logisticsplatform.infrastructure.document.pdf.ProcessCmrDocumentPdf;
 import com.manosgrigorakis.logisticsplatform.infrastructure.storage.FileStorageService;
 import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
 import com.manosgrigorakis.logisticsplatform.shipments.model.Shipment;
@@ -152,33 +154,43 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
     }
 
     @Override
-    public void uploadSignedCmrDocument(Long id, UploadCmrDocumentRequestDTO dto) {
-        CmrDocument cmrDocument = this.cmrDocumentRepository.findById(id)
-                .orElseThrow(() -> {
-                            log.warn("CMR Document not found with id {}", id);
-                            return new ResourceNotFoundException("CMR Document not found with id: " + id);
-                        }
-                );
-
-        if (!cmrDocument.canChangeStatusTo(CmrStatus.SIGNED)) {
-            throw new ConflictException(
-                    "CMR document with number " + cmrDocument.getNumber() + " is already signed",
-                    Map.of("currentStatus", cmrDocument.getStatus())
-            );
+    public void uploadSignedCmrDocument(UploadCmrDocumentRequestDTO dto) {
+        if(!dto.getSenderSigned() || !dto.getCarrierSigned() || !dto.getConsigneeSigned()) {
+            throw new ConflictException("A CMR document requires all 3 signatures to be marked as signed",
+                                        "MISSING_SIGNATURES");
         }
 
         byte[] fileInBytes = convertFileToBytesArray(dto.getFile());
+        String cmrNumber = ProcessCmrDocumentPdf.decodeCmrDocumentQrCode(fileInBytes);
+
+        CmrDocument cmrDocument = cmrDocumentRepository.findCmrDocumentByNumber(cmrNumber).orElseThrow(() -> {
+            log.info("CMR Document not found with number {}", cmrNumber);
+            return new ResourceNotFoundException("CMR Document not found with number: " + cmrNumber);
+        });
+
+        if(cmrDocument.getStatus().equals(CmrStatus.SIGNED)) {
+            throw new ConflictException(
+                    "CMR document with number " + cmrDocument.getNumber() + " is already signed", "ALREADY_SIGNED");
+        }
+
+        if (!cmrDocument.canChangeStatusTo(CmrStatus.SIGNED)) {
+            throw new ConflictException(
+                    "CMR document with number " + cmrDocument.getNumber() + " cannot be updated due to status violation",
+                    "INVALID_STATUS_TRANSITION",
+                    Map.of("currentStatus", cmrDocument.getStatus(),
+                           "desiredStatus", CmrStatus.SIGNED
+                    )
+            );
+        }
+
+        cmrDocument.markCmrDocumentAsSigned();
 
         // Upload signed CMR file to S3
-        fileStorageService.store(
-                this.bucketPathCmr + cmrDocument.getNumber() + "-SIGNED",
-                fileInBytes,
-                "application/pdf"
-        );
+        fileStorageService.store(this.bucketPathCmr + cmrDocument.getNumber() + "-SIGNED", fileInBytes,
+                                 "application/pdf");
 
-        cmrDocument.setStatus(CmrStatus.SIGNED);
-        this.cmrDocumentRepository.save(cmrDocument);
-        log.info("Signed CMR PDF successfully updated and stored");
+        cmrDocumentRepository.save(cmrDocument);
+        log.info("Signed CMR document PDF successfully updated and stored");
         logSignedCmrDocument(cmrDocument);
     }
 
