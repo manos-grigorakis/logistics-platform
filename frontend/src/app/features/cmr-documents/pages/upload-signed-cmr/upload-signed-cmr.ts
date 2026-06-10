@@ -95,6 +95,8 @@ export class UploadSignedCmr {
             this.languageService.toastError('cmr-documents.messages.invalid-qr-code');
           } else if (status === 409 && errorCode === 'ALREADY_SIGNED') {
             this.languageService.toastError('cmr-documents.messages.already-signed');
+          } else if (status === 409 && errorCode === 'INVALID_STATUS_TRANSITION') {
+            this.languageService.toastError('cmr-documents.messages.status-update-violation');
           } else {
             this.languageService.toastError(handleHttpErrors(status));
           }

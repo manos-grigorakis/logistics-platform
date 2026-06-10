@@ -75,7 +75,8 @@ public class CmrDocumentRestController {
             @ApiResponse(responseCode = "204", description = "CMR signed document uploaded successfully"),
             @ApiResponse(responseCode = "400", description = "Failed to process the PDF or Invalid QR Code"),
             @ApiResponse(responseCode = "404", description = "CMR document not found"),
-            @ApiResponse(responseCode = "409", description = "CMR document is already signed or Missing 3 signatures"),
+            @ApiResponse(responseCode = "409", description = "CMR document is already signed or Missing 3 signatures " +
+                    "or Status transition violation"),
     })
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping(value = "/signed-copy", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

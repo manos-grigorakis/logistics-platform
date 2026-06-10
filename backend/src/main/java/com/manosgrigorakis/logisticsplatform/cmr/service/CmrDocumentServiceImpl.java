@@ -168,10 +168,18 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
             return new ResourceNotFoundException("CMR Document not found with number: " + cmrNumber);
         });
 
+        if(cmrDocument.getStatus().equals(CmrStatus.SIGNED)) {
+            throw new ConflictException(
+                    "CMR document with number " + cmrDocument.getNumber() + " is already signed", "ALREADY_SIGNED");
+        }
+
         if (!cmrDocument.canChangeStatusTo(CmrStatus.SIGNED)) {
             throw new ConflictException(
-                    "CMR document with number " + cmrDocument.getNumber() + " is already signed", "ALREADY_SIGNED",
-                    Map.of("currentStatus", cmrDocument.getStatus())
+                    "CMR document with number " + cmrDocument.getNumber() + " cannot be updated due to status violation",
+                    "INVALID_STATUS_TRANSITION",
+                    Map.of("currentStatus", cmrDocument.getStatus(),
+                           "desiredStatus", CmrStatus.SIGNED
+                    )
             );
         }
 
