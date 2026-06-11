@@ -13,6 +13,12 @@ import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
 import com.manosgrigorakis.logisticsplatform.shipments.model.Shipment;
 import com.manosgrigorakis.logisticsplatform.shipments.model.ShipmentCargo;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.pdfbox.io.RandomAccessReadBuffer;
+import org.apache.pdfbox.multipdf.PDFMergerUtility;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
@@ -23,13 +29,28 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 
 @Slf4j
 @Component
 public final class CmrDocumentPdfGenerator extends BasePdfGenerator<CmrDocumentPdfRequestDTO> {
     @Value("classpath:templates/cmr/index.html")
     private Resource cmrHtmlTemplate;
+
+    /**
+     * Generates all four CMR document copies and merges them into a single PDF file
+     *
+     * @param request The request containing all the mandatory information for the PDF
+     * @return A {@code byte[]} containing the merged CMR document copies
+     * @throws IOException If the PDF generation or merge operation fails
+     */
+    public byte[] renderAllCopies(CmrDocumentPdfRequestDTO request) throws IOException {
+        String htmlTemplate = formatTemplate(cmrHtmlTemplate, request);
+        List<byte[]> files = highlightAndRenderPdfCopies(htmlTemplate);
+        return mergeHighlightedPdfCopies(files);
+    }
 
     @Override
     protected String formatTemplate(Resource templateFile, CmrDocumentPdfRequestDTO request) throws IOException {
@@ -180,5 +201,57 @@ public final class CmrDocumentPdfGenerator extends BasePdfGenerator<CmrDocumentP
      */
     private String formatQrCode(String qrCode) {
         return "data:image/png;base64," + qrCode;
+    }
+
+    /**
+     * Generates all CMR document copies by highlighting for each rendered PDF copy only one copy section
+     * in the footer of the template
+     *
+     * @param html The processed HTML template to be used
+     * @return A list containing the rendered PDFs copies
+     * @throws IOException If the render PDF operation fails
+     */
+    private List<byte[]> highlightAndRenderPdfCopies(String html) throws IOException {
+        Document document = Jsoup.parse(html);
+        Element element = document.getElementById("copies-rows");
+
+        if(element == null) {
+            throw new IllegalStateException("No copies rows element found for rendering CMR document copies");
+        }
+
+        Elements elements = element.getElementsByTag("td");
+        List<byte[]> pdfCopies = new ArrayList<>();
+
+        for (Element tr : elements) {
+            // Remove all active classes from elements
+            elements.forEach(e -> e.removeClass("active"));
+
+            tr.addClass("active");
+            Document parsedDocument = parseHtmlTemplate(document.html());
+            pdfCopies.add(renderPdf(parsedDocument));
+        }
+        return pdfCopies;
+    }
+
+    /**
+     * Merges the provided PDFs files into a single one
+     *
+     * @param files The PDF file to be merged
+     * @return The merged PDFs in a {@code byte[]}
+     * @throws IOException If the outputStream operation fails
+     */
+    private byte[] mergeHighlightedPdfCopies(List<byte[]> files) throws IOException {
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+            PDFMergerUtility merger = new PDFMergerUtility();
+            merger.setDestinationStream(outputStream);
+
+            // Merge PDFs
+            for (byte[] file : files) {
+                merger.addSource(new RandomAccessReadBuffer(file));
+            }
+
+            merger.mergeDocuments(null);
+            return outputStream.toByteArray();
+        }
     }
 }
