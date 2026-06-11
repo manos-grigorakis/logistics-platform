@@ -9,12 +9,17 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.ByteArrayInputStream;
 
 @RestController
 @RequestMapping("${app.api.prefix}/v1/cmr-documents")
@@ -82,5 +87,17 @@ public class CmrDocumentRestController {
     @PostMapping(value = "/signed-copy", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public void uploadSignedCmrDocument(@ModelAttribute @Valid UploadCmrDocumentRequestDTO dto) {
         cmrDocumentService.uploadSignedCmrDocument(dto);
+    }
+
+    @GetMapping("/{id}/copies")
+    public ResponseEntity<byte[]> downloadAllCopies(@PathVariable Long id) {
+        DownloadAllCmrCopiesResponse response = cmrDocumentService.generateAllCopies(id);
+        String fileName = response.cmrNumber() + "-copies.pdf";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("attachment", fileName);
+
+        return ResponseEntity.ok().headers(headers).body(response.file());
     }
 }

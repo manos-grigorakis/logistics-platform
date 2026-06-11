@@ -25,6 +25,7 @@ import com.manosgrigorakis.logisticsplatform.shipments.model.Shipment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -32,10 +33,13 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -192,6 +196,27 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
         cmrDocumentRepository.save(cmrDocument);
         log.info("Signed CMR document PDF successfully updated and stored");
         logSignedCmrDocument(cmrDocument);
+    }
+
+    @Override
+    public DownloadAllCmrCopiesResponse generateAllCopies(Long id) {
+        RegenerateCmrDocumentPdf response = cmrDocumentRepository.findCmrDocumentWithShipmentAndQuote(id)
+                .orElseThrow(() -> {
+                    log.warn("CMR Document not found with id {}", id);
+                    return new ResourceNotFoundException("CMR Document not found with id: " + id);
+                });
+
+        CmrDocumentPdfRequestDTO request = new CmrDocumentPdfRequestDTO(response.quote(), response.shipment(),
+                                                                        response.cmrDocument());
+        String cmrNumber = response.cmrDocument().getNumber();
+
+        try {
+            byte[] file = cmrDocumentPdfGenerator.renderAllCopies(request);
+            return new DownloadAllCmrCopiesResponse(cmrNumber, file);
+        } catch (IOException e) {
+            log.error("Error while processing CMR Document PDF with number: {} to generate copies", cmrNumber, e);
+            throw new DocumentProcessingException("Error while processing CMR Document PDF");
+        }
     }
 
     /**

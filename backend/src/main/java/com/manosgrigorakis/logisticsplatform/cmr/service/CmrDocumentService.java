@@ -5,7 +5,12 @@ import com.manosgrigorakis.logisticsplatform.common.dto.PageFilterRequest;
 import com.manosgrigorakis.logisticsplatform.common.dto.SortFilterRequest;
 import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
 import com.manosgrigorakis.logisticsplatform.shipments.model.Shipment;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.ByteArrayInputStream;
+import java.util.List;
 
 public interface CmrDocumentService {
     Page<CmrDocumentListResponseDTO> getAllCmrDocuments(
@@ -21,4 +26,6 @@ public interface CmrDocumentService {
     void updateCmrDocumentStatus(Long id, UpdateCmrDocumentStatusRequestDTO dto);
 
     void uploadSignedCmrDocument(UploadCmrDocumentRequestDTO dto);
+
+    DownloadAllCmrCopiesResponse generateAllCopies(Long id);
 }
