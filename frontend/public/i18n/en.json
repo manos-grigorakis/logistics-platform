@@ -12,6 +12,7 @@
       "delete": "Delete",
       "upload": "Upload",
       "download": "Download",
+      "download-all-copies": "Download All Copies",
       "download-report": "Download Report",
       "send-via-mail": "Send via Mail",
       "action": "Action",

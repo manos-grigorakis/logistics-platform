@@ -51,4 +51,10 @@ export class CmrDocumentsService {
 
     return this.http.post<void>(`${environment.apiUrl}/cmr-documents/signed-copy`, formData);
   }
+
+  public downloadCmrDocumentCopies(id: number): Observable<Blob> {
+    return this.http.get(`${environment.apiUrl}/cmr-documents/${id}/copies`, {
+      responseType: 'blob',
+    });
+  }
 }
