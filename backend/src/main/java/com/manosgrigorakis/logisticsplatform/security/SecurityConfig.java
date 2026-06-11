@@ -131,7 +131,7 @@ public class SecurityConfig {
 
                     // CMR-Documents
                     .requestMatchers(HttpMethod.PATCH, apiPrefix + "/v1/cmr-documents/*/status").hasAuthority("ADMIN")
-                    .requestMatchers(HttpMethod.GET, apiPrefix + "/v1/cmr-documents/*").hasAnyAuthority("ADMIN", "MANAGER", "EMPLOYEE")
+                    .requestMatchers(HttpMethod.GET, apiPrefix + "/v1/cmr-documents/**").hasAnyAuthority("ADMIN", "MANAGER", "EMPLOYEE")
 
                     // Analytics
                     .requestMatchers(HttpMethod.GET, apiPrefix + "/v1/analytics/*").hasAnyAuthority("ADMIN", "MANAGER")

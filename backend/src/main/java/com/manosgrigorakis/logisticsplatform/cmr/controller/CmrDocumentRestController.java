@@ -12,9 +12,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping("${app.api.prefix}/v1/cmr-documents")
@@ -82,5 +85,24 @@ public class CmrDocumentRestController {
     @PostMapping(value = "/signed-copy", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public void uploadSignedCmrDocument(@ModelAttribute @Valid UploadCmrDocumentRequestDTO dto) {
         cmrDocumentService.uploadSignedCmrDocument(dto);
+    }
+
+    @Operation(summary = "Download CMR Document Copies",
+            description = "Downloads all CMR document copies into a merged PDF file, highlighting one copy section per page")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "CMR Document copies successfully returned"),
+            @ApiResponse(responseCode = "400", description = "Failed to generate or merge the PDF copies"),
+            @ApiResponse(responseCode = "404", description = "CMR document not found"),
+    })
+    @GetMapping("/{id}/copies")
+    public ResponseEntity<byte[]> downloadAllCopies(@PathVariable Long id) {
+        DownloadAllCmrCopiesResponse response = cmrDocumentService.generateAllCopies(id);
+        String fileName = response.cmrNumber() + "-copies.pdf";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("attachment", fileName);
+
+        return ResponseEntity.ok().headers(headers).body(response.file());
     }
 }

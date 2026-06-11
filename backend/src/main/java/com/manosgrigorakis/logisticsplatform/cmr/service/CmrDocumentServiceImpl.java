@@ -194,6 +194,27 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
         logSignedCmrDocument(cmrDocument);
     }
 
+    @Override
+    public DownloadAllCmrCopiesResponse generateAllCopies(Long id) {
+        RegenerateCmrDocumentPdf response = cmrDocumentRepository.findCmrDocumentWithShipmentAndQuote(id)
+                .orElseThrow(() -> {
+                    log.warn("CMR Document not found with id {}", id);
+                    return new ResourceNotFoundException("CMR Document not found with id: " + id);
+                });
+
+        CmrDocumentPdfRequestDTO request = new CmrDocumentPdfRequestDTO(response.quote(), response.shipment(),
+                                                                        response.cmrDocument());
+        String cmrNumber = response.cmrDocument().getNumber();
+
+        try {
+            byte[] file = cmrDocumentPdfGenerator.renderAllCopies(request);
+            return new DownloadAllCmrCopiesResponse(cmrNumber, file);
+        } catch (IOException e) {
+            log.error("Error while processing CMR Document PDF with number: {} to generate copies", cmrNumber, e);
+            throw new DocumentProcessingException("Error while processing CMR Document PDF");
+        }
+    }
+
     /**
      * Converts a file to a bytes array
      * @param file The file to be converted

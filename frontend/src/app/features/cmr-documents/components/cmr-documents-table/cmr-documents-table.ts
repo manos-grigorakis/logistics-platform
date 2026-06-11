@@ -6,10 +6,11 @@ import { DatePipe, NgClass } from '@angular/common';
 import { cmrDocumentStatusBadgeColor } from '../../../../shared/utils/cmr-document-status-badge-color.util';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../../core/auth/services/auth.service';
+import { PrimaryButton } from '../../../../shared/ui/primary-button/primary-button';
 
 @Component({
   selector: 'app-cmr-documents-table',
-  imports: [LoadingSpinner, TranslatePipe, DatePipe, NgClass, FormsModule],
+  imports: [LoadingSpinner, TranslatePipe, DatePipe, NgClass, FormsModule, PrimaryButton],
   templateUrl: './cmr-documents-table.html',
   styleUrl: './cmr-documents-table.css',
 })
@@ -20,6 +21,7 @@ export class CmrDocumentsTable {
   @Input() errorMessage?: string;
   @Output() onDocument = new EventEmitter<number>();
   @Output() onStatus = new EventEmitter<{ id: number; status: string }>();
+  @Output() onDownloadCopies = new EventEmitter<{ id: number; cmrNumber: string }>();
 
   private authService = inject(AuthService);
 
@@ -42,6 +44,10 @@ export class CmrDocumentsTable {
 
   public onStatusChange(id: number, status: string): void {
     this.onStatus.emit({ id, status });
+  }
+
+  public onDownloadCopiesClick(id: number, cmrNumber: string): void {
+    this.onDownloadCopies.emit({ id, cmrNumber });
   }
 
   public showSignedText(value: boolean): string {

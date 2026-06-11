@@ -147,6 +147,10 @@ export class CmrDocumentsPage implements OnInit, OnDestroy {
     this.updateDocumentStatus(event.id, event.status);
   }
 
+  public onDownloadCopiesClick(event: { id: number; cmrNumber: string }): void {
+    this.downloadAllDocumentCopies(event.id, event.cmrNumber);
+  }
+
   private fetchCmrDocuments(params: CmrDocumentFilterRequest = {}): void {
     this.isLoading = true;
     this.errorMessage = null;
@@ -249,5 +253,27 @@ export class CmrDocumentsPage implements OnInit, OnDestroy {
       .translateKeyAsync('common.filters.filter-by')
       .pipe(take(1))
       .subscribe((val) => (this.activeFilterLabel = val));
+  }
+
+  private downloadAllDocumentCopies(id: number, cmrNumber: string): void {
+    this.cmrDocumentService.downloadCmrDocumentCopies(id).subscribe({
+      next: (res) => {
+        const downloadUrl = URL.createObjectURL(res);
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = `${cmrNumber}-copies.pdf`;
+        link.click();
+        URL.revokeObjectURL(downloadUrl);
+      },
+      error: (err) => {
+        const status = err.status;
+
+        if (status === 404) {
+          this.languageService.toastError('cmr-documents.messages.not-found');
+        } else {
+          this.languageService.toastError(handleHttpErrors(status));
+        }
+      },
+    });
   }
 }

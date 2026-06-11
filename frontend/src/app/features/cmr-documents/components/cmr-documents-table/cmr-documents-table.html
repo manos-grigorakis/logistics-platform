@@ -19,6 +19,9 @@
       <th scope="col" class="px-2 py-3 font-medium">
         {{ 'common.fields.created-at' | translate }}
       </th>
+      <th scope="col" class="px-2 py-3 font-medium">
+        {{ 'common.actions.action' | translate }}
+      </th>
     </tr>
   </thead>
 
@@ -71,6 +74,18 @@
         <td class="px-2 py-4">{{ showSignedText(document.carrierSigned) | translate }}</td>
         <td class="px-2 py-4">{{ showSignedText(document.consigneeSigned) | translate }}</td>
         <td class="px-2 py-4">{{ document.createdAt | date: 'dd/MM/yyyy' }}</td>
+        @if (document.status !== 'cancelled') {
+          <td class="px-2 py-4">
+            <div class="w-56">
+              <app-primary-button
+                [value]="'common.actions.download-all-copies' | translate"
+                (click)="onDownloadCopiesClick(document.id, document.number)"
+              />
+            </div>
+          </td>
+        } @else {
+          <td>-</td>
+        }
       </tr>
     } @empty {
       <tr>
