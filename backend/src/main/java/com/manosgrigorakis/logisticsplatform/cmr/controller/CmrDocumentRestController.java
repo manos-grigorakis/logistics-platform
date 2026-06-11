@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
@@ -19,7 +18,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.ByteArrayInputStream;
 
 @RestController
 @RequestMapping("${app.api.prefix}/v1/cmr-documents")
@@ -89,6 +87,13 @@ public class CmrDocumentRestController {
         cmrDocumentService.uploadSignedCmrDocument(dto);
     }
 
+    @Operation(summary = "Download CMR Document Copies",
+            description = "Downloads all CMR document copies into a merged PDF file, highlighting one copy section per page")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "CMR Document copies successfully returned"),
+            @ApiResponse(responseCode = "400", description = "Failed to generate or merge the PDF copies"),
+            @ApiResponse(responseCode = "404", description = "CMR document not found"),
+    })
     @GetMapping("/{id}/copies")
     public ResponseEntity<byte[]> downloadAllCopies(@PathVariable Long id) {
         DownloadAllCmrCopiesResponse response = cmrDocumentService.generateAllCopies(id);
