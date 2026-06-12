@@ -79,7 +79,11 @@ public class SupplierPayment {
     }
 
     public BigDecimal getUnpaidAmount() {
-        return totalAmount.subtract(paidAmount);
+        if (paidAmount == null) {
+            return totalAmount;
+        } else {
+            return totalAmount.subtract(paidAmount);
+        }
     }
 
     /**
