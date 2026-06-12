@@ -32,8 +32,8 @@ public class SupplierPayment {
     @Column(name = "total_amount", precision = 19, scale = 2, nullable = false)
     private BigDecimal totalAmount;
 
-    @Column(name = "paid_amount", precision = 19, scale = 2)
-    private BigDecimal paidAmount;
+    @Column(name = "paid_amount", precision = 19, scale = 2, nullable = false)
+    private BigDecimal paidAmount = BigDecimal.ZERO;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
@@ -79,11 +79,7 @@ public class SupplierPayment {
     }
 
     public BigDecimal getUnpaidAmount() {
-        if (paidAmount == null) {
-            return totalAmount;
-        } else {
-            return totalAmount.subtract(paidAmount);
-        }
+        return totalAmount.subtract(paidAmount);
     }
 
     /**

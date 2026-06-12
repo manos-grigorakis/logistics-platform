@@ -5,7 +5,7 @@ CREATE TABLE supplier_payments
     title         VARCHAR(50)                                            NOT NULL,
     `description` TEXT                                                   NULL,
     total_amount  DECIMAL(19, 2)                                         NOT NULL,
-    paid_amount   DECIMAL(19, 2)                                         NULL,
+    paid_amount   DECIMAL(19, 2) DEFAULT 0.00                            NOT NULL,
     status        ENUM ('PENDING', 'PAID', 'PARTIALLY_PAID', 'CANCELED') NOT NULL,
     type          ENUM ('FUEL', 'INSURANCE', 'SERVICE', 'OTHER')         NOT NULL,
     supplier_id   BIGINT                                                 NOT NULL,
