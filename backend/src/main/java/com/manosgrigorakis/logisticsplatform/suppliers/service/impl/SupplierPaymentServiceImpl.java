@@ -2,10 +2,7 @@ package com.manosgrigorakis.logisticsplatform.suppliers.service.impl;
 
 import com.manosgrigorakis.logisticsplatform.common.dto.PageFilterRequest;
 import com.manosgrigorakis.logisticsplatform.common.dto.SortFilterRequest;
-import com.manosgrigorakis.logisticsplatform.common.exception.BadRequestException;
-import com.manosgrigorakis.logisticsplatform.common.exception.ConflictException;
-import com.manosgrigorakis.logisticsplatform.common.exception.DocumentProcessingException;
-import com.manosgrigorakis.logisticsplatform.common.exception.ResourceNotFoundException;
+import com.manosgrigorakis.logisticsplatform.common.exception.*;
 import com.manosgrigorakis.logisticsplatform.common.generators.DocumentNumberGenerator;
 import com.manosgrigorakis.logisticsplatform.infrastructure.storage.FileStorageService;
 import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplierpayment.*;
@@ -126,7 +123,7 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
             log.info("Supplier payment created with id {}", payment.getNumber());
         } catch (IOException e) {
             log.error("Error while saving files for supplier payment {}", payment.getNumber(), e);
-            throw new DocumentProcessingException("Failed to store files", "STORAGE_ERROR");
+            throw new StorageServiceException("Failed to store files", "STORAGE_ERROR");
         } catch (Exception e) {
             log.error("Supplier payment creation failed with number {}", payment.getNumber(), e);
             fileStorageService.deleteObject(invoiceFileName);
@@ -158,7 +155,7 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
             receiptPresignedUrl = storeFileIfExists(request.receiptFile(), receiptFileName);
         } catch (IOException e) {
             log.error("Error while saving files for supplier payment {}", payment.getNumber(), e);
-            throw new DocumentProcessingException("Failed to store files", "STORAGE_ERROR");
+            throw new StorageServiceException("Failed to store files", "STORAGE_ERROR");
         }
 
         if (invoicePresignedUrl != null) {
