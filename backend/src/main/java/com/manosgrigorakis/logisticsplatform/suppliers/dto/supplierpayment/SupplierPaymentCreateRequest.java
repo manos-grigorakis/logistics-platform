@@ -1,4 +1,4 @@
-package com.manosgrigorakis.logisticsplatform.suppliers.dto;
+package com.manosgrigorakis.logisticsplatform.suppliers.dto.supplierpayment;
 
 import com.manosgrigorakis.logisticsplatform.suppliers.model.enums.SupplierPaymentType;
 import jakarta.validation.constraints.*;
@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 
-public record SupplierPaymentUpdateRequest(
+public record SupplierPaymentCreateRequest(
         @NotBlank(message = "Title is required")
         @Size(max = 50)
         String title,
@@ -28,6 +28,11 @@ public record SupplierPaymentUpdateRequest(
 
         MultipartFile invoiceFile,
 
-        MultipartFile receiptFile
+        MultipartFile receiptFile,
+
+        @NotNull(message = "Supplier ID is required")
+        @Positive(message = "Supplier ID must be positive")
+        Long supplierId
+
 ) {
 }

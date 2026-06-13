@@ -1,4 +1,4 @@
-package com.manosgrigorakis.logisticsplatform.suppliers.dto;
+package com.manosgrigorakis.logisticsplatform.suppliers.dto.supplierpayment;
 
 import com.manosgrigorakis.logisticsplatform.suppliers.model.enums.SupplierPaymentStatus;
 import com.manosgrigorakis.logisticsplatform.suppliers.model.enums.SupplierPaymentType;

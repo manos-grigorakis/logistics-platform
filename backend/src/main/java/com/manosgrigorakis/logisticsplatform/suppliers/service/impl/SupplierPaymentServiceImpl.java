@@ -6,9 +6,9 @@ import com.manosgrigorakis.logisticsplatform.common.exception.DocumentProcessing
 import com.manosgrigorakis.logisticsplatform.common.exception.ResourceNotFoundException;
 import com.manosgrigorakis.logisticsplatform.common.generators.DocumentNumberGenerator;
 import com.manosgrigorakis.logisticsplatform.infrastructure.storage.FileStorageService;
-import com.manosgrigorakis.logisticsplatform.suppliers.dto.SupplierPaymentRequest;
-import com.manosgrigorakis.logisticsplatform.suppliers.dto.SupplierPaymentResponse;
-import com.manosgrigorakis.logisticsplatform.suppliers.dto.SupplierPaymentUpdateRequest;
+import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplierpayment.SupplierPaymentCreateRequest;
+import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplierpayment.SupplierPaymentResponse;
+import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplierpayment.SupplierPaymentUpdateRequest;
 import com.manosgrigorakis.logisticsplatform.suppliers.mapper.SupplierPaymentMapper;
 import com.manosgrigorakis.logisticsplatform.suppliers.model.Supplier;
 import com.manosgrigorakis.logisticsplatform.suppliers.model.SupplierPayment;
@@ -57,7 +57,7 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
     }
 
     @Override
-    public SupplierPaymentResponse createSupplierPayment(SupplierPaymentRequest request) {
+    public SupplierPaymentResponse createSupplierPayment(SupplierPaymentCreateRequest request) {
         Supplier supplier = supplierRepository.findById(request.supplierId()).orElseThrow(() -> {
             log.warn("Supplier not found with id {}", request.supplierId());
             return new ResourceNotFoundException("Supplier not found with id " + request.supplierId());

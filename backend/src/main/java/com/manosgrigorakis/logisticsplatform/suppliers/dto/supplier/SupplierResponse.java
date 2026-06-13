@@ -1,4 +1,4 @@
-package com.manosgrigorakis.logisticsplatform.suppliers.dto;
+package com.manosgrigorakis.logisticsplatform.suppliers.dto.supplier;
 
 import java.time.LocalDateTime;
 

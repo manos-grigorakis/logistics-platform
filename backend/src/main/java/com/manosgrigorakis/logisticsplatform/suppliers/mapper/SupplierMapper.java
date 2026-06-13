@@ -1,7 +1,7 @@
 package com.manosgrigorakis.logisticsplatform.suppliers.mapper;
 
-import com.manosgrigorakis.logisticsplatform.suppliers.dto.SupplierRequest;
-import com.manosgrigorakis.logisticsplatform.suppliers.dto.SupplierResponse;
+import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplier.SupplierRequest;
+import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplier.SupplierResponse;
 import com.manosgrigorakis.logisticsplatform.suppliers.model.Supplier;
 
 public class SupplierMapper {

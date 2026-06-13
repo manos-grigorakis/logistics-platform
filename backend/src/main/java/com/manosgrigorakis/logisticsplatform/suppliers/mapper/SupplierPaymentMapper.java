@@ -1,17 +1,17 @@
 package com.manosgrigorakis.logisticsplatform.suppliers.mapper;
 
-import com.manosgrigorakis.logisticsplatform.suppliers.dto.SupplierPaymentRequest;
-import com.manosgrigorakis.logisticsplatform.suppliers.dto.SupplierPaymentResponse;
-import com.manosgrigorakis.logisticsplatform.suppliers.dto.SupplierPaymentUpdateRequest;
-import com.manosgrigorakis.logisticsplatform.suppliers.dto.SupplierSummaryResponse;
+import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplierpayment.SupplierPaymentCreateRequest;
+import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplierpayment.SupplierPaymentResponse;
+import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplierpayment.SupplierPaymentUpdateRequest;
+import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplierpayment.SupplierSummaryResponse;
 import com.manosgrigorakis.logisticsplatform.suppliers.model.Supplier;
 import com.manosgrigorakis.logisticsplatform.suppliers.model.SupplierPayment;
 
 import java.math.BigDecimal;
 
 public class SupplierPaymentMapper {
-    // Request -> Entity
-    public static SupplierPayment toEntity(SupplierPaymentRequest request, String number, Supplier supplier) {
+    // Create Request -> Entity
+    public static SupplierPayment toEntity(SupplierPaymentCreateRequest request, String number, Supplier supplier) {
         return SupplierPayment.builder()
                 .number(number)
                 .title(request.title())
@@ -21,6 +21,16 @@ public class SupplierPaymentMapper {
                 .type(request.type())
                 .supplier(supplier)
                 .build();
+    }
+
+    // Update Request -> Entity
+    public static SupplierPayment toUpdateEntity(SupplierPayment payment, SupplierPaymentUpdateRequest request) {
+        payment.setTitle(request.title());
+        payment.setDescription(request.description());
+        payment.setTotalAmount(request.totalAmount());
+        payment.setPaidAmount(request.paidAmount());
+        payment.setType(request.type());
+        return payment;
     }
 
     // Entity -> Response
@@ -36,15 +46,5 @@ public class SupplierPaymentMapper {
                                            invoicePresignedUrl, receiptPresignedUrl, supplierSummary,
                                            payment.getCreatedAt(),
                                            payment.getUpdatedAt());
-    }
-
-    // Update Request -> Entity
-    public static SupplierPayment toUpdateEntity(SupplierPayment payment, SupplierPaymentUpdateRequest request) {
-        payment.setTitle(request.title());
-        payment.setDescription(request.description());
-        payment.setTotalAmount(request.totalAmount());
-        payment.setPaidAmount(request.paidAmount());
-        payment.setType(request.type());
-        return payment;
     }
 }

@@ -1,6 +1,6 @@
 package com.manosgrigorakis.logisticsplatform.suppliers.repository;
 
-import com.manosgrigorakis.logisticsplatform.suppliers.dto.SupplierListResponse;
+import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplier.SupplierListResponse;
 import com.manosgrigorakis.logisticsplatform.suppliers.model.Supplier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

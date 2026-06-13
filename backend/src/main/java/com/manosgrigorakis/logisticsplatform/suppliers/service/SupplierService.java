@@ -2,10 +2,10 @@ package com.manosgrigorakis.logisticsplatform.suppliers.service;
 
 import com.manosgrigorakis.logisticsplatform.common.dto.PageFilterRequest;
 import com.manosgrigorakis.logisticsplatform.common.dto.SortFilterRequest;
-import com.manosgrigorakis.logisticsplatform.suppliers.dto.SupplierFilterRequest;
-import com.manosgrigorakis.logisticsplatform.suppliers.dto.SupplierListResponse;
-import com.manosgrigorakis.logisticsplatform.suppliers.dto.SupplierRequest;
-import com.manosgrigorakis.logisticsplatform.suppliers.dto.SupplierResponse;
+import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplier.SupplierFilterRequest;
+import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplier.SupplierListResponse;
+import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplier.SupplierRequest;
+import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplier.SupplierResponse;
 import org.springframework.data.domain.Page;
 
 public interface SupplierService {

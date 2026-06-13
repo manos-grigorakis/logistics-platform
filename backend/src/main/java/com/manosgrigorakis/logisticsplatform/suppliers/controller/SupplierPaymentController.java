@@ -1,9 +1,9 @@
 package com.manosgrigorakis.logisticsplatform.suppliers.controller;
 
 import com.manosgrigorakis.logisticsplatform.common.dto.ApiResponseWrapper;
-import com.manosgrigorakis.logisticsplatform.suppliers.dto.SupplierPaymentRequest;
-import com.manosgrigorakis.logisticsplatform.suppliers.dto.SupplierPaymentResponse;
-import com.manosgrigorakis.logisticsplatform.suppliers.dto.SupplierPaymentUpdateRequest;
+import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplierpayment.SupplierPaymentCreateRequest;
+import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplierpayment.SupplierPaymentResponse;
+import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplierpayment.SupplierPaymentUpdateRequest;
 import com.manosgrigorakis.logisticsplatform.suppliers.service.SupplierPaymentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ public class SupplierPaymentController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponseWrapper<SupplierPaymentResponse> createSupplierPayment(
-            @ModelAttribute @Valid SupplierPaymentRequest request) {
+            @ModelAttribute @Valid SupplierPaymentCreateRequest request) {
         return new ApiResponseWrapper<>(supplierPaymentService.createSupplierPayment(request));
     }
 
