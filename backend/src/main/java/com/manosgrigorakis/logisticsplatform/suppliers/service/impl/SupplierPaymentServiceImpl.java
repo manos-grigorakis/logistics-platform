@@ -8,10 +8,7 @@ import com.manosgrigorakis.logisticsplatform.common.exception.DocumentProcessing
 import com.manosgrigorakis.logisticsplatform.common.exception.ResourceNotFoundException;
 import com.manosgrigorakis.logisticsplatform.common.generators.DocumentNumberGenerator;
 import com.manosgrigorakis.logisticsplatform.infrastructure.storage.FileStorageService;
-import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplierpayment.SupplierPaymentCreateRequest;
-import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplierpayment.SupplierPaymentFilterRequest;
-import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplierpayment.SupplierPaymentResponse;
-import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplierpayment.SupplierPaymentUpdateRequest;
+import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplierpayment.*;
 import com.manosgrigorakis.logisticsplatform.suppliers.mapper.SupplierPaymentMapper;
 import com.manosgrigorakis.logisticsplatform.suppliers.model.Supplier;
 import com.manosgrigorakis.logisticsplatform.suppliers.model.SupplierPayment;
@@ -30,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -192,6 +190,26 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
         } catch (Exception e) {
             log.error("Supplier payment update failed with number {}", payment.getNumber(), e);
             throw e;
+        }
+    }
+
+    @Override
+    public void updateSupplierPaymentStatusById(Long id, SupplierPaymentStatusUpdateRequest request) {
+        SupplierPayment payment = supplierPaymentRepository.findById(id).orElseThrow(() -> {
+            log.warn("Supplier payment not found with id {}", id);
+            return new ResourceNotFoundException("Supplier payment not found with id " + id);
+        });
+
+        if(payment.canChangeStatusTo(request.status())) {
+            payment.setStatus(request.status());
+            supplierPaymentRepository.save(payment);
+            log.info("Supplier payment status updated with id {}", payment.getNumber());
+        } else {
+            log.warn("Supplier payment status change violates transition rules");
+            throw new ConflictException("Supplier payment status change violates transition rules", Map.of(
+                    "currentStatus", payment.getStatus(),
+                    "desiredStatus", request.status()
+            ));
         }
     }
 

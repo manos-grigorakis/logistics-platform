@@ -2,10 +2,7 @@ package com.manosgrigorakis.logisticsplatform.suppliers.service;
 
 import com.manosgrigorakis.logisticsplatform.common.dto.PageFilterRequest;
 import com.manosgrigorakis.logisticsplatform.common.dto.SortFilterRequest;
-import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplierpayment.SupplierPaymentCreateRequest;
-import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplierpayment.SupplierPaymentFilterRequest;
-import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplierpayment.SupplierPaymentResponse;
-import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplierpayment.SupplierPaymentUpdateRequest;
+import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplierpayment.*;
 import org.springframework.data.domain.Page;
 
 public interface SupplierPaymentService {
@@ -18,6 +15,8 @@ public interface SupplierPaymentService {
     SupplierPaymentResponse createSupplierPayment(SupplierPaymentCreateRequest request);
 
     SupplierPaymentResponse updateSupplierPaymentById(Long id, SupplierPaymentUpdateRequest request);
+
+    void updateSupplierPaymentStatusById(Long id, SupplierPaymentStatusUpdateRequest request);
 
     void deleteSupplierPaymentById(Long id);
 }

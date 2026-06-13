@@ -3,10 +3,7 @@ package com.manosgrigorakis.logisticsplatform.suppliers.controller;
 import com.manosgrigorakis.logisticsplatform.common.dto.ApiResponseWrapper;
 import com.manosgrigorakis.logisticsplatform.common.dto.PageFilterRequest;
 import com.manosgrigorakis.logisticsplatform.common.dto.SortFilterRequest;
-import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplierpayment.SupplierPaymentCreateRequest;
-import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplierpayment.SupplierPaymentFilterRequest;
-import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplierpayment.SupplierPaymentResponse;
-import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplierpayment.SupplierPaymentUpdateRequest;
+import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplierpayment.*;
 import com.manosgrigorakis.logisticsplatform.suppliers.service.SupplierPaymentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +43,13 @@ public class SupplierPaymentController {
     public ApiResponseWrapper<SupplierPaymentResponse> updateSupplierPaymentById(
             @PathVariable Long id, @ModelAttribute @Valid SupplierPaymentUpdateRequest request) {
         return new ApiResponseWrapper<>(supplierPaymentService.updateSupplierPaymentById(id, request));
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PatchMapping("/{id}/status")
+    public void updateSupplierPaymentStatusById(@PathVariable Long id,
+                                                @RequestBody @Valid SupplierPaymentStatusUpdateRequest request) {
+        supplierPaymentService.updateSupplierPaymentStatusById(id, request);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
