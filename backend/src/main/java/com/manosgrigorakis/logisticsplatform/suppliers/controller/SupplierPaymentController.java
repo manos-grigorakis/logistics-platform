@@ -51,10 +51,4 @@ public class SupplierPaymentController {
                                                 @RequestBody @Valid SupplierPaymentStatusUpdateRequest request) {
         supplierPaymentService.updateSupplierPaymentStatusById(id, request);
     }
-
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping("/{id}")
-    public void deleteSupplierPaymentById(@PathVariable Long id) {
-        supplierPaymentService.deleteSupplierPaymentById(id);
-    }
 }

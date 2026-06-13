@@ -17,6 +17,4 @@ public interface SupplierPaymentService {
     SupplierPaymentResponse updateSupplierPaymentById(Long id, SupplierPaymentUpdateRequest request);
 
     void updateSupplierPaymentStatusById(Long id, SupplierPaymentStatusUpdateRequest request);
-
-    void deleteSupplierPaymentById(Long id);
 }

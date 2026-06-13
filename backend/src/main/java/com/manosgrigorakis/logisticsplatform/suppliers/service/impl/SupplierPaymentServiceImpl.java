@@ -219,16 +219,6 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
         }
     }
 
-    @Override
-    public void deleteSupplierPaymentById(Long id) {
-        SupplierPayment payment = supplierPaymentRepository.findById(id).orElseThrow(() -> {
-            log.warn("Supplier payment not found with id {}", id);
-            return new ResourceNotFoundException("Supplier payment not found with id " + id);
-        });
-
-        supplierPaymentRepository.delete(payment);
-    }
-
     /**
      * Builds the storage file name based on the parameters
      *
