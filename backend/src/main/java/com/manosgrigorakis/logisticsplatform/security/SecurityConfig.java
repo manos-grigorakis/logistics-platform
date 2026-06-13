@@ -137,11 +137,16 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.GET, apiPrefix + "/v1/analytics/*").hasAnyAuthority("ADMIN", "MANAGER")
 
                     // Suppliers
-                    .requestMatchers(HttpMethod.POST, apiPrefix + "/v1/suppliers/*").hasAnyAuthority("ADMIN", "MANAGER")
+                    .requestMatchers(HttpMethod.POST, apiPrefix + "/v1/suppliers").hasAnyAuthority("ADMIN", "MANAGER")
                     .requestMatchers(HttpMethod.PUT, apiPrefix + "/v1/suppliers/*").hasAnyAuthority("ADMIN", "MANAGER")
-                    .requestMatchers(HttpMethod.DELETE, apiPrefix + "/v1/suppliers/*").hasAnyAuthority("ADMIN", "MANAGER")
-                    .requestMatchers(HttpMethod.GET, apiPrefix + "/v1/suppliers/*").hasAnyAuthority("ADMIN", "MANAGER", "EMPLOYEE")
+                    .requestMatchers(HttpMethod.PATCH, apiPrefix + "/v1/suppliers/*/deactivate").hasAnyAuthority("ADMIN", "MANAGER")
+                    .requestMatchers(HttpMethod.GET, apiPrefix + "/v1/suppliers/**").hasAnyAuthority("ADMIN", "MANAGER", "EMPLOYEE")
 
+                    // Supplier Payments
+                    .requestMatchers(HttpMethod.POST, apiPrefix + "/v1/supplier-payments").hasAnyAuthority("ADMIN", "MANAGER", "EMPLOYEE")
+                    .requestMatchers(HttpMethod.PUT, apiPrefix + "/v1/supplier-payments/*").hasAnyAuthority("ADMIN", "MANAGER", "EMPLOYEE")
+                    .requestMatchers(HttpMethod.PATCH, apiPrefix + "/v1/supplier-payments/*/status").hasAnyAuthority("ADMIN", "MANAGER", "EMPLOYEE")
+                    .requestMatchers(HttpMethod.GET, apiPrefix + "/v1/supplier-payments/**").hasAnyAuthority("ADMIN", "MANAGER", "EMPLOYEE")
 
                     // All other endpoints require authentication
                     .anyRequest().authenticated();
