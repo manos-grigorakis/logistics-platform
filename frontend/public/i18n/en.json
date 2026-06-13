@@ -232,6 +232,18 @@
       "generated": "Generated",
       "signed": "Signed",
       "cancelled": "Cancelled"
+    },
+    "supplier-payments-statuses": {
+      "pending": "Pending",
+      "paid": "Paid",
+      "partially_paid": "Partially Paid",
+      "canceled": "Canceled"
+    },
+    "supplier-payments-types": {
+      "fuel": "Fuel",
+      "insurance": "Insurance",
+      "service": "Service",
+      "other": "Other"
     }
   },
 

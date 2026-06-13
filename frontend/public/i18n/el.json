@@ -232,6 +232,18 @@
       "generated": "Δημιουργήθηκε",
       "signed": "Υπογράφηκε",
       "cancelled": "Ακυρώθηκε"
+    },
+    "supplier-payments-statuses": {
+      "pending": "Σε Εκκρεμότητα",
+      "paid": "Εξοφλημένο",
+      "partially_paid": "Μερικώς Εξοφλημένο",
+      "canceled": "Ακυρωμένο"
+    },
+    "supplier-payments-types": {
+      "fuel": "Καύσιμα",
+      "insurance": "Ασφάλιση",
+      "service": "Συντήρηση",
+      "other": "Λοιπά"
     }
   },
 

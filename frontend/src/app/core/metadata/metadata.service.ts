@@ -15,6 +15,8 @@ export class MetadataService {
   public quoteStatuses$ = new BehaviorSubject<string[]>([]);
   public quoteItemUnits$ = new BehaviorSubject<string[]>([]);
   public cargoItemUnits$ = new BehaviorSubject<string[]>([]);
+  public supplierPaymentsStatuses$ = new BehaviorSubject<string[]>([]);
+  public supplierPaymentsTypes$ = new BehaviorSubject<string[]>([]);
 
   public shipmentStatuses$ = this.shipmentStatusesSubject$.asObservable();
 
@@ -66,5 +68,23 @@ export class MetadataService {
         next: (res) => this.cargoItemUnits$.next(res.data),
         error: (err) => console.error('Failed to fetch metadata for cargo items units', err),
       });
+  }
+
+  public fetchSupplierPaymentsStatuses(): void {
+    this.fetchMetadata(this.supplierPaymentsStatuses$, 'supplier-payments-statuses');
+  }
+
+  public fetchSupplierPaymentsTypes(): void {
+    this.fetchMetadata(this.supplierPaymentsStatuses$, 'supplier-payments-types');
+  }
+
+  // prettier-ignore
+  private fetchMetadata<T>(subject$: BehaviorSubject<T[]>, endpoint: string): void {
+    if (subject$.value.length > 0) return;
+
+    this.http.get<ApiResponse<T[]>>(`${environment.apiUrl}/metadata/${endpoint}`).subscribe({
+      next: (res) => subject$.next(res.data),
+      error: (err) => console.error('Failed to fetch metadata', err),
+    });
   }
 }
