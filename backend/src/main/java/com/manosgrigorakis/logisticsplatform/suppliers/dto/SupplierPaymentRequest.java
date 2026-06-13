@@ -2,6 +2,7 @@ package com.manosgrigorakis.logisticsplatform.suppliers.dto;
 
 import com.manosgrigorakis.logisticsplatform.suppliers.model.enums.SupplierPaymentType;
 import jakarta.validation.constraints.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 
@@ -24,6 +25,10 @@ public record SupplierPaymentRequest(
 
         @NotNull(message = "Type is required")
         SupplierPaymentType type,
+
+        MultipartFile invoiceFile,
+
+        MultipartFile receiptFile,
 
         @NotNull(message = "Supplier ID is required")
         @Positive(message = "Supplier ID must be positive")

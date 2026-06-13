@@ -1,16 +1,16 @@
 CREATE TABLE supplier_payments
 (
-    id            BIGINT AUTO_INCREMENT                                  NOT NULL,
-    number        VARCHAR(14)                                            NOT NULL,
-    title         VARCHAR(50)                                            NOT NULL,
-    `description` TEXT                                                   NULL,
-    total_amount  DECIMAL(19, 2)                                         NOT NULL,
-    paid_amount   DECIMAL(19, 2) DEFAULT 0.00                            NOT NULL,
-    status        ENUM ('PENDING', 'PAID', 'PARTIALLY_PAID', 'CANCELED') NOT NULL,
-    type          ENUM ('FUEL', 'INSURANCE', 'SERVICE', 'OTHER')         NOT NULL,
-    supplier_id   BIGINT                                                 NOT NULL,
-    created_at    datetime                                               NOT NULL,
-    updated_at    datetime                                               NULL,
+    id            BIGINT AUTO_INCREMENT                                                      NOT NULL,
+    number        VARCHAR(14)                                                                NOT NULL,
+    title         VARCHAR(50)                                                                NOT NULL,
+    `description` TEXT                                                                       NULL,
+    total_amount  DECIMAL(19, 2)                                                             NOT NULL,
+    paid_amount   DECIMAL(19, 2)                                         DEFAULT 0.00        NOT NULL,
+    status        ENUM ('PENDING', 'PAID', 'PARTIALLY_PAID', 'CANCELED') DEFAULT ('PENDING') NOT NULL,
+    type          ENUM ('FUEL', 'INSURANCE', 'SERVICE', 'OTHER')                             NOT NULL,
+    supplier_id   BIGINT                                                                     NOT NULL,
+    created_at    datetime                                                                   NOT NULL,
+    updated_at    datetime                                                                   NULL,
     CONSTRAINT pk_supplier_payments PRIMARY KEY (id)
 );
 

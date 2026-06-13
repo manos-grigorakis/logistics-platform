@@ -37,7 +37,7 @@ public class SupplierPayment {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private SupplierPaymentStatus status;
+    private SupplierPaymentStatus status = SupplierPaymentStatus.PENDING;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)
@@ -80,6 +80,26 @@ public class SupplierPayment {
 
     public BigDecimal getUnpaidAmount() {
         return totalAmount.subtract(paidAmount);
+    }
+
+    /**
+     * Sets the {@link #status} based on the payment amounts
+     *
+     * <p>Rules:</p>
+     * <ul>
+     *     <li>{@link #totalAmount} equals {@link #paidAmount} -> {@link SupplierPaymentStatus#PAID}</li>
+     *     <li>{@link #paidAmount} is not {@code ZERO} -> {@link SupplierPaymentStatus#PARTIALLY_PAID}</li>
+     *     <li>default -> {@link SupplierPaymentStatus#PENDING}</li>
+     * </ul>
+     */
+    public void setStatusBasedOnAmounts() {
+        if (totalAmount.equals(paidAmount)) {
+            setStatus(SupplierPaymentStatus.PAID);
+        } else if (!paidAmount.equals(BigDecimal.ZERO)) {
+            setStatus(SupplierPaymentStatus.PARTIALLY_PAID);
+        } else {
+            setStatus(SupplierPaymentStatus.PENDING);
+        }
     }
 
     /**

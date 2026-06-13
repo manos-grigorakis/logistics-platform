@@ -16,6 +16,8 @@ public record SupplierPaymentResponse(
         BigDecimal unpaidAmount,
         SupplierPaymentStatus status,
         SupplierPaymentType type,
+        String invoiceUrl,
+        String receiptUrl,
         SupplierSummaryResponse supplier,
         LocalDateTime createdAt,
         LocalDateTime updatedAt

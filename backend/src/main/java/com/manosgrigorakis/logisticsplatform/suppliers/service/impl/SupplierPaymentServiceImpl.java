@@ -1,0 +1,128 @@
+package com.manosgrigorakis.logisticsplatform.suppliers.service.impl;
+
+import com.manosgrigorakis.logisticsplatform.common.exception.BadRequestException;
+import com.manosgrigorakis.logisticsplatform.common.exception.ConflictException;
+import com.manosgrigorakis.logisticsplatform.common.exception.DocumentProcessingException;
+import com.manosgrigorakis.logisticsplatform.common.exception.ResourceNotFoundException;
+import com.manosgrigorakis.logisticsplatform.common.generators.DocumentNumberGenerator;
+import com.manosgrigorakis.logisticsplatform.infrastructure.storage.FileStorageService;
+import com.manosgrigorakis.logisticsplatform.suppliers.dto.SupplierPaymentRequest;
+import com.manosgrigorakis.logisticsplatform.suppliers.dto.SupplierPaymentResponse;
+import com.manosgrigorakis.logisticsplatform.suppliers.mapper.SupplierPaymentMapper;
+import com.manosgrigorakis.logisticsplatform.suppliers.model.Supplier;
+import com.manosgrigorakis.logisticsplatform.suppliers.model.SupplierPayment;
+import com.manosgrigorakis.logisticsplatform.suppliers.model.enums.SupplierPaymentStatus;
+import com.manosgrigorakis.logisticsplatform.suppliers.repository.SupplierPaymentRepository;
+import com.manosgrigorakis.logisticsplatform.suppliers.repository.SupplierRepository;
+import com.manosgrigorakis.logisticsplatform.suppliers.service.SupplierPaymentService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.List;
+
+@Slf4j
+@RequiredArgsConstructor
+@Service
+public class SupplierPaymentServiceImpl implements SupplierPaymentService {
+    private final SupplierPaymentRepository supplierPaymentRepository;
+    private final SupplierRepository supplierRepository;
+    private final DocumentNumberGenerator documentNumberGenerator;
+    private final FileStorageService fileStorageService;
+
+    private final String fileCode = "SP";
+    private final List<String> allowedContentTypes = List.of("application/pdf", "image/jpeg", "image/png");
+
+    @Value("${app.minio.bucketPathSuppliers}")
+    private String bucketPathSuppliers;
+
+    @Override
+    public SupplierPaymentResponse createSupplierPayment(SupplierPaymentRequest request) {
+        Supplier supplier = supplierRepository.findById(request.supplierId()).orElseThrow(() -> {
+            log.warn("Supplier not found with id {}", request.supplierId());
+            return new ResourceNotFoundException("Supplier not found with id " + request.supplierId());
+        });
+
+        // Generates the next sequential payment number for the current year
+        int currentYear = LocalDate.now().getYear();
+        String lastNumber = supplierPaymentRepository.findLastSupplierPaymentByYear(currentYear).orElse(
+                fileCode + "-" + currentYear + "-0000");
+        String newNumber = documentNumberGenerator.generateNextSequentialNumber(fileCode, lastNumber);
+
+        SupplierPayment payment = SupplierPaymentMapper.toEntity(request, newNumber, supplier);
+
+        // Set payment status based on amount
+        if (request.paidAmount() != null) {
+            if (request.paidAmount().compareTo(request.totalAmount()) > 0) {
+                throw new ConflictException("Supplier payment paid amount is greater than total amount",
+                                            "PAID_AMOUNT_EXCEEDS_TOTAL");
+            }
+            payment.setStatusBasedOnAmounts();
+        }
+
+        String invoiceFileName = getReceiptFileName(payment.getNumber(), "invoice");
+        String receiptFileName = getReceiptFileName(payment.getNumber(), "receipt");
+        String invoicePresignedUrl = null;
+        String receiptPresignedUrl = null;
+
+        // Upload & Store Files
+        try {
+            invoicePresignedUrl = storeFileIfExists(request.invoiceFile(), invoiceFileName);
+            receiptPresignedUrl = storeFileIfExists(request.receiptFile(), receiptFileName);
+        } catch (IOException e) {
+            throw new DocumentProcessingException("Failed to store files", "STORAGE_ERROR");
+        }
+
+        supplierPaymentRepository.save(payment);
+        log.info("Supplier payment created with id {}", payment.getNumber());
+
+        return SupplierPaymentMapper.toResponse(payment, invoicePresignedUrl, receiptPresignedUrl);
+    }
+
+    /**
+     * Builds the storage file name based on the parameters
+     *
+     * <p>Uses the {@link #bucketPathSuppliers} as the storage path</p>
+     *
+     * @param paymentNumber The payment number to used in the storage file name
+     * @param fileType      The file type (e.g. {@code invoice} or {@code receipt})
+     * @return The generated storage file name
+     */
+    private String getReceiptFileName(String paymentNumber, String fileType) {
+        return this.bucketPathSuppliers + paymentNumber + "-" + fileType;
+    }
+
+    /**
+     * Validates whether the provided content type is allowed
+     *
+     * @param contentType The content type to validate
+     * @return {@code true} If the provided content type is allowed, otherwise {@code false}
+     */
+    private boolean isAllowedContentType(String contentType) {
+        return allowedContentTypes.contains(contentType);
+    }
+
+    /**
+     * Uploads and stores the provided file in the object storage
+     *
+     * @param file The file to upload
+     * @param fileName The storage file name
+     * @return The presigned URL of the stored file, or {@code null} if the file is {@code null}, or empty
+     * @throws IOException If the storing operations fails
+     * @throws BadRequestException If the provided file content type is not allowed
+     */
+    private String storeFileIfExists(MultipartFile file, String fileName) throws IOException {
+        if (file == null || file.isEmpty()) return null;
+
+        if (!isAllowedContentType(file.getContentType())) {
+            throw new BadRequestException("Invalid file type", "INVALID_FILE_TYPE");
+        }
+
+        fileStorageService.store(fileName, file.getBytes(), file.getContentType());
+        return fileStorageService.createPresignedUrl(fileName);
+    }
+}
