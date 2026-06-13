@@ -36,6 +36,7 @@ import { CmrDocumentsPage } from './features/cmr-documents/pages/cmr-documents-p
 import { UploadSignedCmr } from './features/cmr-documents/pages/upload-signed-cmr/upload-signed-cmr';
 import { SuppliersPage } from './features/suppliers/pages/suppliers-page/suppliers-page';
 import { SupplierPaymentsPage } from './features/suppliers/pages/supplier-payments-page/supplier-payments-page';
+import { EditSupplier } from './features/suppliers/pages/edit-supplier/edit-supplier';
 
 export const routes: Routes = [
   {
@@ -127,6 +128,7 @@ export const routes: Routes = [
         path: 'suppliers',
         children: [
           { path: '', component: SuppliersPage, title: 'Suppliers' },
+          { path: 'edit-supplier', component: EditSupplier, title: 'Edit Supplier' },
           { path: 'payments', component: SupplierPaymentsPage, title: 'Suppliers Payments' },
         ],
       },

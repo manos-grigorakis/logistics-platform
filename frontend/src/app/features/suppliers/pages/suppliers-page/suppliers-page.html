@@ -1,1 +1,18 @@
-<p>suppliers-page works!</p>
+<div>
+  <div class="relative overflow-x-auto rounded-lg bg-white shadow-md">
+    <app-suppliers-table [isLoading]="isLoading" [suppliers]="suppliers" />
+  </div>
+
+  <!-- Pagination -->
+  @if (suppliers.length > 0) {
+    <div class="mt-8">
+      <app-pagination
+        [currentPage]="currentPage"
+        [totalElements]="totalElements"
+        [totalPages]="totalPages"
+        [pageSize]="pageSize"
+        (pageChanged)="onPageChange($event)"
+      />
+    </div>
+  }
+</div>

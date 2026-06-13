@@ -72,6 +72,9 @@
       "signed-by": "Signed by",
       "signed-at": "Signed at",
       "document": "Document",
+      "company-name": "Company Name",
+      "total-amount": "Total Amount",
+      "remaining-amount": "Remaining Amount",
       "placeholders": {
         "first-name": "e.g. John",
         "last-name": "e.g. Doe",
@@ -603,5 +606,9 @@
       "already-signed": "The uploaded CMR is already signed",
       "signed-upload-info": "Before uploading, manually verify that the CMR document contains the required signatures. The checkboxes below confirm that each party has physically signed the document."
     }
+  },
+
+  "suppliers": {
+    "empty-state": "There are no suppliers"
   }
 }
