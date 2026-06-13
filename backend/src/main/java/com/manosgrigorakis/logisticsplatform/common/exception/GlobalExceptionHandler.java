@@ -2,12 +2,14 @@ package com.manosgrigorakis.logisticsplatform.common.exception;
 
 import com.manosgrigorakis.logisticsplatform.common.dto.ApiResponseWrapper;
 import com.manosgrigorakis.logisticsplatform.common.dto.ErrorResponse;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
+import org.springframework.transaction.TransactionException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -189,6 +191,26 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(StorageServiceException.class)
     public ResponseEntity<ApiResponseWrapper<Void>> handleStorageServiceException(StorageServiceException exc) {
         ErrorResponse response = new ErrorResponse(HttpStatus.SERVICE_UNAVAILABLE.value(), exc.getMessage(), null);
+
+        return new ResponseEntity<>(new ApiResponseWrapper<>(response), HttpStatus.SERVICE_UNAVAILABLE);
+    }
+
+    // Database Unavailable (Query) - 503
+    @ExceptionHandler(DataAccessException.class)
+    public ResponseEntity<ApiResponseWrapper<Void>> handleDataAccessException(DataAccessException exc) {
+        ErrorResponse response = new ErrorResponse(HttpStatus.SERVICE_UNAVAILABLE.value(),
+                                                   "Database service temporarily unavailable", "DB_ERROR",
+                                                   null);
+
+        return new ResponseEntity<>(new ApiResponseWrapper<>(response), HttpStatus.SERVICE_UNAVAILABLE);
+    }
+
+    // Database Unavailable (Transaction) - 503
+    @ExceptionHandler(TransactionException.class)
+    public ResponseEntity<ApiResponseWrapper<Void>> handleTransactionException(TransactionException exc) {
+        ErrorResponse response = new ErrorResponse(HttpStatus.SERVICE_UNAVAILABLE.value(),
+                                                   "Database service temporarily unavailable", "DB_ERROR",
+                                                   null);
 
         return new ResponseEntity<>(new ApiResponseWrapper<>(response), HttpStatus.SERVICE_UNAVAILABLE);
     }

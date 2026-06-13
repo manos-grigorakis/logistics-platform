@@ -66,19 +66,26 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
 
         String invoiceFileName = getReceiptFileName(payment.getNumber(), "invoice");
         String receiptFileName = getReceiptFileName(payment.getNumber(), "receipt");
-        String invoicePresignedUrl = null;
-        String receiptPresignedUrl = null;
+        String invoicePresignedUrl;
+        String receiptPresignedUrl;
 
         // Upload & Store Files
         try {
             invoicePresignedUrl = storeFileIfExists(request.invoiceFile(), invoiceFileName);
             receiptPresignedUrl = storeFileIfExists(request.receiptFile(), receiptFileName);
-        } catch (IOException e) {
-            throw new DocumentProcessingException("Failed to store files", "STORAGE_ERROR");
-        }
 
-        supplierPaymentRepository.save(payment);
-        log.info("Supplier payment created with id {}", payment.getNumber());
+            supplierPaymentRepository.save(payment);
+            log.info("Supplier payment created with id {}", payment.getNumber());
+        } catch (IOException e) {
+            log.error("Error while saving files for supplier payment {}", payment.getNumber(), e);
+            throw new DocumentProcessingException("Failed to store files", "STORAGE_ERROR");
+        } catch (Exception e) {
+            log.error("Supplier payment creation failed with number {}", payment.getNumber(), e);
+            fileStorageService.deleteObject(invoiceFileName);
+            fileStorageService.deleteObject(receiptFileName);
+            log.info("Files deleted from storage for supplier payment with number {}", payment.getNumber());
+            throw e;
+        }
 
         return SupplierPaymentMapper.toResponse(payment, invoicePresignedUrl, receiptPresignedUrl);
     }
