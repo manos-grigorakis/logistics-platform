@@ -58,7 +58,7 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
             String invoicePresignedUrl = payment.getInvoiceUrl() != null ?
                     fileStorageService.createPresignedUrl(payment.getInvoiceUrl()) : null;
             String receiptPresignedUrl = payment.getReceiptUrl() != null ?
-                    fileStorageService.createPresignedUrl(payment.getInvoiceUrl()) : null;
+                    fileStorageService.createPresignedUrl(payment.getReceiptUrl()) : null;
 
             return SupplierPaymentMapper.toResponse(payment,  invoicePresignedUrl, receiptPresignedUrl);
         });
@@ -72,10 +72,10 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
         });
 
         String invoicePresignedUrl = payment.getInvoiceUrl() != null ?
-                fileStorageService.createPresignedUrl(getFileName(payment.getNumber(), "invoice")) : null;
+                fileStorageService.createPresignedUrl(payment.getInvoiceUrl()) : null;
 
         String receiptPresignedUrl = payment.getReceiptUrl() != null ?
-                fileStorageService.createPresignedUrl(getFileName(payment.getNumber(), "receipt")) : null;
+                fileStorageService.createPresignedUrl(payment.getReceiptUrl()) : null;
 
         return SupplierPaymentMapper.toResponse(payment, invoicePresignedUrl, receiptPresignedUrl);
     }
