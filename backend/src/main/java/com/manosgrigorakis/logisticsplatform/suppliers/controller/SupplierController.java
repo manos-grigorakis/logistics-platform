@@ -46,8 +46,8 @@ public class SupplierController {
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping("/{id}")
-    public void deleteSupplierById(@PathVariable Long id) {
-        supplierService.deleteSupplierById(id);
+    @PatchMapping("/{id}/deactivate")
+    public void deactivateSupplierById(@PathVariable Long id) {
+        supplierService.deactivateSupplierById(id);
     }
 }

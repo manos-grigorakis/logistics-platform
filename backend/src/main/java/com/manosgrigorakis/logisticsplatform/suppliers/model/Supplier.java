@@ -2,8 +2,6 @@ package com.manosgrigorakis.logisticsplatform.suppliers.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -13,8 +11,6 @@ import java.util.List;
 @Setter
 @ToString
 @NoArgsConstructor
-@SQLDelete(sql = "UPDATE suppliers SET is_deleted = true WHERE id = ?")
-@SQLRestriction("is_deleted=false")
 @Table(name = "suppliers")
 @Entity
 public class Supplier {
@@ -38,8 +34,8 @@ public class Supplier {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "supplier", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<SupplierPayment> supplierPayments = new ArrayList<>();
 
-    @Column(name = "is_deleted", nullable = false)
-    private boolean isDeleted = Boolean.FALSE;
+    @Column(name = "is_active", nullable = false)
+    private boolean isActive = true;
 
     @Builder
     public Supplier(String companyName, String email) {
@@ -55,13 +51,5 @@ public class Supplier {
     @PreUpdate
     public void preUpdate() {
         this.updatedAt = LocalDateTime.now();
-    }
-
-    public void addSupplierPayment(SupplierPayment supplierPayment) {
-        this.supplierPayments.add(supplierPayment);
-    }
-
-    public void removeSupplierPayment(SupplierPayment supplierPayment) {
-        this.supplierPayments.remove(supplierPayment);
     }
 }

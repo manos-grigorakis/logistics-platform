@@ -19,6 +19,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 
 @Slf4j
 @RequiredArgsConstructor
@@ -88,12 +90,13 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
-    public void deleteSupplierById(Long id) {
+    public void deactivateSupplierById(Long id) {
         Supplier supplier = supplierRepository.findById(id).orElseThrow(() -> {
             log.warn("Supplier not found with id {}", id);
             return new ResourceNotFoundException("Supplier not found with id " + id);
         });
 
-        supplierRepository.delete(supplier);
+        supplier.setActive(false);
+        supplierRepository.save(supplier);
     }
 }

@@ -14,8 +14,8 @@ import java.util.Optional;
 
 @Repository
 public interface SupplierRepository extends JpaRepository<Supplier, Long> {
-    @Query("SELECT s.id, s.companyName, " +
-            "sum(sp.totalAmount) as totalAmount, sum(sp.totalAmount - sp.paidAmount) as remainingAmount " +
+    @Query("SELECT s.id, s.companyName, s.email, s.isActive, " +
+            "SUM(sp.totalAmount) as totalAmount, SUM(sp.totalAmount - sp.paidAmount) AS remainingAmount " +
             "FROM Supplier AS s " + "LEFT JOIN s.supplierPayments AS sp " +
             "WHERE(:companyName IS NULL OR LOWER(s.companyName) LIKE LOWER(CONCAT('%', :companyName, '%'))) " +
             "GROUP BY s.id, s.companyName")

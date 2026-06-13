@@ -18,5 +18,5 @@ public interface SupplierService {
 
     SupplierResponse updateSupplierById(Long id, SupplierRequest request);
 
-    void deleteSupplierById(Long id);
+    void deactivateSupplierById(Long id);
 }

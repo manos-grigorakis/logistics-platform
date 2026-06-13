@@ -23,7 +23,7 @@ CREATE TABLE suppliers
     email        VARCHAR(320)          NULL,
     created_at   datetime              NOT NULL,
     updated_at   datetime              NULL,
-    is_deleted   boolean DEFAULT FALSE NOT NULL,
+    is_active    boolean DEFAULT TRUE  NOT NULL,
     CONSTRAINT pk_suppliers PRIMARY KEY (id)
 );
 

@@ -90,6 +90,8 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
             return new ResourceNotFoundException("Supplier not found with id " + request.supplierId());
         });
 
+        isSupplierActive(supplier);
+
         // Generates the next sequential payment number for the current year
         int currentYear = LocalDate.now().getYear();
         String lastNumber = supplierPaymentRepository.findLastSupplierPaymentByYear(currentYear).orElse(
@@ -142,6 +144,8 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
             log.warn("Supplier payment not found with id {}", id);
             return new ResourceNotFoundException("Supplier payment not found with id " + id);
         });
+
+        isSupplierActive(payment.getSupplier());
 
         String invoiceFileName = getFileName(payment.getNumber(), "invoice");
         String receiptFileName = getFileName(payment.getNumber(), "receipt");
@@ -199,6 +203,8 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
             log.warn("Supplier payment not found with id {}", id);
             return new ResourceNotFoundException("Supplier payment not found with id " + id);
         });
+
+        isSupplierActive(payment.getSupplier());
 
         if(payment.canChangeStatusTo(request.status())) {
             payment.setStatus(request.status());
@@ -264,5 +270,17 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
 
         fileStorageService.store(fileName, file.getBytes(), file.getContentType());
         return fileStorageService.createPresignedUrl(fileName);
+    }
+
+    /**
+     * Validates if the supplier is active or not
+     * @param supplier The supplier to validate
+     */
+    private void isSupplierActive(Supplier supplier) {
+        if (!supplier.isActive()) {
+            log.warn("Attempted to create supplier payment with inactive supplier");
+            throw new ConflictException("Attempted to create supplier payment with inactive supplier",
+                                        "SUPPLIER_INACTIVE");
+        }
     }
 }

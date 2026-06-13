@@ -16,6 +16,6 @@ public class SupplierMapper {
     // Entity -> Response
     public static SupplierResponse toResponse(Supplier supplier) {
         return new SupplierResponse(supplier.getId(), supplier.getCompanyName(), supplier.getEmail(),
-                                    supplier.getCreatedAt(), supplier.getUpdatedAt());
+                                    supplier.isActive(), supplier.getCreatedAt(), supplier.getUpdatedAt());
     }
 }
