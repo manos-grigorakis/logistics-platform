@@ -3,6 +3,7 @@ package com.manosgrigorakis.logisticsplatform.suppliers.controller;
 import com.manosgrigorakis.logisticsplatform.common.dto.ApiResponseWrapper;
 import com.manosgrigorakis.logisticsplatform.suppliers.dto.SupplierPaymentRequest;
 import com.manosgrigorakis.logisticsplatform.suppliers.dto.SupplierPaymentResponse;
+import com.manosgrigorakis.logisticsplatform.suppliers.dto.SupplierPaymentUpdateRequest;
 import com.manosgrigorakis.logisticsplatform.suppliers.service.SupplierPaymentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,12 @@ public class SupplierPaymentController {
     public ApiResponseWrapper<SupplierPaymentResponse> createSupplierPayment(
             @ModelAttribute @Valid SupplierPaymentRequest request) {
         return new ApiResponseWrapper<>(supplierPaymentService.createSupplierPayment(request));
+    }
+
+    @PutMapping(path = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ApiResponseWrapper<SupplierPaymentResponse> updateSupplierPaymentById(
+            @PathVariable Long id, @ModelAttribute @Valid SupplierPaymentUpdateRequest request) {
+        return new ApiResponseWrapper<>(supplierPaymentService.updateSupplierPaymentById(id, request));
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

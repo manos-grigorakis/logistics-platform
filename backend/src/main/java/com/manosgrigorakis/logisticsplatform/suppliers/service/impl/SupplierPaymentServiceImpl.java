@@ -8,10 +8,10 @@ import com.manosgrigorakis.logisticsplatform.common.generators.DocumentNumberGen
 import com.manosgrigorakis.logisticsplatform.infrastructure.storage.FileStorageService;
 import com.manosgrigorakis.logisticsplatform.suppliers.dto.SupplierPaymentRequest;
 import com.manosgrigorakis.logisticsplatform.suppliers.dto.SupplierPaymentResponse;
+import com.manosgrigorakis.logisticsplatform.suppliers.dto.SupplierPaymentUpdateRequest;
 import com.manosgrigorakis.logisticsplatform.suppliers.mapper.SupplierPaymentMapper;
 import com.manosgrigorakis.logisticsplatform.suppliers.model.Supplier;
 import com.manosgrigorakis.logisticsplatform.suppliers.model.SupplierPayment;
-import com.manosgrigorakis.logisticsplatform.suppliers.model.enums.SupplierPaymentStatus;
 import com.manosgrigorakis.logisticsplatform.suppliers.repository.SupplierPaymentRepository;
 import com.manosgrigorakis.logisticsplatform.suppliers.repository.SupplierRepository;
 import com.manosgrigorakis.logisticsplatform.suppliers.service.SupplierPaymentService;
@@ -47,15 +47,13 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
             return new ResourceNotFoundException("Supplier payment not found with id " + id);
         });
 
-        String invoicePresignedUrl = payment.getInvoiceUrl() != null ? fileStorageService.createPresignedUrl(
-                getFileName(payment.getNumber(), "invoice")) : null;
-        String receiptPresignUrl = payment.getReceiptUrl() != null ? fileStorageService.createPresignedUrl(
-                getFileName(payment.getNumber(), "receipt")) : null;
+        String invoicePresignedUrl = payment.getInvoiceUrl() != null ?
+                fileStorageService.createPresignedUrl(getFileName(payment.getNumber(), "invoice")) : null;
 
-        payment.setInvoiceUrl(invoicePresignedUrl);
-        payment.setReceiptUrl(receiptPresignUrl);
+        String receiptPresignedUrl = payment.getReceiptUrl() != null ?
+                fileStorageService.createPresignedUrl(getFileName(payment.getNumber(), "receipt")) : null;
 
-        return SupplierPaymentMapper.toResponse(payment);
+        return SupplierPaymentMapper.toResponse(payment, invoicePresignedUrl, receiptPresignedUrl);
     }
 
     @Override
@@ -91,8 +89,9 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
         try {
             invoicePresignedUrl = storeFileIfExists(request.invoiceFile(), invoiceFileName);
             receiptPresignedUrl = storeFileIfExists(request.receiptFile(), receiptFileName);
-            payment.setInvoiceUrl(invoicePresignedUrl);
-            payment.setReceiptUrl(receiptPresignedUrl);
+
+            if (invoicePresignedUrl != null) payment.setInvoiceUrl(invoiceFileName);
+            if (receiptPresignedUrl != null) payment.setReceiptUrl(receiptFileName);
 
             supplierPaymentRepository.save(payment);
             log.info("Supplier payment created with id {}", payment.getNumber());
@@ -107,13 +106,64 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
             throw e;
         }
 
-        return SupplierPaymentMapper.toResponse(payment);
+        return SupplierPaymentMapper.toResponse(payment, invoicePresignedUrl, receiptPresignedUrl);
     }
 
     @Override
-    public SupplierPaymentResponse updateSupplierPaymentById(Long id, SupplierPaymentRequest request) {
+    public SupplierPaymentResponse updateSupplierPaymentById(Long id, SupplierPaymentUpdateRequest request) {
+        SupplierPayment payment = supplierPaymentRepository.findById(id).orElseThrow(() -> {
+            log.warn("Supplier payment not found with id {}", id);
+            return new ResourceNotFoundException("Supplier payment not found with id " + id);
+        });
 
-        return null;
+        String invoiceFileName = getFileName(payment.getNumber(), "invoice");
+        String receiptFileName = getFileName(payment.getNumber(), "receipt");
+        String invoicePresignedUrl;
+        String receiptPresignedUrl;
+
+        // Upload & Store Files
+        try {
+            invoicePresignedUrl = storeFileIfExists(request.invoiceFile(), invoiceFileName);
+            receiptPresignedUrl = storeFileIfExists(request.receiptFile(), receiptFileName);
+        } catch (IOException e) {
+            log.error("Error while saving files for supplier payment {}", payment.getNumber(), e);
+            throw new DocumentProcessingException("Failed to store files", "STORAGE_ERROR");
+        }
+
+        if (invoicePresignedUrl != null) {
+            payment.setInvoiceUrl(invoiceFileName);
+        } else {
+            invoicePresignedUrl = payment.getInvoiceUrl() != null ?
+                    fileStorageService.createPresignedUrl(payment.getInvoiceUrl()) : null;
+        }
+
+        if (receiptPresignedUrl != null) {
+            payment.setReceiptUrl(receiptFileName);
+        } else {
+            receiptPresignedUrl = payment.getReceiptUrl() != null ?
+                    fileStorageService.createPresignedUrl(payment.getReceiptUrl()) : null;
+        }
+
+        SupplierPayment updatedPayment = SupplierPaymentMapper.toUpdateEntity(payment, request);
+
+        // Set payment status based on amount
+        if (request.paidAmount() != null) {
+            if (request.paidAmount().compareTo(request.totalAmount()) > 0) {
+                throw new ConflictException("Supplier payment paid amount is greater than total amount",
+                                            "PAID_AMOUNT_EXCEEDS_TOTAL");
+            }
+            updatedPayment.setStatusBasedOnAmounts();
+        }
+
+        try {
+            SupplierPayment savedPayment = supplierPaymentRepository.save(updatedPayment);
+            log.info("Supplier payment updated with id {}", updatedPayment.getNumber());
+
+            return SupplierPaymentMapper.toResponse(savedPayment, invoicePresignedUrl, receiptPresignedUrl);
+        } catch (Exception e) {
+            log.error("Supplier payment update failed with number {}", payment.getNumber(), e);
+            throw e;
+        }
     }
 
     @Override
@@ -152,10 +202,10 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
     /**
      * Uploads and stores the provided file in the object storage
      *
-     * @param file The file to upload
+     * @param file     The file to upload
      * @param fileName The storage file name
      * @return The presigned URL of the stored file, or {@code null} if the file is {@code null}, or empty
-     * @throws IOException If the storing operations fails
+     * @throws IOException         If the storing operations fails
      * @throws BadRequestException If the provided file content type is not allowed
      */
     private String storeFileIfExists(MultipartFile file, String fileName) throws IOException {
