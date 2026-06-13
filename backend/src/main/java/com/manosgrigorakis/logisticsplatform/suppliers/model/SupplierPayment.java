@@ -33,11 +33,11 @@ public class SupplierPayment {
     private BigDecimal totalAmount;
 
     @Column(name = "paid_amount", precision = 19, scale = 2, nullable = false)
-    private BigDecimal paidAmount = BigDecimal.ZERO;
+    private BigDecimal paidAmount;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private SupplierPaymentStatus status = SupplierPaymentStatus.PENDING;
+    private SupplierPaymentStatus status;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)
@@ -68,8 +68,8 @@ public class SupplierPayment {
         this.title = title;
         this.description = description;
         this.totalAmount = totalAmount;
-        this.paidAmount = paidAmount;
-        this.status = status;
+        this.paidAmount = paidAmount != null ? paidAmount : BigDecimal.ZERO;
+        this.status = status != null ? status : SupplierPaymentStatus.PENDING;
         this.type = type;
         this.invoiceUrl = invoiceUrl;
         this.receiptUrl = receiptUrl;
