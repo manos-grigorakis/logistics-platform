@@ -130,7 +130,9 @@
       "vehicles": "Vehicles",
       "quotes": "Quotes",
       "shipments": "Shipments",
-      "payment-tracking": "Payment Tracking"
+      "payment-tracking": "Payment Tracking",
+      "suppliers": "Suppliers",
+      "payments": "Payments"
     }
   },
 

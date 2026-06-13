@@ -130,7 +130,9 @@
       "vehicles": "Οχήματα",
       "quotes": "Προσφορές",
       "shipments": "Μεταφορές",
-      "payment-tracking": "Πληρωμές"
+      "payment-tracking": "Πληρωμές",
+      "suppliers": "Προμηθευτές",
+      "payments": "Πληρωμές"
     }
   },
 

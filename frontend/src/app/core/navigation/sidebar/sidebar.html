@@ -66,8 +66,33 @@
         label="CMR"
         (onItemClick)="closeOnMobile()"
       />
+
+      <!-- Suppliers Dropdown -->
+      <app-sidebar-dropdown-menu
+        icon="lucideBuilding2"
+        [label]="'nav.side-bar.suppliers' | translate"
+      >
+        <div class="ml-4 flex flex-col gap-2">
+          <app-sidebar-menu-item
+            route="/suppliers"
+            icon="lucideBuilding2"
+            [label]="'nav.side-bar.suppliers' | translate"
+            [isExactRouterPath]="true"
+            (onItemClick)="closeOnMobile()"
+          />
+
+          <app-sidebar-menu-item
+            route="/suppliers/payments"
+            icon="lucideReceiptEuro"
+            [label]="'nav.side-bar.payments' | translate"
+            [isExactRouterPath]="true"
+            (onItemClick)="closeOnMobile()"
+          />
+        </div>
+      </app-sidebar-dropdown-menu>
     </ul>
 
+    <!-- Language Switcher -->
     <div class="border-t border-white/10 pt-4">
       <app-language-switcher variant="dark" />
     </div>

@@ -34,6 +34,8 @@ import { CustomerTabShipments } from './features/customers/pages/view-customer/c
 import { PaymentsPage } from './features/payments/payments-page/payments-page';
 import { CmrDocumentsPage } from './features/cmr-documents/pages/cmr-documents-page/cmr-documents-page';
 import { UploadSignedCmr } from './features/cmr-documents/pages/upload-signed-cmr/upload-signed-cmr';
+import { SuppliersPage } from './features/suppliers/pages/suppliers-page/suppliers-page';
+import { SupplierPaymentsPage } from './features/suppliers/pages/supplier-payments-page/supplier-payments-page';
 
 export const routes: Routes = [
   {
@@ -119,6 +121,13 @@ export const routes: Routes = [
             component: UploadSignedCmr,
             title: 'Upload Signed CMR Document',
           },
+        ],
+      },
+      {
+        path: 'suppliers',
+        children: [
+          { path: '', component: SuppliersPage, title: 'Suppliers' },
+          { path: 'payments', component: SupplierPaymentsPage, title: 'Suppliers Payments' },
         ],
       },
     ],

@@ -1,0 +1,20 @@
+<li>
+  <button
+    class="text-body text-secondary-400 hover:bg-secondary-800 mb-2 flex w-full items-center justify-between rounded px-2 py-1.5 hover:cursor-pointer hover:text-white"
+    (click)="openDropdown()"
+  >
+    <div class="flex items-center">
+      <ng-icon [name]="icon" />
+      <span class="ms-3 flex-1 whitespace-nowrap">{{ label }}</span>
+    </div>
+    <ng-icon
+      name="lucideChevronDown"
+      class="transition-transform duration-200"
+      [class.rotate-180]="showDropdown"
+    />
+  </button>
+
+  @if (showDropdown) {
+    <ng-content></ng-content>
+  }
+</li>
