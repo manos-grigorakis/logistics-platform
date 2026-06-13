@@ -8,6 +8,8 @@ CREATE TABLE supplier_payments
     paid_amount   DECIMAL(19, 2)                                         DEFAULT 0.00        NOT NULL,
     status        ENUM ('PENDING', 'PAID', 'PARTIALLY_PAID', 'CANCELED') DEFAULT ('PENDING') NOT NULL,
     type          ENUM ('FUEL', 'INSURANCE', 'SERVICE', 'OTHER')                             NOT NULL,
+    invoice_url   VARCHAR(500)                                                               NULL,
+    receipt_url   VARCHAR(500)                                                               NULL,
     supplier_id   BIGINT                                                                     NOT NULL,
     created_at    datetime                                                                   NOT NULL,
     updated_at    datetime                                                                   NULL,

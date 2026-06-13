@@ -41,6 +41,24 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
     private String bucketPathSuppliers;
 
     @Override
+    public SupplierPaymentResponse getSupplierPaymentById(Long id) {
+        SupplierPayment payment = supplierPaymentRepository.findById(id).orElseThrow(() -> {
+            log.warn("Supplier payment not found with id {}", id);
+            return new ResourceNotFoundException("Supplier payment not found with id " + id);
+        });
+
+        String invoicePresignedUrl = payment.getInvoiceUrl() != null ? fileStorageService.createPresignedUrl(
+                getFileName(payment.getNumber(), "invoice")) : null;
+        String receiptPresignUrl = payment.getReceiptUrl() != null ? fileStorageService.createPresignedUrl(
+                getFileName(payment.getNumber(), "receipt")) : null;
+
+        payment.setInvoiceUrl(invoicePresignedUrl);
+        payment.setReceiptUrl(receiptPresignUrl);
+
+        return SupplierPaymentMapper.toResponse(payment);
+    }
+
+    @Override
     public SupplierPaymentResponse createSupplierPayment(SupplierPaymentRequest request) {
         Supplier supplier = supplierRepository.findById(request.supplierId()).orElseThrow(() -> {
             log.warn("Supplier not found with id {}", request.supplierId());
@@ -64,8 +82,8 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
             payment.setStatusBasedOnAmounts();
         }
 
-        String invoiceFileName = getReceiptFileName(payment.getNumber(), "invoice");
-        String receiptFileName = getReceiptFileName(payment.getNumber(), "receipt");
+        String invoiceFileName = getFileName(payment.getNumber(), "invoice");
+        String receiptFileName = getFileName(payment.getNumber(), "receipt");
         String invoicePresignedUrl;
         String receiptPresignedUrl;
 
@@ -73,6 +91,8 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
         try {
             invoicePresignedUrl = storeFileIfExists(request.invoiceFile(), invoiceFileName);
             receiptPresignedUrl = storeFileIfExists(request.receiptFile(), receiptFileName);
+            payment.setInvoiceUrl(invoicePresignedUrl);
+            payment.setReceiptUrl(receiptPresignedUrl);
 
             supplierPaymentRepository.save(payment);
             log.info("Supplier payment created with id {}", payment.getNumber());
@@ -87,7 +107,23 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
             throw e;
         }
 
-        return SupplierPaymentMapper.toResponse(payment, invoicePresignedUrl, receiptPresignedUrl);
+        return SupplierPaymentMapper.toResponse(payment);
+    }
+
+    @Override
+    public SupplierPaymentResponse updateSupplierPaymentById(Long id, SupplierPaymentRequest request) {
+
+        return null;
+    }
+
+    @Override
+    public void deleteSupplierPaymentById(Long id) {
+        SupplierPayment payment = supplierPaymentRepository.findById(id).orElseThrow(() -> {
+            log.warn("Supplier payment not found with id {}", id);
+            return new ResourceNotFoundException("Supplier payment not found with id " + id);
+        });
+
+        supplierPaymentRepository.delete(payment);
     }
 
     /**
@@ -99,7 +135,7 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
      * @param fileType      The file type (e.g. {@code invoice} or {@code receipt})
      * @return The generated storage file name
      */
-    private String getReceiptFileName(String paymentNumber, String fileType) {
+    private String getFileName(String paymentNumber, String fileType) {
         return this.bucketPathSuppliers + paymentNumber + "-" + fileType;
     }
 

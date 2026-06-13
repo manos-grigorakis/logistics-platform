@@ -43,6 +43,12 @@ public class SupplierPayment {
     @Column(name = "type", nullable = false)
     private SupplierPaymentType type;
 
+    @Column(name = "invoice_url", length = 500)
+    private String invoiceUrl;
+
+    @Column(name = "receipt_url", length = 500)
+    private String receiptUrl;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "supplier_id", nullable = false)
     private Supplier supplier;
@@ -53,11 +59,11 @@ public class SupplierPayment {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-
     @Builder
     public SupplierPayment(String number, String title, String description, BigDecimal totalAmount,
                            BigDecimal paidAmount,
-                           SupplierPaymentStatus status, SupplierPaymentType type, Supplier supplier) {
+                           SupplierPaymentStatus status, SupplierPaymentType type, String invoiceUrl, String receiptUrl,
+                           Supplier supplier) {
         this.number = number;
         this.title = title;
         this.description = description;
@@ -65,6 +71,8 @@ public class SupplierPayment {
         this.paidAmount = paidAmount;
         this.status = status;
         this.type = type;
+        this.invoiceUrl = invoiceUrl;
+        this.receiptUrl = receiptUrl;
         this.supplier = supplier;
     }
 

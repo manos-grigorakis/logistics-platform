@@ -4,5 +4,12 @@ import com.manosgrigorakis.logisticsplatform.suppliers.dto.SupplierPaymentReques
 import com.manosgrigorakis.logisticsplatform.suppliers.dto.SupplierPaymentResponse;
 
 public interface SupplierPaymentService {
+
+    SupplierPaymentResponse getSupplierPaymentById(Long id);
+
     SupplierPaymentResponse createSupplierPayment(SupplierPaymentRequest request);
+
+    SupplierPaymentResponse updateSupplierPaymentById(Long id, SupplierPaymentRequest request);
+
+    void deleteSupplierPaymentById(Long id);
 }

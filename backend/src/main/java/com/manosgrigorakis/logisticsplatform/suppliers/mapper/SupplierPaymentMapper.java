@@ -23,7 +23,7 @@ public class SupplierPaymentMapper {
     }
 
     // Entity -> Response
-    public static SupplierPaymentResponse toResponse(SupplierPayment payment, String invoiceUrl, String receiptUrl) {
+    public static SupplierPaymentResponse toResponse(SupplierPayment payment) {
         Supplier supplier = payment.getSupplier();
         SupplierSummaryResponse supplierSummary = new SupplierSummaryResponse(supplier.getId(),
                                                                               supplier.getCompanyName());
@@ -31,7 +31,8 @@ public class SupplierPaymentMapper {
         return new SupplierPaymentResponse(payment.getId(), payment.getNumber(), payment.getTitle(),
                                            payment.getDescription(), payment.getTotalAmount(), payment.getPaidAmount(),
                                            payment.getUnpaidAmount(), payment.getStatus(), payment.getType(),
-                                           invoiceUrl, receiptUrl, supplierSummary, payment.getCreatedAt(),
+                                           payment.getInvoiceUrl(), payment.getReceiptUrl(), supplierSummary,
+                                           payment.getCreatedAt(),
                                            payment.getUpdatedAt());
     }
 }
