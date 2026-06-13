@@ -1,12 +1,17 @@
 package com.manosgrigorakis.logisticsplatform.suppliers.controller;
 
 import com.manosgrigorakis.logisticsplatform.common.dto.ApiResponseWrapper;
+import com.manosgrigorakis.logisticsplatform.common.dto.PageFilterRequest;
+import com.manosgrigorakis.logisticsplatform.common.dto.SortFilterRequest;
 import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplierpayment.SupplierPaymentCreateRequest;
+import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplierpayment.SupplierPaymentFilterRequest;
 import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplierpayment.SupplierPaymentResponse;
 import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplierpayment.SupplierPaymentUpdateRequest;
 import com.manosgrigorakis.logisticsplatform.suppliers.service.SupplierPaymentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +21,15 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class SupplierPaymentController {
     private final SupplierPaymentService supplierPaymentService;
+
+    @GetMapping
+    public ApiResponseWrapper<Page<SupplierPaymentResponse>> getAllSupplierPayments(
+            @ParameterObject @ModelAttribute SupplierPaymentFilterRequest filterRequest,
+            @ParameterObject @ModelAttribute @Valid PageFilterRequest pageRequest,
+            @ParameterObject @ModelAttribute @Valid SortFilterRequest sortRequest) {
+        return new ApiResponseWrapper<>(
+                supplierPaymentService.getSupplierPayments(filterRequest, pageRequest, sortRequest));
+    }
 
     @GetMapping("/{id}")
     public ApiResponseWrapper<SupplierPaymentResponse> getSupplierPaymentById(@PathVariable Long id) {

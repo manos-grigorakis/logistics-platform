@@ -1,5 +1,7 @@
 package com.manosgrigorakis.logisticsplatform.suppliers.service.impl;
 
+import com.manosgrigorakis.logisticsplatform.common.dto.PageFilterRequest;
+import com.manosgrigorakis.logisticsplatform.common.dto.SortFilterRequest;
 import com.manosgrigorakis.logisticsplatform.common.exception.BadRequestException;
 import com.manosgrigorakis.logisticsplatform.common.exception.ConflictException;
 import com.manosgrigorakis.logisticsplatform.common.exception.DocumentProcessingException;
@@ -7,6 +9,7 @@ import com.manosgrigorakis.logisticsplatform.common.exception.ResourceNotFoundEx
 import com.manosgrigorakis.logisticsplatform.common.generators.DocumentNumberGenerator;
 import com.manosgrigorakis.logisticsplatform.infrastructure.storage.FileStorageService;
 import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplierpayment.SupplierPaymentCreateRequest;
+import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplierpayment.SupplierPaymentFilterRequest;
 import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplierpayment.SupplierPaymentResponse;
 import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplierpayment.SupplierPaymentUpdateRequest;
 import com.manosgrigorakis.logisticsplatform.suppliers.mapper.SupplierPaymentMapper;
@@ -18,6 +21,9 @@ import com.manosgrigorakis.logisticsplatform.suppliers.service.SupplierPaymentSe
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,6 +45,29 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
 
     @Value("${app.minio.bucketPathSuppliers}")
     private String bucketPathSuppliers;
+
+    @Override
+    public Page<SupplierPaymentResponse> getSupplierPayments(SupplierPaymentFilterRequest filterRequest,
+                                                             PageFilterRequest pageRequest,
+                                                             SortFilterRequest sortRequest) {
+        Pageable pageable = PageRequest.of(pageRequest.getPage(), pageRequest.getSize(), sortRequest.createSort());
+        Page<SupplierPayment> page;
+
+        if(filterRequest.number() != null && !filterRequest.number().isBlank()) {
+            page = supplierPaymentRepository.findAllByNumber(filterRequest.number(), pageable);
+        } else  {
+            page = supplierPaymentRepository.findAll(pageable);
+        }
+
+        return page.map(payment -> {
+            String invoicePresignedUrl = payment.getInvoiceUrl() != null ?
+                    fileStorageService.createPresignedUrl(payment.getInvoiceUrl()) : null;
+            String receiptPresignedUrl = payment.getReceiptUrl() != null ?
+                    fileStorageService.createPresignedUrl(payment.getInvoiceUrl()) : null;
+
+            return SupplierPaymentMapper.toResponse(payment,  invoicePresignedUrl, receiptPresignedUrl);
+        });
+    }
 
     @Override
     public SupplierPaymentResponse getSupplierPaymentById(Long id) {
