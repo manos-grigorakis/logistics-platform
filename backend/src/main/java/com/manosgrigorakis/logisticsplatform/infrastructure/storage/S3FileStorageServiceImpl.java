@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import software.amazon.awssdk.core.exception.SdkClientException;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Exception;
@@ -55,7 +56,11 @@ public class S3FileStorageServiceImpl implements FileStorageService {
             log.error("Error while storing file: {}", key, e);
             throw new StorageServiceException("Error while storing file");
         }
+    }
 
+    @Override
+    public void deleteObject(String key) {
+        s3Client.deleteObject(request -> request.bucket(bucketName).key(key));
     }
 
     @Override

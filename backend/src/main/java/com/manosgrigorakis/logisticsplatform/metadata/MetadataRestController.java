@@ -7,6 +7,8 @@ import com.manosgrigorakis.logisticsplatform.quotes.enums.QuoteStatus;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.ShipmentStatusResponse;
 import com.manosgrigorakis.logisticsplatform.shipments.enums.ShipmentCargoUnit;
 import com.manosgrigorakis.logisticsplatform.shipments.enums.ShipmentStatus;
+import com.manosgrigorakis.logisticsplatform.suppliers.model.enums.SupplierPaymentStatus;
+import com.manosgrigorakis.logisticsplatform.suppliers.model.enums.SupplierPaymentType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -57,5 +59,19 @@ public class MetadataRestController {
     @GetMapping("/shipment-cargo-units")
     public ApiResponseWrapper<List<String>> getShipmentCargosUnits() {
         return new ApiResponseWrapper<>(Arrays.stream(ShipmentCargoUnit.values()).map(Enum::name).toList());
+    }
+
+    @Operation(summary = "ENUM Supplier Payments Status", description = "List of supplier payments statuses")
+    @ApiResponse(responseCode = "200", description = "List of supplier payment statuses")
+    @GetMapping("/supplier-payments-statuses")
+    public ApiResponseWrapper<List<String>> getSupplierPaymentStatuses() {
+        return new ApiResponseWrapper<>(Arrays.stream(SupplierPaymentStatus.values()).map(Enum::name).toList());
+    }
+
+    @Operation(summary = "ENUM Supplier Payments Types", description = "List of supplier payments types")
+    @ApiResponse(responseCode = "200", description = "List of supplier payments types")
+    @GetMapping("/supplier-payments-types")
+    public ApiResponseWrapper<List<String>> getSupplierPaymentTypes() {
+        return new ApiResponseWrapper<>(Arrays.stream(SupplierPaymentType.values()).map(Enum::name).toList());
     }
 }

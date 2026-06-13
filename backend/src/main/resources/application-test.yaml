@@ -94,6 +94,7 @@ app:
     bucketPathQuotes: "quotes/"
     bucketPathCmr: "cmr/"
     bucketPathReconciliationReport: "reconciliation-report/"
+    bucketPathSuppliers: "suppliers/"
 
 tax:
   vat: 24
