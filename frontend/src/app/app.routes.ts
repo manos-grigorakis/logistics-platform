@@ -37,6 +37,7 @@ import { UploadSignedCmr } from './features/cmr-documents/pages/upload-signed-cm
 import { SuppliersPage } from './features/suppliers/pages/suppliers-page/suppliers-page';
 import { SupplierPaymentsPage } from './features/suppliers/pages/supplier-payments-page/supplier-payments-page';
 import { EditSupplier } from './features/suppliers/pages/edit-supplier/edit-supplier';
+import { SuppliersCreate } from './features/suppliers/pages/suppliers-create/suppliers-create';
 
 export const routes: Routes = [
   {
@@ -124,11 +125,14 @@ export const routes: Routes = [
           },
         ],
       },
+
+      // Suppliers
       {
         path: 'suppliers',
         children: [
           { path: '', component: SuppliersPage, title: 'Suppliers' },
-          { path: 'edit-supplier', component: EditSupplier, title: 'Edit Supplier' },
+          { path: 'create-supplier', component: SuppliersCreate, title: 'Create Supplier' },
+          { path: 'edit-supplier/:id', component: EditSupplier, title: 'Edit Supplier' },
           { path: 'payments', component: SupplierPaymentsPage, title: 'Suppliers Payments' },
         ],
       },

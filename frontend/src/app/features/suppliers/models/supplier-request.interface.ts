@@ -1,4 +1,4 @@
 export interface SupplierRequest {
   companyName: string;
-  email: string;
+  email: string | null;
 }

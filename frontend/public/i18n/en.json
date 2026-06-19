@@ -611,10 +611,17 @@
 
   "suppliers": {
     "empty-state": "There are no suppliers",
+    "actions": {
+      "create": "Create Supplier",
+      "update": "Update Supplier"
+    },
     "messages": {
       "delete-supplier-title": "Delete Selected Supplier",
       "not-found": "Supplier not found",
-      "success-deletion": "Supplier deleted successfully"
+      "success-deletion": "Supplier deleted successfully",
+      "success-creation": "Supplier created successfully",
+      "success-update": "Supplier updated successfully",
+      "exists-by-company-name": "Supplier already exists"
     }
   }
 }
