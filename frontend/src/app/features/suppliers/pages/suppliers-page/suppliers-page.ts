@@ -173,7 +173,11 @@ export class SuppliersPage implements OnInit, OnDestroy {
       .deactivateSupplierById(id)
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
-        next: () => this.languageService.toastSuccess('suppliers.messages.success-deletion'),
+        next: () => {
+          // Update UI
+          this.suppliers = this.suppliers.filter((s) => s.id !== id);
+          this.languageService.toastSuccess('suppliers.messages.success-deletion');
+        },
         error: (err) => {
           if (err.status === 404) {
             this.languageService.toastError('suppliers.messages.not-found');
