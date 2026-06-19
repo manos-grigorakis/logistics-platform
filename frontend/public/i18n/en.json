@@ -52,7 +52,8 @@
       "sort-by": "Sort By",
       "filter-by": "Filter By",
       "all": "All",
-      "search-by-number": "Search by Number"
+      "search-by-number": "Search by Number",
+      "search-by-company-name": "Search by Company Name"
     },
     "fields": {
       "first-name": "First Name",
@@ -609,6 +610,11 @@
   },
 
   "suppliers": {
-    "empty-state": "There are no suppliers"
+    "empty-state": "There are no suppliers",
+    "messages": {
+      "delete-supplier-title": "Delete Selected Supplier",
+      "not-found": "Supplier not found",
+      "success-deletion": "Supplier deleted successfully"
+    }
   }
 }

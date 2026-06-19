@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { LoadingSpinner } from '../../../../shared/ui/loading-spinner/loading-spinner';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Supplier } from '../../models/supplier.interface';
@@ -14,4 +14,10 @@ import { RouterLink } from '@angular/router';
 export class SuppliersTable {
   @Input() isLoading?: boolean;
   @Input({ required: true }) suppliers?: Supplier[];
+
+  @Output() onDelete = new EventEmitter<number>();
+
+  public onDeleteClick(id: number): void {
+    this.onDelete.emit(id);
+  }
 }

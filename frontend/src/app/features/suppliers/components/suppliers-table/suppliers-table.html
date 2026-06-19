@@ -29,9 +29,15 @@
         <td class="flex gap-2 px-2 py-4">
           <a
             [routerLink]="['edit-supplier', supplier.id]"
-            class="text-fg-brand font-medium hover:underline"
+            class="text-fg-brand text-info-dark font-medium hover:underline"
             >{{ 'common.actions.edit' | translate }}</a
           >
+          <button
+            (click)="onDeleteClick(supplier.id)"
+            class="text-danger cursor-pointer font-medium hover:underline"
+          >
+            {{ 'common.actions.delete' | translate }}
+          </button>
         </td>
       </tr>
     } @empty {
