@@ -56,6 +56,7 @@
       "search-by-company-name": "Αναζήτηση βάσει επωνυμίας"
     },
     "fields": {
+      "title": "Τίτλος",
       "first-name": "Όνομα",
       "last-name": "Επώνυμο",
       "status": "Κατάσταση",
@@ -68,6 +69,8 @@
       "quantity": "Ποσότητα",
       "company-name": "Επωνυμία",
       "total-amount": "Συνολικό Ποσό",
+      "paid-amount": "Πληρωμένο Ποσό",
+      "unpaid-amount": "Ανεξόφλητο Ποσό",
       "remaining-amount": "Υπόλοιπο Ποσό",
       "created-at": "Ημ. Δημιουργίας",
       "updated-at": "Ημ. Τροποποίησης",
@@ -75,6 +78,7 @@
       "unassigned": "Μη ανατεθειμένο",
       "signed-by": "Υπογράφηκε από",
       "signed-at": "Υπογράφηκε στις",
+      "type": "Τύπος",
       "document": "Έγγραφο",
       "placeholders": {
         "first-name": "π.χ. Γιάννης",
@@ -609,7 +613,11 @@
   },
 
   "suppliers": {
-    "empty-state": "Δεν υπάρχουν προμηθευτές",
+    "empty-state": {
+      "suppliers": "Δεν υπάρχουν προμηθευτές",
+      "payments": "Δεν υπάρχουν πληρωμές προμηθευτών"
+    },
+    "supplier": "Προμηθευτής",
     "actions": {
       "create": "Δημιουργία Προμηθευτή",
       "update": "Ενημέρωση Προμηθευτή"
