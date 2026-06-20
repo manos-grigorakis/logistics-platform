@@ -1,4 +1,14 @@
 <div>
+  <div class="border-primary-500 mb-8 rounded border-b-5 shadow-md">
+    <app-supplier-payments-filters
+      [isLoading]="isLoading"
+      [sortLabel]="activeSortLabel"
+      (onSearchChanged)="onSearchChanged($event)"
+      (onRefresh)="onRefresh()"
+      (onSortBy)="onSortByField($event)"
+    />
+  </div>
+
   <div class="relative overflow-x-auto rounded-lg bg-white shadow-md">
     <app-supplier-payments-table [isLoading]="isLoading" [supplierPayment]="payments" />
   </div>
