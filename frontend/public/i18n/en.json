@@ -56,6 +56,7 @@
       "search-by-company-name": "Search by Company Name"
     },
     "fields": {
+      "title": "Title",
       "first-name": "First Name",
       "last-name": "Last Name",
       "status": "Status",
@@ -64,6 +65,7 @@
       "date": "Date",
       "name": "Name",
       "price": "Price",
+      "type": "Type",
       "description": "Description",
       "quantity": "Quantity",
       "created-at": "Created At",
@@ -76,6 +78,8 @@
       "company-name": "Company Name",
       "total-amount": "Total Amount",
       "remaining-amount": "Remaining Amount",
+      "paid-amount": "Paid Amount",
+      "unpaid-amount": "Unpaid Amount",
       "placeholders": {
         "first-name": "e.g. John",
         "last-name": "e.g. Doe",
@@ -610,7 +614,12 @@
   },
 
   "suppliers": {
-    "empty-state": "There are no suppliers",
+    "empty-state": {
+      "suppliers": "There are no suppliers",
+      "payments": "There are no supplier payments"
+    },
+
+    "supplier": "Supplier",
     "actions": {
       "create": "Create Supplier",
       "update": "Update Supplier"
