@@ -38,6 +38,8 @@ import { SuppliersPage } from './features/suppliers/pages/suppliers-page/supplie
 import { SupplierPaymentsPage } from './features/suppliers/pages/supplier-payments-page/supplier-payments-page';
 import { EditSupplier } from './features/suppliers/pages/edit-supplier/edit-supplier';
 import { SuppliersCreate } from './features/suppliers/pages/suppliers-create/suppliers-create';
+import { SupplierPaymentsCreate } from './features/suppliers/pages/supplier-payments-create/supplier-payments-create';
+import { EditSupplierPayment } from './features/suppliers/pages/edit-supplier-payment/edit-supplier-payment';
 
 export const routes: Routes = [
   {
@@ -131,9 +133,20 @@ export const routes: Routes = [
         path: 'suppliers',
         children: [
           { path: '', component: SuppliersPage, title: 'Suppliers' },
-          { path: 'create-supplier', component: SuppliersCreate, title: 'Create Supplier' },
-          { path: 'edit-supplier/:id', component: EditSupplier, title: 'Edit Supplier' },
-          { path: 'payments', component: SupplierPaymentsPage, title: 'Suppliers Payments' },
+          { path: 'create', component: SuppliersCreate, title: 'Create Supplier' },
+          { path: 'edit/:id', component: EditSupplier, title: 'Edit Supplier' },
+          {
+            path: 'payments',
+            children: [
+              { path: '', component: SupplierPaymentsPage, title: 'Suppliers Payments' },
+              {
+                path: 'create',
+                component: SupplierPaymentsCreate,
+                title: 'Create Supplier Payment',
+              },
+              { path: 'edit/:id', component: EditSupplierPayment, title: 'Edit Supplier Payment' },
+            ],
+          },
         ],
       },
     ],

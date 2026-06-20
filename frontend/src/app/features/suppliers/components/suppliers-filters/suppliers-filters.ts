@@ -36,7 +36,7 @@ export class SuppliersFilters {
   }
 
   public onCreateSupplier(): void {
-    this.router.navigate(['suppliers', 'create-supplier']);
+    this.router.navigate(['suppliers', 'create']);
   }
 
   public onSortByField(sortOption: SortOption | undefined): void {

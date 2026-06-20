@@ -35,7 +35,7 @@ export class SupplierPaymentsFilters {
   }
 
   public onCreateSupplierPayment(): void {
-    this.router.navigate(['suppliers', 'create-supplier-payment']);
+    this.router.navigate(['suppliers', 'payments', 'create']);
   }
 
   public onSortByField(sortOption: SortOption | undefined): void {
