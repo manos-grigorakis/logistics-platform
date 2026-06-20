@@ -22,7 +22,7 @@
     @for (supplier of suppliers; track supplier.id) {
       <tr>
         <td class="px-2 py-4">{{ supplier.companyName }}</td>
-        <td class="px-2 py-4">{{ supplier.email || '-' }}</td>
+        <td class="max-w-20 truncate px-2 py-4">{{ supplier.email || '-' }}</td>
         <td class="px-2 py-4">{{ supplier.totalAmount | currency: 'EUR' }}</td>
         <td class="px-2 py-4">{{ supplier.remainingAmount | currency: 'EUR' }}</td>
 
