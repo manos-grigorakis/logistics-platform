@@ -61,12 +61,8 @@ export class SuppliersPage implements OnInit, OnDestroy {
       .pipe(debounceTime(400), distinctUntilChanged())
       .subscribe((val) => this.onSearch(val));
 
-    this.langChangeSub = this.languageService.onLangChange.subscribe(() =>
-      this.languageService
-        .translateKeyAsync('common.filters.sort-by')
-        .pipe(take(1))
-        .subscribe((val) => (this.activeSortLabel = val)),
-    );
+    this.setLabels();
+    this.langChangeSub = this.languageService.onLangChange.subscribe(() => this.setLabels());
   }
 
   ngOnDestroy(): void {
@@ -186,5 +182,12 @@ export class SuppliersPage implements OnInit, OnDestroy {
           }
         },
       });
+  }
+
+  private setLabels(): void {
+    this.languageService
+      .translateKeyAsync('common.filters.sort-by')
+      .pipe(take(1))
+      .subscribe((val) => (this.activeSortLabel = val));
   }
 }
