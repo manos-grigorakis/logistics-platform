@@ -1,10 +1,10 @@
 export interface SupplierPaymentsCreateRequest {
   title: string;
-  description?: string;
+  description: string | null;
   totalAmount: number;
-  paidAmount?: number;
+  paidAmount: number | null;
   type: string;
-  invoiceFile?: File;
-  receiptFile?: File;
+  invoiceFile: File | null;
+  receiptFile: File | null;
   supplierId: number;
 }

@@ -1,0 +1,192 @@
+<div class="mx-auto mt-6 max-w-5xl rounded-lg bg-white p-6 shadow-lg shadow-black/10">
+  <h2 class="mb-4 text-center text-3xl font-semibold">
+    @if (formUsage === 'create') {
+      {{ 'suppliers.actions.create-payment' | translate }}
+    } @else {
+      {{ 'suppliers.actions.update-payment' | translate }}
+    }
+  </h2>
+
+  @if (isLoading) {
+    <app-loading-spinner />
+  }
+
+  <div class="mb-5">
+    @if (errorMessage) {
+      <app-error-alert [errorMessage]="errorMessage | translate" />
+    }
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmitClick()">
+    @if (this.formUsage === 'create') {
+      <div class="mb-6">
+        <label for="supplierId" (click)="supplierSelect.focus()" class="mb-1 block">
+          <span class="text-danger mr-1 text-sm">*</span>{{ 'suppliers.supplier' | translate }}
+        </label>
+        <ng-select
+          class="tw-select"
+          #supplierSelect
+          [placeholder]="'suppliers.fields.placeholders.search-suppliers' | translate"
+          bindLabel="companyName"
+          bindValue="id"
+          formControlName="supplierId"
+          [loadingText]="('suppliers.messages.loading-suppliers' | translate) + '...'"
+          [notFoundText]="'common.errors.no-results' | translate"
+          [items]="suppliers"
+          [loading]="suppliersLoading"
+          [typeahead]="supplierSearch$"
+          [searchable]="true"
+          [clearable]="true"
+        />
+
+        @if (supplierId.invalid && (supplierId.dirty || supplierId.touched)) {
+          <div>
+            @if (supplierId.hasError('required')) {
+              <span class="text-danger mt-1 ml-1 text-sm">
+                {{ 'suppliers.fields.validation.supplier' | translate }}
+              </span>
+            }
+          </div>
+        }
+      </div>
+    }
+
+    <div class="mb-6 flex gap-4">
+      <!--  Title    -->
+      <app-main-input
+        type="text"
+        formControlName="title"
+        [label]="'common.fields.title' | translate"
+        [showRequiredStar]="true"
+        [placeholder]="'suppliers.fields.placeholders.title' | translate"
+        class="flex-1"
+      />
+
+      <!-- Types -->
+      <div class="flex-1">
+        <label for="type">
+          <span class="text-danger mr-1 text-sm">*</span>{{ 'common.fields.type' | translate }}
+        </label>
+
+        @if (types$ | async; as types) {
+          <select
+            id="type"
+            formControlName="type"
+            class="focus:ring-primary-200 w-full rounded border border-gray-300 px-4 py-2.5 text-gray-700 focus:ring focus:outline-none"
+          >
+            <option [ngValue]="null" disabled>
+              {{ 'common.fields.placeholders.select-type' | translate }}
+            </option>
+
+            @for (type of types; track type) {
+              <option [ngValue]="type">
+                {{ `metadata.supplier-payments-types.${type.toLowerCase()}` | translate }}
+              </option>
+            }
+          </select>
+        }
+
+        @if (type.invalid && (type.dirty || type.touched)) {
+          <div>
+            @if (type.hasError('required')) {
+              <span class="text-danger ml-1 text-sm">
+                {{ 'common.validation.required-type' | translate }}
+              </span>
+            }
+          </div>
+        }
+      </div>
+    </div>
+
+    <!--  Amounts  -->
+    <div class="mb-6 flex gap-4">
+      <app-main-input
+        type="text"
+        formControlName="totalAmount"
+        [label]="'common.fields.total-amount' | translate"
+        [showRequiredStar]="true"
+        [placeholder]="'common.fields.placeholders.price' | translate"
+        [patternErrorMessage]="'common.validation.must-be-number' | translate"
+        class="flex-1"
+      />
+
+      <app-main-input
+        type="text"
+        formControlName="paidAmount"
+        [label]="'common.fields.paid-amount' | translate"
+        [placeholder]="'common.fields.placeholders.price' | translate"
+        [patternErrorMessage]="'common.validation.must-be-number' | translate"
+        class="flex-1"
+      />
+    </div>
+
+    <!-- Description -->
+    <div class="mb-6">
+      <label for="description" class="mb-1 block">
+        {{ 'common.fields.description' | translate }}
+      </label>
+      <textarea
+        formControlName="description"
+        id="description"
+        cols="20"
+        rows="4"
+        [placeholder]="'common.fields.placeholders.description' | translate"
+        class="focus:ring-primary-200 placeholder:text-body w-full resize-none rounded border border-gray-300 px-4 py-2 text-gray-700 focus:ring focus:outline-none"
+      ></textarea>
+    </div>
+
+    <!--  Files  -->
+    <div class="mb-6">
+      <!-- Info -->
+      @if (formUsage === 'update') {
+        <div
+          class="mt-8 mb-6 flex max-w-6xl items-start gap-2 rounded border border-blue-200 bg-blue-50 px-4 py-3 text-blue-800"
+        >
+          <ng-icon name="lucideInfo" color="#52525c" class="mt-0.5 shrink-0" />
+          <div class="text-sm leading-relaxed text-zinc-600">
+            <p>{{ 'common.messages.file-replace-notice' | translate }}</p>
+          </div>
+        </div>
+      }
+
+      <div class="flex flex-col gap-4 md:flex-row">
+        <!-- Invoice -->
+        <div class="flex-1">
+          <h3 class="mb-2 font-medium">
+            {{ 'common.fields.invoice-file' | translate }}
+          </h3>
+          <app-file-dropzone
+            [showMaxFileSize]="false"
+            [supportedFiles]="supportedFiles"
+            (fileSelected)="setInvoiceFile($event)"
+          />
+        </div>
+
+        <!-- Receipt File -->
+        <div class="flex-1">
+          <h3 class="mb-2 font-medium">
+            {{ 'common.fields.receipt-file' | translate }}
+          </h3>
+          <app-file-dropzone
+            [showMaxFileSize]="false"
+            [supportedFiles]="supportedFiles"
+            (fileSelected)="setReceiptFile($event)"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!--  Button  -->
+    @if (formUsage === 'create') {
+      <app-primary-button
+        [value]="'suppliers.actions.create-payment' | translate"
+        [isDisabled]="isLoading"
+      />
+    } @else {
+      <app-primary-button
+        [value]="'suppliers.actions.update-payment' | translate"
+        [isDisabled]="isLoading"
+      />
+    }
+  </form>
+</div>

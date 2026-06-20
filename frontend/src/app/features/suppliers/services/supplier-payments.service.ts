@@ -45,9 +45,21 @@ export class SupplierPaymentsService {
   public createSupplierPayment(
     request: SupplierPaymentsCreateRequest,
   ): Observable<ApiResponse<SupplierPayment>> {
+    let formData: FormData = new FormData();
+    formData.append('title', request.title);
+    formData.append('totalAmount', request.totalAmount.toString());
+    formData.append('type', request.type);
+    formData.append('supplierId', request.supplierId.toString());
+
+    // Optional
+    if (request.description !== null) formData.append('description', request.description);
+    if (request.paidAmount !== null) formData.append('paidAmount', request.paidAmount.toString());
+    if (request.invoiceFile !== null) formData.append('invoiceFile', request.invoiceFile);
+    if (request.receiptFile !== null) formData.append('receiptFile', request.receiptFile);
+
     return this.http.post<ApiResponse<SupplierPayment>>(
       `${environment.apiUrl}/supplier-payments`,
-      request,
+      formData,
     );
   }
 
@@ -55,9 +67,20 @@ export class SupplierPaymentsService {
     id: number,
     request: SupplierPaymentsUpdateRequest,
   ): Observable<ApiResponse<SupplierPayment>> {
+    let formData: FormData = new FormData();
+    formData.append('title', request.title);
+    formData.append('totalAmount', request.totalAmount.toString());
+    formData.append('type', request.type);
+
+    // Optional
+    if (request.description !== null) formData.append('description', request.description);
+    if (request.paidAmount !== null) formData.append('paidAmount', request.paidAmount.toString());
+    if (request.invoiceFile !== null) formData.append('invoiceFile', request.invoiceFile);
+    if (request.receiptFile !== null) formData.append('receiptFile', request.receiptFile);
+
     return this.http.put<ApiResponse<SupplierPayment>>(
       `${environment.apiUrl}/supplier-payments/${id}`,
-      request,
+      formData,
     );
   }
 

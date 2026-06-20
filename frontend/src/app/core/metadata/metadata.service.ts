@@ -75,7 +75,7 @@ export class MetadataService {
   }
 
   public fetchSupplierPaymentsTypes(): void {
-    this.fetchMetadata(this.supplierPaymentsStatuses$, 'supplier-payments-types');
+    this.fetchMetadata(this.supplierPaymentsTypes$, 'supplier-payments-types');
   }
 
   // prettier-ignore

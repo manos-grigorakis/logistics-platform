@@ -2,384 +2,215 @@
   "app": {
     "title": "Logistics Platform"
   },
-
-  "common": {
-    "actions": {
-      "submit": "Submit",
-      "cancel": "Cancel",
-      "save": "Save",
-      "edit": "Edit",
-      "delete": "Delete",
-      "upload": "Upload",
-      "download": "Download",
-      "download-all-copies": "Download All Copies",
-      "download-report": "Download Report",
-      "send-via-mail": "Send via Mail",
-      "action": "Action",
-      "back-to-login": "Back to Login",
-      "back-to-dashboard": "Back to Dashboard",
-      "yes-sure": "Yes, I'm sure",
-      "no-cancel": "No, cancel",
-      "browse-file": "Browse file",
-      "replace-file": "Replace file",
-      "drop-or-click-to-upload": "Drop or Click the button below to upload",
-      "drop-file-here": "Drop file here"
-    },
-    "errors": {
-      "server": "Server error. Please try again later",
-      "generic": "An error occurred. Please try again",
-      "files-processing": "Failed to process the uploaded files. Please try again",
-      "storage-unavailable": "Storage service is temporarily unavailable. Please try again later",
-      "no-results": "No results"
-    },
-    "validation": {
-      "required": "{{field}} is required",
-      "email": "Invalid email address",
-      "invalid-format": "{{field}} has an invalid format",
-      "8-chars-long": "must be 8 characters long",
-      "digits-long": "must be {{number}} digits",
-      "supported-files": "Supported files",
-      "max-file-size": "Max File Size",
-      "file-too-large": "File is too large",
-      "unsupported-file-type": "Unsupported file type",
-      "from-before-to": "From must be before To",
-      "required-fields": "The fields with asterisk (*) are required",
-      "must-be-number": "must be a number",
-      "required-document": "Document is required"
-    },
-    "filters": {
-      "search": "Search",
-      "sort-by": "Sort By",
-      "filter-by": "Filter By",
-      "all": "All",
-      "search-by-number": "Search by Number",
-      "search-by-company-name": "Search by Company Name"
-    },
-    "fields": {
-      "title": "Title",
-      "first-name": "First Name",
-      "last-name": "Last Name",
-      "status": "Status",
-      "number": "Number",
-      "phone": "Phone",
-      "date": "Date",
-      "name": "Name",
-      "price": "Price",
-      "type": "Type",
-      "description": "Description",
-      "quantity": "Quantity",
-      "created-at": "Created At",
-      "updated-at": "Updated At",
-      "issue-date": "Issue Date",
-      "unassigned": "Unassigned",
-      "signed-by": "Signed by",
-      "signed-at": "Signed at",
-      "document": "Document",
-      "company-name": "Company Name",
-      "total-amount": "Total Amount",
-      "remaining-amount": "Remaining Amount",
-      "paid-amount": "Paid Amount",
-      "unpaid-amount": "Unpaid Amount",
-      "placeholders": {
-        "first-name": "e.g. John",
-        "last-name": "e.g. Doe",
-        "email": "e.g. john.doe@example.com",
-        "phone": "e.g. +30 210 123 4567",
-        "price": "e.g. 10.00",
-        "quantity": "e.g. 2",
-        "description": "Description goes here"
-      }
-    },
-    "pagination": {
-      "previous": "Previous",
-      "next": "Next",
-      "showing": "Showing",
-      "to": "to",
-      "of": "of",
-      "results": "results"
-    },
-    "pdf": {
-      "preview": "PDF Preview",
-      "errors": {
-        "preview": "PDF cannot be previewed"
-      }
-    },
-    "messages": {
-      "from": "From",
-      "to": "To",
-      "cannot-undone": "This action is permanent and cannot be undone",
-      "matched": "Matched",
-      "unmatched": "Unmatched",
-      "report-details": "Report Details",
-      "report-name": "Report Name",
-      "period": "Period",
-      "results": "Results",
-      "basic-info": "Basic Information",
-      "item": "Item",
-      "yes": "Yes",
-      "no": "No"
-    },
-    "banks": {
-      "nbg": "National Bank of Greece"
-    }
-  },
-
-  "nav": {
-    "top-nav": {
-      "account": "Account",
-      "settings": "Settings",
-      "logout": "Logout"
-    },
-
-    "side-bar": {
-      "users": "Users",
-      "roles": "Roles",
-      "customers": "Customers",
-      "vehicles": "Vehicles",
-      "quotes": "Quotes",
-      "shipments": "Shipments",
-      "payment-tracking": "Payment Tracking",
-      "suppliers": "Suppliers",
-      "payments": "Payments"
-    }
-  },
-
-  "pages": {
-    "not-found": {
-      "title": "Page not found",
-      "subtitle": "The page you are trying to access does not exist or has been moved."
-    },
-    "forbidden": {
-      "title": "Forbidden Page",
-      "subtitle": "You don't have permission to this page"
-    }
-  },
-
   "auth": {
+    "back-to-login": "Back to Login",
+    "forgot-password": {
+      "check-your-email": "Check your email",
+      "success": "If the email is registered, you will get a reset link in your email",
+      "title": "Forgot Password"
+    },
     "login": {
-      "title": "Login",
       "button": "Login",
       "errors": {
         "invalid-credentials": "Invalid Credentials"
-      }
+      },
+      "title": "Login"
     },
-    "forgot-password": {
-      "title": "Forgot Password",
-      "check-your-email": "Check your email",
-      "success": "If the email is registered, you will get a reset link in your email"
-    },
+    "password": "Password",
     "reset-password": {
-      "title": "Reset Password",
-      "new-password": "New Password",
       "button": "Reset Password",
-      "success": "Your password has been reset successfully",
       "errors": {
         "invalid-or-expired-link": "This password reset link is invalid or has expired",
         "invalid-or-used-link": "This password reset link is invalid or has already been used"
-      }
+      },
+      "new-password": "New Password",
+      "success": "Your password has been reset successfully",
+      "title": "Reset Password"
     },
     "setup-password": {
-      "title": "Setup Password",
       "button": "Setup Password",
-      "success": "Your password has been set up successfully",
       "errors": {
         "invalid-or-used-link": "This password setup link is invalid or has already been used"
-      }
-    },
-    "password": "Password",
-    "back-to-login": "Back to Login"
-  },
-
-  "metadata": {
-    "customers-types": {
-      "individual": "Individual",
-      "company": "Company"
-    },
-    "quotes-statuses": {
-      "draft": "Draft",
-      "sent": "Sent",
-      "accepted": "Accepted",
-      "rejected": "Rejected",
-      "cancelled": "Cancelled",
-      "expired": "Expired",
-      "converted": "Converted"
-    },
-    "quotes-item-units": {
-      "hour": "Hour",
-      "piece": "Piece",
-      "pallet": "Pallet"
-    },
-    "shipments-statuses": {
-      "pending": "Pending",
-      "dispatched": "Dispatched",
-      "delivered": "Delivered"
-    },
-    "cargo-items-units": {
-      "pallet": "Pallet",
-      "box": "Box",
-      "piece": "Piece",
-      "roll": "Roll",
-      "bag": "Bag"
-    },
-    "invoices-statuses": {
-      "paid": "Paid",
-      "disputed": "Disputed",
-      "outstanding": "Outstanding",
-      "partially_paid": "Partially Paid"
-    },
-    "vehicle-types": {
-      "truck": "Truck",
-      "trailer": "Trailer"
-    },
-    "user-statuses": {
-      "active": "Active",
-      "invited": "Invited",
-      "suspended": "Suspended"
-    },
-    "cmr-document-statuses": {
-      "generated": "Generated",
-      "signed": "Signed",
-      "cancelled": "Cancelled"
-    },
-    "supplier-payments-statuses": {
-      "pending": "Pending",
-      "paid": "Paid",
-      "partially_paid": "Partially Paid",
-      "canceled": "Canceled"
-    },
-    "supplier-payments-types": {
-      "fuel": "Fuel",
-      "insurance": "Insurance",
-      "service": "Service",
-      "other": "Other"
+      },
+      "success": "Your password has been set up successfully",
+      "title": "Setup Password"
     }
   },
-
-  "dashboard": {
-    "total-customers": "Total Customers",
-    "total-shipments": "Total Shipments",
-    "total-outstanding-amount": "Total Outstanding Amount",
-    "total-pending-shipments": "Total Pending Shipments (Next 24h)",
-    "quotes-by-status": "Quotes by Status",
-    "shipments-by-status": "Shipments by Status",
-    "invoices-by-status": "Invoices by Status",
-    "quotes-label": "Quotes",
-    "shipments-label": "Shipments",
-    "invoices-label": "Invoices"
-  },
-
-  "vehicles": {
-    "vehicle": "Vehicle",
-    "empty-state": "There are no vehicles",
-    "fields": {
-      "brand": "Brand",
-      "type": "Type",
-      "plate-number": "Plate Number",
-      "choose-vehicle-type": "Choose vehicle type"
-    },
+  "cmr-documents": {
     "actions": {
-      "create": "Create Vehicle",
-      "update": "Update Vehicle"
+      "upload-signed": "Upload Signed"
+    },
+    "empty-state": "There are no CMR documents",
+    "fields": {
+      "carrier-signed": "Carrier Sign",
+      "consignee-signed": "Consignee Sign",
+      "sender-signed": "Sender Sign",
+      "signed-document": "Signed CMR Document"
     },
     "messages": {
-      "type-required": "Type is required",
-      "success-creation": "Vehicle created successfully",
-      "success-update": "Vehicle updated successfully",
-      "success-deletion": "Vehicle deleted successfully",
-      "exists-by-plate": "Vehicle already exists with plate number: {{plate}}",
-      "not-found": "Vehicle doesn't exist"
+      "already-signed": "The uploaded CMR is already signed",
+      "invalid-qr-code": "The uploaded CMR has invalid or missing QR Code",
+      "not-found": "CMR document not found",
+      "signed-upload-info": "Before uploading, manually verify that the CMR document contains the required signatures. The checkboxes below confirm that each party has physically signed the document.",
+      "status-update-not-signed": "CMR document cannot be updated to signed because it's not signed",
+      "status-update-success": "CMR document status updated successfully",
+      "status-update-violation": "CMR document status cannot be updated to the desired status due to violation",
+      "success-signed-upload": "Signed CMR document uploaded successfully"
     }
   },
-
-  "users": {
-    "empty-state": "There are no users",
-    "fields": {
-      "first-name": "First Name",
-      "last-name": "Last Name",
-      "phone": "Phone",
-      "role": "Role"
-    },
+  "common": {
     "actions": {
-      "create": "Create User",
-      "update": "Update User"
+      "action": "Action",
+      "back-to-dashboard": "Back to Dashboard",
+      "back-to-login": "Back to Login",
+      "browse-file": "Browse file",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "download": "Download",
+      "download-all-copies": "Download All Copies",
+      "download-report": "Download Report",
+      "drop-file-here": "Drop file here",
+      "drop-or-click-to-upload": "Drop or Click the button below to upload",
+      "edit": "Edit",
+      "no-cancel": "No, cancel",
+      "replace-file": "Replace file",
+      "save": "Save",
+      "send-via-mail": "Send via Mail",
+      "submit": "Submit",
+      "upload": "Upload",
+      "yes-sure": "Yes, I'm sure"
     },
-    "messages": {
-      "current-user": "(you)",
-      "select-role": "Select a role",
-      "roles-empty-state": "No role available",
-      "role-required": "Role is required",
-      "success-creation": "User created successfully",
-      "success-update": "User updated successfully",
-      "email-exists": "User already exists with email {{email}}",
-      "not-found": "User doesn't exist",
-      "modal": {
-        "title": "Delete Selected User(s)",
-        "message": "This action is permanent and cannot be undone",
-        "success": "User(s) deleted successfully"
-      }
-    }
-  },
-
-  "roles": {
-    "empty-state": "There are no roles",
-    "protected-role": "Protected Role",
+    "banks": {
+      "nbg": "National Bank of Greece"
+    },
+    "errors": {
+      "files-processing": "Failed to process the uploaded files. Please try again",
+      "generic": "An error occurred. Please try again",
+      "no-results": "No results",
+      "server": "Server error. Please try again later",
+      "storage-unavailable": "Storage service is temporarily unavailable. Please try again later"
+    },
     "fields": {
-      "name": "Name",
-      "description": "Description",
-      "description-placeholder": "Describe role"
-    },
-    "actions": {
-      "create": "Create a Role",
-      "update": "Update Role"
-    },
-    "messages": {
-      "success-creation": "Role created successfully",
-      "success-update": "Role updated successfully",
-      "success-deletion": "Role deleted successfully",
-      "assigned-users": "This role cannot be deleted because it is assigned to existing users",
-      "not-found": "Role not found",
-      "invalid-role-id": "Invalid role ID",
-      "protected-role": "Role is protected and cannot be edited",
-      "role-exists": "Role already exists",
-      "modal": {
-        "title": "Delete Selected Role",
-        "message": "This action is permanent and cannot be undone"
-      }
-    }
-  },
-
-  "customers": {
-    "empty-state": "There are no customers",
-    "business-details": "Business Details",
-    "contact-information": "Contact Information",
-    "search-by-tin-or-company-name": "Search by TIN or Company Name",
-    "fields": {
-      "tin": "TIN",
       "company-name": "Company Name",
-      "customer-type": "Customer Type",
-      "location": "Location",
+      "created-at": "Created At",
+      "date": "Date",
+      "description": "Description",
+      "document": "Document",
+      "first-name": "First Name",
+      "invoice-file": "Invoice File",
+      "issue-date": "Issue Date",
+      "last-name": "Last Name",
+      "name": "Name",
+      "number": "Number",
+      "paid-amount": "Paid Amount",
+      "phone": "Phone",
       "placeholders": {
-        "tin": "e.g. 123456789",
-        "company-name": "e.g. Acme Logistics",
-        "location": "e.g. Athens, Attiki"
-      }
+        "description": "Description goes here",
+        "email": "e.g. john.doe@example.com",
+        "first-name": "e.g. John",
+        "last-name": "e.g. Doe",
+        "phone": "e.g. +30 210 123 4567",
+        "price": "e.g. 10.00",
+        "quantity": "e.g. 2",
+        "select-type": "Select a type"
+      },
+      "price": "Price",
+      "quantity": "Quantity",
+      "receipt-file": "Receipt File",
+      "remaining-amount": "Remaining Amount",
+      "signed-at": "Signed at",
+      "signed-by": "Signed by",
+      "status": "Status",
+      "title": "Title",
+      "total-amount": "Total Amount",
+      "type": "Type",
+      "unassigned": "Unassigned",
+      "unpaid-amount": "Unpaid Amount",
+      "updated-at": "Updated At"
     },
+    "filters": {
+      "all": "All",
+      "filter-by": "Filter By",
+      "search": "Search",
+      "search-by-company-name": "Search by Company Name",
+      "search-by-number": "Search by Number",
+      "sort-by": "Sort By"
+    },
+    "messages": {
+      "basic-info": "Basic Information",
+      "cannot-undone": "This action is permanent and cannot be undone",
+      "file-replace-notice": "Uploading a new file will replace the existing one. Leave it empty to keep the current file.",
+      "from": "From",
+      "item": "Item",
+      "matched": "Matched",
+      "no": "No",
+      "period": "Period",
+      "report-details": "Report Details",
+      "report-name": "Report Name",
+      "results": "Results",
+      "to": "To",
+      "unmatched": "Unmatched",
+      "yes": "Yes"
+    },
+    "pagination": {
+      "next": "Next",
+      "of": "of",
+      "previous": "Previous",
+      "results": "results",
+      "showing": "Showing",
+      "to": "to"
+    },
+    "pdf": {
+      "errors": {
+        "preview": "PDF cannot be previewed"
+      },
+      "preview": "PDF Preview"
+    },
+    "validation": {
+      "8-chars-long": "must be 8 characters long",
+      "digits-long": "must be {{number}} digits",
+      "email": "Invalid email address",
+      "file-too-large": "File is too large",
+      "from-before-to": "From must be before To",
+      "invalid-format": "{{field}} has an invalid format",
+      "max-file-size": "Max File Size",
+      "must-be-number": "must be a number",
+      "must-be-positive": "must be positive",
+      "required": "{{field}} is required",
+      "required-document": "Document is required",
+      "required-fields": "The fields with asterisk (*) are required",
+      "required-type": "Type is required",
+      "supported-files": "Supported files",
+      "unsupported-file-type": "Unsupported file type"
+    }
+  },
+  "customers": {
     "actions": {
       "create": "Create Customer",
       "update": "Update Customer",
       "update-quote-status": "Update quote status"
     },
+    "business-details": "Business Details",
+    "contact-information": "Contact Information",
+    "empty-state": "There are no customers",
+    "fields": {
+      "company-name": "Company Name",
+      "customer-type": "Customer Type",
+      "location": "Location",
+      "placeholders": {
+        "company-name": "e.g. Acme Logistics",
+        "location": "e.g. Athens, Attiki",
+        "tin": "e.g. 123456789"
+      },
+      "tin": "TIN"
+    },
     "messages": {
-      "select-customer-type": "Select a customer type",
-      "no-customer-types-available": "No customer types available",
       "customer-type-required": "Customer Type is required",
-      "success-creation": "Customer created successfully",
-      "success-update": "Customer updated successfully",
       "delete-customers-title": "Delete Selected Customer(s)",
-      "success-deletion": "Customer(s) deleted successfully",
-      "exist-by-tin": "Customer with TIN: {{tin}} already exists",
       "exist-by-company-name": "Customer with Company Name: {{companyName}} already exist",
+      "exist-by-tin": "Customer with TIN: {{tin}} already exists",
       "invalid-role-id": "Invalid role ID",
+      "no-customer-types-available": "No customer types available",
       "not-found": "Customer not found",
       "not-found-with-id": "Customer with id: {{id}} not found",
       "quotes": {
@@ -387,250 +218,423 @@
         "not-found": "Quote not found",
         "not-found-id": "Quote with id: {{id}} not exist",
         "status-modal-message": "You are about to update the status of quote {{number}}. This action cannot be undone. Current {{currentStatus}} -> New: {{newStatus}}",
-        "success-status-update": "Quote status updated successfully",
-        "status-violation": "You can't update from {{currentStatus}} to {{desiredStatus}}"
+        "status-violation": "You can't update from {{currentStatus}} to {{desiredStatus}}",
+        "success-status-update": "Quote status updated successfully"
       },
+      "select-customer-type": "Select a customer type",
       "shipments": {
-        "empty-state": "No shipments yet",
         "actions": {
           "success-status-update": "Shipment status updated successfully"
         },
+        "empty-state": "No shipments yet",
+        "errors": {
+          "cargo-required": "This shipment cannot be dispatched because no cargo items have been added yet. Please add at least one cargo item before dispatching",
+          "default-status": "Unable to update shipment status. Please try again",
+          "driver-required": "A driver must be assigned before this shipment can be dispatched.",
+          "finalized-status": "This shipment has already been finalized and its status can no longer be changed",
+          "invalid-transition": "The selected status transition is not allowed for this shipment.",
+          "trailer-required": "A trailer must be assigned before this shipment can be dispatched.",
+          "truck-required": "A truck must be assigned before this shipment can be dispatched."
+        },
         "modal": {
           "header-update": "Update Shipment Status",
-          "title": "Error Updating Shipment Status",
-          "message": "You are about to update the status of shipment {{number}}. This action cannot be undone. Current: {{currentStatus}} -> New: {{newStatus}}"
-        },
-        "errors": {
-          "default-status": "Unable to update shipment status. Please try again",
-          "finalized-status": "This shipment has already been finalized and its status can no longer be changed",
-          "cargo-required": "This shipment cannot be dispatched because no cargo items have been added yet. Please add at least one cargo item before dispatching",
-          "driver-required": "A driver must be assigned before this shipment can be dispatched.",
-          "truck-required": "A truck must be assigned before this shipment can be dispatched.",
-          "trailer-required": "A trailer must be assigned before this shipment can be dispatched.",
-          "invalid-transition": "The selected status transition is not allowed for this shipment."
+          "message": "You are about to update the status of shipment {{number}}. This action cannot be undone. Current: {{currentStatus}} -> New: {{newStatus}}",
+          "title": "Error Updating Shipment Status"
         }
-      }
+      },
+      "success-creation": "Customer created successfully",
+      "success-deletion": "Customer(s) deleted successfully",
+      "success-update": "Customer updated successfully"
+    },
+    "search-by-tin-or-company-name": "Search by TIN or Company Name"
+  },
+  "dashboard": {
+    "invoices-by-status": "Invoices by Status",
+    "invoices-label": "Invoices",
+    "quotes-by-status": "Quotes by Status",
+    "quotes-label": "Quotes",
+    "shipments-by-status": "Shipments by Status",
+    "shipments-label": "Shipments",
+    "total-customers": "Total Customers",
+    "total-outstanding-amount": "Total Outstanding Amount",
+    "total-pending-shipments": "Total Pending Shipments (Next 24h)",
+    "total-shipments": "Total Shipments"
+  },
+  "metadata": {
+    "cargo-items-units": {
+      "bag": "Bag",
+      "box": "Box",
+      "pallet": "Pallet",
+      "piece": "Piece",
+      "roll": "Roll"
+    },
+    "cmr-document-statuses": {
+      "cancelled": "Cancelled",
+      "generated": "Generated",
+      "signed": "Signed"
+    },
+    "customers-types": {
+      "company": "Company",
+      "individual": "Individual"
+    },
+    "invoices-statuses": {
+      "disputed": "Disputed",
+      "outstanding": "Outstanding",
+      "paid": "Paid",
+      "partially_paid": "Partially Paid"
+    },
+    "quotes-item-units": {
+      "hour": "Hour",
+      "pallet": "Pallet",
+      "piece": "Piece"
+    },
+    "quotes-statuses": {
+      "accepted": "Accepted",
+      "cancelled": "Cancelled",
+      "converted": "Converted",
+      "draft": "Draft",
+      "expired": "Expired",
+      "rejected": "Rejected",
+      "sent": "Sent"
+    },
+    "shipments-statuses": {
+      "delivered": "Delivered",
+      "dispatched": "Dispatched",
+      "pending": "Pending"
+    },
+    "supplier-payments-statuses": {
+      "canceled": "Canceled",
+      "paid": "Paid",
+      "partially_paid": "Partially Paid",
+      "pending": "Pending"
+    },
+    "supplier-payments-types": {
+      "fuel": "Fuel",
+      "insurance": "Insurance",
+      "other": "Other",
+      "service": "Service"
+    },
+    "user-statuses": {
+      "active": "Active",
+      "invited": "Invited",
+      "suspended": "Suspended"
+    },
+    "vehicle-types": {
+      "trailer": "Trailer",
+      "truck": "Truck"
     }
   },
-
-  "shipments": {
-    "empty-state": "There are no shipments",
-    "cmr-document-empty-state": "No CMR document",
-    "units-empty-state": "No units are available",
+  "nav": {
+    "side-bar": {
+      "customers": "Customers",
+      "payment-tracking": "Payment Tracking",
+      "payments": "Payments",
+      "quotes": "Quotes",
+      "roles": "Roles",
+      "shipments": "Shipments",
+      "suppliers": "Suppliers",
+      "users": "Users",
+      "vehicles": "Vehicles"
+    },
+    "top-nav": {
+      "account": "Account",
+      "logout": "Logout",
+      "settings": "Settings"
+    }
+  },
+  "pages": {
+    "forbidden": {
+      "subtitle": "You don't have permission to this page",
+      "title": "Forbidden Page"
+    },
+    "not-found": {
+      "subtitle": "The page you are trying to access does not exist or has been moved.",
+      "title": "Page not found"
+    }
+  },
+  "payments": {
     "actions": {
-      "create": "Create a Shipment",
-      "update": "Update Shipment"
+      "new-reconciliation": "New Reconciliation",
+      "start-process": "Start Reconciliation Process"
+    },
+    "errors": {
+      "already-exists-in-system": "All invoices already exist in the system",
+      "duplicate-report": "A report already exists for this invoice range",
+      "fetch-customers": "Failed to fetch customers",
+      "no-invoices-found-in-file": "No invoices were found in the uploaded file",
+      "tin-mismatch": "The selected customer's TIN number doesn't match the invoices file"
     },
     "fields": {
-      "shipment-number": "Shipment Number",
-      "pickup": "Pickup",
-      "driver": "Driver",
-      "truck": "Truck",
-      "trailer": "Trailer",
-      "quote": "Quote",
-      "truck-plate": "Truck Plate",
-      "trailer-plate": "Trailer Plate",
-      "quote-number": "Quote Number",
-      "cargo-items": {
-        "empty-state": "No cargo items",
-        "title": "Cargo Items",
-        "description": "Description",
-        "unit": "Unit",
-        "quantity": "Quantity",
-        "weight": "Weight",
-        "volume": "Volume"
-      },
-      "notes": {
-        "empty-state": "No notes available",
-        "title": "Notes"
-      },
-      "placeholders": {}
-    },
-    "filters": {
-      "search-by-shipment-number": "Search",
-      "search-quote": "Search a Quote",
-      "search-driver": "Search a Driver",
-      "search-truck": "Search a Truck",
-      "search-trailer": "Search a Trailer"
+      "bank-statement": "Bank Statement",
+      "customer": "Customer",
+      "invoices": "Invoices",
+      "placeholders": {
+        "search-customer": "Search a customer"
+      }
     },
     "messages": {
-      "success-creation": "Shipment created successfully",
-      "success-update": "Shipment updated successfully",
-      "not-found": "Shipment not found",
-      "fleet-assignment": "Fleet Assignment",
-      "quotes": {
-        "loading": "Loading Quotes",
-        "required": "Quote is required"
-      },
-      "loading-drivers": "Loading Drivers",
-      "loading-trucks": "Loading Trucks",
-      "loading-trailers": "Loading Trailers",
-      "select-unit": "Select a unit"
+      "analyzing-tx-combinations": "Analyzing transaction combinations",
+      "bank-matched-tx": "Bank Transactions Matched",
+      "invoices-breakdown": "Invoice Breakdown",
+      "loading-customers": "Loading customers",
+      "reconciliation-note-one": "The system will match transactions to invoices using invoice number detection and amount combination matching.",
+      "reconciliation-note-two": "All invoices are saved, along with their matched transactions.",
+      "required-bank-statement-file": "Bank Statement file is required",
+      "required-customer": "Customer is required",
+      "required-invoice-file": "Invoice file is required",
+      "running-matching-algo": "Running Matching Algorithm",
+      "total-invoices": "Total Invoices"
     },
-    "view-shipment": {
-      "quote-number": "Quote Number",
-      "driver": "Driver",
-      "truck": "Truck",
-      "trailer": "Trailer",
-      "action": "Action",
-      "cargos": "Cargo Items",
-      "description": "Description",
-      "unit": "Unit",
-      "quantity": "Quantity",
-      "weight": "Weight",
-      "volume": "Volume",
-      "notes": "Notes",
-      "document": "Document",
-      "status": "Status",
-      "sender-signed": "Sender Sign",
-      "carrier-signed": "Carrier Sign",
-      "consignee-signed": "Consignee Sign",
-      "signed-at": "Signed At",
-      "created-at": "Created At",
-      "number": "Number"
-    }
+    "stepper": {
+      "one": {
+        "description": "Choose a customer and upload files",
+        "title": "Select Customer & Upload"
+      },
+      "three": {
+        "description": "Download results",
+        "title": "Results"
+      },
+      "two": {
+        "description": "Matching Transactions",
+        "title": "Processing"
+      }
+    },
+    "subtitle": "Match bank transactions against outstanding invoices for a customer.",
+    "title": "Payment Reconciliation"
   },
-
   "quotes": {
-    "empty-state": "There are no quotes",
-    "empty-state-units": "There are no units available",
     "actions": {
       "create": "Create a Quote",
       "update": "Update Quote"
     },
+    "empty-state": "There are no quotes",
+    "empty-state-units": "There are no units available",
     "fields": {
-      "customer": "Customer",
       "company-name": "Company Name",
-      "gross-price": "Gross Price",
-      "special-terms": "Special Terms",
-      "notes": "Notes",
-      "unit": "Unit",
-      "validity-days": "Validity Days",
+      "customer": "Customer",
       "destination": "Destination",
-      "services-items": "Services & Items",
+      "gross-price": "Gross Price",
+      "notes": "Notes",
       "origin": "Origin",
       "placeholders": {
-        "special-terms": "Add some special terms",
-        "notes": "Add some notes",
-        "validity-days": "e.g. 30",
-        "origin": "e.g. Athens",
         "destination": "e.g. Patra",
-        "service-name": "Service/Item Name"
-      }
+        "notes": "Add some notes",
+        "origin": "e.g. Athens",
+        "service-name": "Service/Item Name",
+        "special-terms": "Add some special terms",
+        "validity-days": "e.g. 30"
+      },
+      "services-items": "Services & Items",
+      "special-terms": "Special Terms",
+      "unit": "Unit",
+      "validity-days": "Validity Days"
     },
     "filters": {
       "search-by-number-or-company-name": "Search by Number or Company Name",
       "search-customer": "Search a customer"
     },
     "messages": {
-      "success-creation": "Quote created successfully",
-      "success-update": "Quote updated successfully",
+      "additional-info": "Additional Information",
+      "failed-to-fetch-customers": "Failed to fetch Customers",
+      "loading-customers": "Loading customers",
       "not-found-customer-or-user": "Customer or user not found",
       "not-found-with-id": "Quote not found with id: {{id}}",
-      "warning-draft-status-update": "You can only update quotes in DRAFT status",
-      "loading-customers": "Loading customers",
       "required-customer": "Customer is required",
-      "select-unit": "Select a unit",
-      "required-unit": "Unit is required",
       "required-service-items": "Service/Items are required",
-      "failed-to-fetch-customers": "Failed to fetch Customers",
-      "additional-info": "Additional Information"
+      "required-unit": "Unit is required",
+      "select-unit": "Select a unit",
+      "success-creation": "Quote created successfully",
+      "success-update": "Quote updated successfully",
+      "warning-draft-status-update": "You can only update quotes in DRAFT status"
     }
   },
-
-  "payments": {
-    "title": "Payment Reconciliation",
-    "subtitle": "Match bank transactions against outstanding invoices for a customer.",
-    "stepper": {
-      "one": {
-        "title": "Select Customer & Upload",
-        "description": "Choose a customer and upload files"
-      },
-      "two": {
-        "title": "Processing",
-        "description": "Matching Transactions"
-      },
-      "three": {
-        "title": "Results",
-        "description": "Download results"
-      }
-    },
-    "fields": {
-      "customer": "Customer",
-      "invoices": "Invoices",
-      "bank-statement": "Bank Statement",
-
-      "placeholders": {
-        "search-customer": "Search a customer"
-      }
-    },
+  "roles": {
     "actions": {
-      "start-process": "Start Reconciliation Process",
-      "new-reconciliation": "New Reconciliation"
+      "create": "Create a Role",
+      "update": "Update Role"
     },
-    "errors": {
-      "fetch-customers": "Failed to fetch customers",
-      "no-invoices-found-in-file": "No invoices were found in the uploaded file",
-      "tin-mismatch": "The selected customer's TIN number doesn't match the invoices file",
-      "duplicate-report": "A report already exists for this invoice range",
-      "already-exists-in-system": "All invoices already exist in the system"
+    "empty-state": "There are no roles",
+    "fields": {
+      "description": "Description",
+      "description-placeholder": "Describe role",
+      "name": "Name"
     },
     "messages": {
-      "reconciliation-note-one": "The system will match transactions to invoices using invoice number detection and amount combination matching.",
-      "reconciliation-note-two": "All invoices are saved, along with their matched transactions.",
-      "required-customer": "Customer is required",
-      "required-invoice-file": "Invoice file is required",
-      "required-bank-statement-file": "Bank Statement file is required",
-      "loading-customers": "Loading customers",
-      "running-matching-algo": "Running Matching Algorithm",
-      "analyzing-tx-combinations": "Analyzing transaction combinations",
-      "total-invoices": "Total Invoices",
-      "bank-matched-tx": "Bank Transactions Matched",
-      "invoices-breakdown": "Invoice Breakdown"
-    }
+      "assigned-users": "This role cannot be deleted because it is assigned to existing users",
+      "invalid-role-id": "Invalid role ID",
+      "modal": {
+        "message": "This action is permanent and cannot be undone",
+        "title": "Delete Selected Role"
+      },
+      "not-found": "Role not found",
+      "protected-role": "Role is protected and cannot be edited",
+      "role-exists": "Role already exists",
+      "success-creation": "Role created successfully",
+      "success-deletion": "Role deleted successfully",
+      "success-update": "Role updated successfully"
+    },
+    "protected-role": "Protected Role"
   },
-
-  "cmr-documents": {
-    "empty-state": "There are no CMR documents",
+  "shipments": {
+    "actions": {
+      "create": "Create a Shipment",
+      "update": "Update Shipment"
+    },
+    "cmr-document-empty-state": "No CMR document",
+    "empty-state": "There are no shipments",
     "fields": {
-      "sender-signed": "Sender Sign",
+      "cargo-items": {
+        "description": "Description",
+        "empty-state": "No cargo items",
+        "quantity": "Quantity",
+        "title": "Cargo Items",
+        "unit": "Unit",
+        "volume": "Volume",
+        "weight": "Weight"
+      },
+      "driver": "Driver",
+      "notes": {
+        "empty-state": "No notes available",
+        "title": "Notes"
+      },
+      "pickup": "Pickup",
+      "quote": "Quote",
+      "quote-number": "Quote Number",
+      "shipment-number": "Shipment Number",
+      "trailer": "Trailer",
+      "trailer-plate": "Trailer Plate",
+      "truck": "Truck",
+      "truck-plate": "Truck Plate"
+    },
+    "filters": {
+      "search-by-shipment-number": "Search",
+      "search-driver": "Search a Driver",
+      "search-quote": "Search a Quote",
+      "search-trailer": "Search a Trailer",
+      "search-truck": "Search a Truck"
+    },
+    "messages": {
+      "fleet-assignment": "Fleet Assignment",
+      "loading-drivers": "Loading Drivers",
+      "loading-trailers": "Loading Trailers",
+      "loading-trucks": "Loading Trucks",
+      "not-found": "Shipment not found",
+      "quotes": {
+        "loading": "Loading Quotes",
+        "required": "Quote is required"
+      },
+      "select-unit": "Select a unit",
+      "success-creation": "Shipment created successfully",
+      "success-update": "Shipment updated successfully"
+    },
+    "units-empty-state": "No units are available",
+    "view-shipment": {
+      "action": "Action",
+      "cargos": "Cargo Items",
       "carrier-signed": "Carrier Sign",
       "consignee-signed": "Consignee Sign",
-      "signed-document": "Signed CMR Document"
-    },
-    "actions": {
-      "upload-signed": "Upload Signed"
-    },
-    "messages": {
-      "not-found": "CMR document not found",
-      "status-update-violation": "CMR document status cannot be updated to the desired status due to violation",
-      "status-update-not-signed": "CMR document cannot be updated to signed because it's not signed",
-      "status-update-success": "CMR document status updated successfully",
-      "success-signed-upload": "Signed CMR document uploaded successfully",
-      "invalid-qr-code": "The uploaded CMR has invalid or missing QR Code",
-      "already-signed": "The uploaded CMR is already signed",
-      "signed-upload-info": "Before uploading, manually verify that the CMR document contains the required signatures. The checkboxes below confirm that each party has physically signed the document."
+      "created-at": "Created At",
+      "description": "Description",
+      "document": "Document",
+      "driver": "Driver",
+      "notes": "Notes",
+      "number": "Number",
+      "quantity": "Quantity",
+      "quote-number": "Quote Number",
+      "sender-signed": "Sender Sign",
+      "signed-at": "Signed At",
+      "status": "Status",
+      "trailer": "Trailer",
+      "truck": "Truck",
+      "unit": "Unit",
+      "volume": "Volume",
+      "weight": "Weight"
     }
   },
-
   "suppliers": {
-    "empty-state": {
-      "suppliers": "There are no suppliers",
-      "payments": "There are no supplier payments"
-    },
-
-    "supplier": "Supplier",
     "actions": {
       "create": "Create Supplier",
-      "update": "Update Supplier"
+      "create-payment": "Create Supplier Payment",
+      "update": "Update Supplier",
+      "update-payment": "Update Supplier Payment"
+    },
+    "empty-state": {
+      "payments": "There are no supplier payments",
+      "suppliers": "There are no suppliers"
+    },
+    "fields": {
+      "placeholders": {
+        "search-suppliers": "Search a supplier",
+        "select-type": "Select a type",
+        "title": "e.g. January Fuel - Truck XX1234"
+      },
+      "validation": {
+        "paid-exceeds-total-amount": "Paid amount exceeds total amount",
+        "supplier": "Supplier is required"
+      }
     },
     "messages": {
       "delete-supplier-title": "Delete Selected Supplier",
+      "exists-by-company-name": "Supplier already exists",
+      "loading-suppliers": "Suppliers loading",
       "not-found": "Supplier not found",
-      "success-deletion": "Supplier deleted successfully",
+      "payment-success-creation": "Supplier Payment created successfully",
+      "payment-success-update": "Supplier Payment updated successfully",
       "success-creation": "Supplier created successfully",
+      "success-deletion": "Supplier deleted successfully",
       "success-update": "Supplier updated successfully",
-      "exists-by-company-name": "Supplier already exists"
+      "supplier-inactive": "The selected supplier is no longer active. Please refresh and choose a different supplier."
+    },
+    "supplier": "Supplier"
+  },
+  "users": {
+    "actions": {
+      "create": "Create User",
+      "update": "Update User"
+    },
+    "empty-state": "There are no users",
+    "fields": {
+      "first-name": "First Name",
+      "last-name": "Last Name",
+      "phone": "Phone",
+      "role": "Role"
+    },
+    "messages": {
+      "current-user": "(you)",
+      "email-exists": "User already exists with email {{email}}",
+      "modal": {
+        "message": "This action is permanent and cannot be undone",
+        "success": "User(s) deleted successfully",
+        "title": "Delete Selected User(s)"
+      },
+      "not-found": "User doesn't exist",
+      "role-required": "Role is required",
+      "roles-empty-state": "No role available",
+      "select-role": "Select a role",
+      "success-creation": "User created successfully",
+      "success-update": "User updated successfully"
     }
+  },
+  "vehicles": {
+    "actions": {
+      "create": "Create Vehicle",
+      "update": "Update Vehicle"
+    },
+    "empty-state": "There are no vehicles",
+    "fields": {
+      "brand": "Brand",
+      "choose-vehicle-type": "Choose vehicle type",
+      "plate-number": "Plate Number",
+      "type": "Type"
+    },
+    "messages": {
+      "exists-by-plate": "Vehicle already exists with plate number: {{plate}}",
+      "not-found": "Vehicle doesn't exist",
+      "success-creation": "Vehicle created successfully",
+      "success-deletion": "Vehicle deleted successfully",
+      "success-update": "Vehicle updated successfully",
+      "type-required": "Type is required"
+    },
+    "vehicle": "Vehicle"
   }
 }

@@ -1,1 +1,6 @@
-<p>edit-supplier-payment works!</p>
+<app-supplier-payments-form
+  formUsage="update"
+  [isLoading]="isLoading"
+  [paymentData]="payment"
+  (onUpdate)="onSubmit($event)"
+/>
