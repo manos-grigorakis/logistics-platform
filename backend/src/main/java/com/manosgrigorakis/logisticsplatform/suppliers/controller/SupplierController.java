@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
 public class SupplierController {
     private final SupplierService supplierService;
 
-    @Operation(summary = "Get all Suppliers", description = "Lists all suppliers with pagination")
+    @Operation(summary = "Get all Suppliers", description = "Lists all active suppliers with pagination")
     @ApiResponse(responseCode = "200", description = "List of suppliers with pagination")
     @GetMapping
     public ApiResponseWrapper<Page<SupplierListResponse>> getAllSuppliers(
