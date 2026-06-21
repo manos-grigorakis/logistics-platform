@@ -83,6 +83,9 @@
     "banks": {
       "nbg": "National Bank of Greece"
     },
+    "empty-state": {
+      "description": "There is no description"
+    },
     "errors": {
       "files-processing": "Failed to process the uploaded files. Please try again",
       "generic": "An error occurred. Please try again",
@@ -97,6 +100,7 @@
       "description": "Description",
       "document": "Document",
       "first-name": "First Name",
+      "invoice": "Invoice",
       "invoice-file": "Invoice File",
       "issue-date": "Issue Date",
       "last-name": "Last Name",
@@ -116,6 +120,7 @@
       },
       "price": "Price",
       "quantity": "Quantity",
+      "receipt": "Receipt",
       "receipt-file": "Receipt File",
       "remaining-amount": "Remaining Amount",
       "signed-at": "Signed at",
@@ -137,14 +142,18 @@
       "sort-by": "Sort By"
     },
     "messages": {
+      "amounts": "Amounts",
       "basic-info": "Basic Information",
       "cannot-undone": "This action is permanent and cannot be undone",
+      "documents": "Documents",
+      "file-preview-format-notice": "Only PDF documents support preview. If a document does not display, it may be in a different format please download it instead.",
       "file-replace-notice": "Uploading a new file will replace the existing one. Leave it empty to keep the current file.",
       "from": "From",
       "item": "Item",
       "matched": "Matched",
       "no": "No",
       "period": "Period",
+      "preview": "Preview",
       "report-details": "Report Details",
       "report-name": "Report Name",
       "results": "Results",
@@ -580,12 +589,18 @@
       "not-found": "Supplier not found",
       "payment-success-creation": "Supplier Payment created successfully",
       "payment-success-update": "Supplier Payment updated successfully",
+      "payment-supplier-not-found": "Supplier Payment not found",
       "success-creation": "Supplier created successfully",
       "success-deletion": "Supplier deleted successfully",
       "success-update": "Supplier updated successfully",
       "supplier-inactive": "The selected supplier is no longer active. Please refresh and choose a different supplier."
     },
-    "supplier": "Supplier"
+    "supplier": "Supplier",
+    "payment-view": {
+      "amounts": "Amounts",
+      "description": "Description",
+      "documents": "Files"
+    }
   },
   "users": {
     "actions": {

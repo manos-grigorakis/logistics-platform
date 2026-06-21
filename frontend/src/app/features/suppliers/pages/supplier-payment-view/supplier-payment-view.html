@@ -1,0 +1,188 @@
+@if (isLoading) {
+  <app-loading-spinner />
+}
+
+@if (payment) {
+  <!-- Modals -->
+  <app-modal-file
+    (closeModal)="showInvoiceModal = false"
+    [isEnabled]="showInvoiceModal"
+    [pdfUrl]="payment.invoiceUrl"
+    [showSendViaMailButton]="false"
+    pdfName="Invoice Document"
+  />
+
+  <app-modal-file
+    (closeModal)="showReceiptModal = false"
+    [isEnabled]="showReceiptModal"
+    [pdfUrl]="payment.receiptUrl"
+    [showSendViaMailButton]="false"
+    pdfName="Receipt Document"
+  />
+
+  <section class="mt-4">
+    <!--  Header  -->
+    <div class="flex flex-wrap items-center justify-between gap-4">
+      <div>
+        <h2 class="text-2xl leading-tight font-semibold sm:text-3xl lg:text-4xl">
+          {{ payment.number }}
+        </h2>
+        <h3 class="mt-1 max-w-xl text-zinc-500">{{ payment.title }}</h3>
+      </div>
+
+      <div>
+        <span
+          [ngClass]="applyStatusBadgeColor(payment.status)"
+          class="rounded border p-2 capitalize"
+        >
+          {{ `metadata.supplier-payments-statuses.${payment.status.toLowerCase()}` | translate }}
+        </span>
+      </div>
+    </div>
+
+    <!--  Divider  -->
+    <div class="border-primary-500 my-4 rounded border-2"></div>
+
+    <!--  Stats  -->
+    <div
+      class="grid grid-cols-1 divide-x divide-zinc-300 overflow-hidden rounded border border-zinc-300 sm:grid-cols-2 lg:grid-cols-4"
+    >
+      <app-stat-box
+        [label]="'suppliers.supplier' | translate"
+        [value]="payment.supplier.companyName"
+      />
+
+      <app-stat-box [label]="'common.fields.type' | translate" [value]="null">
+        <span class="rounded border bg-gray-100 px-2 text-gray-700">
+          {{ `metadata.supplier-payments-types.${payment.type.toLowerCase()}` | translate }}
+        </span>
+      </app-stat-box>
+
+      <app-stat-box
+        [label]="'common.fields.created-at' | translate"
+        [value]="payment.createdAt | date: 'dd/MM/yyyy'"
+      />
+
+      <app-stat-box
+        [label]="'common.fields.updated-at' | translate"
+        [value]="payment.updatedAt ? (payment.updatedAt | date: 'dd/MM/yyyy') : '-'"
+      />
+    </div>
+
+    <!--  Amounts  -->
+    <div class="mt-6">
+      <app-section-header [header]="'suppliers.payment-view.amounts' | translate" />
+
+      <div
+        class="grid grid-cols-1 divide-x divide-zinc-300 overflow-hidden rounded border border-zinc-300 lg:grid-cols-3"
+      >
+        <app-stat-box
+          [label]="'common.fields.total-amount' | translate"
+          [value]="payment.totalAmount | currency: 'EUR'"
+          styles="text-2xl"
+        />
+
+        <app-stat-box
+          [label]="'common.fields.paid-amount' | translate"
+          [value]="payment.paidAmount | currency: 'EUR'"
+          styles="text-2xl text-success"
+        />
+
+        <app-stat-box
+          [label]="'common.fields.unpaid-amount' | translate"
+          [value]="payment.unpaidAmount | currency: 'EUR'"
+          styles="text-2xl text-danger"
+        />
+      </div>
+    </div>
+
+    <!--  Description  -->
+    <div class="mt-6">
+      <app-section-header [header]="'suppliers.payment-view.description' | translate" />
+
+      <p
+        [ngClass]="{ 'text-zinc-400': !payment.description }"
+        class="max-w-2xl rounded border border-zinc-300 p-5 text-wrap"
+      >
+        {{ payment.description || ('common.empty-state.description' | translate) }}
+      </p>
+    </div>
+
+    <!--  Documents  -->
+    <div class="mt-6">
+      <app-section-header [header]="'suppliers.payment-view.documents' | translate" />
+
+      <div class="flex flex-col items-center gap-4 md:flex-row">
+        <!-- Invoice -->
+        <div class="flex-1 rounded border border-zinc-300 p-5">
+          <div class="flex items-center justify-between gap-3">
+            <div class="flex items-center gap-4 overflow-hidden">
+              <div
+                [ngClass]="payment.invoiceUrl ? 'bg-primary-400' : 'bg-zinc-300'"
+                class="bg-primary-400 flex items-center rounded p-2"
+              >
+                <ng-icon [name]="applyFileIcon(payment.invoiceUrl)" color="white" size="24" />
+              </div>
+
+              <div>
+                <p class="text-lg font-medium">{{ 'common.fields.invoice' | translate }}</p>
+
+                @if (payment.invoiceUrl) {
+                  <p class="text-xs font-light text-zinc-500">
+                    {{ 'common.messages.preview' | translate }}
+                  </p>
+                }
+              </div>
+            </div>
+
+            @if (payment.invoiceUrl) {
+              <button
+                (click)="showInvoiceModal = true"
+                class="rounded text-zinc-500 transition-colors hover:cursor-pointer hover:text-zinc-900"
+              >
+                <ng-icon name="LucideEye" size="20" />
+              </button>
+            }
+          </div>
+        </div>
+
+        <!-- Receipt -->
+        <div class="flex-1 rounded border border-zinc-300 p-5">
+          <div class="flex items-center justify-between gap-3">
+            <div class="flex items-center gap-4 overflow-hidden">
+              <div
+                [ngClass]="payment.receiptUrl ? 'bg-primary-400' : 'bg-zinc-300'"
+                class="bg-primary-400 flex items-center rounded p-2"
+              >
+                <ng-icon [name]="applyFileIcon(payment.receiptUrl)" color="white" size="24" />
+              </div>
+
+              <div>
+                <p class="text-lg font-medium">{{ 'common.fields.receipt' | translate }}</p>
+
+                @if (payment.receiptUrl) {
+                  <p class="text-xs font-light text-zinc-500">
+                    {{ 'common.messages.preview' | translate }}
+                  </p>
+                }
+              </div>
+            </div>
+
+            @if (payment.receiptUrl) {
+              <button
+                (click)="showReceiptModal = true"
+                class="rounded text-zinc-500 transition-colors hover:cursor-pointer hover:text-zinc-900"
+              >
+                <ng-icon name="LucideEye" size="20" />
+              </button>
+            }
+          </div>
+        </div>
+      </div>
+
+      <app-info-banner>
+        <p>{{ 'common.messages.file-preview-format-notice' | translate }}</p>
+      </app-info-banner>
+    </div>
+  </section>
+}

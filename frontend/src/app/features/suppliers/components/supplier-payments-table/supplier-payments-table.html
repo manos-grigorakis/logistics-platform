@@ -4,34 +4,34 @@
   }
 
   <thead class="text-body bg-secondary-700 text-sm text-white">
-    <th scope="col" class="w-40 px-2 py-3 font-medium">
+    <th class="w-40 px-2 py-3 font-medium" scope="col">
       {{ 'common.fields.number' | translate }}
     </th>
-    <th scope="col" class="px-2 py-3 font-medium">
+    <th class="px-2 py-3 font-medium" scope="col">
       {{ 'common.fields.title' | translate }}
     </th>
-    <th scope="col" class="px-2 py-3 font-medium">
+    <th class="px-2 py-3 font-medium" scope="col">
       {{ 'common.fields.status' | translate }}
     </th>
-    <th scope="col" class="px-2 py-3 font-medium">
+    <th class="px-2 py-3 font-medium" scope="col">
       {{ 'common.fields.type' | translate }}
     </th>
-    <th scope="col" class="px-2 py-3 font-medium">
+    <th class="px-2 py-3 font-medium" scope="col">
       {{ 'common.fields.total-amount' | translate }}
     </th>
-    <th scope="col" class="px-2 py-3 font-medium">
+    <th class="px-2 py-3 font-medium" scope="col">
       {{ 'common.fields.paid-amount' | translate }}
     </th>
-    <th scope="col" class="px-2 py-3 font-medium">
+    <th class="px-2 py-3 font-medium" scope="col">
       {{ 'common.fields.unpaid-amount' | translate }}
     </th>
-    <th scope="col" class="px-2 py-3 font-medium">
+    <th class="px-2 py-3 font-medium" scope="col">
       {{ 'suppliers.supplier' | translate }}
     </th>
-    <th scope="col" class="px-2 py-3 font-medium">
+    <th class="px-2 py-3 font-medium" scope="col">
       {{ 'common.fields.created-at' | translate }}
     </th>
-    <th scope="col" class="px-2 py-3 font-medium">
+    <th class="px-2 py-3 font-medium" scope="col">
       {{ 'common.actions.action' | translate }}
     </th>
   </thead>
@@ -39,10 +39,14 @@
   <tbody>
     @for (payment of supplierPayment; track payment.id) {
       <tr>
-        <td class="px-2 py-4">{{ payment.number }}</td>
+        <td class="px-2 py-4">
+          <a [routerLink]="['/suppliers/payments', payment.id]" class="hover:underline">
+            {{ payment.number }}
+          </a>
+        </td>
         <td class="max-w-44 truncate px-2 py-4">{{ payment.title }}</td>
         <td class="px-2 py-4">
-          <span class="rounded border px-2" [ngClass]="applyStatusBadgeColor(payment.status)">
+          <span [ngClass]="applyStatusBadgeColor(payment.status)" class="rounded border px-2">
             {{ `metadata.supplier-payments-statuses.${payment.status.toLowerCase()}` | translate }}
           </span>
         </td>

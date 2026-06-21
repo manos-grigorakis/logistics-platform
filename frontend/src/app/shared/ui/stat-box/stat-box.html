@@ -1,0 +1,10 @@
+<div class="border-b border-zinc-300 p-5 text-center lg:border-b-0">
+  <p class="mb-1 text-sm text-zinc-500">{{ label }}</p>
+  @if (value) {
+    <p [class]="styles" class="font-semibold">{{ value }}</p>
+  } @else {
+    <p>
+      <ng-content></ng-content>
+    </p>
+  }
+</div>
