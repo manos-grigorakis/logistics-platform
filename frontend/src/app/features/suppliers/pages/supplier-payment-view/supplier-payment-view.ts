@@ -7,7 +7,7 @@ import { BehaviorSubject, finalize } from 'rxjs';
 import { handleHttpErrors } from '../../../../shared/utils/handle-http-errors.util';
 import { SupplierPayment } from '../../models/supplier-payments.interface';
 import { LoadingSpinner } from '../../../../shared/ui/loading-spinner/loading-spinner';
-import { CurrencyPipe, DatePipe, NgClass } from '@angular/common';
+import { AsyncPipe, CurrencyPipe, DatePipe, NgClass } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { NgIcon } from '@ng-icons/core';
 import { ModalFile } from '../../../../shared/ui/modal-file/modal-file';
@@ -15,6 +15,7 @@ import { StatBox } from '../../../../shared/ui/stat-box/stat-box';
 import { supplierPaymentStatusBadgeColor } from '../../utils/supplier-payment-status-badge-color.util';
 import { InfoBanner } from '../../../../shared/ui/info-banner/info-banner';
 import { SectionHeader } from '../../../../shared/ui/section-header/section-header';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-supplier-payment-view',
@@ -30,6 +31,9 @@ import { SectionHeader } from '../../../../shared/ui/section-header/section-head
     StatBox,
     InfoBanner,
     SectionHeader,
+    ReactiveFormsModule,
+    AsyncPipe,
+    FormsModule,
   ],
   templateUrl: './supplier-payment-view.html',
   styleUrl: './supplier-payment-view.css',
@@ -76,6 +80,37 @@ export class SupplierPaymentView implements OnInit {
     return supplierPaymentStatusBadgeColor(status.toUpperCase());
   }
 
+  public onStatusChange(status: string): void {
+    if (!this.id || !this.payment) {
+      this.router.navigate(['/suppliers/payments']);
+      return;
+    }
+
+    const previousStatus = this.payment.status;
+    this.payment.status = status.toUpperCase();
+
+    this.paymentsService.updateSupplierPaymentStatus(this.id, status.toLowerCase()).subscribe({
+      next: () => {
+        this.languageService.toastSuccess('common.messages.success-status-update');
+      },
+      error: (err) => {
+        this.payment!.status = previousStatus; // rollback status
+        const errorStatus = err.status;
+        const errorCode = err.error?.error?.errorCode;
+
+        if (errorStatus === 404) {
+          this.languageService.toastError('');
+        } else if (errorStatus === 409 && errorCode === 'SUPPLIER_INACTIVE') {
+          this.languageService.toastError('suppliers.messages.supplier-inactive');
+        } else if (errorStatus === 409 && errorCode === 'TRANSITION_VIOLATION') {
+          this.languageService.toastError('common.messages.status-transition-violation');
+        } else {
+          this.languageService.toastError(handleHttpErrors(errorStatus));
+        }
+      },
+    });
+  }
+
   private fetchSupplierPayment(id: number): void {
     this.isLoading = true;
 
@@ -85,7 +120,6 @@ export class SupplierPaymentView implements OnInit {
       .subscribe({
         next: (res) => {
           this.payment = res.data;
-          console.log(this.payment);
         },
         error: (err) => {
           const errorStatus = err.status;

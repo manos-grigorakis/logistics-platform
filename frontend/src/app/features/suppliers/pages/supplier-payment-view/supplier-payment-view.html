@@ -31,12 +31,20 @@
       </div>
 
       <div>
-        <span
-          [ngClass]="applyStatusBadgeColor(payment.status)"
-          class="rounded border p-2 capitalize"
-        >
-          {{ `metadata.supplier-payments-statuses.${payment.status.toLowerCase()}` | translate }}
-        </span>
+        @if (statuses$ | async; as statuses) {
+          <select
+            (ngModelChange)="onStatusChange($event)"
+            [ngClass]="applyStatusBadgeColor(payment.status)"
+            [ngModel]="payment.status.toUpperCase()"
+            class="rounded border p-2"
+          >
+            @for (status of statuses; track status) {
+              <option [ngValue]="status">
+                {{ `metadata.supplier-payments-statuses.${status.toLowerCase()}` | translate }}
+              </option>
+            }
+          </select>
+        }
       </div>
     </div>
 

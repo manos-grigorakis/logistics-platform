@@ -157,6 +157,8 @@
       "report-details": "Report Details",
       "report-name": "Report Name",
       "results": "Results",
+      "status-transition-violation": "Cannot update status to the desired state due to an invalid status transition",
+      "success-status-update": "Status updated successfully",
       "to": "To",
       "unmatched": "Unmatched",
       "yes": "Yes"
@@ -595,12 +597,12 @@
       "success-update": "Supplier updated successfully",
       "supplier-inactive": "The selected supplier is no longer active. Please refresh and choose a different supplier."
     },
-    "supplier": "Supplier",
     "payment-view": {
       "amounts": "Amounts",
       "description": "Description",
       "documents": "Files"
-    }
+    },
+    "supplier": "Supplier"
   },
   "users": {
     "actions": {
