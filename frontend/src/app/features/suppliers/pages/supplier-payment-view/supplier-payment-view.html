@@ -112,7 +112,7 @@
     <div class="mt-6">
       <app-section-header [header]="'suppliers.payment-view.documents' | translate" />
 
-      <div class="flex flex-col items-center gap-4 md:flex-row">
+      <div class="flex max-w-xl flex-row items-center gap-4">
         <!-- Invoice -->
         <div class="flex-1 rounded border border-zinc-300 p-5">
           <div class="flex items-center justify-between gap-3">
@@ -180,9 +180,11 @@
         </div>
       </div>
 
-      <app-info-banner>
-        <p>{{ 'common.messages.file-preview-format-notice' | translate }}</p>
-      </app-info-banner>
+      <div class="max-w-xl">
+        <app-info-banner>
+          <p>{{ 'common.messages.file-preview-format-notice' | translate }}</p>
+        </app-info-banner>
+      </div>
     </div>
   </section>
 }
