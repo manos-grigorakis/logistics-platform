@@ -1,0 +1,52 @@
+<div class="mx-auto mt-6 max-w-xl rounded-lg bg-white p-6 shadow-lg shadow-black/10">
+  <h2 class="mb-4 text-center text-3xl font-semibold">
+    @if (formUsage === 'create') {
+      {{ 'suppliers.actions.create' | translate }}
+    } @else {
+      {{ 'suppliers.actions.update' | translate }}
+    }
+  </h2>
+
+  @if (isLoading) {
+    <app-loading-spinner />
+  }
+
+  <div class="mb-5">
+    @if (errorMessage) {
+      <app-error-alert [errorMessage]="errorMessage" />
+    }
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmitClick()">
+    <div class="mb-6">
+      <app-main-input
+        formControlName="companyName"
+        [label]="'customers.fields.company-name' | translate"
+        [placeholder]="'customers.fields.placeholders.company-name' | translate"
+        type="text"
+        [showRequiredStar]="true"
+      />
+    </div>
+
+    <div class="mb-6">
+      <app-main-input
+        formControlName="email"
+        label="Email"
+        [placeholder]="'common.fields.placeholders.email' | translate"
+        type="text"
+      />
+    </div>
+
+    @if (formUsage === 'create') {
+      <app-primary-button
+        [value]="'suppliers.actions.create' | translate"
+        [isDisabled]="isLoading"
+      />
+    } @else {
+      <app-primary-button
+        [value]="'suppliers.actions.update' | translate"
+        [isDisabled]="isLoading"
+      />
+    }
+  </form>
+</div>

@@ -85,7 +85,6 @@ public class SupplierPaymentController {
             @ApiResponse(responseCode = "409", description = """
                     **Possible Causes:**
                     - Supplier is inactive
-                    - Paid amount exceeds total amount
                     - Violation on status transition
                     """
             ),

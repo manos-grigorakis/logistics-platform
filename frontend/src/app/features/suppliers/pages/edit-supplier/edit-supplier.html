@@ -1,0 +1,7 @@
+<app-suppliers-form
+  formUsage="update"
+  [isLoading]="isLoading"
+  [errorMessage]="errorMessage | translate"
+  [supplierData]="supplier"
+  (onSubmit)="onSubmitClick($event)"
+/>

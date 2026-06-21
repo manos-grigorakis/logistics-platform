@@ -1,0 +1,51 @@
+<table class="text-body w-full text-left text-sm whitespace-nowrap rtl:text-right">
+  @if (isLoading) {
+    <app-loading-spinner />
+  }
+
+  <thead class="text-body bg-secondary-700 text-sm text-white">
+    <tr>
+      <th scope="col" class="px-2 py-3 font-medium">
+        {{ 'common.fields.company-name' | translate }}
+      </th>
+      <th scope="col" class="px-2 py-3 font-medium">Email</th>
+      <th scope="col" class="px-2 py-3 font-medium">
+        {{ 'common.fields.total-amount' | translate }}
+      </th>
+      <th scope="col" class="px-2 py-3 font-medium">
+        {{ 'common.fields.remaining-amount' | translate }}
+      </th>
+      <th scope="col" class="px-2 py-3 font-medium">{{ 'common.actions.action' | translate }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (supplier of suppliers; track supplier.id) {
+      <tr>
+        <td class="px-2 py-4">{{ supplier.companyName }}</td>
+        <td class="max-w-20 truncate px-2 py-4">{{ supplier.email || '-' }}</td>
+        <td class="px-2 py-4">{{ supplier.totalAmount | currency: 'EUR' }}</td>
+        <td class="px-2 py-4">{{ supplier.remainingAmount | currency: 'EUR' }}</td>
+
+        <td class="flex gap-2 px-2 py-4">
+          <a
+            [routerLink]="['edit', supplier.id]"
+            class="text-fg-brand text-info-dark font-medium hover:underline"
+            >{{ 'common.actions.edit' | translate }}</a
+          >
+          <button
+            (click)="onDeleteClick(supplier.id)"
+            class="text-danger cursor-pointer font-medium hover:underline"
+          >
+            {{ 'common.actions.delete' | translate }}
+          </button>
+        </td>
+      </tr>
+    } @empty {
+      <tr>
+        <td class="w-full py-4 text-center text-lg" colspan="7">
+          {{ 'suppliers.empty-state.suppliers' | translate }}
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>

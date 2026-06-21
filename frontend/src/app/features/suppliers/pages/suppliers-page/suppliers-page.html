@@ -1,0 +1,45 @@
+<div>
+  <div class="border-primary-500 mb-8 rounded border-b-5 shadow-md">
+    <app-suppliers-filters
+      [isLoading]="isLoading"
+      [sortLabel]="activeSortLabel"
+      (onSearchChanged)="onSearchChanged($event)"
+      (onRefresh)="onRefresh()"
+      (onSortBy)="onSortByField($event)"
+    />
+  </div>
+
+  <app-modal
+    color="danger"
+    icon="lucideAlertTriangle"
+    [isEnabled]="showModal"
+    [confirmButtonText]="'common.actions.delete' | translate"
+    [cancelButtonText]="'common.actions.cancel' | translate"
+    [header]="modalHeader | translate"
+    [message]="modalMessage | translate"
+    (closeModalClick)="closeModalAndResetSelectedSupplier()"
+    (cancelClick)="closeModalAndResetSelectedSupplier()"
+    (confirmClick)="handleDelete()"
+  />
+
+  <div class="relative overflow-x-auto rounded-lg bg-white shadow-md">
+    <app-suppliers-table
+      [isLoading]="isLoading"
+      [suppliers]="suppliers"
+      (onDelete)="onDeleteClick($event)"
+    />
+  </div>
+
+  <!-- Pagination -->
+  @if (suppliers.length > 0) {
+    <div class="mt-8">
+      <app-pagination
+        [currentPage]="currentPage"
+        [totalElements]="totalElements"
+        [totalPages]="totalPages"
+        [pageSize]="pageSize"
+        (pageChanged)="onPageChange($event)"
+      />
+    </div>
+  }
+</div>

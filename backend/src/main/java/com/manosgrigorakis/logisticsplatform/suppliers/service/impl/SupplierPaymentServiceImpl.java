@@ -209,10 +209,12 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
             log.info("Supplier payment status updated with id {}", payment.getNumber());
         } else {
             log.warn("Supplier payment status change violates transition rules");
-            throw new ConflictException("Supplier payment status change violates transition rules", Map.of(
-                    "currentStatus", payment.getStatus(),
-                    "desiredStatus", request.status()
-            ));
+            throw new ConflictException("Supplier payment status change violates transition rules",
+                                        "TRANSITION_VIOLATION",
+                                        Map.of(
+                                                "currentStatus", payment.getStatus(),
+                                                "desiredStatus", request.status()
+                                        ));
         }
     }
 

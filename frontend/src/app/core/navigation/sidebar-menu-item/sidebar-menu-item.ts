@@ -14,6 +14,7 @@ export class SidebarMenuItem {
   @Input() icon?: string;
   @Input() label?: string;
   @Input() badgeValue?: string;
+  @Input() isExactRouterPath: boolean = false;
   @Output() onItemClick = new EventEmitter<void>();
 
   public onClick(): void {

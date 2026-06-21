@@ -1,0 +1,97 @@
+<div class="flex items-center justify-between space-x-4 p-4">
+  <app-search-bar
+    [placeholder]="'common.filters.search-by-company-name' | translate"
+    [value]="searchTerm"
+    (valueChange)="onSearchChange($event)"
+  />
+
+  <div class="flex items-center gap-6">
+    <div class="flex items-center gap-4">
+      <!-- Add -->
+      <app-rounded-icon-button (clicked)="onCreateSupplier()" icon="lucidePlus" color="success" />
+
+      <!-- Refresh -->
+      <app-rounded-icon-button
+        (clicked)="loadSuppliers()"
+        [isDisabled]="isLoading"
+        icon="lucideRefreshCcw"
+        color="info"
+      />
+    </div>
+
+    <!-- Sort -->
+    <app-dropdown-button [label]="sortLabel">
+      <ng-icon name="lucideFilter" size="16" dropdown-left-icon />
+      <ng-icon name="lucideChevronDown" size="16" dropdown-right-icon />
+
+      <!-- Menu Items -->
+      <li dropdown-menu-item>
+        <a
+          class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
+          (click)="onSortByField(undefined)"
+          >{{ 'common.filters.all' | translate }}</a
+        >
+      </li>
+
+      <!-- Company name -->
+      <li dropdown-menu-item>
+        <a
+          class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
+          (click)="
+            onSortByField({
+              label: 'company-name',
+              sortBy: 'companyName',
+              sortDirection: 'asc',
+              isNumeric: false,
+            })
+          "
+          >{{ 'common.fields.company-name' | translate }} (A → Z)</a
+        >
+      </li>
+      <li dropdown-menu-item>
+        <a
+          class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
+          (click)="
+            onSortByField({
+              label: 'company-name',
+              sortBy: 'companyName',
+              sortDirection: 'desc',
+              isNumeric: false,
+            })
+          "
+          >{{ 'common.fields.company-name' | translate }} (Z → A)</a
+        >
+      </li>
+
+      <!-- Total amount -->
+      <li dropdown-menu-item>
+        <a
+          class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
+          (click)="
+            onSortByField({
+              label: 'total-amount',
+              sortBy: 'totalAmount',
+              sortDirection: 'asc',
+              isNumeric: true,
+            })
+          "
+          >{{ 'common.fields.total-amount' | translate }} (0 → 9)</a
+        >
+      </li>
+      <li dropdown-menu-item>
+        <a
+          class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
+          (click)="
+            onSortByField({
+              label: 'total-amount',
+              sortBy: 'totalAmount',
+              sortDirection: 'desc',
+              isNumeric: true,
+            })
+          "
+          >{{ 'common.fields.total-amount' | translate }} (9 → 0)</a
+        >
+      </li>
+    </app-dropdown-button>
+  </div>
+</div>

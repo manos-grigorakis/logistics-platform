@@ -22,7 +22,9 @@ import { QuotesPage } from './features/quotes/pages/quotes-page/quotes-page';
 import { CreateQuote } from './features/quotes/pages/create-quote/create-quote';
 import { EditQuote } from './features/quotes/pages/edit-quote/edit-quote';
 import { Forbidden } from './pages/forbidden/forbidden';
-import { CustomerTabQuotes } from './features/customers/pages/view-customer/customer-tabs/customers-tab-quotes/customer-tab-quotes';
+import {
+  CustomerTabQuotes
+} from './features/customers/pages/view-customer/customer-tabs/customers-tab-quotes/customer-tab-quotes';
 import { VehiclesPage } from './features/vehicles/pages/vehicles-page/vehicles-page';
 import { CreateVehicle } from './features/vehicles/pages/create-vehicle/create-vehicle';
 import { EditVehicle } from './features/vehicles/pages/edit-vehicle/edit-vehicle';
@@ -30,10 +32,19 @@ import { ShipmentsPage } from './features/shipments/pages/shipments-page/shipmen
 import { CreateShipment } from './features/shipments/pages/create-shipment/create-shipment';
 import { EditShipment } from './features/shipments/pages/edit-shipment/edit-shipment';
 import { ViewShipment } from './features/shipments/pages/view-shipment/view-shipment';
-import { CustomerTabShipments } from './features/customers/pages/view-customer/customer-tabs/customers-tab-shipments/customer-tab-shipments';
+import {
+  CustomerTabShipments
+} from './features/customers/pages/view-customer/customer-tabs/customers-tab-shipments/customer-tab-shipments';
 import { PaymentsPage } from './features/payments/payments-page/payments-page';
 import { CmrDocumentsPage } from './features/cmr-documents/pages/cmr-documents-page/cmr-documents-page';
 import { UploadSignedCmr } from './features/cmr-documents/pages/upload-signed-cmr/upload-signed-cmr';
+import { SuppliersPage } from './features/suppliers/pages/suppliers-page/suppliers-page';
+import { SupplierPaymentsPage } from './features/suppliers/pages/supplier-payments-page/supplier-payments-page';
+import { EditSupplier } from './features/suppliers/pages/edit-supplier/edit-supplier';
+import { SuppliersCreate } from './features/suppliers/pages/suppliers-create/suppliers-create';
+import { SupplierPaymentsCreate } from './features/suppliers/pages/supplier-payments-create/supplier-payments-create';
+import { EditSupplierPayment } from './features/suppliers/pages/edit-supplier-payment/edit-supplier-payment';
+import { SupplierPaymentView } from './features/suppliers/pages/supplier-payment-view/supplier-payment-view';
 
 export const routes: Routes = [
   {
@@ -118,6 +129,29 @@ export const routes: Routes = [
             path: 'upload-signed',
             component: UploadSignedCmr,
             title: 'Upload Signed CMR Document',
+          },
+        ],
+      },
+
+      // Suppliers
+      {
+        path: 'suppliers',
+        children: [
+          { path: '', component: SuppliersPage, title: 'Suppliers' },
+          { path: 'create', component: SuppliersCreate, title: 'Create Supplier' },
+          { path: 'edit/:id', component: EditSupplier, title: 'Edit Supplier' },
+          {
+            path: 'payments',
+            children: [
+              { path: '', component: SupplierPaymentsPage, title: 'Suppliers Payments' },
+              {
+                path: 'create',
+                component: SupplierPaymentsCreate,
+                title: 'Create Supplier Payment',
+              },
+              { path: 'edit/:id', component: EditSupplierPayment, title: 'Edit Supplier Payment' },
+              { path: ':id', component: SupplierPaymentView, title: 'Suppliers Payment' },
+            ],
           },
         ],
       },

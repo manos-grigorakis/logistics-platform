@@ -1,0 +1,132 @@
+<div class="flex items-center justify-between space-x-4 p-4">
+  <app-search-bar
+    [placeholder]="'common.filters.search-by-number' | translate"
+    [value]="searchTerm"
+    (valueChange)="onSearchChange($event)"
+  />
+
+  <div class="flex items-center gap-6">
+    <div class="flex items-center gap-4">
+      <!-- Add -->
+      <app-rounded-icon-button
+        (clicked)="onCreateSupplierPayment()"
+        icon="lucidePlus"
+        color="success"
+      />
+
+      <!-- Refresh -->
+      <app-rounded-icon-button
+        (clicked)="loadSupplierPayments()"
+        [isDisabled]="isLoading"
+        icon="lucideRefreshCcw"
+        color="info"
+      />
+    </div>
+
+    <!-- Sort -->
+    <app-dropdown-button [label]="sortLabel">
+      <ng-icon name="lucideFilter" size="16" dropdown-left-icon />
+      <ng-icon name="lucideChevronDown" size="16" dropdown-right-icon />
+
+      <!-- Menu Items -->
+      <li dropdown-menu-item>
+        <a
+          class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
+          (click)="onSortByField(undefined)"
+          >{{ 'common.filters.all' | translate }}</a
+        >
+      </li>
+
+      <!-- Number -->
+      <li dropdown-menu-item>
+        <a
+          class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
+          (click)="
+            onSortByField({
+              label: 'number',
+              sortBy: 'number',
+              sortDirection: 'asc',
+              isNumeric: true,
+            })
+          "
+          >{{ 'common.fields.number' | translate }} (0 → 9)</a
+        >
+      </li>
+
+      <li dropdown-menu-item>
+        <a
+          class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
+          (click)="
+            onSortByField({
+              label: 'number',
+              sortBy: 'number',
+              sortDirection: 'desc',
+              isNumeric: true,
+            })
+          "
+          >{{ 'common.fields.number' | translate }} (9 → 0)</a
+        >
+      </li>
+
+      <!-- Total Amount -->
+      <li dropdown-menu-item>
+        <a
+          class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
+          (click)="
+            onSortByField({
+              label: 'total-amount',
+              sortBy: 'totalAmount',
+              sortDirection: 'asc',
+              isNumeric: true,
+            })
+          "
+          >{{ 'common.fields.total-amount' | translate }} (0 → 9)</a
+        >
+      </li>
+      <li dropdown-menu-item>
+        <a
+          class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
+          (click)="
+            onSortByField({
+              label: 'total-amount',
+              sortBy: 'totalAmount',
+              sortDirection: 'desc',
+              isNumeric: true,
+            })
+          "
+          >{{ 'common.fields.total-amount' | translate }} (9 → 0)</a
+        >
+      </li>
+
+      <!-- Created At -->
+      <li dropdown-menu-item>
+        <a
+          class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
+          (click)="
+            onSortByField({
+              label: 'created-at',
+              sortBy: 'createdAt',
+              sortDirection: 'asc',
+              isNumeric: true,
+            })
+          "
+          >{{ 'common.fields.created-at' | translate }} (0 → 9)</a
+        >
+      </li>
+      <li dropdown-menu-item>
+        <a
+          class="inline-flex w-full items-center p-2 text-sm text-gray-600 hover:cursor-pointer hover:text-black"
+          (click)="
+            onSortByField({
+              label: 'created-at',
+              sortBy: 'createdAt',
+              sortDirection: 'desc',
+              isNumeric: true,
+            })
+          "
+          >{{ 'common.fields.created-at' | translate }} (9 → 0)</a
+        >
+      </li>
+    </app-dropdown-button>
+  </div>
+</div>

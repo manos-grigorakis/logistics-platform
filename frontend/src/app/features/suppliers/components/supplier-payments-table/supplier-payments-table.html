@@ -1,0 +1,79 @@
+<table class="text-body w-full text-left text-sm whitespace-nowrap rtl:text-right">
+  @if (isLoading) {
+    <app-loading-spinner />
+  }
+
+  <thead class="text-body bg-secondary-700 text-sm text-white">
+    <th class="w-40 px-2 py-3 font-medium" scope="col">
+      {{ 'common.fields.number' | translate }}
+    </th>
+    <th class="px-2 py-3 font-medium" scope="col">
+      {{ 'common.fields.title' | translate }}
+    </th>
+    <th class="px-2 py-3 font-medium" scope="col">
+      {{ 'common.fields.status' | translate }}
+    </th>
+    <th class="px-2 py-3 font-medium" scope="col">
+      {{ 'common.fields.type' | translate }}
+    </th>
+    <th class="px-2 py-3 font-medium" scope="col">
+      {{ 'common.fields.total-amount' | translate }}
+    </th>
+    <th class="px-2 py-3 font-medium" scope="col">
+      {{ 'common.fields.paid-amount' | translate }}
+    </th>
+    <th class="px-2 py-3 font-medium" scope="col">
+      {{ 'common.fields.unpaid-amount' | translate }}
+    </th>
+    <th class="px-2 py-3 font-medium" scope="col">
+      {{ 'suppliers.supplier' | translate }}
+    </th>
+    <th class="px-2 py-3 font-medium" scope="col">
+      {{ 'common.fields.created-at' | translate }}
+    </th>
+    <th class="px-2 py-3 font-medium" scope="col">
+      {{ 'common.actions.action' | translate }}
+    </th>
+  </thead>
+
+  <tbody>
+    @for (payment of supplierPayment; track payment.id) {
+      <tr>
+        <td class="px-2 py-4">
+          <a [routerLink]="['/suppliers/payments', payment.id]" class="hover:underline">
+            {{ payment.number }}
+          </a>
+        </td>
+        <td class="max-w-44 truncate px-2 py-4">{{ payment.title }}</td>
+        <td class="px-2 py-4">
+          <span [ngClass]="applyStatusBadgeColor(payment.status)" class="rounded border px-2">
+            {{ `metadata.supplier-payments-statuses.${payment.status.toLowerCase()}` | translate }}
+          </span>
+        </td>
+        <td class="px-2 py-4">
+          <span class="rounded border bg-gray-100 px-2 text-gray-700">
+            {{ `metadata.supplier-payments-types.${payment.type.toLowerCase()}` | translate }}
+          </span>
+        </td>
+        <td class="px-2 py-4">{{ payment.totalAmount | currency: 'EUR' }}</td>
+        <td class="px-2 py-4">{{ payment.paidAmount | currency: 'EUR' }}</td>
+        <td class="px-2 py-4">{{ payment.unpaidAmount | currency: 'EUR' }}</td>
+        <td class="px-2 py-4">{{ payment.supplier.companyName }}</td>
+        <td class="px-2 py-4">{{ payment.createdAt | date: 'dd/MM/yyyy' }}</td>
+        <td class="px-2 py-4">
+          <a
+            [routerLink]="['edit', payment.id]"
+            class="text-fg-brand text-info-dark font-medium hover:underline"
+            >{{ 'common.actions.edit' | translate }}</a
+          >
+        </td>
+      </tr>
+    } @empty {
+      <tr>
+        <td class="w-full py-4 text-center text-lg" colspan="7">
+          {{ 'suppliers.empty-state.payments' | translate }}
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
