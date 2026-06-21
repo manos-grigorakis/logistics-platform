@@ -17,7 +17,8 @@ public interface SupplierRepository extends JpaRepository<Supplier, Long> {
     @Query("SELECT s.id, s.companyName, s.email, s.isActive, " +
             "SUM(sp.totalAmount) as totalAmount, SUM(sp.totalAmount - sp.paidAmount) AS remainingAmount " +
             "FROM Supplier AS s " + "LEFT JOIN s.supplierPayments AS sp " +
-            "WHERE(:companyName IS NULL OR LOWER(s.companyName) LIKE LOWER(CONCAT('%', :companyName, '%'))) " +
+            "WHERE s.isActive = TRUE " +
+            "AND(:companyName IS NULL OR LOWER(s.companyName) LIKE LOWER(CONCAT('%', :companyName, '%'))) " +
             "GROUP BY s.id, s.companyName")
     Page<SupplierListResponse> findSupplierWithTotals(@Param("companyName") String companyName, Pageable pageable);
 
