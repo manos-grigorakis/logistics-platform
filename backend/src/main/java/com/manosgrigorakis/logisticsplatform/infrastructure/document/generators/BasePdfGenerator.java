@@ -6,7 +6,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.xhtmlrenderer.pdf.ITextFontResolver;
 import org.xhtmlrenderer.pdf.ITextRenderer;
@@ -20,23 +19,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public abstract class BasePdfGenerator<T extends PdfRequest> {
-    @Value("${app.company.name}")
-    protected String companyName;
-
-    @Value("${app.company.slogan}")
-    protected String companySlogan;
-
-    @Value("${app.company.location}")
-    protected String companyLocation;
-
-    @Value("${app.company.phones}")
-    protected String companyPhones;
-
-    @Value("${app.company.mail}")
-    protected String companyMail;
-
-    @Value("${app.company.website_url}")
-    protected String companyWebsiteUrl;
 
     private final Logger log = LoggerFactory.getLogger(BasePdfGenerator.class);
 

@@ -75,16 +75,6 @@ app:
     primary_dark_color: "#0f172a"
     accent_light_color: "#3498db"
 
-  company:
-    name: Test Company
-    slogan: Test
-    location: Test
-    phones: Test
-    mail: test@domain.com
-    website_url: test.domain.com
-    representative: Test
-    representative_title: Test
-
   aws:
     region: "eu-central-1"
 
