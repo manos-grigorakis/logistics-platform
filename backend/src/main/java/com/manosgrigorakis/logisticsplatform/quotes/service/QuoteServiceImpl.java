@@ -62,9 +62,6 @@ public class QuoteServiceImpl implements QuoteService {
 
     private final Logger log = LoggerFactory.getLogger(QuoteServiceImpl.class);
 
-    @Value("${tax.vat}")
-    private Integer vatPercent;
-
     @Value("${app.minio.bucketPathQuotes}")
     private String bucketPathQuotes;
 
@@ -145,18 +142,19 @@ public class QuoteServiceImpl implements QuoteService {
         String newNumber = documentNumberGenerator.generateNextSequentialNumber("Q", lastNumber);
         quote.setNumber(newNumber);
 
+        CompanyProfile companyProfile = companyProfileService.getCompanyProfileEntity();
+
         BigDecimal netTotal = quoteCalculator.calculateNetTotal(quote);
-        BigDecimal vatAmount = FinancialCalculator.calculateVatAmount(netTotal, vatPercent);
+        BigDecimal vatAmount = FinancialCalculator.calculateVatAmount(netTotal, companyProfile.getVatPercentage());
         BigDecimal grossTotal = FinancialCalculator.calculateGrossTotal(netTotal, vatAmount);
 
-        quote.setTaxRatePercentage(vatPercent);
+        quote.setTaxRatePercentage(companyProfile.getVatPercentage());
         quote.setNetPrice(netTotal.setScale(2, RoundingMode.HALF_UP));
         quote.setVatAmount(vatAmount.setScale(2, RoundingMode.HALF_UP));
         quote.setGrossPrice(grossTotal.setScale(2, RoundingMode.HALF_UP));
 
         // Generate PDF and store / upload it
-        byte[] quotePdf = quotePdfGenerator.generatePdf(
-                new QuotePdfRequestDTO(quote, companyProfileService.getCompanyProfileEntity()));
+        byte[] quotePdf = quotePdfGenerator.generatePdf(new QuotePdfRequestDTO(quote, companyProfile));
         fileStorageService.store(this.bucketPathQuotes + quote.getNumber(), quotePdf, "application/pdf");
 
         Quote savedQuote = quoteRepository.save(quote);
@@ -200,9 +198,11 @@ public class QuoteServiceImpl implements QuoteService {
             quote.addQuoteItem(item);
         }
 
+        CompanyProfile companyProfile = companyProfileService.getCompanyProfileEntity();
+
         // Calculate
         BigDecimal netTotal = quoteCalculator.calculateNetTotal(quote);
-        BigDecimal vatAmount = FinancialCalculator.calculateVatAmount(netTotal, vatPercent);
+        BigDecimal vatAmount = FinancialCalculator.calculateVatAmount(netTotal, companyProfile.getVatPercentage());
         BigDecimal grossTotal = FinancialCalculator.calculateGrossTotal(netTotal, vatAmount);
 
         // Update fields
@@ -217,8 +217,7 @@ public class QuoteServiceImpl implements QuoteService {
         quote.setGrossPrice(grossTotal);
 
         // Re-generate PDF and store / upload it
-        byte[] quotePdf = quotePdfGenerator.generatePdf(
-                new QuotePdfRequestDTO(quote, companyProfileService.getCompanyProfileEntity()));
+        byte[] quotePdf = quotePdfGenerator.generatePdf(new QuotePdfRequestDTO(quote, companyProfile));
         fileStorageService.store(this.bucketPathQuotes + quote.getNumber(), quotePdf, "application/pdf");
 
         Quote savedQuote = quoteRepository.save(quote);

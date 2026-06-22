@@ -86,9 +86,6 @@ app:
     primary_dark_color: ${PLATFORM_PRIMARY_DARK_COLOR}
     accent_light_color: ${PLATFORM_ACCENT_LIGHT_COLOR}
 
-  tax:
-    vat: ${TAX_VAT}
-
   aws:
     region: ${AWS_REGION}
 

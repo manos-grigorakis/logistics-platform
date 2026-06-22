@@ -88,6 +88,3 @@ app:
     bucketPathReconciliationReport: "reconciliation-report/"
     bucketPathSuppliers: "suppliers/"
     bucketPathCompanyProfile: "company-profile/"
-
-tax:
-  vat: 24
