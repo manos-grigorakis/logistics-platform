@@ -148,6 +148,11 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.PATCH, apiPrefix + "/v1/supplier-payments/*/status").hasAnyAuthority("ADMIN", "MANAGER", "EMPLOYEE")
                     .requestMatchers(HttpMethod.GET, apiPrefix + "/v1/supplier-payments/**").hasAnyAuthority("ADMIN", "MANAGER", "EMPLOYEE")
 
+                    // Company Profile
+                    .requestMatchers(HttpMethod.POST, apiPrefix + "/v1/company-profile").hasAuthority("ADMIN")
+                    .requestMatchers(HttpMethod.PUT, apiPrefix + "/v1/company-profile").hasAuthority("ADMIN")
+                    .requestMatchers(HttpMethod.GET, apiPrefix + "/v1/company-profile").authenticated()
+
                     // All other endpoints require authentication
                     .anyRequest().authenticated();
         });

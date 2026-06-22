@@ -13,6 +13,7 @@ import org.springframework.transaction.TransactionException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -57,6 +58,18 @@ public class GlobalExceptionHandler {
                 exc.getMessage(),
                 exc.getErrorCode(),
                 exc.getDetails()
+        );
+
+        return new ResponseEntity<>(new ApiResponseWrapper<>(response), HttpStatus.BAD_REQUEST);
+    }
+
+    // Bad Request (Max upload file size) - 400
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ApiResponseWrapper<Void>> handleMaxUploadSizeException(MaxUploadSizeExceededException exc) {
+        ErrorResponse response = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                "File is too large",
+                "FILE_TOO_LARGE", null
         );
 
         return new ResponseEntity<>(new ApiResponseWrapper<>(response), HttpStatus.BAD_REQUEST);
