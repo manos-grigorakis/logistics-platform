@@ -68,10 +68,12 @@ app:
   reset_password:
     expires: "20m"
 
-  mail:
-    no_reply: "example@example.com"
-    support: "support@exampe.com"
-    displayName: "Logistics Platform"
+  platform:
+    display_name: "Logistics Platform"
+    no_reply_mail: "Logistics Platform <no-reply@logistics.com>"
+    support_mail: "Support <support@logistics.com>"
+    primary_dark_color: "#0f172a"
+    accent_light_color: "#3498db"
 
   company:
     name: Test Company
