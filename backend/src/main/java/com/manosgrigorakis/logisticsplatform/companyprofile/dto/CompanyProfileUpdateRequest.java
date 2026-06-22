@@ -2,6 +2,7 @@ package com.manosgrigorakis.logisticsplatform.companyprofile.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,11 +38,11 @@ public record CompanyProfileUpdateRequest(
         @Size(max = 100)
         String country,
 
-        @NotBlank(message = "Brand primary color is required")
+        @Pattern(regexp = "^#[0-9A-Fa-f]{6}$", message = "Invalid hex color format")
         @Size(min = 7, max = 7)
         String brandPrimaryColor,
 
-        @NotBlank(message = "Brand secondary color is required")
+        @Pattern(regexp = "^#[0-9A-Fa-f]{6}$", message = "Invalid hex color format")
         @Size(min = 7, max = 7)
         String brandSecondaryColor,
 
