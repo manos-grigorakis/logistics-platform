@@ -12,7 +12,12 @@ public class CompanyProfileMapper {
                 .name(request.name())
                 .tin(request.tin())
                 .vatPercentage(request.vatPercentage())
+                .representativeTitle(request.representativeTitle())
                 .representative(request.representative())
+                .slogan(request.slogan())
+                .email(request.email())
+                .phones(request.phones())
+                .websiteUrl(request.websiteUrl())
                 .street(request.street())
                 .streetNumber(request.streetNumber())
                 .postalCode(request.postalCode())
@@ -27,14 +32,21 @@ public class CompanyProfileMapper {
     public static CompanyProfile toUpdate(CompanyProfileUpdateRequest request, CompanyProfile entity) {
         entity.setName(request.name());
         entity.setVatPercentage(request.vatPercentage());
+        entity.setRepresentativeTitle(request.representativeTitle());
         entity.setRepresentative(request.representative());
+        entity.setSlogan(request.slogan());
+        entity.setEmail(request.email());
+        entity.setPhones(request.phones());
+        entity.setWebsiteUrl(request.websiteUrl());
         entity.setStreet(request.street());
         entity.setStreetNumber(request.streetNumber());
         entity.setPostalCode(request.postalCode());
         entity.setRegion(request.region());
         entity.setCountry(request.country());
-        entity.setBrandPrimaryColor(request.brandPrimaryColor());
-        entity.setBrandSecondaryColor(request.brandSecondaryColor());
+        entity.setBrandPrimaryColor(
+                request.brandPrimaryColor() != null ? request.brandPrimaryColor() : entity.getBrandPrimaryColor());
+        entity.setBrandSecondaryColor(
+                request.brandSecondaryColor() != null ? request.brandSecondaryColor() : entity.getBrandSecondaryColor());
 
         return entity;
     }
@@ -49,8 +61,11 @@ public class CompanyProfileMapper {
         CompanyProfileBrandingSummary brandingSummary = new CompanyProfileBrandingSummary(entity.getBrandPrimaryColor(),
                                                                                           entity.getBrandSecondaryColor());
 
-        return new CompanyProfileResponse(entity.getId(), entity.getName(), entity.getTin(), logoUrl,
-                                          entity.getVatPercentage(), entity.getRepresentative(), addressSummary,
+        return new CompanyProfileResponse(entity.getId(), entity.getName(), entity.getTin(), entity.getSlogan(),
+                                          logoUrl,
+                                          entity.getVatPercentage(), entity.getRepresentativeTitle(),
+                                          entity.getRepresentative(), entity.getEmail(), entity.getPhones(), entity.getWebsiteUrl(),
+                                          addressSummary,
                                           brandingSummary, entity.getCreatedAt(), entity.getUpdatedAt());
     }
 }

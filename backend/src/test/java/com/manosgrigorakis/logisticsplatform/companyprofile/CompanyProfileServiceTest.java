@@ -20,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -322,8 +323,24 @@ public class CompanyProfileServiceTest {
      */
     private CompanyProfileCreateRequest buildCreateRequest(MultipartFile file) {
         return new CompanyProfileCreateRequest(
-                "ACME Logistics", "123456789", 24, "John Doe", "Street", "100", "123456", "Athens", "Greece", "#FFFFFF",
-                "#FFFFFF", file);
+                "ACME Logistics",
+                "123456789",
+                24,
+                "CEO",
+                "John Doe",
+                "Street",
+                "100",
+                "123456",
+                "Athens",
+                "Greece",
+                "#FFFFFF",
+                "#FFFFFF",
+                file,
+                "https://example.com",
+                "Random slogan",
+                List.of("12345678", "87654321"),
+                "doe@example.com"
+                );
     }
 
     /**
@@ -334,7 +351,21 @@ public class CompanyProfileServiceTest {
      */
     private CompanyProfileUpdateRequest buildUpdateRequest(MultipartFile file) {
         return new CompanyProfileUpdateRequest(
-                "ACME Logistics", 24, "John Doe", "Street", "100", "123456", "Athens", "Greece", "#FFFFFF", "#FFFFFF",
-                file);
+                "ACME Logistics",
+                24,
+                "CEO",
+                "John Doe",
+                "Street",
+                "100",
+                "123456",
+                "Athens",
+                "Greece",
+                "#FFFFFF",
+                "#FFFFFF",
+                file,
+                "https://example.com",
+                "Random slogan",
+                List.of("12345678", "87654321"),
+                "doe@example.com");
     }
 }

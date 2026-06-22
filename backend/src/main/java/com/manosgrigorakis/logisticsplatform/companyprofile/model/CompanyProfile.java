@@ -2,8 +2,11 @@ package com.manosgrigorakis.logisticsplatform.companyprofile.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -26,8 +29,17 @@ public class CompanyProfile {
     @Column(name = "logo_url", length = 500)
     private String logoUrl;
 
+    @Column(name = "website_url", length = 500)
+    private String websiteUrl;
+
+    @Column(name = "slogan", length = 100)
+    private String slogan;
+
     @Column(name = "vat_percentage", nullable = false)
     private Integer vatPercentage;
+
+    @Column(name = "representative_title", nullable = false, length = 50)
+    private String representativeTitle;
 
     @Column(name = "representative", nullable = false, length = 150)
     private String representative;
@@ -53,6 +65,13 @@ public class CompanyProfile {
     @Column(name = "brand_secondary_color", nullable = false, length = 7)
     private String brandSecondaryColor;
 
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "phones", nullable = false, columnDefinition = "longtext")
+    private List<String> phones;
+
+    @Column(name = "email", nullable = false, length = 320)
+    private String email;
+
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
@@ -60,13 +79,17 @@ public class CompanyProfile {
     private LocalDateTime updatedAt;
 
     @Builder
-    public CompanyProfile(String name, String tin, String logoUrl, Integer vatPercentage, String representative,
+    public CompanyProfile(String name, String tin, String logoUrl, String websiteUrl, String slogan,
+                          Integer vatPercentage, String representativeTitle, String representative,
                           String street, String streetNumber, String postalCode, String region, String country,
-                          String brandPrimaryColor, String brandSecondaryColor) {
+                          String brandPrimaryColor, String brandSecondaryColor, List<String> phones, String email) {
         this.name = name;
         this.tin = tin;
         this.logoUrl = logoUrl;
+        this.websiteUrl = websiteUrl;
+        this.slogan = slogan;
         this.vatPercentage = vatPercentage;
+        this.representativeTitle = representativeTitle;
         this.representative = representative;
         this.street = street;
         this.streetNumber = streetNumber;
@@ -75,6 +98,8 @@ public class CompanyProfile {
         this.country = country;
         this.brandPrimaryColor = brandPrimaryColor == null ? "#F9FAFB" : brandPrimaryColor;
         this.brandSecondaryColor = brandSecondaryColor == null ? "#374151" : brandSecondaryColor;
+        this.phones = phones;
+        this.email = email;
     }
 
     @PrePersist
@@ -85,5 +110,10 @@ public class CompanyProfile {
     @PreUpdate
     public void preUpdate() {
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public String getFullAddress() {
+        return String.format("%s %s, %s %s, %s", this.street, this.streetNumber, this.postalCode, this.region,
+                             this.country);
     }
 }
