@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -31,7 +32,7 @@ public class CompanyProfileServiceImpl implements CompanyProfileService {
     private String companyProfileBucketPath;
 
     private final List<String> allowedContentTypes = List.of("image/jpeg", "image/png");
-    private final Long maxLogoFile = 2_000_000L;
+    private final int maxLogoFileSize = 2 * 1024 * 1024; // 2ΜΒ
     private final String fileKey = "company-logo";
 
     @Override
@@ -127,11 +128,15 @@ public class CompanyProfileServiceImpl implements CompanyProfileService {
      */
     private void validateLogoFile(MultipartFile file) throws BadRequestException {
         if (!allowedContentTypes.contains(file.getContentType())) {
-            throw new BadRequestException("Invalid logo file contentType", "INVALID_FILE_TYPE");
+            throw new BadRequestException("Invalid logo file contentType", "INVALID_FILE_TYPE",
+                                          Map.of(
+                                                  "allowedContentTypes", allowedContentTypes.toString()));
         }
 
-        if (file.getSize() > maxLogoFile) {
-            throw new BadRequestException("Invalid logo file size", "FILE_TOO_LARGE");
+        if (file.getSize() > maxLogoFileSize) {
+            double maxSizeMb = maxLogoFileSize / (1024.0 * 1024.0);
+            throw new BadRequestException("Invalid logo file size", "FILE_TOO_LARGE",
+                                          Map.of("maxLogoSize", maxSizeMb + "ΜΒ"));
         }
     }
 
