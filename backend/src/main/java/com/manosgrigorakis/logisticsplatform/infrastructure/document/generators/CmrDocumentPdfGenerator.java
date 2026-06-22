@@ -7,6 +7,7 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.manosgrigorakis.logisticsplatform.cmr.enums.CmrStatus;
 import com.manosgrigorakis.logisticsplatform.cmr.model.CmrDocument;
+import com.manosgrigorakis.logisticsplatform.companyprofile.model.CompanyProfile;
 import com.manosgrigorakis.logisticsplatform.customers.model.Customer;
 import com.manosgrigorakis.logisticsplatform.infrastructure.document.dto.CmrDocumentPdfRequestDTO;
 import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
@@ -57,6 +58,7 @@ public final class CmrDocumentPdfGenerator extends BasePdfGenerator<CmrDocumentP
         Quote quote = request.quote();
         Shipment shipment = request.shipment();
         CmrDocument cmrDocument = request.cmrDocument();
+        CompanyProfile companyProfile = request.companyProfile();
 
         // Format template
         String htmlTemplate = new String(
@@ -94,13 +96,15 @@ public final class CmrDocumentPdfGenerator extends BasePdfGenerator<CmrDocumentP
         String formattedPickupDate = formatDate(pickupDate);
         String formattedIssuedDate = formatDate(issuedDate);
         String formatedQrCode = formatQrCode(generateQrCode(cmrNumber));
+        String companySlogan = companyProfile.getSlogan() != null ? companyProfile.getSlogan() : "";
 
         htmlTemplate = htmlTemplate
-                .replace("${companyName}", this.companyName)
-                .replace("${companySlogan}", this.companySlogan)
-                .replace("${companyLocation}", this.companyLocation)
-                .replace("${companyPhones}", this.companyPhones)
-                .replace("${companyMail}", this.companyMail)
+                .replace("${companyName}", companyProfile.getName())
+                .replace("${companySlogan}", companySlogan)
+                .replace("${companyLocation}", companyProfile.getFullAddress())
+                .replace("${companyPhones}", companyProfile.getFormattedPhones())
+                .replace("${companyMail}", companyProfile.getEmail())
+                .replace("${primaryColor}", companyProfile.getBrandPrimaryColor())
                 .replace("${quoteNumber}", quoteNumber)
                 .replace("${origin}", origin)
                 .replace("${destination}", destination)
