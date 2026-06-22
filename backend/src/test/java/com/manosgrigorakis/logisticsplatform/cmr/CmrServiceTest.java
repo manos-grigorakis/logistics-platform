@@ -12,6 +12,9 @@ import com.manosgrigorakis.logisticsplatform.cmr.service.CmrDocumentServiceImpl;
 import com.manosgrigorakis.logisticsplatform.common.exception.ConflictException;
 import com.manosgrigorakis.logisticsplatform.common.exception.ResourceNotFoundException;
 import com.manosgrigorakis.logisticsplatform.common.generators.DocumentNumberGenerator;
+import com.manosgrigorakis.logisticsplatform.companyprofile.model.CompanyProfile;
+import com.manosgrigorakis.logisticsplatform.companyprofile.repository.CompanyProfileRepository;
+import com.manosgrigorakis.logisticsplatform.companyprofile.service.CompanyProfileServiceImpl;
 import com.manosgrigorakis.logisticsplatform.infrastructure.document.generators.CmrDocumentPdfGenerator;
 import com.manosgrigorakis.logisticsplatform.infrastructure.storage.FileStorageService;
 import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
@@ -51,6 +54,9 @@ public class CmrServiceTest {
 
     @InjectMocks
     private CmrDocumentServiceImpl cmrDocumentService;
+
+    @Mock
+    private CompanyProfileServiceImpl companyProfileService;
 
     @Test
     public void getCmrDocumentById_shouldReturnCmrDocument_whenExists() {

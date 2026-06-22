@@ -16,6 +16,7 @@ import com.manosgrigorakis.logisticsplatform.common.exception.DocumentProcessing
 import com.manosgrigorakis.logisticsplatform.common.exception.ResourceNotFoundException;
 import com.manosgrigorakis.logisticsplatform.common.generators.DocumentNumberGenerator;
 import com.manosgrigorakis.logisticsplatform.common.utils.SpecsUtils;
+import com.manosgrigorakis.logisticsplatform.companyprofile.service.CompanyProfileService;
 import com.manosgrigorakis.logisticsplatform.infrastructure.document.generators.CmrDocumentPdfGenerator;
 import com.manosgrigorakis.logisticsplatform.infrastructure.document.dto.CmrDocumentPdfRequestDTO;
 import com.manosgrigorakis.logisticsplatform.infrastructure.document.pdf.ProcessCmrDocumentPdf;
@@ -47,16 +48,22 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
     private final FileStorageService fileStorageService;
     private final CmrDocumentPdfGenerator cmrDocumentPdfGenerator;
     private final AuditService auditService;
+    private final CompanyProfileService companyProfileService;
 
     @Value("${app.minio.bucketPathCmr}")
     private String bucketPathCmr;
 
-    public CmrDocumentServiceImpl(CmrDocumentRepository cmrDocumentRepository, DocumentNumberGenerator documentNumberGenerator, FileStorageService fileStorageService, CmrDocumentPdfGenerator cmrDocumentPdfGenerator, AuditService auditService) {
+    public CmrDocumentServiceImpl(CmrDocumentRepository cmrDocumentRepository,
+                                  DocumentNumberGenerator documentNumberGenerator,
+                                  FileStorageService fileStorageService,
+                                  CmrDocumentPdfGenerator cmrDocumentPdfGenerator, AuditService auditService,
+                                  CompanyProfileService companyProfileService) {
         this.cmrDocumentRepository = cmrDocumentRepository;
         this.documentNumberGenerator = documentNumberGenerator;
         this.fileStorageService = fileStorageService;
         this.cmrDocumentPdfGenerator = cmrDocumentPdfGenerator;
         this.auditService = auditService;
+        this.companyProfileService = companyProfileService;
     }
 
     @Override
@@ -112,7 +119,8 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
         
         // Generate PDF
         byte[] cmrDocumentPdf = cmrDocumentPdfGenerator.generatePdf(
-                new CmrDocumentPdfRequestDTO(quote, shipment, cmrDocument)
+                new CmrDocumentPdfRequestDTO(quote, shipment, cmrDocument,
+                                             companyProfileService.getCompanyProfileEntity())
         );
 
         // Upload the generated PDF to S3
@@ -203,7 +211,8 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
                 });
 
         CmrDocumentPdfRequestDTO request = new CmrDocumentPdfRequestDTO(response.quote(), response.shipment(),
-                                                                        response.cmrDocument());
+                                                                        response.cmrDocument(),
+                                                                        companyProfileService.getCompanyProfileEntity());
         String cmrNumber = response.cmrDocument().getNumber();
 
         try {
@@ -297,7 +306,8 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
 
         // Regenerate PDF
         byte[] cmrDocumentPdf = cmrDocumentPdfGenerator.generatePdf(
-                new CmrDocumentPdfRequestDTO(response.quote(), response.shipment(), response.cmrDocument())
+                new CmrDocumentPdfRequestDTO(response.quote(), response.shipment(), response.cmrDocument(),
+                                             companyProfileService.getCompanyProfileEntity())
         );
 
         // Upload the regenerated PDF to S3

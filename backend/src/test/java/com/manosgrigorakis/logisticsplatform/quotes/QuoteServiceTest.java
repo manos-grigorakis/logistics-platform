@@ -1,6 +1,8 @@
 package com.manosgrigorakis.logisticsplatform.quotes;
 
 import com.manosgrigorakis.logisticsplatform.common.exception.ResourceNotFoundException;
+import com.manosgrigorakis.logisticsplatform.companyprofile.model.CompanyProfile;
+import com.manosgrigorakis.logisticsplatform.companyprofile.service.CompanyProfileServiceImpl;
 import com.manosgrigorakis.logisticsplatform.customers.enums.CustomerType;
 import com.manosgrigorakis.logisticsplatform.customers.model.Customer;
 import com.manosgrigorakis.logisticsplatform.customers.repository.CustomerRepository;
@@ -19,6 +21,7 @@ import com.manosgrigorakis.logisticsplatform.users.enums.UserStatus;
 import com.manosgrigorakis.logisticsplatform.users.model.User;
 import com.manosgrigorakis.logisticsplatform.users.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,6 +30,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -53,6 +57,31 @@ public class QuoteServiceTest {
 
     @Autowired
     private QuoteServiceImpl quoteService;
+
+    @MockitoBean
+    private CompanyProfileServiceImpl companyProfileService;
+
+    @BeforeEach
+    public void setUp() {
+        when(companyProfileService.getCompanyProfileEntity()).thenReturn(CompanyProfile.builder()
+                                                                                 .name("Test Company")
+                                                                                 .slogan("Test")
+                                                                                 .email("test@test.com")
+                                                                                 .street("Street")
+                                                                                 .streetNumber("1")
+                                                                                 .postalCode("12345")
+                                                                                 .region("Athens")
+                                                                                 .tin("123456789")
+                                                                                 .vatPercentage(24)
+                                                                                 .representative("John Doe")
+                                                                                 .representativeTitle("Manager")
+                                                                                 .brandPrimaryColor("#0f172a")
+                                                                                 .brandSecondaryColor("#2563eb")
+                                                                                 .phones(List.of("2101234567"))
+                                                                                 .country("Greece")
+                                                                                 .build()
+        );
+    }
 
     @Test
     void getQuoteById_shouldReturnQuote() {

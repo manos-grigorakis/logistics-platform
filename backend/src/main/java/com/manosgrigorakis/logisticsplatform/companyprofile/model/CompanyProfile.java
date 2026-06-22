@@ -96,8 +96,8 @@ public class CompanyProfile {
         this.postalCode = postalCode;
         this.region = region;
         this.country = country;
-        this.brandPrimaryColor = brandPrimaryColor == null ? "#F9FAFB" : brandPrimaryColor;
-        this.brandSecondaryColor = brandSecondaryColor == null ? "#374151" : brandSecondaryColor;
+        this.brandPrimaryColor = brandPrimaryColor == null ? "#0f172a" : brandPrimaryColor;
+        this.brandSecondaryColor = brandSecondaryColor == null ? "#2563eb" : brandSecondaryColor;
         this.phones = phones;
         this.email = email;
     }
@@ -115,5 +115,9 @@ public class CompanyProfile {
     public String getFullAddress() {
         return String.format("%s %s, %s %s, %s", this.street, this.streetNumber, this.postalCode, this.region,
                              this.country);
+    }
+
+    public String getFormattedPhones() {
+        return String.join(", ", this.phones);
     }
 }

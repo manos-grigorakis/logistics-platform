@@ -79,23 +79,12 @@ app:
   reset_password:
     expires: ${RESET_PASSWORD_TOKEN_EXPIRATION}
 
-  mail:
-    no_reply: ${NO_REPLY_MAIL}
-    support: ${SUPPORT_MAIL}
-    displayName: ${DISPLAY_NAME}
-
-  company:
-    name: ${COMPANY_NAME}
-    slogan: ${COMPANY_SLOGAN}
-    location: ${COMPANY_LOCATION}
-    phones: ${COMPANY_PHONES}
-    mail: ${COMPANY_MAIL}
-    website_url: ${COMPANY_WEBSITE_URL}
-    representative: ${COMPANY_REPRESENTATIVE}
-    representative_title: ${COMPANY_REPRESENTATIVE_TITLE}
-
-  tax:
-    vat: ${TAX_VAT}
+  platform:
+    display_name: ${PLATFORM_DISPLAY_NAME}
+    no_reply_mail: ${PLATFORM_NO_REPLY_MAIL}
+    support_mail: ${PLATFORM_SUPPORT_MAIL}
+    primary_dark_color: ${PLATFORM_PRIMARY_DARK_COLOR}
+    accent_light_color: ${PLATFORM_ACCENT_LIGHT_COLOR}
 
   aws:
     region: ${AWS_REGION}

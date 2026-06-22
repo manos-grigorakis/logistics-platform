@@ -1,5 +1,6 @@
 package com.manosgrigorakis.logisticsplatform.infrastructure.document.generators;
 
+import com.manosgrigorakis.logisticsplatform.companyprofile.model.CompanyProfile;
 import com.manosgrigorakis.logisticsplatform.infrastructure.document.dto.QuotePdfRequestDTO;
 import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
 import com.manosgrigorakis.logisticsplatform.quotes.model.QuoteItem;
@@ -15,15 +16,10 @@ public final class QuotePdfGenerator extends BasePdfGenerator<QuotePdfRequestDTO
     @Value("classpath:templates/quotes/greek/index.html")
     private Resource greekQuoteHtmlTemplate;
 
-    @Value("${app.company.representative}")
-    private String companyRepresentative;
-
-    @Value("${app.company.representative_title}")
-    private String companyRepresentativeTitle;
-
     @Override
     protected String formatTemplate(Resource templateFile, QuotePdfRequestDTO request) throws IOException {
         Quote quote = request.quote();
+        CompanyProfile companyProfile = request.companyProfile();
 
         // Format template
         String htmlTemplate = new String(
@@ -35,18 +31,20 @@ public final class QuotePdfGenerator extends BasePdfGenerator<QuotePdfRequestDTO
         String specialTerms = buildSpecialTerms(quote);
         String notes = buildNotes(quote);
 
-        // Format issueDate
+        // Format fields
         String formatedDate = formatDate(quote.getIssueDate());
+        String companySlogan = companyProfile.getSlogan() != null ? companyProfile.getSlogan() : "";
+        String companyWebsiteUrl = companyProfile.getWebsiteUrl() != null ? companyProfile.getWebsiteUrl() : "";
 
         htmlTemplate = htmlTemplate
-                .replace("${companyName}", this.companyName)
-                .replace("${companySlogan}", this.companySlogan)
-                .replace("${companyLocation}", this.companyLocation)
-                .replace("${companyPhones}", this.companyPhones)
-                .replace("${companyMail}", this.companyMail)
-                .replace("${companyWebsiteUrl}", this.companyWebsiteUrl)
-                .replace("${companyRepresentative}", this.companyRepresentative)
-                .replace("${companyRepresentativeTitle}", this.companyRepresentativeTitle)
+                .replace("${companyName}", companyProfile.getName())
+                .replace("${companySlogan}", companySlogan)
+                .replace("${companyLocation}", companyProfile.getFullAddress())
+                .replace("${companyPhones}", companyProfile.getFormattedPhones())
+                .replace("${companyMail}", companyProfile.getEmail())
+                .replace("${companyWebsiteUrl}", companyWebsiteUrl)
+                .replace("${companyRepresentative}", companyProfile.getRepresentative())
+                .replace("${companyRepresentativeTitle}", companyProfile.getRepresentativeTitle())
                 .replace("${quoteNumber}", quote.getNumber())
                 .replace("${issueDate}", formatedDate)
                 .replace("${company}", quote.getCustomer().getCompanyName())
@@ -60,7 +58,8 @@ public final class QuotePdfGenerator extends BasePdfGenerator<QuotePdfRequestDTO
                 .replace("${taxRatePercentage}", quote.getTaxRatePercentage().toString())
                 .replace("${notes}", notes)
                 .replace("${validityDate}", quote.getValidityDays().toString())
-                .replace("${specialTerms}", specialTerms);
+                .replace("${specialTerms}", specialTerms)
+                .replace("${primaryColor}", companyProfile.getBrandPrimaryColor());
 
         return htmlTemplate;
     }

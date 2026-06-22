@@ -29,7 +29,7 @@
 
         /* ─── HEADER ─── */
         .header {
-            background: #1e3c72;
+            background: ${primaryColor};
             color: #ffffff;
             padding: 14px 18px;
             margin-bottom: 0;
@@ -69,9 +69,10 @@
 
         /* ─── META BAR ─── */
         .meta-bar {
-            background: #2a5298;
+            background: ${primaryColor};
             color: #ffffff;
             padding: 6px 18px;
+            border-top: 1px solid #d1d5db
         }
 
         .meta-table {
@@ -95,12 +96,12 @@
         .sections-table {
             width: 100%;
             border-collapse: collapse;
-            border: 1.5px solid #1e3c72;
+            border: 1.5px solid ${primaryColor};
             margin-top: 10px;
         }
 
         .sections-table td {
-            border: 1px solid #c5d0e8;
+            border: 1px solid #d1d5db;
             padding: 8px 10px;
             vertical-align: top;
         }
@@ -108,7 +109,7 @@
         .sec-number {
             font-size: 7px;
             font-weight: bold;
-            color: #2a5298;
+            color: ${primaryColor}/80;
             text-transform: uppercase;
             letter-spacing: 0.08em;
             margin-bottom: 1px;
@@ -137,14 +138,14 @@
 
         /* ─── SECTION HEADER ROW ─── */
         .sec-header-row td {
-            background: #e7eefc;
+            background: #f5f5f5;
             font-size: 8px;
             font-weight: bold;
-            color: #1e3c72;
+            color: ${primaryColor};
             text-transform: uppercase;
             letter-spacing: 0.1em;
             padding: 5px 10px;
-            border: 1px solid #c5d0e8;
+            border: 1px solid #d1d5db;
         }
 
         /* ─── CARGO TABLE ─── */
@@ -155,7 +156,7 @@
         }
 
         .cargo-table th {
-            background: #1e3c72;
+            background: ${primaryColor};
             color: #ffffff;
             font-size: 8px;
             text-transform: uppercase;
@@ -166,7 +167,7 @@
         .cargo-table td {
             font-size: 10px;
             padding: 5px 6px;
-            border-bottom: 1px solid #e8edf5;
+            border-bottom: 1px solid #d1d5db;
             vertical-align: top;
         }
 
@@ -177,8 +178,8 @@
         /* ─── PLATE ─── */
         .plate {
             display: inline-block;
-            background: #f0f4fb;
-            border: 1.5px solid #1e3c72;
+            background: #f5f5f5;
+            border: 1.5px solid ${primaryColor};
             font-size: 12px;
             font-weight: bold;
             padding: 3px 10px;
@@ -190,12 +191,12 @@
         .sig-table {
             width: 100%;
             border-collapse: collapse;
-            border: 1.5px solid #1e3c72;
+            border: 1.5px solid ${primaryColor};
             margin-top: 10px;
         }
 
         .sig-table td {
-            border: 1px solid #c5d0e8;
+            border: 1px solid #d1d5db;
             padding: 8px 10px;
             width: 33.33%;
             vertical-align: top;
@@ -214,7 +215,7 @@
 
         /* ─── COPIES FOOTER ─── */
         .copies-bar {
-            background: #1e3c72;
+            background: ${primaryColor};
             color: #ffffff;
             padding: 8px 18px;
             margin-top: 10px;
@@ -229,12 +230,12 @@
             text-align: center;
             font-size: 8px;
             padding: 3px 6px;
-            border: 1px solid #3a5fa8;
+            border: 1px solid #475569;
         }
 
         .copy-cell.active {
             background: #ffffff;
-            color: #1e3c72;
+            color: ${primaryColor};
             font-weight: bold;
         }
 
@@ -246,8 +247,8 @@
 
         /* ─── NOTES BOX ─── */
         .notes-box {
-            background: #f8f9fc;
-            border: 1px dashed #aab6d0;
+            background: #f8fafc;
+            border: 1px dashed #d1d5db;
             padding: 7px 10px;
             font-size: 10px;
             color: #555555;

@@ -35,12 +35,23 @@ public class CompanyProfileServiceImpl implements CompanyProfileService {
     private final int maxLogoFileSize = 2 * 1024 * 1024; // 2ΜΒ
     private final String fileKey = "company-logo";
 
+    /**
+     * Returns the first and only company profile that exists in the database
+     *
+     * @return The first and only company profile
+     * @throws ResourceNotFoundException If the company profile not found
+     */
     @Override
-    public CompanyProfileResponse getCompanyProfile() {
-        CompanyProfile company = companyProfileRepository.findFirstByOrderByIdAsc().orElseThrow(() -> {
+    public CompanyProfile getCompanyProfileEntity() throws ResourceNotFoundException {
+        return companyProfileRepository.findFirstByOrderByIdAsc().orElseThrow(() -> {
             log.warn("Company profile not found");
             return new ResourceNotFoundException("Company profile not found");
         });
+    }
+
+    @Override
+    public CompanyProfileResponse getCompanyProfile() {
+        CompanyProfile company = getCompanyProfileEntity();
 
         return CompanyProfileMapper.toResponse(company, createPresignedUrl(company));
     }
@@ -73,10 +84,7 @@ public class CompanyProfileServiceImpl implements CompanyProfileService {
 
     @Override
     public CompanyProfileResponse updateCompanyProfile(CompanyProfileUpdateRequest request) {
-        CompanyProfile company = companyProfileRepository.findFirstByOrderByIdAsc().orElseThrow(() -> {
-            log.warn("Company profile not found");
-            return new ResourceNotFoundException("Company profile not found");
-        });
+        CompanyProfile company = getCompanyProfileEntity();
 
         String logoKey = companyProfileBucketPath + fileKey;
         storeLogoFileIfExists(request.logoFile(), logoKey);
