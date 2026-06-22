@@ -79,10 +79,12 @@ app:
   reset_password:
     expires: ${RESET_PASSWORD_TOKEN_EXPIRATION}
 
-  mail:
-    no_reply: ${NO_REPLY_MAIL}
-    support: ${SUPPORT_MAIL}
-    displayName: ${DISPLAY_NAME}
+  platform:
+    display_name: ${PLATFORM_DISPLAY_NAME}
+    no_reply_mail: ${PLATFORM_NO_REPLY_MAIL}
+    support_mail: ${PLATFORM_SUPPORT_MAIL}
+    primary_dark_color: ${PLATFORM_PRIMARY_DARK_COLOR}
+    accent_light_color: ${PLATFORM_ACCENT_LIGHT_COLOR}
 
   company:
     name: ${COMPANY_NAME}

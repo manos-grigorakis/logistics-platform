@@ -23,20 +23,26 @@ public class MailService {
     @Value("${app.frontend.url}")
     private String frontendUrl;
 
-    @Value("${app.mail.no_reply}")
+    @Value("${app.platform.display_name}")
+    private String displayName;
+
+    @Value("${app.platform.no_reply_mail}")
     private String noReplyMail;
 
-    @Value("${app.mail.support}")
+    @Value("${app.platform.support_mail}")
     private String supportMail;
+
+    @Value("${app.platform.primary_dark_color}")
+    private String primaryDarkColor;
+
+    @Value("${app.platform.accent_light_color}")
+    private String accentLightColor;
 
     @Value("classpath:templates/mails/reset-password/index.html")
     private Resource resetPasswordHtmlTemplate;
 
     @Value("classpath:templates/mails/setup-password/index.html")
     private Resource setupPasswordHtmlTemplate;
-
-    @Value("${app.mail.displayName}")
-    private String displayName;
 
     @Value("${app.reset_password.expires}")
     private String resetPasswordTokenExpiresIn;
@@ -74,7 +80,9 @@ public class MailService {
                     .replace("${displayName}", displayName)
                     .replace("${supportMail}", supportMail)
                     .replace("${tokenExpiresIn}", formattedTokenExpiration)
-                    .replace("${currentYear}", String.valueOf(Year.now().getValue()));
+                    .replace("${currentYear}", String.valueOf(Year.now().getValue()))
+                    .replace("${primaryDarkColor}", primaryDarkColor)
+                    .replace("${accentLightColor}", accentLightColor);
 
             MimeMessage mail = buildHtmlMail(user.getEmail(), subject, htmlTemplate);
             mailSender.send(mail);
@@ -108,7 +116,9 @@ public class MailService {
                     .replace("${displayName}", displayName)
                     .replace("${supportMail}", supportMail)
                     .replace("${resetPasswordTokenExpiresIn}", formattedTokenExpiration)
-                    .replace("${currentYear}", String.valueOf(Year.now().getValue()));
+                    .replace("${currentYear}", String.valueOf(Year.now().getValue()))
+                    .replace("${primaryDarkColor}", primaryDarkColor)
+                    .replace("${accentLightColor}", accentLightColor);
 
             MimeMessage mail = buildHtmlMail(email, subject, htmlTemplate);
             mailSender.send(mail);
