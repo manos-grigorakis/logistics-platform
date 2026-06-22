@@ -40,7 +40,7 @@ public class CompanyProfileMapper {
     }
 
     // Entity -> Response
-    public static CompanyProfileResponse toResponse(CompanyProfile entity) {
+    public static CompanyProfileResponse toResponse(CompanyProfile entity, String logoUrl) {
         CompanyProfileAddressSummary addressSummary = new CompanyProfileAddressSummary(entity.getStreet(),
                                                                                        entity.getStreetNumber(),
                                                                                        entity.getPostalCode(),
@@ -49,7 +49,7 @@ public class CompanyProfileMapper {
         CompanyProfileBrandingSummary brandingSummary = new CompanyProfileBrandingSummary(entity.getBrandPrimaryColor(),
                                                                                           entity.getBrandSecondaryColor());
 
-        return new CompanyProfileResponse(entity.getId(), entity.getName(), entity.getTin(), entity.getLogoUrl(),
+        return new CompanyProfileResponse(entity.getId(), entity.getName(), entity.getTin(), logoUrl,
                                           entity.getVatPercentage(), entity.getRepresentative(), addressSummary,
                                           brandingSummary, entity.getCreatedAt(), entity.getUpdatedAt());
     }

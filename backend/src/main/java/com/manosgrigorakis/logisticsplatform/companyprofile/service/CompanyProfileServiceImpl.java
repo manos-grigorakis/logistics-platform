@@ -41,7 +41,7 @@ public class CompanyProfileServiceImpl implements CompanyProfileService {
             return new ResourceNotFoundException("Company profile not found");
         });
 
-        return CompanyProfileMapper.toResponse(company);
+        return CompanyProfileMapper.toResponse(company, createPresignedUrl(company));
     }
 
     @Override
@@ -67,7 +67,7 @@ public class CompanyProfileServiceImpl implements CompanyProfileService {
             throw e;
         }
 
-        return CompanyProfileMapper.toResponse(companyProfile);
+        return CompanyProfileMapper.toResponse(companyProfile, createPresignedUrl(companyProfile));
     }
 
     @Override
@@ -93,7 +93,7 @@ public class CompanyProfileServiceImpl implements CompanyProfileService {
             throw e;
         }
 
-        return CompanyProfileMapper.toResponse(updated);
+        return CompanyProfileMapper.toResponse(updated, createPresignedUrl(updated));
     }
 
     /**
@@ -101,7 +101,7 @@ public class CompanyProfileServiceImpl implements CompanyProfileService {
      * <p>Validation - {@link #validateLogoFile(MultipartFile)}</p>
      *
      * @param file    The Logo file to store
-     * @param fileKey The key prefix and file name
+     * @param fileKey The full file key along with the prefix of the bucket
      * @throws StorageServiceException If the storing of the logo fails {@code STORAGE_ERROR}
      */
     private void storeLogoFileIfExists(MultipartFile file, String fileKey) throws StorageServiceException {
@@ -133,5 +133,16 @@ public class CompanyProfileServiceImpl implements CompanyProfileService {
         if (file.getSize() > maxLogoFile) {
             throw new BadRequestException("Invalid logo file size", "FILE_TOO_LARGE");
         }
+    }
+
+    /**
+     * Creates a presigned URL for the Logo of the company profile
+     *
+     * @param companyProfile The company profile entity
+     * @return The Logo URL if exists, otherwise {@code null}
+     */
+    private String createPresignedUrl(CompanyProfile companyProfile) {
+        return companyProfile.getLogoUrl() != null ? fileStorageService.createPresignedUrl(
+                companyProfile.getLogoUrl()) : null;
     }
 }
