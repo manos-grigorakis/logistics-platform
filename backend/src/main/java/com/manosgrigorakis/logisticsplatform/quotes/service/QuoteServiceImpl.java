@@ -5,6 +5,9 @@ import com.manosgrigorakis.logisticsplatform.audit.enums.AuditAction;
 import com.manosgrigorakis.logisticsplatform.audit.service.AuditService;
 import com.manosgrigorakis.logisticsplatform.common.generators.DocumentNumberGenerator;
 import com.manosgrigorakis.logisticsplatform.common.utils.EntityChangeTracker;
+import com.manosgrigorakis.logisticsplatform.companyprofile.model.CompanyProfile;
+import com.manosgrigorakis.logisticsplatform.companyprofile.repository.CompanyProfileRepository;
+import com.manosgrigorakis.logisticsplatform.companyprofile.service.CompanyProfileService;
 import com.manosgrigorakis.logisticsplatform.infrastructure.document.generators.QuotePdfGenerator;
 import com.manosgrigorakis.logisticsplatform.infrastructure.document.dto.QuotePdfRequestDTO;
 import com.manosgrigorakis.logisticsplatform.quotes.dto.quoteItem.QuoteItemRequestDTO;
@@ -48,6 +51,7 @@ public class QuoteServiceImpl implements QuoteService {
     private final QuoteRepository quoteRepository;
     private final UserRepository userRepository;
     private final CustomerRepository customerRepository;
+    private final CompanyProfileService companyProfileService;
 
     private final FileStorageService fileStorageService;
     private final AuditService auditService;
@@ -72,10 +76,12 @@ public class QuoteServiceImpl implements QuoteService {
             FileStorageService fileStorageService,
             AuditService auditService,
             QuoteCalculator quoteCalculator,
-            DocumentNumberGenerator documentNumberGenerator) {
+            DocumentNumberGenerator documentNumberGenerator,
+            CompanyProfileService companyProfileService) {
         this.quoteRepository = quoteRepository;
         this.userRepository = userRepository;
         this.customerRepository = customerRepository;
+        this.companyProfileService = companyProfileService;
         this.quotePdfGenerator = quotePdfGenerator;
         this.fileStorageService = fileStorageService;
         this.auditService = auditService;
@@ -149,7 +155,8 @@ public class QuoteServiceImpl implements QuoteService {
         quote.setGrossPrice(grossTotal.setScale(2, RoundingMode.HALF_UP));
 
         // Generate PDF and store / upload it
-        byte[] quotePdf = quotePdfGenerator.generatePdf(new QuotePdfRequestDTO(quote));
+        byte[] quotePdf = quotePdfGenerator.generatePdf(
+                new QuotePdfRequestDTO(quote, companyProfileService.getCompanyProfileEntity()));
         fileStorageService.store(this.bucketPathQuotes + quote.getNumber(), quotePdf, "application/pdf");
 
         Quote savedQuote = quoteRepository.save(quote);
@@ -210,7 +217,8 @@ public class QuoteServiceImpl implements QuoteService {
         quote.setGrossPrice(grossTotal);
 
         // Re-generate PDF and store / upload it
-        byte[] quotePdf = quotePdfGenerator.generatePdf(new QuotePdfRequestDTO(quote));
+        byte[] quotePdf = quotePdfGenerator.generatePdf(
+                new QuotePdfRequestDTO(quote, companyProfileService.getCompanyProfileEntity()));
         fileStorageService.store(this.bucketPathQuotes + quote.getNumber(), quotePdf, "application/pdf");
 
         Quote savedQuote = quoteRepository.save(quote);
