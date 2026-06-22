@@ -24,7 +24,7 @@ public class CompanyProfileMapper {
     }
 
     // Update -> Entity
-    public static CompanyProfile toUpdate(CompanyProfileUpdateRequest request, CompanyProfile entity, String logoUrl) {
+    public static CompanyProfile toUpdate(CompanyProfileUpdateRequest request, CompanyProfile entity) {
         entity.setName(request.name());
         entity.setVatPercentage(request.vatPercentage());
         entity.setRepresentative(request.representative());
@@ -35,7 +35,6 @@ public class CompanyProfileMapper {
         entity.setCountry(request.country());
         entity.setBrandPrimaryColor(request.brandPrimaryColor());
         entity.setBrandSecondaryColor(request.brandSecondaryColor());
-        entity.setLogoUrl(logoUrl);
 
         return entity;
     }

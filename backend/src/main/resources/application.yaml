@@ -106,3 +106,4 @@ app:
     bucketPathCmr: ${MINIO_BUCKET_PATH_CMR}
     bucketPathReconciliationReport: ${MINIO_BUCKET_PATH_RECONCILIATION_REPORT}
     bucketPathSuppliers: ${MINIO_BUCKET_PATH_SUPPLIERS}
+    bucketPathCompanyProfile: ${MINIO_BUCKET_PATH_COMPANY_PROFILE}
