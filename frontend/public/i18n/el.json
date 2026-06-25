@@ -211,7 +211,7 @@
   "company-profile": {
     "actions": {
       "update": "Ενημέρωση Στοιχείων Εταιρείας",
-      "open-existing": "Άνοιγμα τρέχοντος logo"
+      "open-existing-logo": "Άνοιγμα τρέχοντος logo"
     },
     "fields": {
       "phones": "Τηλέφωνα",
