@@ -1,7 +1,9 @@
 <div [formGroup]="parentForm" class="grid grid-cols-1 gap-4">
-  <h3 class="text-xl font-semibold">{{ 'company-profile.titles.branding' | translate }}</h3>
+  <h3 class="text-lg font-medium md:text-xl">
+    {{ 'company-profile.titles.branding' | translate }}
+  </h3>
 
-  <div class="grid grid-cols-2 gap-4">
+  <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
     <!-- Website URL -->
     <app-main-input
       formControlName="websiteUrl"
@@ -27,7 +29,7 @@
     </div>
   </div>
 
-  <div class="grid grid-cols-2 gap-4">
+  <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
     <!-- Slogan -->
     <div>
       <label for="slogan" class="mb-1 block">

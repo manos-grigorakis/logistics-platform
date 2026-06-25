@@ -1,7 +1,7 @@
 <div [formGroup]="parentForm" class="grid grid-cols-1 gap-4">
-  <h3 class="text-xl font-semibold">{{ 'common.messages.basic-info' | translate }}</h3>
+  <h3 class="text-lg font-medium md:text-xl">{{ 'common.messages.basic-info' | translate }}</h3>
 
-  <div class="grid grid-cols-2 gap-4">
+  <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
     <!-- TIN  -->
     @if (formUsage === 'update') {
       <label class="mb-1 block">
@@ -31,7 +31,7 @@
     />
   </div>
 
-  <div class="grid grid-cols-3 gap-4">
+  <div class="grid grid-cols-1 gap-4 lg:grid-cols-3">
     <!-- Representative Title -->
     <app-main-input
       formControlName="representativeTitle"
