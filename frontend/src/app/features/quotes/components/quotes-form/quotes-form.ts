@@ -1,23 +1,15 @@
-import {
-  AfterViewInit,
-  Component,
-  EventEmitter,
-  inject,
-  Input,
-  OnInit,
-  Output,
-} from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import {
   AbstractControl,
   FormArray,
   FormBuilder,
   FormControl,
   FormGroup,
-  Validators,
+  ReactiveFormsModule,
+  Validators
 } from '@angular/forms';
 import { LoadingSpinner } from '../../../../shared/ui/loading-spinner/loading-spinner';
 import { PrimaryButton } from '../../../../shared/ui/primary-button/primary-button';
-import { ReactiveFormsModule } from '@angular/forms';
 import { MetadataService } from '../../../../core/metadata/metadata.service';
 import { CustomersService } from '../../../customers/customers.service';
 import { debounceTime, Subject } from 'rxjs';
@@ -31,6 +23,7 @@ import { QuoteItems } from '../../models/quote-items';
 import { QuoteFormPayload } from '../../models/quote-form-payload';
 import { ErrorAlert } from '../../../../shared/ui/error-alert/error-alert';
 import { TranslatePipe } from '@ngx-translate/core';
+import { formatGreekAmount, GREEK_AMOUNT_PATTERN, parseGreekAmount } from '../../../../shared/utils/currency.util';
 
 @Component({
   selector: 'app-quotes-form',
@@ -52,26 +45,19 @@ export class QuotesForm implements OnInit, AfterViewInit {
   @Input() isLoading: boolean = false;
   @Input() errorMessage?: string;
   @Output() onSubmit = new EventEmitter<any>();
-
-  // Form & Services
-  private formBuilder: FormBuilder = inject(FormBuilder);
-  private metadataService: MetadataService = inject(MetadataService);
-  private customersService: CustomersService = inject(CustomersService);
-
   public quote?: Quote;
   public quoteItemUnits: string[] = [];
   public itemsErrorMessage?: string = undefined;
   public customerErrorMessage?: string = undefined;
-
   // Customers
   public customerSearch$ = new Subject<string>();
   public customersLoading: boolean = false;
   public customersList: CustomerSummary[] = [];
-
   // Parsed HTML data
   public notesHtml: string | null = null;
   public specialTermsHtml: string | null = null;
-
+  // Form & Services
+  private formBuilder: FormBuilder = inject(FormBuilder);
   quoteForm = this.formBuilder.group({
     customerId: new FormControl<number | null>(null, Validators.required),
     origin: new FormControl<string>('', {
@@ -82,7 +68,7 @@ export class QuotesForm implements OnInit, AfterViewInit {
       nonNullable: true,
       validators: [Validators.required],
     }),
-    validityDays: new FormControl<number | null>(null, [
+    validityDays: new FormControl<string | null>(null, [
       Validators.required,
       Validators.min(1),
       Validators.pattern(/^\d+$/), // Only digits
@@ -91,23 +77,8 @@ export class QuotesForm implements OnInit, AfterViewInit {
     notes: new FormControl<string | unknown | null>(null),
     specialTerms: new FormControl<string | unknown | null>(null),
   });
-
-  ngOnInit(): void {
-    // Fetch some inial customers
-    if (this.formUsage === 'create') {
-      this.fetchCustomers('');
-    }
-
-    this.metadataService.fetchQuoteItemUnits();
-    this.metadataService.quoteItemUnits$.subscribe((units) => (this.quoteItemUnits = units));
-  }
-
-  ngAfterViewInit(): void {
-    // Debouncer on customers search
-    this.customerSearch$.pipe(debounceTime(300)).subscribe((value) => {
-      this.fetchCustomers(value || '');
-    });
-  }
+  private metadataService: MetadataService = inject(MetadataService);
+  private customersService: CustomersService = inject(CustomersService);
 
   @Input() set quoteData(value: Quote | undefined) {
     if (!value) return;
@@ -121,7 +92,10 @@ export class QuotesForm implements OnInit, AfterViewInit {
     // Update items
     value.quoteItems.forEach((item) => {
       const group = this.createItem();
-      group.patchValue(item);
+      group.patchValue({
+        ...item,
+        price: formatGreekAmount(item.price.toString()),
+      });
       formItems.push(group);
     });
 
@@ -141,7 +115,7 @@ export class QuotesForm implements OnInit, AfterViewInit {
       customerId: value.customer.id,
       origin: value.origin,
       destination: value.destination,
-      validityDays: value.validityDays,
+      validityDays: value.validityDays.toString(),
       notes: value.notes ? toDoc(value.notes) : null,
       specialTerms: value.specialTerms ? toDoc(value.specialTerms) : null,
     });
@@ -153,6 +127,23 @@ export class QuotesForm implements OnInit, AfterViewInit {
 
   public get items(): FormArray<FormGroup> {
     return this.quoteForm.get('items') as FormArray<FormGroup>;
+  }
+
+  ngOnInit(): void {
+    // Fetch some inial customers
+    if (this.formUsage === 'create') {
+      this.fetchCustomers('');
+    }
+
+    this.metadataService.fetchQuoteItemUnits();
+    this.metadataService.quoteItemUnits$.subscribe((units) => (this.quoteItemUnits = units));
+  }
+
+  ngAfterViewInit(): void {
+    // Debouncer on customers search
+    this.customerSearch$.pipe(debounceTime(300)).subscribe((value) => {
+      this.fetchCustomers(value || '');
+    });
   }
 
   public onClickAddItem(): void {
@@ -178,6 +169,11 @@ export class QuotesForm implements OnInit, AfterViewInit {
     }
 
     const raw = this.quoteForm.getRawValue();
+    const parsedItems: QuoteItems[] = raw.items.map((item: any) => ({
+      ...item,
+      price: parseGreekAmount(item.price), // string "3.911,16" -> number 3911.16
+    }));
+
     const payload: QuoteFormPayload = {
       customerId: raw.customerId!,
       origin: raw.origin,
@@ -185,7 +181,7 @@ export class QuotesForm implements OnInit, AfterViewInit {
       validityDays: parseInt(this.validityDays.value),
       notes: this.notesHtml,
       specialTerms: this.specialTermsHtml,
-      items: raw.items as QuoteItems[],
+      items: parsedItems,
     };
 
     this.onSubmit.emit(payload);
@@ -194,10 +190,10 @@ export class QuotesForm implements OnInit, AfterViewInit {
   private createItem(): FormGroup {
     return this.formBuilder.group({
       name: new FormControl<string>('', { nonNullable: true, validators: Validators.required }),
-      price: new FormControl<number | null>(null, [
+      price: new FormControl<string | null>(null, [
         Validators.required,
         Validators.min(1),
-        Validators.pattern(/^\d+(\.\d{1,2})?$/), // Only digits and two decimals
+        Validators.pattern(GREEK_AMOUNT_PATTERN),
       ]),
       quantity: new FormControl<number | null>(null, [
         Validators.required,

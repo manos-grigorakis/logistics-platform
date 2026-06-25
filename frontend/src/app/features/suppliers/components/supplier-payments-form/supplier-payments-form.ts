@@ -18,6 +18,7 @@ import { NgSelectComponent } from '@ng-select/ng-select';
 import { PrimaryButton } from '../../../../shared/ui/primary-button/primary-button';
 import { FileDropzone } from '../../../../shared/ui/file-dropzone/file-dropzone';
 import { NgIcon } from '@ng-icons/core';
+import { formatGreekAmount, GREEK_AMOUNT_PATTERN, parseGreekAmount } from '../../../../shared/utils/currency.util';
 
 @Component({
   selector: 'app-supplier-payments-form',
@@ -53,48 +54,32 @@ export class SupplierPaymentsForm implements OnInit {
   public errorMessage?: string;
 
   private formBuilder = inject(FormBuilder);
-
-  // Services
-  private suppliersService = inject(SuppliersService);
-  private metadataService = inject(MetadataService);
-  private languageService = inject(LanguageService);
-
-  public types$: BehaviorSubject<string[]> = this.metadataService.supplierPaymentsTypes$;
-
   form = this.formBuilder.group({
     title: new FormControl<string | null>(null, Validators.required),
     description: new FormControl<string | null>(null),
     totalAmount: new FormControl<string | null>(null, [
       Validators.required,
-      Validators.pattern(/^\d+(\.\d{1,2})?$/), // Only digits and two decimals
+      Validators.pattern(GREEK_AMOUNT_PATTERN),
     ]),
-    paidAmount: new FormControl<string | null>(
-      null,
-      Validators.pattern(/^\d+(\.\d{1,2})?$/), // Only digits and two decimals
-    ),
+    paidAmount: new FormControl<string | null>(null, Validators.pattern(GREEK_AMOUNT_PATTERN)),
     type: new FormControl<string | null>(null, Validators.required),
     invoiceFile: new FormControl<File | null>(null),
     receiptFile: new FormControl<File | null>(null),
     supplierId: new FormControl<number | null>(null),
   });
-
-  ngOnInit(): void {
-    // Dynamic validation based on form usage
-    if (this.formUsage === 'create') {
-      this.fetchSuppliers();
-      this.supplierId.addValidators(Validators.required);
-    }
-
-    this.metadataService.fetchSupplierPaymentsTypes();
-  }
+  // Services
+  private suppliersService = inject(SuppliersService);
+  private metadataService = inject(MetadataService);
+  public types$: BehaviorSubject<string[]> = this.metadataService.supplierPaymentsTypes$;
+  private languageService = inject(LanguageService);
 
   @Input() set paymentData(value: SupplierPayment | undefined) {
     if (value) {
       this.form.patchValue({
         title: value.title,
         description: value.description,
-        totalAmount: value.totalAmount.toFixed(2),
-        paidAmount: value.paidAmount !== null ? value.paidAmount.toFixed(2) : null,
+        totalAmount: formatGreekAmount(value.totalAmount),
+        paidAmount: value.paidAmount !== null ? formatGreekAmount(value.paidAmount) : null,
         type: value.type.toUpperCase(),
         supplierId: value.supplier.id,
       });
@@ -134,6 +119,16 @@ export class SupplierPaymentsForm implements OnInit {
     return this.form.get('supplierId') as FormControl;
   }
 
+  ngOnInit(): void {
+    // Dynamic validation based on form usage
+    if (this.formUsage === 'create') {
+      this.fetchSuppliers();
+      this.supplierId.addValidators(Validators.required);
+    }
+
+    this.metadataService.fetchSupplierPaymentsTypes();
+  }
+
   // Setters
   public setInvoiceFile(file: File): void {
     this.invoiceFile.setValue(file);
@@ -166,8 +161,8 @@ export class SupplierPaymentsForm implements OnInit {
       this.onCreate.emit({
         title: raw.title!,
         description: raw.description !== null ? raw.description : null,
-        totalAmount: Number(raw.totalAmount),
-        paidAmount: raw.paidAmount !== null ? Number(raw.paidAmount) : null,
+        totalAmount: parseGreekAmount(raw.totalAmount!),
+        paidAmount: raw.paidAmount !== null ? parseGreekAmount(raw.paidAmount) : null,
         type: raw.type!,
         invoiceFile: raw.invoiceFile !== null ? raw.invoiceFile : null,
         receiptFile: raw.receiptFile !== null ? raw.receiptFile : null,
@@ -177,8 +172,8 @@ export class SupplierPaymentsForm implements OnInit {
       this.onUpdate.emit({
         title: raw.title!,
         description: raw.description !== null ? raw.description : null,
-        totalAmount: Number(raw.totalAmount),
-        paidAmount: raw.paidAmount !== null ? Number(raw.paidAmount) : null,
+        totalAmount: parseGreekAmount(raw.totalAmount!),
+        paidAmount: raw.paidAmount !== null ? parseGreekAmount(raw.paidAmount) : null,
         type: raw.type!,
         invoiceFile: raw.invoiceFile !== null ? raw.invoiceFile : null,
         receiptFile: raw.receiptFile !== null ? raw.receiptFile : null,
