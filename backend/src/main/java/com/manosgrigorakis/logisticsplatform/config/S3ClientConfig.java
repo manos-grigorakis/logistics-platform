@@ -23,7 +23,10 @@ public class S3ClientConfig {
     private String secretKey;
 
     @Value("${app.minio.endpoint}")
-    private String endpoint;
+    private String internalEndpoint;
+
+    @Value("${app.minio.publicEndpoint}")
+    private String publicEndpoint;
 
     @Value("${app.aws.region}")
     private String region;
@@ -35,11 +38,11 @@ public class S3ClientConfig {
         Region s3Region = Region.of(region);
 
         return S3Client.builder()
-                .endpointOverride(URI.create(endpoint))
+                .endpointOverride(URI.create(internalEndpoint))
                 .credentialsProvider(StaticCredentialsProvider.create(credentials))
                 .region(s3Region)
                 .serviceConfiguration(S3Configuration.builder()
-                        .pathStyleAccessEnabled(true) // required for minio
+                        .pathStyleAccessEnabled(true) // required for MinIO
                         .build())
                 .build();
     }
@@ -50,11 +53,11 @@ public class S3ClientConfig {
         Region s3Region = Region.of(region);
 
         return S3Presigner.builder()
-                .endpointOverride(URI.create(endpoint))
+                .endpointOverride(URI.create(publicEndpoint))
                 .credentialsProvider(StaticCredentialsProvider.create(credentials))
                 .region(s3Region)
                 .serviceConfiguration(S3Configuration.builder()
-                        .pathStyleAccessEnabled(true)  // required for minio
+                        .pathStyleAccessEnabled(true)  // required for MinIO
                         .build())
                 .build();
     }
