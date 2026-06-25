@@ -26,3 +26,17 @@ export function parseGreekAmount(raw: string): number {
   // Example: "1.234.567" -> 1234567
   return parseFloat(cleaned.replace(/\./g, ''));
 }
+
+/**
+ * Formats a numeric value using locale conversation
+ *
+ * Uses dot as thousands separator and comma as decimal separator \
+ * Always keeps exactly 2 decimal places
+ * @param value The value to format
+ */
+export function formatGreekAmount(value: number | string): string {
+  return Number(value).toLocaleString('el-GR', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+}

@@ -23,7 +23,7 @@ import { QuoteItems } from '../../models/quote-items';
 import { QuoteFormPayload } from '../../models/quote-form-payload';
 import { ErrorAlert } from '../../../../shared/ui/error-alert/error-alert';
 import { TranslatePipe } from '@ngx-translate/core';
-import { GREEK_AMOUNT_PATTERN, parseGreekAmount } from '../../../../shared/utils/currency.util';
+import { formatGreekAmount, GREEK_AMOUNT_PATTERN, parseGreekAmount } from '../../../../shared/utils/currency.util';
 
 @Component({
   selector: 'app-quotes-form',
@@ -92,7 +92,10 @@ export class QuotesForm implements OnInit, AfterViewInit {
     // Update items
     value.quoteItems.forEach((item) => {
       const group = this.createItem();
-      group.patchValue(item);
+      group.patchValue({
+        ...item,
+        price: formatGreekAmount(item.price.toString()),
+      });
       formItems.push(group);
     });
 

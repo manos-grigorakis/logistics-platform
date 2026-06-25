@@ -18,7 +18,7 @@ import { NgSelectComponent } from '@ng-select/ng-select';
 import { PrimaryButton } from '../../../../shared/ui/primary-button/primary-button';
 import { FileDropzone } from '../../../../shared/ui/file-dropzone/file-dropzone';
 import { NgIcon } from '@ng-icons/core';
-import { GREEK_AMOUNT_PATTERN, parseGreekAmount } from '../../../../shared/utils/currency.util';
+import { formatGreekAmount, GREEK_AMOUNT_PATTERN, parseGreekAmount } from '../../../../shared/utils/currency.util';
 
 @Component({
   selector: 'app-supplier-payments-form',
@@ -78,8 +78,8 @@ export class SupplierPaymentsForm implements OnInit {
       this.form.patchValue({
         title: value.title,
         description: value.description,
-        totalAmount: value.totalAmount.toFixed(2),
-        paidAmount: value.paidAmount !== null ? value.paidAmount.toFixed(2) : null,
+        totalAmount: formatGreekAmount(value.totalAmount),
+        paidAmount: value.paidAmount !== null ? formatGreekAmount(value.paidAmount) : null,
         type: value.type.toUpperCase(),
         supplierId: value.supplier.id,
       });
