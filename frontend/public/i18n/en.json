@@ -210,7 +210,8 @@
   },
   "company-profile": {
     "actions": {
-      "update": "Update Company Profile"
+      "update": "Update Company Profile",
+      "open-existing-logo": "Open current logo"
     },
     "fields": {
       "phones": "Phones",
@@ -222,6 +223,7 @@
       "website-url": "Website URL"
     },
     "messages": {
+      "logo-replace-notice": "Uploading a new logo will replace the existing one. Leave this field empty to keep the current logo.\"",
       "success-update": "Company profile updated successfully"
     },
     "titles": {

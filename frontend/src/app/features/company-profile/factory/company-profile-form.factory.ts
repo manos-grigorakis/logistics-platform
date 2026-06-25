@@ -44,7 +44,7 @@ export function buildCompanyProfileForm(formBuilder: FormBuilder, includeTin: bo
     logoFile: new FormControl<File | null>(null),
     websiteUrl: new FormControl<string>('', {
       nonNullable: true,
-      validators: [Validators.maxLength(500)],
+      validators: [Validators.maxLength(500), Validators.pattern(REGEX.URL)],
     }),
     slogan: new FormControl<string>('', {
       nonNullable: true,

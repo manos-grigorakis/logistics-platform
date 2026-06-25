@@ -1,5 +1,5 @@
 <div class="max-w-8xl mx-auto mt-6 rounded-lg bg-white p-6 shadow-lg shadow-black/10">
-  <h2 class="mb-4 text-center text-3xl font-semibold">
+  <h2 class="mb-8 text-3xl font-bold">
     {{ 'company-profile.actions.update' | translate }}
   </h2>
 
@@ -9,7 +9,7 @@
 
   @if (companyProfile) {
     <form (ngSubmit)="onSubmitClick()" [formGroup]="form">
-      <div class="mb-6 flex flex-col gap-4">
+      <div class="mb-8 flex flex-col space-y-8">
         <app-basic-details
           [tinNumber]="companyProfile.tin"
           [parentForm]="form"
@@ -22,7 +22,7 @@
           (onAddPhone)="addPhone()"
           (onRemovePhone)="removePhone($event)"
         />
-        <app-branding [parentForm]="form" />
+        <app-branding [parentForm]="form" [logoUrl]="companyProfile.logoUrl" formUsage="update" />
       </div>
 
       <div class="max-w-md">
