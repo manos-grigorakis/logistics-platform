@@ -45,12 +45,14 @@
           size="30"
         />
         <!-- Items -->
-        <app-dropdown-menu-item
-          [label]="'nav.top-nav.company' | translate"
-          dropdown-menu-item
-          icon="lucideBriefcaseBusiness"
-          route="company-profile/edit"
-        />
+        @if (isAdmin()) {
+          <app-dropdown-menu-item
+            [label]="'nav.top-nav.company' | translate"
+            dropdown-menu-item
+            icon="lucideBriefcaseBusiness"
+            route="company-profile/edit"
+          />
+        }
 
         <app-dropdown-menu-item
           (click)="logout()"
