@@ -350,6 +350,7 @@
     "top-nav": {
       "account": "Account",
       "logout": "Logout",
+      "company": "Company",
       "settings": "Settings"
     }
   },

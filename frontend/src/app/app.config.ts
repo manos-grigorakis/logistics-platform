@@ -2,7 +2,7 @@ import {
   ApplicationConfig,
   LOCALE_ID,
   provideBrowserGlobalErrorListeners,
-  provideZoneChangeDetection
+  provideZoneChangeDetection,
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideIcons, provideNgIconsConfig } from '@ng-icons/core';
@@ -11,6 +11,7 @@ import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@a
 import { JWT_OPTIONS, JwtHelperService } from '@auth0/angular-jwt';
 import {
   lucideAlertTriangle,
+  lucideBriefcaseBusiness,
   lucideBuilding,
   lucideBuilding2,
   lucideCalendar,
@@ -42,7 +43,7 @@ import {
   lucideUserCircle,
   lucideUserCog,
   lucideUsers,
-  lucideX
+  lucideX,
 } from '@ng-icons/lucide';
 import { JwtHeadersInterceptor } from './core/interceptors/jwt-headers.interceptor';
 
@@ -56,7 +57,7 @@ import {
   Legend,
   LinearScale,
   PieController,
-  Tooltip
+  Tooltip,
 } from 'chart.js';
 
 import { provideTranslateService } from '@ngx-translate/core';
@@ -111,6 +112,7 @@ export const appConfig: ApplicationConfig = {
       lucideReceiptEuro,
       lucideFile,
       lucideFileXCorner,
+      lucideBriefcaseBusiness,
     }),
 
     provideNgIconsConfig({
