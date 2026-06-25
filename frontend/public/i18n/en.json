@@ -83,6 +83,10 @@
     "banks": {
       "nbg": "National Bank of Greece"
     },
+    "countries": {
+      "cyprus": "Cyprus",
+      "greece": "Greece"
+    },
     "empty-state": {
       "description": "There is no description"
     },
@@ -94,7 +98,9 @@
       "storage-unavailable": "Storage service is temporarily unavailable. Please try again later"
     },
     "fields": {
+      "address": "Address",
       "company-name": "Company Name",
+      "country": "Country",
       "created-at": "Created At",
       "date": "Date",
       "description": "Description",
@@ -118,20 +124,26 @@
         "quantity": "e.g. 2",
         "select-type": "Select a type"
       },
+      "postal-code": "Postal Code",
       "price": "Price",
       "quantity": "Quantity",
       "receipt": "Receipt",
       "receipt-file": "Receipt File",
+      "region": "Region",
       "remaining-amount": "Remaining Amount",
       "signed-at": "Signed at",
       "signed-by": "Signed by",
       "status": "Status",
+      "street": "Street",
+      "street-number": "Street Number",
+      "tin": "TIN",
       "title": "Title",
       "total-amount": "Total Amount",
       "type": "Type",
       "unassigned": "Unassigned",
       "unpaid-amount": "Unpaid Amount",
-      "updated-at": "Updated At"
+      "updated-at": "Updated At",
+      "vat": "VAT"
     },
     "filters": {
       "all": "All",
@@ -145,6 +157,7 @@
       "amounts": "Amounts",
       "basic-info": "Basic Information",
       "cannot-undone": "This action is permanent and cannot be undone",
+      "contact": "Contact",
       "documents": "Documents",
       "file-preview-format-notice": "Only PDF documents support preview. If a document does not display, it may be in a different format please download it instead.",
       "file-replace-notice": "Uploading a new file will replace the existing one. Leave it empty to keep the current file.",
@@ -193,6 +206,26 @@
       "required-type": "Type is required",
       "supported-files": "Supported files",
       "unsupported-file-type": "Unsupported file type"
+    }
+  },
+  "company-profile": {
+    "actions": {
+      "update": "Update Company Profile"
+    },
+    "fields": {
+      "phones": "Phones",
+      "primary-color": "Primary Color",
+      "representative": "Representative",
+      "representative-title": "Representative Title",
+      "secondary-color": "Secondary Color",
+      "slogan": "Slogan",
+      "website-url": "Website URL"
+    },
+    "messages": {
+      "success-update": "Company profile updated successfully"
+    },
+    "titles": {
+      "branding": "Branding"
     }
   },
   "customers": {
@@ -349,8 +382,8 @@
     },
     "top-nav": {
       "account": "Account",
-      "logout": "Logout",
       "company": "Company",
+      "logout": "Logout",
       "settings": "Settings"
     }
   },
