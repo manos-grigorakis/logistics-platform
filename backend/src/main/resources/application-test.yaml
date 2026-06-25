@@ -82,6 +82,7 @@ app:
     accessKey: admin
     secretKey: admin
     endpoint: "http://localhost:9001"
+    publicEndpoint: "http://localhost:9001"
     bucketName: "my_bucket"
     bucketPathQuotes: "quotes/"
     bucketPathCmr: "cmr/"
