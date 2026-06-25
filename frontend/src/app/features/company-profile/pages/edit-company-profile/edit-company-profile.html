@@ -1,0 +1,33 @@
+<div class="max-w-8xl mx-auto mt-6 rounded-lg bg-white p-6 shadow-lg shadow-black/10">
+  <h2 class="mb-4 text-center text-3xl font-semibold">
+    {{ 'company-profile.actions.update' | translate }}
+  </h2>
+
+  @if (isLoading) {
+    <app-loading-spinner />
+  }
+
+  @if (companyProfile) {
+    <form (ngSubmit)="onSubmitClick()" [formGroup]="form">
+      <div class="mb-6 flex flex-col gap-4">
+        <app-basic-details
+          [tinNumber]="companyProfile.tin"
+          [parentForm]="form"
+          formUsage="update"
+        />
+        <app-address [parentForm]="form" />
+        <app-contact
+          [parentForm]="form"
+          [parentFormArray]="phones"
+          (onAddPhone)="addPhone()"
+          (onRemovePhone)="removePhone($event)"
+        />
+        <app-branding [parentForm]="form" />
+      </div>
+
+      <div class="max-w-md">
+        <app-primary-button [value]="'common.actions.save' | translate" [isDisabled]="isLoading" />
+      </div>
+    </form>
+  }
+</div>

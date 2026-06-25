@@ -1,0 +1,38 @@
+<div [formGroup]="parentForm" class="grid grid-cols-1 gap-4">
+  <h3 class="text-xl font-semibold">{{ 'common.messages.contact' | translate }}</h3>
+
+  <div class="grid grid-cols-1 gap-4">
+    <!-- Email -->
+    <app-main-input formControlName="email" type="text" label="Email" [showRequiredStar]="true" />
+
+    <!-- Phones -->
+    <div formArrayName="phones" class="space-y-2">
+      <label class="mb-1 block">
+        <span class="text-danger mr-1">*</span>
+        {{ 'company-profile.fields.phones' | translate }}
+      </label>
+
+      @for (phone of phones.controls; track $index) {
+        <div class="flex items-center gap-2">
+          <app-main-input class="flex-1" [formControl]="phone" type="text" />
+
+          <app-rounded-icon-button
+            type="button"
+            icon="lucideTrash"
+            color="danger"
+            (clicked)="onRemovePhoneClick($index)"
+            [isDisabled]="phones.length <= 1"
+          />
+        </div>
+      }
+
+      <button
+        type="button"
+        class="text-primary-600 text-sm font-medium"
+        (click)="onAddPhoneClick()"
+      >
+        + Add phone
+      </button>
+    </div>
+  </div>
+</div>
