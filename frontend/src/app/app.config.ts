@@ -64,6 +64,7 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { registerLocaleData } from '@angular/common';
 import localeEl from '@angular/common/locales/el';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 registerLocaleData(localeEl);
 export const appConfig: ApplicationConfig = {
@@ -143,5 +144,7 @@ export const appConfig: ApplicationConfig = {
         suffix: '.json',
       }),
     }),
+
+    provideAnimations(),
   ],
 };
