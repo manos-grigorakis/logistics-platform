@@ -1,0 +1,59 @@
+<div [formGroup]="parentForm" class="grid grid-cols-1 gap-4">
+  <h3 class="text-xl font-semibold">{{ 'common.messages.basic-info' | translate }}</h3>
+
+  <div class="grid grid-cols-2 gap-4">
+    <!-- TIN  -->
+    @if (formUsage === 'update') {
+      <label class="mb-1 block">
+        {{ 'common.fields.tin' | translate }}
+        <input
+          [value]="tinNumber"
+          disabled
+          readonly
+          class="focus:ring-primary-200 w-full rounded border border-gray-300 px-4 py-2 text-gray-700 focus:ring focus:outline-none disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-100 disabled:text-gray-400"
+        />
+      </label>
+    } @else {
+      <app-main-input
+        formControlName="tin"
+        type="text"
+        [label]="'common.fields.tin' | translate"
+        [showRequiredStar]="true"
+      />
+    }
+
+    <!-- Company name -->
+    <app-main-input
+      formControlName="name"
+      type="text"
+      [label]="'common.fields.company-name' | translate"
+      [showRequiredStar]="true"
+    />
+  </div>
+
+  <div class="grid grid-cols-3 gap-4">
+    <!-- Representative Title -->
+    <app-main-input
+      formControlName="representativeTitle"
+      type="text"
+      [label]="'company-profile.fields.representative-title' | translate"
+      [showRequiredStar]="true"
+    />
+
+    <!-- Representative -->
+    <app-main-input
+      formControlName="representative"
+      type="text"
+      [label]="'company-profile.fields.representative' | translate"
+      [showRequiredStar]="true"
+    />
+
+    <!-- VAT -->
+    <app-main-input
+      formControlName="vatPercentage"
+      type="number"
+      [label]="'common.fields.vat' | translate"
+      [showRequiredStar]="true"
+    />
+  </div>
+</div>
