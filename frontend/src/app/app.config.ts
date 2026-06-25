@@ -1,15 +1,14 @@
 import {
   ApplicationConfig,
+  LOCALE_ID,
   provideBrowserGlobalErrorListeners,
-  provideZoneChangeDetection,
+  provideZoneChangeDetection
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideIcons, provideNgIconsConfig } from '@ng-icons/core';
 import { routes } from './app.routes';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { JWT_OPTIONS, JwtHelperService } from '@auth0/angular-jwt';
-
-// Lucide Icons
 import {
   lucideAlertTriangle,
   lucideBuilding,
@@ -43,7 +42,7 @@ import {
   lucideUserCircle,
   lucideUserCog,
   lucideUsers,
-  lucideX,
+  lucideX
 } from '@ng-icons/lucide';
 import { JwtHeadersInterceptor } from './core/interceptors/jwt-headers.interceptor';
 
@@ -57,12 +56,15 @@ import {
   Legend,
   LinearScale,
   PieController,
-  Tooltip,
+  Tooltip
 } from 'chart.js';
 
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
+import { registerLocaleData } from '@angular/common';
+import localeEl from '@angular/common/locales/el';
 
+registerLocaleData(localeEl);
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
@@ -72,6 +74,7 @@ export const appConfig: ApplicationConfig = {
     { provide: HTTP_INTERCEPTORS, useClass: JwtHeadersInterceptor, multi: true },
     { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
     JwtHelperService,
+    { provide: LOCALE_ID, useValue: 'el_GR' },
 
     // Icons
     provideIcons({
