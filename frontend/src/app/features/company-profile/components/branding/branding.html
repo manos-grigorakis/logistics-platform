@@ -51,7 +51,24 @@
     <!-- Logo -->
     <div>
       <div class="flex items-center justify-between gap-2">
-        <label class="mb-1 block">Logo</label>
+        @if (formUsage === 'create') {
+          <div class="mb-1 flex w-full items-center justify-between">
+            <label>Logo</label>
+
+            @if (logoFile.value !== null && formUsage === 'create') {
+              <button
+                (click)="removeLogoFile()"
+                type="button"
+                class="text-danger text-sm hover:cursor-pointer hover:underline"
+              >
+                {{ 'common.actions.delete' | translate }}
+              </button>
+            }
+          </div>
+        } @else {
+          <label class="mb-1 block">Logo</label>
+        }
+
         @if (logoUrl && formUsage === 'update') {
           <a [href]="logoUrl" target="_blank" rel="noopener" class="text-sm hover:underline">{{
             'company-profile.actions.open-existing-logo' | translate

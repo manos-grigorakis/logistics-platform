@@ -244,6 +244,7 @@
       "website-url": "Website URL"
     },
     "messages": {
+      "logo-delete": "Logo deleted successfully",
       "logo-replace-notice": "Uploading a new logo will replace the existing one. Leave this field empty to keep the current logo.\"",
       "success-create": "Company profile created successfully",
       "success-update": "Company profile updated successfully"

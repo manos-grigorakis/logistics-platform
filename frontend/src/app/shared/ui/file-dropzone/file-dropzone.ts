@@ -1,7 +1,6 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { NgIcon } from '@ng-icons/core';
 import { NgClass } from '@angular/common';
-import { toast } from 'ngx-sonner';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LanguageService } from '../../../core/services/language.service';
 
@@ -63,6 +62,13 @@ export class FileDropzone {
     this.isFileSelected = true;
     this.fileName = file.name;
     this.fileSelected.emit(file);
+  }
+
+  public reset(): void {
+    this.isFileSelected = false;
+    this.isFileLoading = false;
+    this.fileName = undefined;
+    this.error = false;
   }
 
   // === Drag Events ===
