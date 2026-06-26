@@ -43,7 +43,6 @@ export class EditCompanyProfile implements OnInit {
   // Lifecycle
   ngOnInit() {
     this.fetchCompanyProfile();
-    this.addPhone();
   }
 
   form = buildCompanyProfileForm(this.formBuilder, false);
