@@ -1,7 +1,13 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LoadingSpinner } from '../../../../shared/ui/loading-spinner/loading-spinner';
-import { FormArray, FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { CompanyProfileService } from '../../services/company-profile.service';
 import { LanguageService } from '../../../../core/services/language.service';
 import { finalize } from 'rxjs';
@@ -155,7 +161,18 @@ export class EditCompanyProfile implements OnInit {
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: () => this.languageService.toastSuccess('company-profile.messages.success-update'),
-        error: (err) => this.languageService.toastError(handleHttpErrors(err.status)),
+        error: (err) => {
+          const errStatus = err.status;
+          const errCode = err.error?.error?.errorCode;
+
+          if (errStatus === 400 && errCode === 'FILE_TOO_LARGE') {
+            this.languageService.toastError('common.errors.too-large-file', { fileName: 'Logo' });
+          } else if (errStatus === 400 && errCode === 'INVALID_FILE_TYPE') {
+            this.languageService.toastError('common.errors.invalid-file-type');
+          } else {
+            this.languageService.toastError(handleHttpErrors(err.status));
+          }
+        },
       });
   }
 

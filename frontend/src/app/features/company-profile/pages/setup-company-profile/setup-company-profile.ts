@@ -231,7 +231,21 @@ export class SetupCompanyProfile implements OnInit, OnDestroy {
         this.languageService.toastSuccess('company-profile.messages.success-create');
         this.router.navigate(['/dashboard']);
       },
-      error: (err) => this.languageService.toastError(handleHttpErrors(err.status)),
+      error: (err) => {
+        const errStatus = err.status;
+        const errCode = err.error?.error?.errorCode;
+
+        if (errStatus === 400 && errCode === 'FILE_TOO_LARGE') {
+          this.languageService.toastError('common.errors.too-large-file', { fileName: 'Logo' });
+        } else if (errStatus === 400 && errCode === 'INVALID_FILE_TYPE') {
+          this.languageService.toastError('common.errors.invalid-file-type');
+        } else if (errStatus === 409 && errCode === 'COMPANY_PROFILE_ALREADY_EXISTS') {
+          this.languageService.toastWarning('company-profile.messages.exists');
+          this.router.navigate(['/dashboard']);
+        } else {
+          this.languageService.toastError(handleHttpErrors(err.status));
+        }
+      },
     });
   }
 

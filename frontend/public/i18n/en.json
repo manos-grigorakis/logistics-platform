@@ -96,9 +96,11 @@
     "errors": {
       "files-processing": "Failed to process the uploaded files. Please try again",
       "generic": "An error occurred. Please try again",
+      "invalid-file-type": "Invalid file type",
       "no-results": "No results",
       "server": "Server error. Please try again later",
-      "storage-unavailable": "Storage service is temporarily unavailable. Please try again later"
+      "storage-unavailable": "Storage service is temporarily unavailable. Please try again later",
+      "too-large-file": "{{fileName}} file is too large"
     },
     "fields": {
       "address": "Address",
@@ -244,6 +246,7 @@
       "website-url": "Website URL"
     },
     "messages": {
+      "exists": "Company profile already exists",
       "logo-delete": "Logo deleted successfully",
       "logo-replace-notice": "Uploading a new logo will replace the existing one. Leave this field empty to keep the current logo.\"",
       "success-create": "Company profile created successfully",
