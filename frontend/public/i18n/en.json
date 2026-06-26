@@ -76,12 +76,12 @@
       "next": "Next",
       "no-cancel": "No, cancel",
       "replace-file": "Replace file",
+      "review": "Review",
       "save": "Save",
       "send-via-mail": "Send via Mail",
       "submit": "Submit",
       "upload": "Upload",
-      "yes-sure": "Yes, I'm sure",
-      "review": "Review"
+      "yes-sure": "Yes, I'm sure"
     },
     "banks": {
       "nbg": "National Bank of Greece"
@@ -125,16 +125,16 @@
         "full-name": "e.g. John Doe",
         "last-name": "e.g. Doe",
         "phone": "e.g. +30 210 123 4567",
+        "postal-code": "e.g. 117 42",
         "price": "e.g. 10.00",
         "quantity": "e.g. 2",
+        "region": "e.g. Athens",
         "select-country": "Select a country",
         "select-type": "Select a type",
-        "tin": "e.g. 123456789",
-        "vat": "e.g. 24",
         "street": "e.g. Kifisias Avenue",
         "street-number": "e.g. 44",
-        "postal-code": "e.g. 117 42",
-        "region": "e.g. Athens"
+        "tin": "e.g. 123456789",
+        "vat": "e.g. 24"
       },
       "postal-code": "Postal Code",
       "price": "Price",
@@ -210,7 +210,9 @@
       "from-before-to": "From must be before To",
       "invalid-format": "{{field}} has an invalid format",
       "max-file-size": "Max File Size",
+      "max-length": "{{field}} must be at most {{requiredLength}} characters",
       "max-value": "must be less than or equal to {{value}}",
+      "min-length": "{{field}} must be at least {{requiredLength}} characters",
       "must-be-number": "must be a number",
       "must-be-positive": "must be positive",
       "required": "{{field}} is required",
@@ -218,9 +220,7 @@
       "required-fields": "The fields with asterisk (*) are required",
       "required-type": "Type is required",
       "supported-files": "Supported files",
-      "unsupported-file-type": "Unsupported file type",
-      "min-length": "{{field}} must be at least {{requiredLength}} characters",
-      "max-length": "{{field}} must be at most {{requiredLength}} characters"
+      "unsupported-file-type": "Unsupported file type"
     }
   },
   "company-profile": {
@@ -233,8 +233,8 @@
       "phones": "Phones",
       "placeholders": {
         "representative-title": "e.g. CEO",
-        "website-url": "e.g. https://www.yourcompany.com",
-        "slogan": "e.g. Your trusted logistics partner"
+        "slogan": "e.g. Your trusted logistics partner",
+        "website-url": "e.g. https://www.yourcompany.com"
       },
       "primary-color": "Primary Color",
       "representative": "Representative",
@@ -249,30 +249,30 @@
       "success-create": "Company profile created successfully",
       "success-update": "Company profile updated successfully"
     },
-    "titles": {
-      "branding": "Branding"
-    },
     "stepper": {
-      "one": {
-        "title": "Basic Information",
-        "description": "Enter your company details and tax information"
-      },
-      "two": {
-        "title": "Address",
-        "description": "Provide your registered business address"
-      },
-      "three": {
-        "title": "Contact",
-        "description": "Add your company email and phone numbers"
+      "five": {
+        "description": "Review all information before submitting your profile",
+        "title": "Review"
       },
       "four": {
-        "title": "Branding",
-        "description": "Customize your company profile with branding assets"
+        "description": "Customize your company profile with branding assets",
+        "title": "Branding"
       },
-      "five": {
-        "title": "Review",
-        "description": "Review all information before submitting your profile"
+      "one": {
+        "description": "Enter your company details and tax information",
+        "title": "Basic Information"
+      },
+      "three": {
+        "description": "Add your company email and phone numbers",
+        "title": "Contact"
+      },
+      "two": {
+        "description": "Provide your registered business address",
+        "title": "Address"
       }
+    },
+    "titles": {
+      "branding": "Branding"
     }
   },
   "customers": {

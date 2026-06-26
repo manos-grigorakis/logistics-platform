@@ -228,7 +228,7 @@ export class SetupCompanyProfile implements OnInit, OnDestroy {
   private createCompanyProfile(request: CompanyProfileCreateRequest): void {
     this.companyProfileService.createCompanyProfile(request).subscribe({
       next: (res) => {
-        this.languageService.toastSuccess('company-profile.messages.success');
+        this.languageService.toastSuccess('company-profile.messages.success-create');
         this.router.navigate(['/dashboard']);
       },
       error: (err) => this.languageService.toastError(handleHttpErrors(err.status)),

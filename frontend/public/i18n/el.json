@@ -61,6 +61,7 @@
   "common": {
     "actions": {
       "action": "Ενέργεια",
+      "back": "Πίσω",
       "back-to-dashboard": "Επιστροφή στο Dashboard",
       "back-to-login": "Επιστροφή στη Σύνδεση",
       "browse-file": "Αναζήτηση αρχείου",
@@ -72,8 +73,10 @@
       "drop-file-here": "Σύρετε το αρχείο εδώ",
       "drop-or-click-to-upload": "Σύρετε το αρχείο εδώ ή κάντε κλικ στο κουμπί για μεταφόρτωση",
       "edit": "Επεξεργασία",
+      "next": "Επόμενο",
       "no-cancel": "Όχι, ακύρωση",
       "replace-file": "Αντικατάσταση αρχείου",
+      "review": "Έλεγχος",
       "save": "Αποθήκευση",
       "send-via-mail": "Αποστολή μέσω Email",
       "submit": "Υποβολή",
@@ -115,14 +118,23 @@
       "paid-amount": "Πληρωμένο Ποσό",
       "phone": "Τηλέφωνο",
       "placeholders": {
+        "company-name": "π.χ. ACME Logistics",
         "description": "Η περιγραφή συμπληρώνεται εδώ",
         "email": "π.χ. john.papadopoulos@example.com",
         "first-name": "π.χ. Γιάννης",
+        "full-name": "π.χ. Γιάννης Παπαδόπουλος",
         "last-name": "π.χ. Παπαδόπουλος",
         "phone": "π.χ. +30 210 123 4567",
+        "postal-code": "π.χ. 117 42",
         "price": "π.χ. 10.00",
         "quantity": "π.χ. 2",
-        "select-type": "Επιλέξτε τύπο"
+        "region": "π.χ. Αθήνα",
+        "select-country": "Επιλέξτε χώρα",
+        "select-type": "Επιλέξτε τύπο",
+        "street": "π.χ. Λεωφόρος Κηφισίας",
+        "street-number": "π.χ. 44",
+        "tin": "π.χ. 123456789",
+        "vat": "π.χ. 24"
       },
       "postal-code": "Ταχυδρομικός Κώδικας",
       "price": "Τιμή",
@@ -198,6 +210,9 @@
       "from-before-to": "Η ημερομηνία «Από» πρέπει να είναι προγενέστερη της ημερομηνίας «Προς»",
       "invalid-format": "Το πεδίο {{field}} έχει μη έγκυρη μορφή",
       "max-file-size": "Μέγιστο μέγεθος αρχείου",
+      "max-length": "Το πεδίο {{field}} πρέπει να έχει έως {{requiredLength}} χαρακτήρες",
+      "max-value": "πρέπει να είναι μικρότερο ή ίσο με {{value}}",
+      "min-length": "Το πεδίο {{field}} πρέπει να έχει τουλάχιστον {{requiredLength}} χαρακτήρες",
       "must-be-number": "πρέπει να είναι αριθμός",
       "must-be-positive": "πρέπει να είναι θετικό",
       "required": "Το πεδίο {{field}} είναι υποχρεωτικό",
@@ -211,10 +226,16 @@
   "company-profile": {
     "actions": {
       "open-existing-logo": "Άνοιγμα τρέχοντος logo",
+      "setup": "Ρύθμιση Προφίλ Εταιρείας",
       "update": "Ενημέρωση Στοιχείων Εταιρείας"
     },
     "fields": {
       "phones": "Τηλέφωνα",
+      "placeholders": {
+        "representative-title": "π.χ. Διευθύνων Σύμβουλος",
+        "slogan": "π.χ. Ο αξιόπιστος συνεργάτης σας στις μεταφορές",
+        "website-url": "π.χ. https://www.yourcompany.com"
+      },
       "primary-color": "Κύριο Χρώμα",
       "representative": "Εκπρόσωπος",
       "representative-title": "Ιδιότητα Εκπροσώπου",
@@ -223,8 +244,32 @@
       "website-url": "Ιστοσελίδα"
     },
     "messages": {
+      "logo-delete": "Το λογότυπο διαγράφηκε με επιτυχία",
       "logo-replace-notice": "Η μεταφόρτωση νέου logo θα αντικαταστήσει το υπάρχον. Αφήστε αυτό το πεδίο κενό για να διατηρήσετε το τρέχον logo.",
+      "success-create": "Το προφίλ εταιρείας δημιουργήθηκε με επιτυχία",
       "success-update": "Το προφίλ της εταιρείας ενημερώθηκε επιτυχώς"
+    },
+    "stepper": {
+      "five": {
+        "description": "Ελέγξτε όλες τις πληροφορίες πριν την υποβολή του προφίλ σας",
+        "title": "Έλεγχος"
+      },
+      "four": {
+        "description": "Προσαρμόστε το προφίλ της εταιρείας σας με στοιχεία branding",
+        "title": "Branding"
+      },
+      "one": {
+        "description": "Εισάγετε τα στοιχεία της εταιρείας και τις φορολογικές πληροφορίες",
+        "title": "Βασικές Πληροφορίες"
+      },
+      "three": {
+        "description": "Προσθέστε το email και τα τηλέφωνα της εταιρείας σας",
+        "title": "Επικοινωνία"
+      },
+      "two": {
+        "description": "Καταχωρήστε τη δηλωμένη διεύθυνση της επιχείρησής σας",
+        "title": "Διεύθυνση"
+      }
     },
     "titles": {
       "branding": "Εταιρική Ταυτότητα"
