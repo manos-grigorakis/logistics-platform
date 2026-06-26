@@ -1,0 +1,68 @@
+<section>
+  <div class="flex items-center justify-between">
+    <h3 class="font-semibold">{{ 'company-profile.titles.branding' | translate }}</h3>
+    <button
+      type="button"
+      (click)="onGoToStep.emit(3)"
+      class="text-primary-600 text-sm hover:cursor-pointer hover:underline"
+    >
+      {{ 'common.actions.edit' | translate }}
+    </button>
+  </div>
+  <div class="mt-2 grid grid-cols-1 gap-1">
+    <app-review-field-item
+      [label]="'company-profile.fields.website-url' | translate"
+      [value]="data.websiteUrl || '-'"
+    />
+
+    <!-- Primary Color -->
+    <div class="grid grid-cols-2 gap-2">
+      <span class="text-gray-500">
+        {{ 'company-profile.fields.primary-color' | translate }}
+      </span>
+
+      <div class="flex items-center gap-2">
+        <div
+          class="h-5 w-5 rounded border border-gray-300"
+          [style.background]="data.brandPrimaryColor"
+        ></div>
+
+        <span>{{ data.brandPrimaryColor }}</span>
+      </div>
+    </div>
+
+    <!-- Secondary Color -->
+    <div class="grid grid-cols-2 gap-2">
+      <span class="text-gray-500">
+        {{ 'company-profile.fields.secondary-color' | translate }}
+      </span>
+
+      <div class="flex items-center gap-2">
+        <div
+          class="h-5 w-5 rounded border border-gray-300"
+          [style.background]="data.brandSecondaryColor"
+        ></div>
+
+        <span>{{ data.brandSecondaryColor }}</span>
+      </div>
+    </div>
+
+    <app-review-field-item
+      [label]="'company-profile.fields.slogan' | translate"
+      [value]="data.slogan || '-'"
+    />
+
+    @if (logoPreviewUrl) {
+      <div class="mt-2 grid grid-cols-2">
+        <span class="text-gray-500">Logo</span>
+        <img
+          [src]="logoPreviewUrl"
+          class="mt-1 h-20 w-20 rounded border object-contain"
+          alt="Logo preview"
+        />
+      </div>
+    } @else {
+      <app-review-field-item label="Logo" [value]="'-'" />
+    }
+  </div>
+</section>

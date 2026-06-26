@@ -1,0 +1,28 @@
+<section>
+  <div class="flex items-center justify-between">
+    <h3 class="font-semibold">{{ 'common.messages.basic-info' | translate }}</h3>
+    <button
+      type="button"
+      (click)="onGoToStep.emit(0)"
+      class="text-primary-600 text-sm hover:cursor-pointer hover:underline"
+    >
+      {{ 'common.actions.edit' | translate }}
+    </button>
+  </div>
+  <div class="mt-2 grid grid-cols-1 gap-1">
+    <app-review-field-item [label]="'common.fields.tin' | translate" [value]="data.tin" />
+    <app-review-field-item [label]="'common.fields.name' | translate" [value]="data.name" />
+    <app-review-field-item
+      [label]="'common.fields.vat' | translate"
+      [value]="data.vatPercentage + '%'"
+    />
+    <app-review-field-item
+      [label]="'company-profile.fields.representative-title' | translate"
+      [value]="data.representativeTitle"
+    />
+    <app-review-field-item
+      [label]="'company-profile.fields.representative' | translate"
+      [value]="data.representative"
+    />
+  </div>
+</section>

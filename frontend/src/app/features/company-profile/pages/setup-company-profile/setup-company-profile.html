@@ -37,10 +37,18 @@
     }
 
     @if (currentStep === 4) {
-      <!-- TODO: Submit form through the review component -->
-      <app-review-step />
+      <div class="mt-8">
+        <app-review-step
+          [basicDetails]="reviewBasicDetails"
+          [address]="reviewAddress"
+          [contact]="reviewContact"
+          [branding]="reviewBranding"
+          (onGoToStep)="goToStep($event)"
+        />
+      </div>
     }
 
+    <!-- Buttons -->
     <div
       class="mt-8 flex"
       [class.justify-between]="currentStep > 0"
@@ -74,6 +82,16 @@
             type="button"
             [value]="'common.actions.review' | translate"
             (click)="next()"
+          />
+        </div>
+      }
+
+      @if (currentStep === 4) {
+        <div class="w-40">
+          <app-primary-button
+            type="button"
+            [value]="'common.actions.submit' | translate"
+            (click)="onSubmitClick()"
           />
         </div>
       }

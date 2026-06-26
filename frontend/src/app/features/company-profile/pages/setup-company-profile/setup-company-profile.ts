@@ -15,6 +15,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { DetailedStepper } from '../../../../shared/ui/detailed-stepper/detailed-stepper';
 import { Subscription, take } from 'rxjs';
 import { ReviewStep } from '../../components/review-step/review-step';
+import { AddressReview, BasicDetailsReview, BrandingReview, ContactReview } from '../../model/review-step.interface';
 
 @Component({
   selector: 'app-setup-company-profile',
@@ -34,7 +35,7 @@ import { ReviewStep } from '../../components/review-step/review-step';
 })
 export class SetupCompanyProfile implements OnInit, OnDestroy {
   public isLoading: boolean = false;
-  public currentStep: number = 0;
+  public currentStep: number = 3;
   public defaultPrimaryColor: string = '#0f172a';
   public defaultSecondaryColor: string = '#2563eb';
   public steps: { title: string; description: string }[] = [];
@@ -82,7 +83,48 @@ export class SetupCompanyProfile implements OnInit, OnDestroy {
     }
   }
 
+  public goToStep(step: number): void {
+    this.currentStep = step;
+  }
+
   // Getters
+  public get reviewBasicDetails(): BasicDetailsReview {
+    return {
+      tin: this.tin.value,
+      name: this.name.value,
+      vatPercentage: this.vatPercentage.value,
+      representativeTitle: this.representativeTitle.value,
+      representative: this.representative.value,
+    };
+  }
+
+  public get reviewAddress(): AddressReview {
+    return {
+      street: this.street.value,
+      streetNumber: this.streetNumber.value,
+      postalCode: this.postalCode.value,
+      region: this.region.value,
+      country: this.country.value,
+    };
+  }
+
+  public get reviewContact(): ContactReview {
+    return {
+      email: this.email.value,
+      phones: this.phones.value,
+    };
+  }
+
+  public get reviewBranding(): BrandingReview {
+    return {
+      brandPrimaryColor: this.brandPrimaryColor.value,
+      brandSecondaryColor: this.brandSecondaryColor.value,
+      websiteUrl: this.websiteUrl.value,
+      slogan: this.slogan.value,
+      logoFile: this.logoFile.value,
+    };
+  }
+
   public get tin(): FormControl<string> {
     return this.form.get('tin') as unknown as FormControl<string>;
   }
