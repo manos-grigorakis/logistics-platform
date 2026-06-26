@@ -70,5 +70,7 @@ export function buildCompanyProfileForm(formBuilder: FormBuilder, includeTin: bo
 }
 
 export function createPhone(formBuilder: FormBuilder) {
-  return formBuilder.nonNullable.control('', Validators.required);
+  return formBuilder.nonNullable.control('', {
+    validators: [Validators.required, Validators.minLength(8), Validators.maxLength(15)],
+  });
 }
