@@ -9,7 +9,7 @@ export function buildCompanyProfileForm(formBuilder: FormBuilder, includeTin: bo
     }),
     vatPercentage: new FormControl<number | null>(null, {
       nonNullable: true,
-      validators: [Validators.required, Validators.min(1), Validators.max(100)],
+      validators: [Validators.required, Validators.max(100)],
     }),
     representativeTitle: new FormControl<string>('', {
       nonNullable: true,
@@ -61,7 +61,7 @@ export function buildCompanyProfileForm(formBuilder: FormBuilder, includeTin: bo
     Object.assign(controls, {
       tin: new FormControl<string>('', {
         nonNullable: true,
-        validators: [Validators.required, Validators.minLength(9), Validators.maxLength(9)],
+        validators: [Validators.required, Validators.pattern(REGEX.ONLY_DIGITS)],
       }),
     });
   }
