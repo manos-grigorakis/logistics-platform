@@ -61,6 +61,7 @@
   "common": {
     "actions": {
       "action": "Action",
+      "back": "Back",
       "back-to-dashboard": "Back to Dashboard",
       "back-to-login": "Back to Login",
       "browse-file": "Browse file",
@@ -72,8 +73,10 @@
       "drop-file-here": "Drop file here",
       "drop-or-click-to-upload": "Drop or Click the button below to upload",
       "edit": "Edit",
+      "next": "Next",
       "no-cancel": "No, cancel",
       "replace-file": "Replace file",
+      "review": "Review",
       "save": "Save",
       "send-via-mail": "Send via Mail",
       "submit": "Submit",
@@ -83,18 +86,26 @@
     "banks": {
       "nbg": "National Bank of Greece"
     },
+    "countries": {
+      "cyprus": "Cyprus",
+      "greece": "Greece"
+    },
     "empty-state": {
       "description": "There is no description"
     },
     "errors": {
       "files-processing": "Failed to process the uploaded files. Please try again",
       "generic": "An error occurred. Please try again",
+      "invalid-file-type": "Invalid file type",
       "no-results": "No results",
       "server": "Server error. Please try again later",
-      "storage-unavailable": "Storage service is temporarily unavailable. Please try again later"
+      "storage-unavailable": "Storage service is temporarily unavailable. Please try again later",
+      "too-large-file": "{{fileName}} file is too large"
     },
     "fields": {
+      "address": "Address",
       "company-name": "Company Name",
+      "country": "Country",
       "created-at": "Created At",
       "date": "Date",
       "description": "Description",
@@ -109,29 +120,44 @@
       "paid-amount": "Paid Amount",
       "phone": "Phone",
       "placeholders": {
+        "company-name": "e.g. ACME Logistics",
         "description": "Description goes here",
         "email": "e.g. john.doe@example.com",
         "first-name": "e.g. John",
+        "full-name": "e.g. John Doe",
         "last-name": "e.g. Doe",
         "phone": "e.g. +30 210 123 4567",
+        "postal-code": "e.g. 117 42",
         "price": "e.g. 10.00",
         "quantity": "e.g. 2",
-        "select-type": "Select a type"
+        "region": "e.g. Athens",
+        "select-country": "Select a country",
+        "select-type": "Select a type",
+        "street": "e.g. Kifisias Avenue",
+        "street-number": "e.g. 44",
+        "tin": "e.g. 123456789",
+        "vat": "e.g. 24"
       },
+      "postal-code": "Postal Code",
       "price": "Price",
       "quantity": "Quantity",
       "receipt": "Receipt",
       "receipt-file": "Receipt File",
+      "region": "Region",
       "remaining-amount": "Remaining Amount",
       "signed-at": "Signed at",
       "signed-by": "Signed by",
       "status": "Status",
+      "street": "Street",
+      "street-number": "Street Number",
+      "tin": "TIN",
       "title": "Title",
       "total-amount": "Total Amount",
       "type": "Type",
       "unassigned": "Unassigned",
       "unpaid-amount": "Unpaid Amount",
-      "updated-at": "Updated At"
+      "updated-at": "Updated At",
+      "vat": "VAT (%)"
     },
     "filters": {
       "all": "All",
@@ -145,6 +171,7 @@
       "amounts": "Amounts",
       "basic-info": "Basic Information",
       "cannot-undone": "This action is permanent and cannot be undone",
+      "contact": "Contact",
       "documents": "Documents",
       "file-preview-format-notice": "Only PDF documents support preview. If a document does not display, it may be in a different format please download it instead.",
       "file-replace-notice": "Uploading a new file will replace the existing one. Leave it empty to keep the current file.",
@@ -185,6 +212,9 @@
       "from-before-to": "From must be before To",
       "invalid-format": "{{field}} has an invalid format",
       "max-file-size": "Max File Size",
+      "max-length": "{{field}} must be at most {{requiredLength}} characters",
+      "max-value": "must be less than or equal to {{value}}",
+      "min-length": "{{field}} must be at least {{requiredLength}} characters",
       "must-be-number": "must be a number",
       "must-be-positive": "must be positive",
       "required": "{{field}} is required",
@@ -193,6 +223,59 @@
       "required-type": "Type is required",
       "supported-files": "Supported files",
       "unsupported-file-type": "Unsupported file type"
+    }
+  },
+  "company-profile": {
+    "actions": {
+      "open-existing-logo": "Open current logo",
+      "setup": "Setup Your Company Profile",
+      "update": "Update Company Profile"
+    },
+    "fields": {
+      "phones": "Phones",
+      "placeholders": {
+        "representative-title": "e.g. CEO",
+        "slogan": "e.g. Your trusted logistics partner",
+        "website-url": "e.g. https://www.yourcompany.com"
+      },
+      "primary-color": "Primary Color",
+      "representative": "Representative",
+      "representative-title": "Representative Title",
+      "secondary-color": "Secondary Color",
+      "slogan": "Slogan",
+      "website-url": "Website URL"
+    },
+    "messages": {
+      "exists": "Company profile already exists",
+      "logo-delete": "Logo deleted successfully",
+      "logo-replace-notice": "Uploading a new logo will replace the existing one. Leave this field empty to keep the current logo.\"",
+      "success-create": "Company profile created successfully",
+      "success-update": "Company profile updated successfully"
+    },
+    "stepper": {
+      "five": {
+        "description": "Review all information before submitting your profile",
+        "title": "Review"
+      },
+      "four": {
+        "description": "Customize your company profile with branding assets",
+        "title": "Branding"
+      },
+      "one": {
+        "description": "Enter your company details and tax information",
+        "title": "Basic Information"
+      },
+      "three": {
+        "description": "Add your company email and phone numbers",
+        "title": "Contact"
+      },
+      "two": {
+        "description": "Provide your registered business address",
+        "title": "Address"
+      }
+    },
+    "titles": {
+      "branding": "Branding"
     }
   },
   "customers": {
@@ -349,6 +432,7 @@
     },
     "top-nav": {
       "account": "Account",
+      "company": "Company",
       "logout": "Logout",
       "settings": "Settings"
     }

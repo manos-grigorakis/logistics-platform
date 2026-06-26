@@ -1,0 +1,20 @@
+<section>
+  <div class="flex items-center justify-between">
+    <h3 class="font-semibold">{{ 'common.messages.contact' | translate }}</h3>
+    <button
+      type="button"
+      (click)="onGoToStep.emit(2)"
+      class="text-primary-600 text-sm hover:cursor-pointer hover:underline"
+    >
+      {{ 'common.actions.edit' | translate }}
+    </button>
+  </div>
+  <div class="mt-2 grid grid-cols-1 gap-1">
+    <app-review-field-item label="Email" [value]="data.email" />
+
+    <app-review-field-item
+      [label]="'company-profile.fields.phones' | translate"
+      [value]="data.phones.join(', ')"
+    />
+  </div>
+</section>

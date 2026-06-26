@@ -38,6 +38,10 @@ export class Navbar implements OnInit {
     this.toggleSidebar.emit();
   }
 
+  public isAdmin(): boolean {
+    return this.authService.isAdmin();
+  }
+
   private formatUserName(): string | undefined {
     if (!this.user) return;
 

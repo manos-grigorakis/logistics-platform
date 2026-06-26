@@ -1,0 +1,70 @@
+<div [formGroup]="parentForm" class="grid grid-cols-1 gap-4">
+  <h3 class="text-lg font-medium md:text-xl">{{ 'common.fields.address' | translate }}</h3>
+
+  <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+    <!-- Street -->
+    <app-main-input
+      formControlName="street"
+      type="text"
+      [label]="'common.fields.street' | translate"
+      [placeholder]="'common.fields.placeholders.street' | translate"
+      [showRequiredStar]="true"
+    />
+
+    <!-- Street Number -->
+    <app-main-input
+      formControlName="streetNumber"
+      type="text"
+      [label]="'common.fields.street-number' | translate"
+      [placeholder]="'common.fields.placeholders.street-number' | translate"
+      [showRequiredStar]="true"
+    />
+  </div>
+
+  <div class="grid grid-cols-1 gap-4 lg:grid-cols-3">
+    <!-- Postal Code -->
+    <app-main-input
+      formControlName="postalCode"
+      type="text"
+      [label]="'common.fields.postal-code' | translate"
+      [placeholder]="'common.fields.placeholders.postal-code' | translate"
+      [showRequiredStar]="true"
+    />
+
+    <!-- Street Number -->
+    <app-main-input
+      formControlName="region"
+      type="text"
+      [label]="'common.fields.region' | translate"
+      [placeholder]="'common.fields.placeholders.region' | translate"
+      [showRequiredStar]="true"
+    />
+
+    <label class="mb-1 block">
+      <span class="text-danger mr-1 text-sm">*</span>{{ 'common.fields.country' | translate }}
+      <select
+        formControlName="country"
+        class="focus:ring-primary-200 w-full rounded border border-gray-300 px-4 py-2.5 text-gray-700 focus:ring focus:outline-none"
+      >
+        <option [ngValue]="null" disabled>
+          {{ 'common.fields.placeholders.select-country' | translate }}
+        </option>
+        <option value="Greece">{{ 'common.countries.greece' | translate }}</option>
+        <option value="Cyprus">{{ 'common.countries.cyprus' | translate }}</option>
+      </select>
+
+      @if (country.invalid && (country.dirty || country.touched)) {
+        <div>
+          @if (country.hasError('required')) {
+            <span class="text-danger ml-1 text-sm">
+              {{
+                'common.validation.required'
+                  | translate: { field: ('common.fields.country' | translate) }
+              }}
+            </span>
+          }
+        </div>
+      }
+    </label>
+  </div>
+</div>

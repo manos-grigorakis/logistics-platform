@@ -48,5 +48,45 @@
     @if (control?.errors?.['pattern']) {
       <span class="text-danger ml-1 text-sm"> {{ label() }} {{ patternErrorMessage() }} </span>
     }
+
+    <!-- Min & Max Length -->
+    @if (control?.errors?.['minlength']) {
+      <span class="text-danger ml-1 text-sm">
+        {{
+          'common.validation.min-length'
+            | translate
+              : {
+                  field: label(),
+                  requiredLength: control?.errors?.['minlength']?.requiredLength,
+                }
+        }}
+      </span>
+    }
+
+    @if (control?.errors?.['maxlength']) {
+      <span class="text-danger ml-1 text-sm">
+        {{
+          'common.validation.max-length'
+            | translate
+              : {
+                  field: label(),
+                  requiredLength: control?.errors?.['maxlength']?.requiredLength,
+                }
+        }}
+      </span>
+    }
+
+    <!-- Min & Max Number -->
+    @if (control?.errors?.['min']) {
+      <span class="text-danger ml-1 text-sm">
+        {{ 'common.validation.must-be-positive' | translate }}
+      </span>
+    }
+
+    @if (control?.errors?.['max']) {
+      <span class="text-danger ml-1 text-sm">
+        {{ 'common.validation.max-value' | translate: { value: control?.errors?.['max']?.max } }}
+      </span>
+    }
   </div>
 }

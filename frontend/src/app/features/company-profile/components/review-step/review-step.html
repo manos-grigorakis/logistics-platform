@@ -1,0 +1,6 @@
+<div class="flex flex-col space-y-6">
+  <app-review-basic-details [data]="basicDetails" (onGoToStep)="onGoToStep.emit($event)" />
+  <app-review-address [data]="address" (onGoToStep)="onGoToStep.emit($event)" />
+  <app-review-contact [data]="contact" (onGoToStep)="onGoToStep.emit($event)" />
+  <app-review-branding [data]="branding" (onGoToStep)="onGoToStep.emit($event)" />
+</div>

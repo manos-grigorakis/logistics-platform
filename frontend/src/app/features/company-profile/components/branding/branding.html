@@ -1,0 +1,93 @@
+<div [formGroup]="parentForm" class="grid grid-cols-1 gap-4">
+  <h3 class="text-lg font-medium md:text-xl">
+    {{ 'company-profile.titles.branding' | translate }}
+  </h3>
+
+  <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+    <!-- Website URL -->
+    <app-main-input
+      formControlName="websiteUrl"
+      type="text"
+      [label]="'company-profile.fields.website-url' | translate"
+      [placeholder]="'company-profile.fields.placeholders.website-url' | translate"
+    />
+
+    <!-- Colors -->
+    <div class="grid grid-cols-2 gap-4">
+      <!-- Primary Color -->
+      <app-color-picker
+        [label]="'company-profile.fields.primary-color' | translate"
+        [colorControl]="brandPrimaryColor"
+        [colorValue]="brandPrimaryValColor"
+        [defaultColor]="defaultPrimaryColor"
+      />
+
+      <!-- Secondary Color -->
+      <app-color-picker
+        [label]="'company-profile.fields.secondary-color' | translate"
+        [colorControl]="brandSecondaryColor"
+        [colorValue]="brandSecondaryValColor"
+        [defaultColor]="defaultSecondaryColor"
+      />
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+    <!-- Slogan -->
+    <div>
+      <label for="slogan" class="mb-1 block">
+        {{ 'company-profile.fields.slogan' | translate }}
+      </label>
+      <textarea
+        formControlName="slogan"
+        id="slogan"
+        cols="20"
+        rows="10"
+        [placeholder]="'company-profile.fields.placeholders.slogan' | translate"
+        class="focus:ring-primary-200 placeholder:text-body w-full resize-none rounded border border-gray-300 px-4 py-2 text-gray-700 focus:ring focus:outline-none"
+      ></textarea>
+    </div>
+
+    <!-- Logo -->
+    <div>
+      <div class="flex items-center justify-between gap-2">
+        @if (formUsage === 'create') {
+          <div class="mb-1 flex w-full items-center justify-between">
+            <label>Logo</label>
+
+            @if (logoFile.value !== null && formUsage === 'create') {
+              <button
+                (click)="removeLogoFile()"
+                type="button"
+                class="text-danger text-sm hover:cursor-pointer hover:underline"
+              >
+                {{ 'common.actions.delete' | translate }}
+              </button>
+            }
+          </div>
+        } @else {
+          <label class="mb-1 block">Logo</label>
+        }
+
+        @if (logoUrl && formUsage === 'update') {
+          <a [href]="logoUrl" target="_blank" rel="noopener" class="text-sm hover:underline">{{
+            'company-profile.actions.open-existing-logo' | translate
+          }}</a>
+        }
+      </div>
+      <app-file-dropzone
+        [showMaxFileSize]="true"
+        [maxFileSizeInMB]="2"
+        [supportedFiles]="supportedLogoTypes"
+        (fileSelected)="setLogoFile($event)"
+      />
+
+      <!-- Banner -->
+      @if (formUsage === 'update') {
+        <app-info-banner>
+          <p>{{ 'company-profile.messages.logo-replace-notice' | translate }}</p>
+        </app-info-banner>
+      }
+    </div>
+  </div>
+</div>

@@ -6,28 +6,28 @@
         <button
           (click)="onBurgerClick()"
           aria-controls="top-bar-sidebar"
-          type="button"
           class="box-border border border-transparent bg-transparent p-2 text-sm leading-5 font-medium hover:cursor-pointer focus:outline-none"
+          type="button"
         >
           <span class="sr-only">Open sidebar</span>
           <svg
-            class="h-6 w-6"
             aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
+            class="h-6 w-6"
             fill="none"
+            height="24"
             viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
+              d="M5 7h14M5 12h14M5 17h10"
               stroke="white"
               stroke-linecap="round"
               stroke-width="2"
-              d="M5 7h14M5 12h14M5 17h10"
             />
           </svg>
         </button>
-        <a routerLink="/dashboard" class="ms-2 flex md:me-24">
+        <a class="ms-2 flex md:me-24" routerLink="/dashboard">
           <!-- <img src="" class="h-6 me-3" alt="Logo" /> -->
           <span class="self-center text-lg font-semibold whitespace-nowrap text-white">{{
             'app.title' | translate
@@ -36,33 +36,28 @@
       </div>
 
       <!-- Dropdown -->
-      <app-dropdown-button [label]="''" [applyBorderButton]="false">
+      <app-dropdown-button [applyBorderButton]="false" [label]="''">
         <ng-icon
-          dropdown-left-icon
           class="border-0 outline-0"
-          name="lucideUserCircle"
           color="#ffffff"
+          dropdown-left-icon
+          name="lucideUserCircle"
           size="30"
         />
         <!-- Items -->
-        <app-dropdown-menu-item
-          dropdown-menu-item
-          route="#"
-          [label]="'nav.top-nav.account' | translate"
-          icon="lucideUserCircle"
-        />
+        @if (isAdmin()) {
+          <app-dropdown-menu-item
+            [label]="'nav.top-nav.company' | translate"
+            dropdown-menu-item
+            icon="lucideBriefcaseBusiness"
+            route="company-profile/edit"
+          />
+        }
 
         <app-dropdown-menu-item
-          dropdown-menu-item
-          route="#"
-          [label]="'nav.top-nav.settings' | translate"
-          icon="lucideCog"
-        />
-
-        <app-dropdown-menu-item
-          dropdown-menu-item
           (click)="logout()"
           [label]="'nav.top-nav.logout' | translate"
+          dropdown-menu-item
           icon="lucideLogOut"
         />
       </app-dropdown-button>

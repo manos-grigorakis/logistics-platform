@@ -1,0 +1,27 @@
+<div class="space-y-2">
+  <label class="text-sm">
+    @if (required) {
+      <span class="text-danger">*</span>
+    }
+
+    {{ label }}
+  </label>
+
+  <div
+    class="flex cursor-pointer items-center gap-3 rounded-md border border-gray-300 px-3 py-2"
+    (click)="togglePicker()"
+  >
+    <div
+      class="h-6 w-6 rounded-md border border-gray-300"
+      [style.background]="colorControl.value"
+    ></div>
+
+    <span class="font-mono text-sm">{{ colorControl.value }}</span>
+  </div>
+
+  @if (showColorPicker) {
+    <div class="absolute z-50 mt-2">
+      <chrome-picker [control]="colorValue" />
+    </div>
+  }
+</div>

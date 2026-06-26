@@ -45,6 +45,9 @@ import { SuppliersCreate } from './features/suppliers/pages/suppliers-create/sup
 import { SupplierPaymentsCreate } from './features/suppliers/pages/supplier-payments-create/supplier-payments-create';
 import { EditSupplierPayment } from './features/suppliers/pages/edit-supplier-payment/edit-supplier-payment';
 import { SupplierPaymentView } from './features/suppliers/pages/supplier-payment-view/supplier-payment-view';
+import { EditCompanyProfile } from './features/company-profile/pages/edit-company-profile/edit-company-profile';
+import { SetupCompanyProfile } from './features/company-profile/pages/setup-company-profile/setup-company-profile';
+import { companyProfileSetupGuard } from './core/guards/company-profile-setup-guard';
 
 export const routes: Routes = [
   {
@@ -52,6 +55,7 @@ export const routes: Routes = [
     component: MainLayout,
     title: 'Logistics Platform',
     canActivate: [authGuard],
+    canActivateChild: [companyProfileSetupGuard],
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: MainDashboard, title: 'Dashboard' },
@@ -155,7 +159,19 @@ export const routes: Routes = [
           },
         ],
       },
+
+      // Company Profile
+      {
+        path: 'company-profile',
+        children: [{ path: 'edit', component: EditCompanyProfile, title: 'Edit Company Profile' }],
+      },
     ],
+  },
+  {
+    path: 'setup',
+    component: SetupCompanyProfile,
+    title: 'Setup Company Profile',
+    canActivate: [authGuard, roleGuard],
   },
   {
     path: 'login',

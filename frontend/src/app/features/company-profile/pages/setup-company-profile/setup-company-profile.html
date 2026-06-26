@@ -1,0 +1,105 @@
+@if (isLoading) {
+  <app-loading-spinner />
+}
+
+<section class="mx-auto mt-6 max-w-4xl rounded-lg bg-white p-6 shadow-lg shadow-black/10">
+  <h1 class="mb-8 text-center text-3xl font-bold">{{ 'app.title' | translate }}</h1>
+
+  <app-detailed-stepper [steps]="steps" [activeStep]="currentStep" [showDescription]="false" />
+
+  @if (currentStep !== 4) {
+    <span class="text-danger mt-8 block text-sm">
+      {{ 'common.validation.required-fields' | translate }}
+    </span>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="onSubmitClick()" class="mt-2">
+    @if (currentStep === 0) {
+      <app-basic-details [parentForm]="form" />
+    }
+
+    @if (currentStep === 1) {
+      <app-address [parentForm]="form" />
+    }
+
+    @if (currentStep === 2) {
+      <app-contact
+        [parentForm]="form"
+        [parentFormArray]="phones"
+        (onAddPhone)="addPhone()"
+        (onRemovePhone)="removePhone($event)"
+      />
+    }
+
+    @if (currentStep === 3) {
+      <app-branding
+        formUsage="create"
+        [parentForm]="form"
+        [defaultPrimaryColor]="defaultPrimaryColor"
+        [defaultSecondaryColor]="defaultSecondaryColor"
+      />
+    }
+
+    @if (currentStep === 4) {
+      <div class="mt-8">
+        <app-review-step
+          [basicDetails]="reviewBasicDetails"
+          [address]="reviewAddress"
+          [contact]="reviewContact"
+          [branding]="reviewBranding"
+          (onGoToStep)="goToStep($event)"
+        />
+      </div>
+    }
+
+    <!-- Buttons -->
+    <div
+      class="mt-8 flex"
+      [class.justify-between]="currentStep > 0"
+      [class.justify-end]="currentStep === 0"
+    >
+      @if (currentStep > 0) {
+        <div class="w-40">
+          <button
+            type="button"
+            (click)="previous()"
+            class="w-full cursor-pointer rounded-md bg-zinc-300 px-2 py-2 font-medium text-white transition-all duration-150 hover:bg-zinc-500"
+          >
+            {{ 'common.actions.back' | translate }}
+          </button>
+        </div>
+      }
+
+      @if (currentStep < 3) {
+        <div class="w-40">
+          <app-primary-button
+            type="button"
+            [value]="'common.actions.next' | translate"
+            (click)="next()"
+          />
+        </div>
+      }
+
+      @if (currentStep === 3) {
+        <div class="w-40">
+          <app-primary-button
+            type="button"
+            [value]="'common.actions.review' | translate"
+            (click)="next()"
+          />
+        </div>
+      }
+
+      @if (currentStep === 4) {
+        <div class="w-40">
+          <app-primary-button
+            type="button"
+            [value]="'common.actions.submit' | translate"
+            [isDisabled]="isLoading"
+            (click)="onSubmitClick()"
+          />
+        </div>
+      }
+    </div>
+  </form>
+</section>
