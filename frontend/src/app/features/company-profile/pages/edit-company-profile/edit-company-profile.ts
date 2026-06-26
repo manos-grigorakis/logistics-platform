@@ -149,8 +149,6 @@ export class EditCompanyProfile implements OnInit {
       slogan: raw['slogan'] || null,
     };
 
-    console.log(request);
-
     this.updateCompanyProfile(request);
   }
 
