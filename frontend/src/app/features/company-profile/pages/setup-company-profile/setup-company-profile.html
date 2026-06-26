@@ -1,0 +1,76 @@
+<section class="mx-auto mt-6 max-w-4xl rounded-lg bg-white p-6 shadow-lg shadow-black/10">
+  <h1 class="mb-6 text-center text-3xl font-bold">{{ 'app.title' | translate }}</h1>
+
+  <!-- TODO: Add stepper -->
+
+  <h2 class="mb-1 text-2xl font-semibold">
+    {{ 'company-profile.actions.setup' | translate }}
+  </h2>
+  <span class="text-danger text-sm">{{ 'common.validation.required-fields' | translate }}</span>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmitClick()" class="mt-6">
+    @if (currentStep === 1) {
+      <app-basic-details [parentForm]="form" />
+    }
+
+    @if (currentStep === 2) {
+      <app-address [parentForm]="form" />
+    }
+
+    @if (currentStep === 3) {
+      <app-contact
+        [parentForm]="form"
+        [parentFormArray]="phones"
+        (onAddPhone)="addPhone()"
+        (onRemovePhone)="removePhone($event)"
+      />
+    }
+
+    @if (currentStep === 4) {
+      <app-branding
+        formUsage="create"
+        [parentForm]="form"
+        [defaultPrimaryColor]="defaultPrimaryColor"
+        [defaultSecondaryColor]="defaultSecondaryColor"
+      />
+    }
+
+    <div
+      class="mt-8 flex"
+      [class.justify-between]="currentStep > 1"
+      [class.justify-end]="currentStep === 1"
+    >
+      @if (currentStep > 1) {
+        <div class="w-40">
+          <button
+            type="button"
+            (click)="previous()"
+            class="w-full cursor-pointer rounded-md bg-zinc-300 px-2 py-2 font-medium text-white transition-all duration-150 hover:bg-zinc-500"
+          >
+            {{ 'common.actions.back' | translate }}
+          </button>
+        </div>
+      }
+
+      @if (currentStep < 4) {
+        <div class="w-40">
+          <app-primary-button
+            type="button"
+            [value]="'common.actions.next' | translate"
+            (click)="next()"
+          />
+        </div>
+      }
+
+      @if (currentStep === 4) {
+        <div class="w-40">
+          <app-primary-button type="button" [value]="'common.actions.review' | translate" />
+        </div>
+      }
+
+      @if (currentStep === 5) {
+        <!-- TODO: Submit form through the review component -->
+      }
+    </div>
+  </form>
+</section>

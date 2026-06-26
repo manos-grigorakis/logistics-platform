@@ -80,7 +80,8 @@
       "send-via-mail": "Send via Mail",
       "submit": "Submit",
       "upload": "Upload",
-      "yes-sure": "Yes, I'm sure"
+      "yes-sure": "Yes, I'm sure",
+      "review": "Review"
     },
     "banks": {
       "nbg": "National Bank of Greece"

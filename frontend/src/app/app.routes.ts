@@ -46,6 +46,7 @@ import { SupplierPaymentsCreate } from './features/suppliers/pages/supplier-paym
 import { EditSupplierPayment } from './features/suppliers/pages/edit-supplier-payment/edit-supplier-payment';
 import { SupplierPaymentView } from './features/suppliers/pages/supplier-payment-view/supplier-payment-view';
 import { EditCompanyProfile } from './features/company-profile/pages/edit-company-profile/edit-company-profile';
+import { SetupCompanyProfile } from './features/company-profile/pages/setup-company-profile/setup-company-profile';
 
 export const routes: Routes = [
   {
@@ -163,6 +164,11 @@ export const routes: Routes = [
         children: [{ path: 'edit', component: EditCompanyProfile, title: 'Edit Company Profile' }],
       },
     ],
+  },
+  {
+    path: 'setup',
+    component: SetupCompanyProfile,
+    title: 'Setup Company Profile',
   },
   {
     path: 'login',
