@@ -1,13 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LoadingSpinner } from '../../../../shared/ui/loading-spinner/loading-spinner';
-import {
-  FormArray,
-  FormBuilder,
-  FormControl,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CompanyProfileService } from '../../services/company-profile.service';
 import { LanguageService } from '../../../../core/services/language.service';
 import { finalize } from 'rxjs';
@@ -192,6 +186,9 @@ export class EditCompanyProfile implements OnInit {
   }
 
   private patchCompanyProfileForm(data: CompanyProfileResponse): void {
+    this.phones.clear();
+    data.phones.forEach((phone) => this.phones.push(createPhone(this.formBuilder)));
+
     this.form.patchValue({
       name: data.name,
       vatPercentage: data.vatPercentage,
