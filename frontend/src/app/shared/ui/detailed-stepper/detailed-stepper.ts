@@ -10,4 +10,5 @@ import { NgClass } from '@angular/common';
 export class DetailedStepper {
   @Input() steps: { title: string; description: string }[] = [];
   @Input() activeStep: number = 0;
+  @Input() showDescription: boolean = true;
 }
