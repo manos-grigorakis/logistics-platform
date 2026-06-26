@@ -7,7 +7,7 @@ export function buildCompanyProfileForm(formBuilder: FormBuilder, includeTin: bo
       nonNullable: true,
       validators: [Validators.required, Validators.maxLength(100)],
     }),
-    vatPercentage: new FormControl<number>(0, {
+    vatPercentage: new FormControl<number | null>(null, {
       nonNullable: true,
       validators: [Validators.required, Validators.min(1), Validators.max(100)],
     }),
@@ -35,7 +35,7 @@ export function buildCompanyProfileForm(formBuilder: FormBuilder, includeTin: bo
       nonNullable: true,
       validators: [Validators.required, Validators.maxLength(100)],
     }),
-    country: new FormControl<string>('', {
+    country: new FormControl<string | null>(null, {
       nonNullable: true,
       validators: [Validators.required, Validators.maxLength(100)],
     }),
@@ -50,7 +50,7 @@ export function buildCompanyProfileForm(formBuilder: FormBuilder, includeTin: bo
       nonNullable: true,
       validators: [Validators.maxLength(100)],
     }),
-    phones: formBuilder.array<FormControl<string>>([]),
+    phones: formBuilder.array<FormControl<string>>([createPhone(formBuilder)], Validators.required),
     email: new FormControl<string>('', {
       nonNullable: true,
       validators: [Validators.required, Validators.email],
@@ -67,4 +67,8 @@ export function buildCompanyProfileForm(formBuilder: FormBuilder, includeTin: bo
   }
 
   return formBuilder.group(controls);
+}
+
+export function createPhone(formBuilder: FormBuilder) {
+  return formBuilder.nonNullable.control('', Validators.required);
 }

@@ -1,13 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LoadingSpinner } from '../../../../shared/ui/loading-spinner/loading-spinner';
-import {
-  FormArray,
-  FormBuilder,
-  FormControl,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CompanyProfileService } from '../../services/company-profile.service';
 import { LanguageService } from '../../../../core/services/language.service';
 import { finalize } from 'rxjs';
@@ -19,7 +13,7 @@ import { Address } from '../../components/address/address';
 import { Contact } from '../../components/contact/contact';
 import { Branding } from '../../components/branding/branding';
 import { PrimaryButton } from '../../../../shared/ui/primary-button/primary-button';
-import { buildCompanyProfileForm } from '../../factory/company-profile-form.factory';
+import { buildCompanyProfileForm, createPhone } from '../../factory/company-profile-form.factory';
 
 @Component({
   selector: 'app-edit-company-profile',
@@ -121,7 +115,7 @@ export class EditCompanyProfile implements OnInit {
 
   // Form array
   public addPhone(): void {
-    this.phones.push(this.createPhone());
+    this.phones.push(createPhone(this.formBuilder));
   }
 
   public removePhone(index: number): void {
@@ -143,6 +137,8 @@ export class EditCompanyProfile implements OnInit {
     const raw = this.form.getRawValue();
     const request: CompanyProfileUpdateRequest = {
       ...raw,
+      vatPercentage: raw['vatPercentage']!,
+      country: this.country.getRawValue(),
       brandPrimaryColor: raw['brandPrimaryColor'] || null,
       brandSecondaryColor: raw['brandSecondaryColor'] || null,
       websiteUrl: raw['websiteUrl'] || null,

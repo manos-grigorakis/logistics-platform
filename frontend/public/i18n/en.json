@@ -231,7 +231,9 @@
     "fields": {
       "phones": "Phones",
       "placeholders": {
-        "representative-title": "e.g. CEO"
+        "representative-title": "e.g. CEO",
+        "website-url": "e.g. https://www.yourcompany.com",
+        "slogan": "e.g. Your trusted logistics partner"
       },
       "primary-color": "Primary Color",
       "representative": "Representative",

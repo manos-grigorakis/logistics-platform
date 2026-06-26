@@ -3,7 +3,13 @@
 
   <div class="grid grid-cols-1 gap-4">
     <!-- Email -->
-    <app-main-input formControlName="email" type="email" label="Email" [showRequiredStar]="true" />
+    <app-main-input
+      formControlName="email"
+      type="email"
+      label="Email"
+      [showRequiredStar]="true"
+      [placeholder]="'common.fields.placeholders.email' | translate"
+    />
 
     <!-- Phones -->
     <div formArrayName="phones" class="space-y-2">
@@ -14,7 +20,12 @@
 
       @for (phone of phones.controls; track $index) {
         <div class="flex items-center gap-2">
-          <app-main-input class="flex-1" [formControl]="phone" type="text" />
+          <app-main-input
+            class="flex-1"
+            [formControl]="phone"
+            type="text"
+            [placeholder]="'common.fields.placeholders.phone' | translate"
+          />
 
           <app-rounded-icon-button
             type="button"
@@ -23,6 +34,19 @@
             (clicked)="onRemovePhoneClick($index)"
             [isDisabled]="phones.length <= 1"
           />
+        </div>
+      }
+
+      @if (phones.invalid && (phones.dirty || phones.touched)) {
+        <div>
+          @if (phones.invalid && (phones.dirty || phones.touched)) {
+            <span class="text-danger ml-1 text-sm">
+              {{
+                'common.validation.required'
+                  | translate: { field: ('company-profile.fields.phones' | translate) }
+              }}
+            </span>
+          }
         </div>
       }
 

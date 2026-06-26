@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MainInput } from '../../../../shared/components/forms/main-input/main-input';
 
@@ -11,4 +11,8 @@ import { MainInput } from '../../../../shared/components/forms/main-input/main-i
 })
 export class Address {
   @Input({ required: true }) parentForm!: FormGroup;
+
+  public get country(): FormControl<string> {
+    return this.parentForm.controls['country'] as FormControl;
+  }
 }

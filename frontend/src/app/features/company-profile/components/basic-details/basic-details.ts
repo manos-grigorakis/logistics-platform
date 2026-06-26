@@ -10,7 +10,7 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
   styleUrl: './basic-details.css',
 })
 export class BasicDetails {
-  @Input({ required: true }) tinNumber!: string;
+  @Input() tinNumber?: string;
   @Input({ required: true }) parentForm!: FormGroup;
   @Input() formUsage: 'create' | 'update' = 'create';
 }

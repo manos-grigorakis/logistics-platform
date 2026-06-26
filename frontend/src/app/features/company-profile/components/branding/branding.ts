@@ -15,9 +15,11 @@ import { InfoBanner } from '../../../../shared/ui/info-banner/info-banner';
   styleUrl: './branding.css',
 })
 export class Branding implements OnInit {
-  @Input({ required: true }) parentForm!: FormGroup;
-  @Input({ required: true }) logoUrl!: string | null;
   @Input({ required: true }) formUsage!: 'create' | 'update';
+  @Input({ required: true }) parentForm!: FormGroup;
+  @Input() logoUrl?: string | null;
+  @Input() defaultPrimaryColor?: string;
+  @Input() defaultSecondaryColor?: string;
 
   public brandPrimaryValColor: ColorPickerControl = new ColorPickerControl();
   public brandSecondaryValColor: ColorPickerControl = new ColorPickerControl();

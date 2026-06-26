@@ -9,6 +9,7 @@
       formControlName="websiteUrl"
       type="text"
       [label]="'company-profile.fields.website-url' | translate"
+      [placeholder]="'company-profile.fields.placeholders.website-url' | translate"
     />
 
     <!-- Colors -->
@@ -18,6 +19,7 @@
         [label]="'company-profile.fields.primary-color' | translate"
         [colorControl]="brandPrimaryColor"
         [colorValue]="brandPrimaryValColor"
+        [defaultColor]="defaultPrimaryColor"
       />
 
       <!-- Secondary Color -->
@@ -25,6 +27,7 @@
         [label]="'company-profile.fields.secondary-color' | translate"
         [colorControl]="brandSecondaryColor"
         [colorValue]="brandSecondaryValColor"
+        [defaultColor]="defaultSecondaryColor"
       />
     </div>
   </div>
@@ -40,6 +43,7 @@
         id="slogan"
         cols="20"
         rows="10"
+        [placeholder]="'company-profile.fields.placeholders.slogan' | translate"
         class="focus:ring-primary-200 placeholder:text-body w-full resize-none rounded border border-gray-300 px-4 py-2 text-gray-700 focus:ring focus:outline-none"
       ></textarea>
     </div>
