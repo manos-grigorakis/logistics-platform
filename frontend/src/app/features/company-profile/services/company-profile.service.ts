@@ -55,7 +55,7 @@ export class CompanyProfileService {
     form.append('postalCode', request.postalCode);
     form.append('region', request.region);
     form.append('country', request.country);
-    form.append('email', request.email);
+    form.append('email', request.email.toLowerCase());
     request.phones.forEach((phone: string) => form.append('phones', phone));
 
     // Optional
