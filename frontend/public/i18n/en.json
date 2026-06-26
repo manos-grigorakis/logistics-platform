@@ -61,6 +61,7 @@
   "common": {
     "actions": {
       "action": "Action",
+      "back": "Back",
       "back-to-dashboard": "Back to Dashboard",
       "back-to-login": "Back to Login",
       "browse-file": "Browse file",
@@ -72,6 +73,7 @@
       "drop-file-here": "Drop file here",
       "drop-or-click-to-upload": "Drop or Click the button below to upload",
       "edit": "Edit",
+      "next": "Next",
       "no-cancel": "No, cancel",
       "replace-file": "Replace file",
       "save": "Save",
@@ -115,14 +117,23 @@
       "paid-amount": "Paid Amount",
       "phone": "Phone",
       "placeholders": {
+        "company-name": "e.g. ACME Logistics",
         "description": "Description goes here",
         "email": "e.g. john.doe@example.com",
         "first-name": "e.g. John",
+        "full-name": "e.g. John Doe",
         "last-name": "e.g. Doe",
         "phone": "e.g. +30 210 123 4567",
         "price": "e.g. 10.00",
         "quantity": "e.g. 2",
-        "select-type": "Select a type"
+        "select-country": "Select a country",
+        "select-type": "Select a type",
+        "tin": "e.g. 123456789",
+        "vat": "e.g. 24",
+        "street": "e.g. Kifisias Avenue",
+        "street-number": "e.g. 44",
+        "postal-code": "e.g. 117 42",
+        "region": "e.g. Athens"
       },
       "postal-code": "Postal Code",
       "price": "Price",
@@ -143,7 +154,7 @@
       "unassigned": "Unassigned",
       "unpaid-amount": "Unpaid Amount",
       "updated-at": "Updated At",
-      "vat": "VAT"
+      "vat": "VAT (%)"
     },
     "filters": {
       "all": "All",
@@ -198,6 +209,7 @@
       "from-before-to": "From must be before To",
       "invalid-format": "{{field}} has an invalid format",
       "max-file-size": "Max File Size",
+      "max-value": "must be less than or equal to {{value}}",
       "must-be-number": "must be a number",
       "must-be-positive": "must be positive",
       "required": "{{field}} is required",
@@ -205,16 +217,22 @@
       "required-fields": "The fields with asterisk (*) are required",
       "required-type": "Type is required",
       "supported-files": "Supported files",
-      "unsupported-file-type": "Unsupported file type"
+      "unsupported-file-type": "Unsupported file type",
+      "min-length": "{{field}} must be at least {{requiredLength}} characters",
+      "max-length": "{{field}} must be at most {{requiredLength}} characters"
     }
   },
   "company-profile": {
     "actions": {
-      "update": "Update Company Profile",
-      "open-existing-logo": "Open current logo"
+      "open-existing-logo": "Open current logo",
+      "setup": "Setup Your Company Profile",
+      "update": "Update Company Profile"
     },
     "fields": {
       "phones": "Phones",
+      "placeholders": {
+        "representative-title": "e.g. CEO"
+      },
       "primary-color": "Primary Color",
       "representative": "Representative",
       "representative-title": "Representative Title",
@@ -224,6 +242,7 @@
     },
     "messages": {
       "logo-replace-notice": "Uploading a new logo will replace the existing one. Leave this field empty to keep the current logo.\"",
+      "success-create": "Company profile created successfully",
       "success-update": "Company profile updated successfully"
     },
     "titles": {

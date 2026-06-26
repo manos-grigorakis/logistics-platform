@@ -143,7 +143,7 @@
       "unassigned": "Μη ανατεθειμένο",
       "unpaid-amount": "Ανεξόφλητο Ποσό",
       "updated-at": "Ημ. Τροποποίησης",
-      "vat": "ΦΠΑ"
+      "vat": "ΦΠΑ (%)"
     },
     "filters": {
       "all": "Όλα",
@@ -210,8 +210,8 @@
   },
   "company-profile": {
     "actions": {
-      "update": "Ενημέρωση Στοιχείων Εταιρείας",
-      "open-existing-logo": "Άνοιγμα τρέχοντος logo"
+      "open-existing-logo": "Άνοιγμα τρέχοντος logo",
+      "update": "Ενημέρωση Στοιχείων Εταιρείας"
     },
     "fields": {
       "phones": "Τηλέφωνα",
