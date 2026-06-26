@@ -1,23 +1,24 @@
 <section class="mx-auto mt-6 max-w-4xl rounded-lg bg-white p-6 shadow-lg shadow-black/10">
-  <h1 class="mb-6 text-center text-3xl font-bold">{{ 'app.title' | translate }}</h1>
+  <h1 class="mb-8 text-center text-3xl font-bold">{{ 'app.title' | translate }}</h1>
 
-  <!-- TODO: Add stepper -->
+  <app-detailed-stepper [steps]="steps" [activeStep]="currentStep" [showDescription]="false" />
 
-  <h2 class="mb-1 text-2xl font-semibold">
-    {{ 'company-profile.actions.setup' | translate }}
-  </h2>
-  <span class="text-danger text-sm">{{ 'common.validation.required-fields' | translate }}</span>
+  @if (currentStep !== 4) {
+    <span class="text-danger mt-8 block text-sm">
+      {{ 'common.validation.required-fields' | translate }}
+    </span>
+  }
 
-  <form [formGroup]="form" (ngSubmit)="onSubmitClick()" class="mt-6">
-    @if (currentStep === 1) {
+  <form [formGroup]="form" (ngSubmit)="onSubmitClick()" class="mt-2">
+    @if (currentStep === 0) {
       <app-basic-details [parentForm]="form" />
     }
 
-    @if (currentStep === 2) {
+    @if (currentStep === 1) {
       <app-address [parentForm]="form" />
     }
 
-    @if (currentStep === 3) {
+    @if (currentStep === 2) {
       <app-contact
         [parentForm]="form"
         [parentFormArray]="phones"
@@ -26,7 +27,7 @@
       />
     }
 
-    @if (currentStep === 4) {
+    @if (currentStep === 3) {
       <app-branding
         formUsage="create"
         [parentForm]="form"
@@ -35,12 +36,17 @@
       />
     }
 
+    @if (currentStep === 4) {
+      <!-- TODO: Submit form through the review component -->
+      <app-review-step />
+    }
+
     <div
       class="mt-8 flex"
-      [class.justify-between]="currentStep > 1"
-      [class.justify-end]="currentStep === 1"
+      [class.justify-between]="currentStep > 0"
+      [class.justify-end]="currentStep === 0"
     >
-      @if (currentStep > 1) {
+      @if (currentStep > 0) {
         <div class="w-40">
           <button
             type="button"
@@ -52,7 +58,7 @@
         </div>
       }
 
-      @if (currentStep < 4) {
+      @if (currentStep < 3) {
         <div class="w-40">
           <app-primary-button
             type="button"
@@ -62,14 +68,14 @@
         </div>
       }
 
-      @if (currentStep === 4) {
+      @if (currentStep === 3) {
         <div class="w-40">
-          <app-primary-button type="button" [value]="'common.actions.review' | translate" />
+          <app-primary-button
+            type="button"
+            [value]="'common.actions.review' | translate"
+            (click)="next()"
+          />
         </div>
-      }
-
-      @if (currentStep === 5) {
-        <!-- TODO: Submit form through the review component -->
       }
     </div>
   </form>

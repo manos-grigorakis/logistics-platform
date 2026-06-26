@@ -250,6 +250,28 @@
     },
     "titles": {
       "branding": "Branding"
+    },
+    "stepper": {
+      "one": {
+        "title": "Basic Information",
+        "description": "Enter your company details and tax information"
+      },
+      "two": {
+        "title": "Address",
+        "description": "Provide your registered business address"
+      },
+      "three": {
+        "title": "Contact",
+        "description": "Add your company email and phone numbers"
+      },
+      "four": {
+        "title": "Branding",
+        "description": "Customize your company profile with branding assets"
+      },
+      "five": {
+        "title": "Review",
+        "description": "Review all information before submitting your profile"
+      }
     }
   },
   "customers": {

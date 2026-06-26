@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { CompanyProfileService } from '../../services/company-profile.service';
 import { LanguageService } from '../../../../core/services/language.service';
 import { FormArray, FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -12,6 +12,9 @@ import { Contact } from '../../components/contact/contact';
 import { Branding } from '../../components/branding/branding';
 import { PrimaryButton } from '../../../../shared/ui/primary-button/primary-button';
 import { TranslatePipe } from '@ngx-translate/core';
+import { DetailedStepper } from '../../../../shared/ui/detailed-stepper/detailed-stepper';
+import { Subscription, take } from 'rxjs';
+import { ReviewStep } from '../../components/review-step/review-step';
 
 @Component({
   selector: 'app-setup-company-profile',
@@ -23,17 +26,21 @@ import { TranslatePipe } from '@ngx-translate/core';
     Branding,
     PrimaryButton,
     TranslatePipe,
+    DetailedStepper,
+    ReviewStep,
   ],
   templateUrl: './setup-company-profile.html',
   styleUrl: './setup-company-profile.css',
 })
-export class SetupCompanyProfile implements OnInit {
+export class SetupCompanyProfile implements OnInit, OnDestroy {
   public isLoading: boolean = false;
-  public currentStep: number = 1;
+  public currentStep: number = 0;
   public defaultPrimaryColor: string = '#0f172a';
   public defaultSecondaryColor: string = '#2563eb';
+  public steps: { title: string; description: string }[] = [];
 
   private router = inject(Router);
+  private langChangeSub?: Subscription;
 
   // Services
   private companyProfileService = inject(CompanyProfileService);
@@ -41,14 +48,21 @@ export class SetupCompanyProfile implements OnInit {
 
   private formBuilder = inject(FormBuilder);
   private stepFields: Record<number, string[]> = {
-    1: ['tin', 'name', 'vatPercentage', 'representativeTitle', 'representative'],
-    2: ['street', 'streetNumber', 'postalCode', 'region', 'country'],
-    3: ['email', 'phones'],
-    4: ['brandPrimaryColor', 'brandSecondaryColor', 'websiteUrl', 'slogan'],
+    0: ['tin', 'name', 'vatPercentage', 'representativeTitle', 'representative'],
+    1: ['street', 'streetNumber', 'postalCode', 'region', 'country'],
+    2: ['email', 'phones'],
+    3: ['brandPrimaryColor', 'brandSecondaryColor', 'websiteUrl', 'slogan'],
   };
 
   ngOnInit() {
     if (this.phones.length === 0) this.addPhone();
+
+    this.setStepperValues();
+    this.langChangeSub = this.languageService.onLangChange.subscribe(() => this.setStepperValues());
+  }
+
+  ngOnDestroy() {
+    this.langChangeSub?.unsubscribe();
   }
 
   form = buildCompanyProfileForm(this.formBuilder, true);
@@ -63,7 +77,7 @@ export class SetupCompanyProfile implements OnInit {
   }
 
   public previous(): void {
-    if (this.currentStep > 1) {
+    if (this.currentStep > 0) {
       this.currentStep--;
     }
   }
@@ -191,5 +205,36 @@ export class SetupCompanyProfile implements OnInit {
       this.form.get(field)?.markAsTouched();
       this.form.get(field)?.updateValueAndValidity();
     });
+  }
+
+  /**
+   * Sets the stepper values using keys from translation
+   */
+  private setStepperValues(): void {
+    const keys = [
+      'company-profile.stepper.one.title',
+      'company-profile.stepper.one.description',
+      'company-profile.stepper.two.title',
+      'company-profile.stepper.two.description',
+      'company-profile.stepper.three.title',
+      'company-profile.stepper.three.description',
+      'company-profile.stepper.four.title',
+      'company-profile.stepper.four.description',
+      'company-profile.stepper.five.title',
+      'company-profile.stepper.five.description',
+    ];
+
+    this.languageService
+      .translateKeyAsync(keys)
+      .pipe(take(1))
+      .subscribe((translations: any) => {
+        this.steps = [
+          { title: translations[keys[0]], description: translations[keys[1]] },
+          { title: translations[keys[2]], description: translations[keys[3]] },
+          { title: translations[keys[4]], description: translations[keys[5]] },
+          { title: translations[keys[6]], description: translations[keys[7]] },
+          { title: translations[keys[8]], description: translations[keys[9]] },
+        ];
+      });
   }
 }
