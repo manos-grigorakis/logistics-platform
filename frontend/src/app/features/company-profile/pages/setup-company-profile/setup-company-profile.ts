@@ -35,7 +35,7 @@ import { AddressReview, BasicDetailsReview, BrandingReview, ContactReview } from
 })
 export class SetupCompanyProfile implements OnInit, OnDestroy {
   public isLoading: boolean = false;
-  public currentStep: number = 3;
+  public currentStep: number = 0;
   public defaultPrimaryColor: string = '#0f172a';
   public defaultSecondaryColor: string = '#2563eb';
   public steps: { title: string; description: string }[] = [];
