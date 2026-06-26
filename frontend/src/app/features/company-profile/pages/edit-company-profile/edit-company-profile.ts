@@ -1,7 +1,13 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LoadingSpinner } from '../../../../shared/ui/loading-spinner/loading-spinner';
-import { FormArray, FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { CompanyProfileService } from '../../services/company-profile.service';
 import { LanguageService } from '../../../../core/services/language.service';
 import { finalize } from 'rxjs';

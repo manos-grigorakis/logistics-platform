@@ -1,3 +1,7 @@
+@if (isLoading) {
+  <app-loading-spinner />
+}
+
 <section class="mx-auto mt-6 max-w-4xl rounded-lg bg-white p-6 shadow-lg shadow-black/10">
   <h1 class="mb-8 text-center text-3xl font-bold">{{ 'app.title' | translate }}</h1>
 
@@ -91,6 +95,7 @@
           <app-primary-button
             type="button"
             [value]="'common.actions.submit' | translate"
+            [isDisabled]="isLoading"
             (click)="onSubmitClick()"
           />
         </div>

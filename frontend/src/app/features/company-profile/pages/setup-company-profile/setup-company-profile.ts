@@ -13,9 +13,10 @@ import { Branding } from '../../components/branding/branding';
 import { PrimaryButton } from '../../../../shared/ui/primary-button/primary-button';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DetailedStepper } from '../../../../shared/ui/detailed-stepper/detailed-stepper';
-import { Subscription, take } from 'rxjs';
+import { finalize, Subscription, take } from 'rxjs';
 import { ReviewStep } from '../../components/review-step/review-step';
 import { AddressReview, BasicDetailsReview, BrandingReview, ContactReview } from '../../model/review-step.interface';
+import { LoadingSpinner } from '../../../../shared/ui/loading-spinner/loading-spinner';
 
 @Component({
   selector: 'app-setup-company-profile',
@@ -29,6 +30,7 @@ import { AddressReview, BasicDetailsReview, BrandingReview, ContactReview } from
     TranslatePipe,
     DetailedStepper,
     ReviewStep,
+    LoadingSpinner,
   ],
   templateUrl: './setup-company-profile.html',
   styleUrl: './setup-company-profile.css',
@@ -226,27 +228,32 @@ export class SetupCompanyProfile implements OnInit, OnDestroy {
   }
 
   private createCompanyProfile(request: CompanyProfileCreateRequest): void {
-    this.companyProfileService.createCompanyProfile(request).subscribe({
-      next: (res) => {
-        this.languageService.toastSuccess('company-profile.messages.success-create');
-        this.router.navigate(['/dashboard']);
-      },
-      error: (err) => {
-        const errStatus = err.status;
-        const errCode = err.error?.error?.errorCode;
+    this.isLoading = true;
 
-        if (errStatus === 400 && errCode === 'FILE_TOO_LARGE') {
-          this.languageService.toastError('common.errors.too-large-file', { fileName: 'Logo' });
-        } else if (errStatus === 400 && errCode === 'INVALID_FILE_TYPE') {
-          this.languageService.toastError('common.errors.invalid-file-type');
-        } else if (errStatus === 409 && errCode === 'COMPANY_PROFILE_ALREADY_EXISTS') {
-          this.languageService.toastWarning('company-profile.messages.exists');
+    this.companyProfileService
+      .createCompanyProfile(request)
+      .pipe(finalize(() => (this.isLoading = false)))
+      .subscribe({
+        next: (res) => {
+          this.languageService.toastSuccess('company-profile.messages.success-create');
           this.router.navigate(['/dashboard']);
-        } else {
-          this.languageService.toastError(handleHttpErrors(err.status));
-        }
-      },
-    });
+        },
+        error: (err) => {
+          const errStatus = err.status;
+          const errCode = err.error?.error?.errorCode;
+
+          if (errStatus === 400 && errCode === 'FILE_TOO_LARGE') {
+            this.languageService.toastError('common.errors.too-large-file', { fileName: 'Logo' });
+          } else if (errStatus === 400 && errCode === 'INVALID_FILE_TYPE') {
+            this.languageService.toastError('common.errors.invalid-file-type');
+          } else if (errStatus === 409 && errCode === 'COMPANY_PROFILE_ALREADY_EXISTS') {
+            this.languageService.toastWarning('company-profile.messages.exists');
+            this.router.navigate(['/dashboard']);
+          } else {
+            this.languageService.toastError(handleHttpErrors(err.status));
+          }
+        },
+      });
   }
 
   private isCurrentStepValid(): boolean {
