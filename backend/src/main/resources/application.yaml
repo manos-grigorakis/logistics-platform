@@ -74,6 +74,17 @@ app:
     prefix: ${API_PREFIX:/api}
   frontend:
     url: ${FRONTEND_URL}
+  cache:
+    ttls:
+      analytics: 5m
+      metadata: 20m
+      vehicles: 15m
+      shipments: 5m
+      users: 10m
+      roles: 20m
+      company-profile: 1h
+      suppliers: 15m
+      customers: 10m
   setup_password:
     expires: ${SETUP_PASSWORD_TOKEN_EXPIRATION}
   reset_password:

@@ -18,6 +18,8 @@ import com.manosgrigorakis.logisticsplatform.quotes.repository.QuoteRepository;
 import com.manosgrigorakis.logisticsplatform.quotes.specs.QuotesSpecs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -69,6 +71,7 @@ public class CustomerServiceImpl implements CustomerService {
         return customerPage.map(CustomerMapper::toResponse);
     }
 
+    @Cacheable(value = "customers", key = "#id")
     @Override
     public CustomerResponseDTO getCustomerById(Long id) {
         Customer customer = customerRepository.findById(id)
@@ -103,6 +106,7 @@ public class CustomerServiceImpl implements CustomerService {
         return CustomerMapper.toResponse(savedCustomer);
     }
 
+    @CacheEvict(value = "customers", key = "#id")
     @Override
     public CustomerResponseDTO updateCustomerById(Long id, UpdateCustomerRequestDTO dto) {
         Customer customer = customerRepository.findById(id)
@@ -113,9 +117,8 @@ public class CustomerServiceImpl implements CustomerService {
 
         Customer oldCustomer = new Customer(customer);
         Optional<Customer> existingCustomerCompanyName = customerRepository.findByCompanyName(dto.getCompanyName());
-        Optional<Customer> existing = customerRepository.findByCompanyName(dto.getCompanyName());
 
-        if (existingCustomerCompanyName.isPresent() && !existing.get().getId().equals(customer.getId())) {
+        if (existingCustomerCompanyName.isPresent() && !existingCustomerCompanyName.get().getId().equals(customer.getId())) {
             log.warn("Update failed. Attempted to update customer with existing company name: {}", dto.getCompanyName());
             throw  new DuplicateEntryException("companyName", dto.getCompanyName());
         }
@@ -135,6 +138,7 @@ public class CustomerServiceImpl implements CustomerService {
         return CustomerMapper.toResponse(updatedCustomer);
     }
 
+    @CacheEvict(value = "customers", key = "#id")
     @Override
     public void deleteCustomerById(Long id) {
         Customer customer = this.customerRepository.findById(id)

@@ -21,6 +21,9 @@ import com.manosgrigorakis.logisticsplatform.users.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -50,6 +53,7 @@ public class UserServiceImpl implements UserService {
         this.auditService = auditService;
     }
 
+    @Cacheable(value = "users", key = "'all-users'")
     @Override
     public List<UserResponseDTO> getAllUsers() {
         List<User> users =  userRepository.findAll();
@@ -59,6 +63,7 @@ public class UserServiceImpl implements UserService {
                 .toList();
     }
 
+    @Cacheable(value = "users", key = "#id")
     @Override
     public UserResponseDTO getUserById(Long id) {
         User user = userRepository.findById(id)
@@ -67,6 +72,7 @@ public class UserServiceImpl implements UserService {
         return UserMapper.toResponse(user);
     }
 
+    @CacheEvict(value = "users", allEntries = true)
     @Override
     public UserResponseDTO createUser(UserRequestDTO dto) {
         Optional<User> existingUser = userRepository.findByEmail(dto.getEmail());
@@ -102,6 +108,11 @@ public class UserServiceImpl implements UserService {
         return UserMapper.toResponse(user);
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = "users", key = "'all-users'"),
+            @CacheEvict(value = "users", key = "#id"),
+            @CacheEvict(value = "shipments", allEntries = true)
+    })
     @Override
     public UserResponseDTO updateUserById(Long id, UserRequestDTO dto) {
         User user = userRepository.findById(id)
@@ -136,6 +147,10 @@ public class UserServiceImpl implements UserService {
         return UserMapper.toResponse(user);
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = "users", key = "'all-users'"),
+            @CacheEvict(value = "users", key = "#id")
+    })
     @Override
     public void deleteUserById(Long id) {
         User user = this.userRepository.findById(id)

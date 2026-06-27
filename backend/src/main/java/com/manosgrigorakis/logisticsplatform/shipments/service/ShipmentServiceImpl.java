@@ -36,6 +36,9 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -118,6 +121,7 @@ public class ShipmentServiceImpl implements ShipmentService {
         return shipmentPage.map(ShipmentMapper::toResponse);
     }
 
+    @Cacheable(value = "shipments", key = "#id")
     @Override
     public ShipmentResponseDTO getShipmentById(Long id) {
         Shipment shipment = findByIdOrThrow(id, shipmentRepository::findById, "Shipment");
@@ -125,6 +129,7 @@ public class ShipmentServiceImpl implements ShipmentService {
         return ShipmentMapper.toResponse(shipment);
     }
 
+    @CacheEvict(value = "shipments", allEntries = true)
     @Override
     @Transactional
     public ShipmentResponseDTO createShipment(ShipmentRequestDTO dto) {
@@ -176,6 +181,7 @@ public class ShipmentServiceImpl implements ShipmentService {
         return ShipmentMapper.toResponse(savedShipment);
     }
 
+    @CacheEvict(value = "shipments", key = "#id")
     @Override
     public ShipmentResponseDTO updateShipmentById(Long id, UpdateShipmentRequestDTO dto) {
         Shipment shipment = findByIdOrThrow(id, shipmentRepository::findById, "Shipment");
@@ -214,6 +220,7 @@ public class ShipmentServiceImpl implements ShipmentService {
         return ShipmentMapper.toResponse(savedShipment);
     }
 
+    @CacheEvict(value = "shipments", key = "#id")
     @Transactional
     @Override
     public void updateShipmentStatus(Long id, UpdateShipmentStatusRequestDTO dto) {
