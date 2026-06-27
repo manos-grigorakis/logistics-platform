@@ -14,6 +14,8 @@ import com.manosgrigorakis.logisticsplatform.infrastructure.storage.FileStorageS
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,6 +43,7 @@ public class CompanyProfileServiceImpl implements CompanyProfileService {
      * @return The first and only company profile
      * @throws ResourceNotFoundException If the company profile not found
      */
+    @Cacheable(value = "company-profile", key = "'entity'")
     @Override
     public CompanyProfile getCompanyProfileEntity() throws ResourceNotFoundException {
         return companyProfileRepository.findFirstByOrderByIdAsc().orElseThrow(() -> {
@@ -49,6 +52,7 @@ public class CompanyProfileServiceImpl implements CompanyProfileService {
         });
     }
 
+    @Cacheable(value = "company-profile", key = "'full-response'")
     @Override
     public CompanyProfileResponse getCompanyProfile() {
         CompanyProfile company = getCompanyProfileEntity();
@@ -82,6 +86,7 @@ public class CompanyProfileServiceImpl implements CompanyProfileService {
         return CompanyProfileMapper.toResponse(companyProfile, createPresignedUrl(companyProfile));
     }
 
+    @CacheEvict(value = "company-profile", allEntries = true)
     @Override
     public CompanyProfileResponse updateCompanyProfile(CompanyProfileUpdateRequest request) {
         CompanyProfile company = getCompanyProfileEntity();
