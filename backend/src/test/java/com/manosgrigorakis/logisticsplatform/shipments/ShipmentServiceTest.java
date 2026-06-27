@@ -19,6 +19,9 @@ import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.UpdateShipme
 import com.manosgrigorakis.logisticsplatform.shipments.dto.summary.CmrDocumentSummary;
 import com.manosgrigorakis.logisticsplatform.shipments.enums.ShipmentStatus;
 import com.manosgrigorakis.logisticsplatform.shipments.enums.VehicleType;
+import com.manosgrigorakis.logisticsplatform.shipments.mapper.ShipmentCargoMapper;
+import com.manosgrigorakis.logisticsplatform.shipments.mapper.ShipmentCargoMapperImpl;
+import com.manosgrigorakis.logisticsplatform.shipments.mapper.ShipmentMapper;
 import com.manosgrigorakis.logisticsplatform.shipments.model.Shipment;
 import com.manosgrigorakis.logisticsplatform.shipments.model.ShipmentCargo;
 import com.manosgrigorakis.logisticsplatform.shipments.model.Vehicle;
@@ -27,6 +30,7 @@ import com.manosgrigorakis.logisticsplatform.shipments.repository.VehicleReposit
 import com.manosgrigorakis.logisticsplatform.shipments.service.ShipmentServiceImpl;
 import com.manosgrigorakis.logisticsplatform.users.model.User;
 import com.manosgrigorakis.logisticsplatform.users.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -75,6 +79,26 @@ public class ShipmentServiceTest {
 
     @InjectMocks
     private ShipmentServiceImpl shipmentService;
+
+    private ShipmentCargoMapper shipmentCargoMapper = new ShipmentCargoMapperImpl();
+    private ShipmentMapper shipmentMapper = new ShipmentMapper(shipmentCargoMapper);
+
+    @BeforeEach
+    void setUp() {
+        shipmentService = new ShipmentServiceImpl(
+                shipmentRepository,
+                quoteRepository,
+                userRepository,
+                vehicleRepository,
+                auditService,
+                cmrDocumentService,
+                documentNumberGenerator,
+                cmrDocumentRepository,
+                fileStorageService,
+                shipmentMapper,
+                shipmentCargoMapper
+        );
+    }
 
     @Test
     public void getShipmentById_shouldReturnResponse() {

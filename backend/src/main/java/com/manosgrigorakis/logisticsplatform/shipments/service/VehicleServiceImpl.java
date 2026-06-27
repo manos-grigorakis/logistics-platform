@@ -11,8 +11,8 @@ import com.manosgrigorakis.logisticsplatform.shipments.dto.vehicle.VehicleRespon
 import com.manosgrigorakis.logisticsplatform.shipments.mapper.VehicleMapper;
 import com.manosgrigorakis.logisticsplatform.shipments.model.Vehicle;
 import com.manosgrigorakis.logisticsplatform.shipments.repository.VehicleRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
@@ -22,35 +22,31 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
+@RequiredArgsConstructor
 @Service
 public class VehicleServiceImpl implements VehicleService{
     private final VehicleRepository vehicleRepository;
     private final AuditService auditService;
-    private final Logger log = LoggerFactory.getLogger(VehicleServiceImpl.class);
+    private final VehicleMapper vehicleMapper;
 
-    public VehicleServiceImpl(VehicleRepository vehicleRepository, AuditService auditService) {
-        this.vehicleRepository = vehicleRepository;
-        this.auditService = auditService;
-    }
 
     @Cacheable(value = "vehicles", key = "'all-vehicles'")
     @Override
     public List<VehicleResponseDTO> getAllVehicles() {
         List<Vehicle> vehicles = vehicleRepository.findAll();
-
-        return vehicles.stream().map(VehicleMapper::toResponse).toList();
+        return vehicles.stream().map(vehicleMapper::toResponse).toList();
     }
 
     @Cacheable(value = "vehicles", key = "#id")
     @Override
     public VehicleResponseDTO getVehicleById(Long id) {
-        Vehicle vehicle = vehicleRepository.findById(id)
-                .orElseThrow(() -> {
-                    log.warn("Vehicle not found with id {}", id);
-                    return new ResourceNotFoundException("Vehicle not found with id: " + id);
-                });
+        Vehicle vehicle = vehicleRepository.findById(id).orElseThrow(() -> {
+            log.warn("Vehicle not found with id {}", id);
+            return new ResourceNotFoundException("Vehicle not found with id: " + id);
+        });
 
-        return VehicleMapper.toResponse(vehicle);
+        return vehicleMapper.toResponse(vehicle);
     }
 
     @CacheEvict(value = "vehicles", allEntries = true)
@@ -61,17 +57,13 @@ public class VehicleServiceImpl implements VehicleService{
             throw new DuplicateEntryException("plate", dto.getPlate());
         }
 
-        Vehicle vehicle = Vehicle.builder()
-                .brand(dto.getBrand())
-                .plate(dto.getPlate())
-                .type(dto.getType())
-                .build();
+        Vehicle vehicle = vehicleMapper.toEntity(dto);
 
         Vehicle savedVehicle = vehicleRepository.save(vehicle);
         log.info("Vehicle created with plate {}", dto.getPlate());
         this.logVehicle(vehicle, AuditAction.CREATE);
 
-        return VehicleMapper.toResponse(savedVehicle);
+        return vehicleMapper.toResponse(savedVehicle);
     }
 
     @Caching(evict = {
@@ -81,8 +73,7 @@ public class VehicleServiceImpl implements VehicleService{
     })
     @Override
     public VehicleResponseDTO updateVehicleById(Long id, VehicleRequestDTO dto) {
-        Vehicle vehicle = vehicleRepository.findById(id)
-                .orElseThrow(() -> {
+        Vehicle vehicle = vehicleRepository.findById(id).orElseThrow(() -> {
                     log.warn("Vehicle not found with id {}", id);
                     return new ResourceNotFoundException("Vehicle not found with id: " + id);
                 });
@@ -94,14 +85,12 @@ public class VehicleServiceImpl implements VehicleService{
             throw new DuplicateEntryException("plate", dto.getPlate());
         }
 
-        vehicle.setBrand(dto.getBrand());
-        vehicle.setPlate(dto.getPlate());
-        vehicle.setType(dto.getType());
+        vehicleMapper.toUpdate(vehicle, dto);
 
         Vehicle updatedVehicle = vehicleRepository.save(vehicle);
         log.info("Vehicle updated with plate {}", updatedVehicle.getPlate());
         this.logUpdatedVehicle(oldVehicle, updatedVehicle);
-        return VehicleMapper.toResponse(updatedVehicle);
+        return vehicleMapper.toResponse(updatedVehicle);
     }
 
     @Caching(evict = {

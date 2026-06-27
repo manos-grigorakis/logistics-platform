@@ -13,20 +13,19 @@ import com.manosgrigorakis.logisticsplatform.shipments.model.Shipment;
 import com.manosgrigorakis.logisticsplatform.shipments.model.ShipmentCargo;
 import com.manosgrigorakis.logisticsplatform.shipments.model.Vehicle;
 import com.manosgrigorakis.logisticsplatform.users.model.User;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@RequiredArgsConstructor
+@Component
 public class ShipmentMapper {
+    private final ShipmentCargoMapper shipmentCargoMapper;
+
     // DTO -> Entity
-    public static Shipment toEntity(
-            ShipmentRequestDTO dto,
-            Quote quote,
-            User driver,
-            User createdByUser,
-            Vehicle truck,
-            Vehicle trailer
-    )
-    {
+    public Shipment toEntity(ShipmentRequestDTO dto, Quote quote, User driver, User createdByUser, Vehicle truck,
+                                    Vehicle trailer) {
         Shipment shipment = Shipment.builder()
                 .pickup(dto.getPickup())
                 .notes(dto.getNotes())
@@ -39,15 +38,14 @@ public class ShipmentMapper {
 
         if(dto.getCargoItems() != null) {
             dto.getCargoItems().forEach(item ->
-                    shipment.addShipmentCargoItem(ShipmentCargoMapper.toEntity(item))
-            );
+                                                shipment.addShipmentCargoItem(shipmentCargoMapper.toEntity(item)));
         }
 
         return  shipment;
     }
 
     // Entity -> Response
-    public static ShipmentResponseDTO toResponse(Shipment shipment) {
+    public ShipmentResponseDTO toResponse(Shipment shipment) {
         Quote quote = shipment.getQuote();
         User driver = shipment.getDriver();
         User createdByUser = shipment.getCreatedByUser();
@@ -55,20 +53,15 @@ public class ShipmentMapper {
         Vehicle trailer = shipment.getTrailer();
         List<ShipmentCargo> shipmentCargo = shipment.getShipmentCargos();
 
-
         // Summaries
         ShipmentStatus shipmentStatus = shipment.getStatus();
 
         QuoteSummaryDTO quoteSummary = new QuoteSummaryDTO(quote.getId(), quote.getNumber());
         UserSummaryDTO createsByUserSummary = new UserSummaryDTO(createdByUser.getId(), createdByUser.fullName());
-        ShipmentStatusSummaryDTO shipmentStatusSummary = new ShipmentStatusSummaryDTO(
-                shipmentStatus.getLabel(),
-                shipmentStatus.isEditable(),
-                shipmentStatus.isFinalized())
-                ;
-        List<ShipmentCargoResponseDTO> cargoItems = shipmentCargo.stream()
-                .map(ShipmentCargoMapper::toResponse)
-                .toList();
+        ShipmentStatusSummaryDTO shipmentStatusSummary = new ShipmentStatusSummaryDTO(shipmentStatus.getLabel(),
+                                                                                      shipmentStatus.isEditable(),
+                                                                                      shipmentStatus.isFinalized());
+        List<ShipmentCargoResponseDTO> cargoItems = shipmentCargo.stream().map(shipmentCargoMapper::toResponse).toList();
 
         return new ShipmentResponseDTO(
                 shipment.getId(),
