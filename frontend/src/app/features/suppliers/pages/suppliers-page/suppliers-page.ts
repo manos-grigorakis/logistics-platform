@@ -11,6 +11,7 @@ import { SuppliersFilters } from '../../components/suppliers-filters/suppliers-f
 import { SortOption } from '../../../../shared/models/sort-option.interface';
 import { Modal } from '../../../../shared/ui/modal/modal';
 import { TranslatePipe } from '@ngx-translate/core';
+import { Page } from '../../../../shared/models/page.interface';
 
 @Component({
   selector: 'app-suppliers-page',
@@ -28,11 +29,7 @@ export class SuppliersPage implements OnInit, OnDestroy {
   public activeSortLabel: string = '';
 
   // Pagination
-  public currentPage: number = 0;
-  public totalPages: number = 0;
-  public totalElements: number = 0;
-  public isFirstPage: boolean = false;
-  public pageSize: number = 0;
+  public page: Page = { size: 0, number: 0, totalElements: 0, totalPages: 0 };
 
   // UI
   public isLoading: boolean = false;
@@ -70,9 +67,9 @@ export class SuppliersPage implements OnInit, OnDestroy {
   }
 
   public onPageChange(page: number): void {
-    if (page === this.currentPage) return;
+    if (page === this.page.number) return;
 
-    this.currentPage = page;
+    this.page.number = page;
     this.fetchSuppliers({ page: page });
   }
 
@@ -149,14 +146,8 @@ export class SuppliersPage implements OnInit, OnDestroy {
       .subscribe({
         next: (res) => {
           const data = res.data;
-
           this.suppliers = data.content;
-
-          // pagination
-          this.currentPage = data.number;
-          this.totalPages = data.totalPages;
-          this.totalElements = data.totalElements;
-          this.pageSize = data.size;
+          this.page = data.page;
         },
         error: (err) => this.languageService.toastError(handleHttpErrors(err.status)),
       });

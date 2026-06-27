@@ -64,13 +64,7 @@
     <!-- Pagination -->
     @if (quotes.length > 0) {
       <div class="mt-auto">
-        <app-pagination
-          [currentPage]="currentPage"
-          [totalPages]="totalPages"
-          [totalElements]="totalElements"
-          [pageSize]="pageSize"
-          (pageChanged)="onPageChange($event)"
-        />
+        <app-pagination [page]="page" (pageChanged)="onPageChange($event)" />
       </div>
     }
   }

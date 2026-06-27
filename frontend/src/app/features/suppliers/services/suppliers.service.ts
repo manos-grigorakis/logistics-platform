@@ -7,7 +7,8 @@ import { environment } from '../../../../environments/environment';
 import { SupplierRequest } from '../models/supplier-request.interface';
 import { FetchSuppliersParams } from '../models/fetch-suppliers-params.interface';
 import { addHttpParam } from '../../../shared/utils/add-http-params.util';
-import { SupplierListResponse } from '../models/suppliers-list-response.interface';
+import { PagedResponse } from '../../../shared/models/paged-response.interface';
+import { Supplier } from '../models/supplier.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -17,8 +18,9 @@ export class SuppliersService {
 
   constructor() {}
 
-  // prettier-ignore
-  public fetchSuppliers(param: FetchSuppliersParams = {}): Observable<ApiResponse<SupplierListResponse>> {
+  public fetchSuppliers(
+    param: FetchSuppliersParams = {},
+  ): Observable<ApiResponse<PagedResponse<Supplier>>> {
     let params = new HttpParams();
     params = addHttpParam(params, 'page', param.page);
     params = addHttpParam(params, 'size', param.size);
@@ -26,7 +28,9 @@ export class SuppliersService {
     params = addHttpParam(params, 'sortDirection', param.sortDirection);
     params = addHttpParam(params, 'companyName', param.companyName);
 
-    return this.http.get<ApiResponse<SupplierListResponse>>(`${environment.apiUrl}/suppliers`, { params });
+    return this.http.get<ApiResponse<PagedResponse<Supplier>>>(`${environment.apiUrl}/suppliers`, {
+      params,
+    });
   }
 
   public fetchSupplierById(id: number): Observable<ApiResponse<SupplierResponse>> {

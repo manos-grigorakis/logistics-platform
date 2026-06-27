@@ -10,6 +10,7 @@ import { debounceTime, distinctUntilChanged, Subject, Subscription, take } from 
 import { LanguageService } from '../../../../core/services/language.service';
 import { TranslatePipe } from '@ngx-translate/core';
 import { handleHttpErrors } from '../../../../shared/utils/handle-http-errors.util';
+import { Page } from '../../../../shared/models/page.interface';
 
 @Component({
   selector: 'app-quotes-page',
@@ -37,11 +38,7 @@ export class QuotesPage implements OnInit, OnDestroy {
   public activeFilterLabel: string = '';
 
   // Pagination
-  public currentPage: number = 0;
-  public totalPages: number = 0;
-  public totalElements: number = 0;
-  public isFirstPage: boolean = false;
-  public pageSize: number = 0;
+  public page: Page = { size: 0, number: 0, totalElements: 0, totalPages: 0 };
 
   private languageService = inject(LanguageService);
   private langChangeSub?: Subscription;
@@ -149,9 +146,9 @@ export class QuotesPage implements OnInit, OnDestroy {
   }
 
   public onPageChange(page: number): void {
-    if (page === this.currentPage) return;
+    if (page === this.page.number) return;
 
-    this.currentPage = page;
+    this.page.number = page;
     this.fetchQuotes({ page: page });
   }
 
@@ -222,12 +219,7 @@ export class QuotesPage implements OnInit, OnDestroy {
         this.errorMessage = undefined;
         const data = res.data;
         this.quotes = data.content;
-
-        // pagination
-        this.currentPage = data.number;
-        this.totalPages = data.totalPages;
-        this.totalElements = data.totalElements;
-        this.pageSize = data.size;
+        this.page = data.page;
       },
       error: (err) => {
         this.isLoading = false;

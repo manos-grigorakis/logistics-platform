@@ -9,6 +9,7 @@ import { debounceTime, distinctUntilChanged, finalize, Subject, Subscription, ta
 import { Pagination } from '../../../../shared/ui/pagination/pagination';
 import { SupplierPaymentsFilters } from '../../components/supplier-payments-filters/supplier-payments-filters';
 import { SortOption } from '../../../../shared/models/sort-option.interface';
+import { Page } from '../../../../shared/models/page.interface';
 
 @Component({
   selector: 'app-supplier-payments-page',
@@ -23,11 +24,7 @@ export class SupplierPaymentsPage implements OnInit, OnDestroy {
   public isLoading: boolean = false;
 
   // Pagination
-  public currentPage: number = 0;
-  public totalPages: number = 0;
-  public totalElements: number = 0;
-  public isFirstPage: boolean = false;
-  public pageSize: number = 0;
+  public page: Page = { size: 0, number: 0, totalElements: 0, totalPages: 0 };
 
   // Filterint - Sorting
   public activeSortLabel: string = '';
@@ -94,9 +91,9 @@ export class SupplierPaymentsPage implements OnInit, OnDestroy {
   }
 
   public onPageChange(page: number): void {
-    if (page === this.currentPage) return;
+    if (page === this.page.number) return;
 
-    this.currentPage = page;
+    this.page.number = page;
     this.fetchSupplierPayments({ page: page });
   }
 
@@ -119,12 +116,7 @@ export class SupplierPaymentsPage implements OnInit, OnDestroy {
         next: (res) => {
           const data = res.data;
           this.payments = data.content;
-
-          // Pagination
-          this.currentPage = data.number;
-          this.totalPages = data.totalPages;
-          this.totalElements = data.totalElements;
-          this.pageSize = data.size;
+          this.page = data.page;
         },
         error: (err) => this.languageService.toastError(handleHttpErrors(err.status)),
       });

@@ -65,13 +65,7 @@
     <!-- Pagination -->
     @if (shipments.length > 0) {
       <div class="mt-8">
-        <app-pagination
-          [currentPage]="currentPage"
-          [totalPages]="totalPages"
-          [totalElements]="totalElements"
-          [pageSize]="pageSize"
-          (pageChanged)="onPageChange($event)"
-        />
+        <app-pagination [page]="page" (pageChanged)="onPageChange($event)" />
       </div>
     }
   }

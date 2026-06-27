@@ -4,11 +4,11 @@
       <button
         class="text-body border-secondary-300 box-border flex h-9 items-center justify-center rounded border px-3 text-sm font-medium focus:outline-none"
         [ngClass]="{
-          'text-secondary-400 cursor-not-allowed hover:bg-none': currentPage === 0,
-          'hover:bg-primary-500 cursor-pointer hover:text-white': currentPage !== 0,
+          'text-secondary-400 cursor-not-allowed hover:bg-none': page.number === 0,
+          'hover:bg-primary-500 cursor-pointer hover:text-white': page.number !== 0,
         }"
         (click)="prevPage()"
-        [disabled]="currentPage === 0"
+        [disabled]="page.number === 0"
       >
         {{ 'common.pagination.previous' | translate }}
       </button>
@@ -32,11 +32,12 @@
       <button
         class="text-body border-secondary-300 box-border flex h-9 items-center justify-center rounded border px-3 text-sm font-medium focus:outline-none"
         [ngClass]="{
-          'text-secondary-400 cursor-not-allowed hover:bg-none': currentPage === totalPages - 1,
-          'hover:bg-primary-500 cursor-pointer hover:text-white': currentPage < totalPages - 1,
+          'text-secondary-400 cursor-not-allowed hover:bg-none':
+            page.number === page.totalPages - 1,
+          'hover:bg-primary-500 cursor-pointer hover:text-white': page.number < page.totalPages - 1,
         }"
         (click)="nextPage()"
-        [disabled]="currentPage === totalPages - 1"
+        [disabled]="page.number === page.totalPages - 1"
       >
         {{ 'common.pagination.next' | translate }}
       </button>
@@ -45,7 +46,8 @@
   <div class="mb-3 text-sm text-gray-600">
     {{ 'common.pagination.showing' | translate }} <span class="font-medium">{{ startItem }}</span>
     {{ 'common.pagination.to' | translate }} <span class="font-medium">{{ endItem }}</span>
-    {{ 'common.pagination.of' | translate }} <span class="font-medium">{{ totalElements }}</span>
+    {{ 'common.pagination.of' | translate }}
+    <span class="font-medium">{{ page.totalElements }}</span>
     {{ 'common.pagination.results' | translate }}
   </div>
 </nav>

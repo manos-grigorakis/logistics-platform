@@ -7,7 +7,7 @@ import { UploadSignedCmrDocumentRequest } from './models/upload-signed-cmr-docum
 import { CmrDocument } from './models/cmr-document.interface';
 import { CmrDocumentFilterRequest } from './models/cmr-document-filter-request.interface';
 import { addHttpParam } from '../../shared/utils/add-http-params.util';
-import { Page } from '../../shared/models/page.interface';
+import { PagedResponse } from '../../shared/models/paged-response.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +18,7 @@ export class CmrDocumentsService {
   constructor() {}
 
   // prettier-ignore
-  public fetchCmrDocuments(param: CmrDocumentFilterRequest = {}): Observable<ApiResponse<Page<CmrDocument>>> {
+  public fetchCmrDocuments(param: CmrDocumentFilterRequest = {}): Observable<ApiResponse<PagedResponse<CmrDocument>>> {
     let params = new HttpParams();
 
     params = addHttpParam(params, 'size', param.size);
@@ -28,9 +28,12 @@ export class CmrDocumentsService {
     params = addHttpParam(params, 'number', param.number);
     params = addHttpParam(params, 'status', param.status);
 
-    return this.http.get<ApiResponse<Page<CmrDocument>>>(`${environment.apiUrl}/cmr-documents`, {
-      params,
-    });
+    return this.http.get<ApiResponse<PagedResponse<CmrDocument>>>(
+      `${environment.apiUrl}/cmr-documents`,
+      {
+        params,
+      },
+    );
   }
 
   public fetchCmrDocument(id: number): Observable<ApiResponse<CmrDocument>> {

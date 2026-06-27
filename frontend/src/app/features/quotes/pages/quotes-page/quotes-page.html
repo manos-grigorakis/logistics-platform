@@ -30,13 +30,7 @@
   <!-- Pagination -->
   @if (quotes.length > 0) {
     <div class="mt-8">
-      <app-pagination
-        [currentPage]="currentPage"
-        [totalElements]="totalElements"
-        [totalPages]="totalPages"
-        [pageSize]="pageSize"
-        (pageChanged)="onPageChange($event)"
-      />
+      <app-pagination [page]="page" (pageChanged)="onPageChange($event)" />
     </div>
   }
 </div>

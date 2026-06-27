@@ -1,13 +1,14 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { FetchQuotesResponse } from './models/fetch-quotes-response';
 import { environment } from '../../../environments/environment';
 import { QuoteResponse } from './models/quote-response';
 import { FetchQuotesParameters } from './models/fetch-quotes-parameters';
 import { QuoteRequest } from './models/quote-request';
 import { CreatedQuoteResponse } from './models/created-quote-response';
 import { ApiResponse } from '../../shared/models/api-response.interface';
+import { PagedResponse } from '../../shared/models/paged-response.interface';
+import { QuotesListItem } from './models/quotes-list-item';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +17,7 @@ export class QuotesService {
   private http: HttpClient = inject(HttpClient);
 
   // prettier-ignore
-  public fetchQuotes(param: FetchQuotesParameters = {}): Observable<ApiResponse<FetchQuotesResponse>> {
+  public fetchQuotes(param: FetchQuotesParameters = {}): Observable<ApiResponse<PagedResponse<QuotesListItem>>> {
     let params = new HttpParams();
     params = this.addParam(params, 'page', param.page);
     params = this.addParam(params, 'size', param.size);
@@ -26,9 +27,12 @@ export class QuotesService {
     params = this.addParam(params, 'companyName', param.companyName);
     params = this.addParam(params, 'quoteStatus', param.quoteStatus);
 
-    return this.http.get<ApiResponse<FetchQuotesResponse>>(`${environment.apiUrl}/quotes`, {
-      params: params,
-    });
+    return this.http.get<ApiResponse<PagedResponse<QuotesListItem>>>(
+      `${environment.apiUrl}/quotes`,
+      {
+        params: params,
+      },
+    );
   }
 
   public fetchQuoteById(id: number): Observable<ApiResponse<QuoteResponse>> {

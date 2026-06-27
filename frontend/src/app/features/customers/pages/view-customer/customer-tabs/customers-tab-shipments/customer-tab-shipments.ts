@@ -15,6 +15,7 @@ import { ShipmentParams } from '../../../../../shipments/models/shipment-params'
 import { Modal } from '../../../../../../shared/ui/modal/modal';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LanguageService } from '../../../../../../core/services/language.service';
+import { Page } from '../../../../../../shared/models/page.interface';
 
 @Component({
   selector: 'app-customer-tab-shipments',
@@ -61,11 +62,7 @@ export class CustomerTabShipments implements OnInit, OnDestroy {
   public isShipmentStatusErrorModalOpen: boolean = false;
 
   // Pagination
-  public currentPage: number = 0;
-  public totalPages: number = 0;
-  public totalElements: number = 0;
-  private shipmentsToShow: number = 5;
-  public pageSize: number = this.shipmentsToShow;
+  public page: Page = { size: 5, number: 0, totalElements: 0, totalPages: 0 };
 
   private route = inject(ActivatedRoute);
   private customerId?: number;
@@ -83,7 +80,7 @@ export class CustomerTabShipments implements OnInit, OnDestroy {
     if (!tempId) return;
     this.customerId = parseInt(tempId);
 
-    this.fetchShipmentsByCustomer({ size: this.shipmentsToShow });
+    this.fetchShipmentsByCustomer({ size: this.page.size });
 
     // Metadata for statuses filter
     this.statusesSub = this.metadataService.fetchShipmentsStatuses().subscribe((statuses) => {
@@ -106,10 +103,10 @@ export class CustomerTabShipments implements OnInit, OnDestroy {
   }
 
   public onPageChange(page: number): void {
-    if (page === this.currentPage) return;
+    if (page === this.page.number) return;
 
-    this.currentPage = page;
-    this.fetchShipmentsByCustomer({ page: page, size: this.shipmentsToShow });
+    this.page.number = page;
+    this.fetchShipmentsByCustomer({ page: page, size: this.page.size });
   }
 
   public onSearchChanged(value: string): void {
@@ -211,11 +208,7 @@ export class CustomerTabShipments implements OnInit, OnDestroy {
         this.isLoading = false;
         const data = res.data;
         this.shipments = data.content;
-
-        // Pagination
-        this.currentPage = data.number;
-        this.totalPages = data.totalPages;
-        this.totalElements = data.totalElements;
+        this.page = data.page;
       },
       error: (err) => {
         this.isLoading = false;

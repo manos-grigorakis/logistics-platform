@@ -11,6 +11,7 @@ import { ModalFile } from '../../../../shared/ui/modal-file/modal-file';
 import { LanguageService } from '../../../../core/services/language.service';
 import { CmrDocumentsFilters } from '../../components/cmr-documents-filters/cmr-documents-filters';
 import { SortOption } from '../../../../shared/models/sort-option.interface';
+import { Page } from '../../../../shared/models/page.interface';
 
 @Component({
   selector: 'app-cmr-documents-page',
@@ -26,11 +27,7 @@ export class CmrDocumentsPage implements OnInit, OnDestroy {
   public errorMessage: string | null = null;
 
   // Pagination
-  public currentPage: number = 0;
-  public totalPages: number = 0;
-  public totalElements: number = 0;
-  public isFirstPage: boolean = false;
-  public pageSize: number = 0;
+  public page: Page = { size: 0, number: 0, totalElements: 0, totalPages: 0 };
 
   // Modal
   public isModalOpen: boolean = false;
@@ -132,9 +129,9 @@ export class CmrDocumentsPage implements OnInit, OnDestroy {
   }
 
   public onPageChange(page: number): void {
-    if (page === this.currentPage) return;
+    if (page === this.page.number) return;
 
-    this.currentPage = page;
+    this.page.number = page;
     this.fetchCmrDocuments({ page: page });
   }
 
@@ -171,12 +168,7 @@ export class CmrDocumentsPage implements OnInit, OnDestroy {
         next: (res) => {
           const data = res.data;
           this.documents = data.content;
-
-          // pagination
-          this.currentPage = data.number;
-          this.totalPages = data.totalPages;
-          this.totalElements = data.totalElements;
-          this.pageSize = data.size;
+          this.page = data.page;
         },
         error: (err) => (this.errorMessage = handleHttpErrors(err.status)),
       });
