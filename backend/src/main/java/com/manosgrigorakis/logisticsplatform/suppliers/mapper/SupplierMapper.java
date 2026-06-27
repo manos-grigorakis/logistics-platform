@@ -3,19 +3,16 @@ package com.manosgrigorakis.logisticsplatform.suppliers.mapper;
 import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplier.SupplierRequest;
 import com.manosgrigorakis.logisticsplatform.suppliers.dto.supplier.SupplierResponse;
 import com.manosgrigorakis.logisticsplatform.suppliers.model.Supplier;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
-public class SupplierMapper {
-    // Request -> Entity
-    public static Supplier toEntity(SupplierRequest request) {
-        return Supplier.builder()
-                .companyName(request.companyName())
-                .email(request.email())
-                .build();
-    }
+@Mapper(componentModel = "spring")
+public interface SupplierMapper {
+    Supplier toEntity(SupplierRequest request);
 
-    // Entity -> Response
-    public static SupplierResponse toResponse(Supplier supplier) {
-        return new SupplierResponse(supplier.getId(), supplier.getCompanyName(), supplier.getEmail(),
-                                    supplier.isActive(), supplier.getCreatedAt(), supplier.getUpdatedAt());
-    }
+    void toUpdate(@MappingTarget Supplier supplier, SupplierRequest request);
+
+    @Mapping(target = "isActive", source = "active")
+    SupplierResponse toResponse(Supplier supplier);
 }
