@@ -13,6 +13,9 @@ import com.manosgrigorakis.logisticsplatform.shipments.model.Vehicle;
 import com.manosgrigorakis.logisticsplatform.shipments.repository.VehicleRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -30,6 +33,7 @@ public class VehicleServiceImpl implements VehicleService{
         this.auditService = auditService;
     }
 
+    @Cacheable(value = "vehicles", key = "'all-vehicles'")
     @Override
     public List<VehicleResponseDTO> getAllVehicles() {
         List<Vehicle> vehicles = vehicleRepository.findAll();
@@ -37,6 +41,7 @@ public class VehicleServiceImpl implements VehicleService{
         return vehicles.stream().map(VehicleMapper::toResponse).toList();
     }
 
+    @Cacheable(value = "vehicles", key = "#id")
     @Override
     public VehicleResponseDTO getVehicleById(Long id) {
         Vehicle vehicle = vehicleRepository.findById(id)
@@ -48,6 +53,7 @@ public class VehicleServiceImpl implements VehicleService{
         return VehicleMapper.toResponse(vehicle);
     }
 
+    @CacheEvict(value = "vehicles", allEntries = true)
     @Override
     public VehicleResponseDTO createVehicle(VehicleRequestDTO dto) {
         if(vehicleRepository.existsVehicleByPlate(dto.getPlate())) {
@@ -68,6 +74,10 @@ public class VehicleServiceImpl implements VehicleService{
         return VehicleMapper.toResponse(savedVehicle);
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = "vehicles", key = "'all-vehicles'"),
+            @CacheEvict(value = "vehicles", key = "#id")
+    })
     @Override
     public VehicleResponseDTO updateVehicleById(Long id, VehicleRequestDTO dto) {
         Vehicle vehicle = vehicleRepository.findById(id)
@@ -93,6 +103,10 @@ public class VehicleServiceImpl implements VehicleService{
         return VehicleMapper.toResponse(updatedVehicle);
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = "vehicles", key = "'all-vehicles'"),
+            @CacheEvict(value = "vehicles", key = "#id")
+    })
     @Override
     public void deleteVehicleById(Long id) {
         Vehicle vehicle = vehicleRepository.findById(id)
