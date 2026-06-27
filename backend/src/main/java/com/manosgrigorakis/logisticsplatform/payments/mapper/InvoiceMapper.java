@@ -2,14 +2,13 @@ package com.manosgrigorakis.logisticsplatform.payments.mapper;
 
 import com.manosgrigorakis.logisticsplatform.infrastructure.document.dto.ExcelInvoiceImportDTO;
 import com.manosgrigorakis.logisticsplatform.payments.model.Invoice;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-public class InvoiceMapper {
-    // Excel Invoice Import -> Entity
-    public static Invoice toEntity(ExcelInvoiceImportDTO dto) {
-        return Invoice.builder()
-                .externalInvoiceNumber(dto.number())
-                .totalAmount(dto.amount())
-                .invoiceDate(dto.issueDate())
-                .build();
-    }
+@Mapper(componentModel = "spring")
+public interface InvoiceMapper {
+    @Mapping(target = "externalInvoiceNumber", source = "number")
+    @Mapping(target = "totalAmount", source = "amount")
+    @Mapping(target = "invoiceDate", source = "issueDate")
+    Invoice toEntity(ExcelInvoiceImportDTO dto);
 }

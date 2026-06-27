@@ -16,8 +16,8 @@ import com.manosgrigorakis.logisticsplatform.payments.enums.InvoiceStatus;
 import com.manosgrigorakis.logisticsplatform.payments.mapper.InvoiceMapper;
 import com.manosgrigorakis.logisticsplatform.payments.model.Invoice;
 import com.manosgrigorakis.logisticsplatform.payments.repository.InvoiceRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,24 +26,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+@Slf4j
+@RequiredArgsConstructor
 @Service
 public class InvoiceServiceImpl implements InvoiceService {
     private final InvoiceRepository invoiceRepository;
     private final CustomerRepository customerRepository;
-
     private final ExcelInvoiceReader excelInvoiceReader;
-
-    private static final Logger log = LoggerFactory.getLogger(InvoiceServiceImpl.class);
-
-    public InvoiceServiceImpl(
-            InvoiceRepository invoiceRepository,
-            CustomerRepository customerRepository,
-            ExcelInvoiceReader excelInvoiceReader
-    ) {
-        this.invoiceRepository = invoiceRepository;
-        this.customerRepository = customerRepository;
-        this.excelInvoiceReader = excelInvoiceReader;
-    }
+    private final InvoiceMapper invoiceMapper;
 
     @Override
     public BulkInvoiceResponseDTO bulkInvoicesImport(BulkInvoiceRequestDTO dto) {
@@ -55,11 +45,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         int skippedInvoices = response.originalInvoicesLength() - savedInvoices.size();
 
-        return new BulkInvoiceResponseDTO(
-                response.originalInvoicesLength(),
-                savedInvoices.size(),
-                skippedInvoices
-        );
+        return new BulkInvoiceResponseDTO(response.originalInvoicesLength(), savedInvoices.size(), skippedInvoices);
     }
 
     /**
@@ -68,8 +54,8 @@ public class InvoiceServiceImpl implements InvoiceService {
      * @param customerId The {@link Customer} id
      * @param file The imported Excel file
      * @return A list of prepared {@link Invoice} entities
-     * @throw {@link BadRequestException} when no invoices found in the uploaded file
-     * @throw {@link DuplicateEntryException} when invoices already exist in the system
+     * @throws {@link BadRequestException} when no invoices found in the uploaded file
+     * @throws {@link DuplicateEntryException} when invoices already exist in the system
      */
     @Override
     public PrepareReconciliationResult prepareInvoicesForReconciliation(Long customerId, MultipartFile file) {
@@ -118,7 +104,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         ExcelInvoiceImportResultDTO data = this.processInvoicesExcelFile(file);
         this.validateCustomerTin(customer.getTin(), data.tin());
 
-        List<Invoice> invoices = data.invoices().stream().map(InvoiceMapper::toEntity).toList();
+        List<Invoice> invoices = data.invoices().stream().map(invoiceMapper::toEntity).toList();
 
         List<Invoice> filteredInvoices = invoices.stream()
                 .filter(i -> !this.invoiceRepository.existsByExternalInvoiceNumber(i.getExternalInvoiceNumber()))

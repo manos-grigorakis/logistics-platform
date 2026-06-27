@@ -2,16 +2,14 @@ package com.manosgrigorakis.logisticsplatform.payments.mapper;
 
 import com.manosgrigorakis.logisticsplatform.infrastructure.document.dto.BankStatementImportResultDTO;
 import com.manosgrigorakis.logisticsplatform.payments.model.BankTransaction;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-public class BankTransactionMapper {
-    // BankStatementImportResultDTO -> Entity
-    public static BankTransaction toEntity(BankStatementImportResultDTO dto, String bankName) {
-        return BankTransaction.builder()
-                .bankName(bankName)
-                .senderName(dto.counterPartyName())
-                .amount(dto.transaction())
-                .issueDate(dto.date())
-                .description(dto.description())
-                .build();
-    }
+@Mapper(componentModel = "spring")
+public interface BankTransactionMapper {
+    @Mapping(target = "bankName", source = "bankName")
+    @Mapping(target = "senderName", source = "dto.counterPartyName")
+    @Mapping(target = "amount", source = "dto.transaction")
+    @Mapping(target = "issueDate", source = "dto.date")
+    BankTransaction toEntity(BankStatementImportResultDTO dto, String bankName);
 }
