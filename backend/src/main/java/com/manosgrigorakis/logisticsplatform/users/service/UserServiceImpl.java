@@ -110,7 +110,8 @@ public class UserServiceImpl implements UserService {
 
     @Caching(evict = {
             @CacheEvict(value = "users", key = "'all-users'"),
-            @CacheEvict(value = "users", key = "#id")
+            @CacheEvict(value = "users", key = "#id"),
+            @CacheEvict(value = "shipments", allEntries = true)
     })
     @Override
     public UserResponseDTO updateUserById(Long id, UserRequestDTO dto) {

@@ -76,7 +76,8 @@ public class VehicleServiceImpl implements VehicleService{
 
     @Caching(evict = {
             @CacheEvict(value = "vehicles", key = "'all-vehicles'"),
-            @CacheEvict(value = "vehicles", key = "#id")
+            @CacheEvict(value = "vehicles", key = "#id"),
+            @CacheEvict(value = "shipments", allEntries = true)
     })
     @Override
     public VehicleResponseDTO updateVehicleById(Long id, VehicleRequestDTO dto) {
