@@ -23,8 +23,8 @@ import com.manosgrigorakis.logisticsplatform.infrastructure.document.pdf.Process
 import com.manosgrigorakis.logisticsplatform.infrastructure.storage.FileStorageService;
 import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
 import com.manosgrigorakis.logisticsplatform.shipments.model.Shipment;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -39,39 +39,26 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
+@RequiredArgsConstructor
 @Service
 public class CmrDocumentServiceImpl implements CmrDocumentService {
     private final CmrDocumentRepository cmrDocumentRepository;
 
-    private static final Logger log = LoggerFactory.getLogger(CmrDocumentServiceImpl.class);
     private final DocumentNumberGenerator documentNumberGenerator;
     private final FileStorageService fileStorageService;
     private final CmrDocumentPdfGenerator cmrDocumentPdfGenerator;
     private final AuditService auditService;
     private final CompanyProfileService companyProfileService;
 
+    private final CmrDocumentMapper cmrDocumentMapper;
+
     @Value("${app.minio.bucketPathCmr}")
     private String bucketPathCmr;
 
-    public CmrDocumentServiceImpl(CmrDocumentRepository cmrDocumentRepository,
-                                  DocumentNumberGenerator documentNumberGenerator,
-                                  FileStorageService fileStorageService,
-                                  CmrDocumentPdfGenerator cmrDocumentPdfGenerator, AuditService auditService,
-                                  CompanyProfileService companyProfileService) {
-        this.cmrDocumentRepository = cmrDocumentRepository;
-        this.documentNumberGenerator = documentNumberGenerator;
-        this.fileStorageService = fileStorageService;
-        this.cmrDocumentPdfGenerator = cmrDocumentPdfGenerator;
-        this.auditService = auditService;
-        this.companyProfileService = companyProfileService;
-    }
-
     @Override
-    public Page<CmrDocumentListResponseDTO> getAllCmrDocuments(
-            CmrDocumentFilterRequest filterRequest,
-            PageFilterRequest page,
-            SortFilterRequest sort
-    ) {
+    public Page<CmrDocumentListResponseDTO> getAllCmrDocuments(CmrDocumentFilterRequest filterRequest,
+                                                               PageFilterRequest page, SortFilterRequest sort) {
         Specification<CmrDocument> spec = Specification.allOf();
         spec = SpecsUtils.andIf(spec, filterRequest.getNumber(), CmrDocumentSpecs::likeNumber);
         spec = SpecsUtils.andIf(spec, filterRequest.getStatus(), CmrDocumentSpecs::equalCmrDocumentStatus);
@@ -79,20 +66,18 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
         Pageable pageable = PageRequest.of(page.getPage(), page.getSize(), sort.createSort());
         Page<CmrDocument> cmrDocumentPage = this.cmrDocumentRepository.findAll(spec, pageable);
 
-        return cmrDocumentPage.map(CmrDocumentMapper::toResponseList);
+        return cmrDocumentPage.map(cmrDocumentMapper::toResponseList);
     }
 
     @Override
     public CmrDocumentResponseDTO getCmrDocumentById(Long id) {
-        CmrDocument cmrDocument = this.cmrDocumentRepository.findById(id)
-                .orElseThrow(() -> {
-                            log.warn("CMR Document not found with id {}", id);
-                            return new ResourceNotFoundException("CMR Document not found with id: " + id);
-                        }
-                );
+        CmrDocument cmrDocument = cmrDocumentRepository.findById(id).orElseThrow(() -> {
+            log.warn("CMR Document not found with id {}", id);
+            return new ResourceNotFoundException("CMR Document not found with id: " + id);
+        });
 
         String presignedUrl = fileStorageService.createPresignedUrl(this.bucketPathCmr + cmrDocument.getNumber());
-        CmrDocumentResponseDTO response = CmrDocumentMapper.toResponse(cmrDocument);
+        CmrDocumentResponseDTO response = cmrDocumentMapper.toResponse(cmrDocument);
         response.setFileUrl(presignedUrl);
         return response;
     }
@@ -118,17 +103,11 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
         cmrDocument.setFileUrl(presignedUrl);
         
         // Generate PDF
-        byte[] cmrDocumentPdf = cmrDocumentPdfGenerator.generatePdf(
-                new CmrDocumentPdfRequestDTO(quote, shipment, cmrDocument,
-                                             companyProfileService.getCompanyProfileEntity())
-        );
+        byte[] cmrDocumentPdf = cmrDocumentPdfGenerator.generatePdf(new CmrDocumentPdfRequestDTO(
+                quote, shipment, cmrDocument, companyProfileService.getCompanyProfileEntity()));
 
         // Upload the generated PDF to S3
-        fileStorageService.store(
-                this.bucketPathCmr + cmrDocument.getNumber(),
-                cmrDocumentPdf,
-                "application/pdf"
-        );
+        fileStorageService.store(this.bucketPathCmr + cmrDocument.getNumber(), cmrDocumentPdf, "application/pdf");
 
         this.cmrDocumentRepository.save(cmrDocument);
         log.info("CMR Document saved with number {}", cmrDocument.getNumber());
@@ -137,11 +116,10 @@ public class CmrDocumentServiceImpl implements CmrDocumentService {
 
     @Override
     public void updateCmrDocumentStatus(Long id, UpdateCmrDocumentStatusRequestDTO dto) {
-        CmrDocument cmrDocument = this.cmrDocumentRepository.findById(id)
-                .orElseThrow(() -> {
-                    log.warn("CMR Document not found with id {}", id);
-                    return new ResourceNotFoundException("CMR Document not found with id: " + id);
-                });
+        CmrDocument cmrDocument = cmrDocumentRepository.findById(id).orElseThrow(() -> {
+            log.warn("CMR Document not found with id {}", id);
+            return new ResourceNotFoundException("CMR Document not found with id: " + id);
+        });
         
         CmrDocument oldCmrDocument = new CmrDocument(cmrDocument);
 
