@@ -48,7 +48,7 @@ public class AnalyticsController {
 
     @GetMapping("/shipments-by-status")
     public ApiResponseWrapper<List<ValueByStatus<ShipmentStatus>>> getShipmentsByStatus(){
-        return new ApiResponseWrapper<>(analyticsService.getShipmentByStatus());
+        return new ApiResponseWrapper<>(analyticsService.getShipmentsByStatus());
     }
 
     @GetMapping("/invoices-by-status")

@@ -20,7 +20,7 @@ public interface AnalyticsService {
 
     List<ValueByStatus<QuoteStatus>> getQuotesByStatus();
 
-    List<ValueByStatus<ShipmentStatus>> getShipmentByStatus();
+    List<ValueByStatus<ShipmentStatus>> getShipmentsByStatus();
 
     List<ValueByStatus<InvoiceStatus>> getInvoicesByStatus();
 }
