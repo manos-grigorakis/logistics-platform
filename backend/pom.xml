@@ -8,6 +8,7 @@
 		<version>3.5.7</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+
 	<groupId>com.manosgrigorakis</groupId>
 	<artifactId>logisticsplatform</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
@@ -29,10 +30,21 @@
 
 	<properties>
 		<java.version>17</java.version>
+		<jjwt.version>0.11.5</jjwt.version>
+		<jsoup.version>1.21.2</jsoup.version>
+		<flying-saucer-pdf.version>9.10.2</flying-saucer-pdf.version>
 		<pdfbox.version>3.0.7</pdfbox.version>
-		<zxin.version>3.5.1</zxin.version>
+		<zxing.version>3.5.1</zxing.version>
+		<poi.version>5.5.0</poi.version>
+		<aws-s3.version>2.39.6</aws-s3.version>
+		<springdoc.version>2.8.14</springdoc.version>
+		<jacoco.version>0.8.11</jacoco.version>
 	</properties>
 	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -43,13 +55,17 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
+			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 			<scope>runtime</scope>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -58,28 +74,18 @@
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-mysql</artifactId>
 		</dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
 
 		<!-- Monitoring -->
-		<!-- Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-actuator -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
-			<scope>compile</scope>
 		</dependency>
-
-		<!-- Source: https://mvnrepository.com/artifact/io.micrometer/micrometer-registry-prometheus -->
 		<dependency>
 			<groupId>io.micrometer</groupId>
 			<artifactId>micrometer-registry-prometheus</artifactId>
-			<scope>compile</scope>
 		</dependency>
 
         <!-- Tests -->
@@ -88,8 +94,6 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
@@ -100,17 +104,17 @@
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
-            <version>0.11.5</version>
+            <version>${jjwt.version}</version>
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-impl</artifactId>
-            <version>0.11.5</version>
+            <version>${jjwt.version}</version>
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-jackson</artifactId>
-            <version>0.11.5</version>
+            <version>${jjwt.version}</version>
         </dependency>
 
         <!-- Mail -->
@@ -123,83 +127,71 @@
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
-            <version>1.21.2</version>
+            <version>${jsoup.version}</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.xhtmlrenderer/flying-saucer-pdf -->
         <dependency>
             <groupId>org.xhtmlrenderer</groupId>
             <artifactId>flying-saucer-pdf</artifactId>
-            <version>9.10.2</version>
+            <version>${flying-saucer-pdf.version}</version>
         </dependency>
 		<dependency>
 			<groupId>org.apache.pdfbox</groupId>
 			<artifactId>pdfbox</artifactId>
 			<version>${pdfbox.version}</version>
-			<scope>compile</scope>
 		</dependency>
 
-		<!-- Microsoft Files e.g. ExcelInvoiceReader -->
+		<!-- Microsoft Files -->
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
-			<version>5.5.0</version>
+			<version>${poi.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
-			<version>5.5.0</version>
+			<version>${poi.version}</version>
 		</dependency>
 
 		<!-- QR Codes -->
 		<dependency>
 			<groupId>com.google.zxing</groupId>
 			<artifactId>core</artifactId>
-			<version>${zxin.version}</version>
+			<version>${zxing.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.zxing</groupId>
 			<artifactId>javase</artifactId>
-			<version>${zxin.version}</version>
+			<version>${zxing.version}</version>
 		</dependency>
 
         <!-- AWS -->
-        <!-- https://mvnrepository.com/artifact/software.amazon.awssdk/s3 -->
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>s3</artifactId>
-            <version>2.39.6</version>
-            <scope>compile</scope>
+            <version>${aws-s3.version}</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui -->
+		<!-- API Documentation -->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-            <version>2.8.14</version>
+            <version>${springdoc.version}</version>
         </dependency>
-
-		<!-- Source: https://mvnrepository.com/artifact/org.flywaydb/flyway-core -->
-		<dependency>
-			<groupId>org.flywaydb</groupId>
-			<artifactId>flyway-mysql</artifactId>
-			<scope>compile</scope>
-		</dependency>
 
 		<!-- Cache -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-cache</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>com.github.ben-manes.caffeine</groupId>
 			<artifactId>caffeine</artifactId>
-			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 
 	<build>
 		<plugins>
+			<!-- Lombok -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -225,11 +217,11 @@
 				</configuration>
 			</plugin>
 
-            <!-- Jacoco -->
+            <!-- JaCoCo -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.11</version>
+                <version>${jacoco.version}</version>
                 <executions>
                     <execution>
                         <goals>
