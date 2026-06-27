@@ -8,7 +8,7 @@ import { FetchSupplierPaymentsParams } from '../models/fetch-supplier-payments-p
 import { addHttpParam } from '../../../shared/utils/add-http-params.util';
 import { SupplierPaymentsCreateRequest } from '../models/supplier-payments-create-request.interface';
 import { SupplierPaymentsUpdateRequest } from '../models/supplier-payments-update-request.interface';
-import { SupplierPaymentsList } from '../models/supplier-payments-list.interface';
+import { PagedResponse } from '../../../shared/models/paged-response.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +20,7 @@ export class SupplierPaymentsService {
 
   public fetchSupplierPayments(
     param: FetchSupplierPaymentsParams = {},
-  ): Observable<ApiResponse<SupplierPaymentsList>> {
+  ): Observable<ApiResponse<PagedResponse<SupplierPayment>>> {
     let params = new HttpParams();
     params = addHttpParam(params, 'page', param.page);
     params = addHttpParam(params, 'size', param.size);
@@ -28,7 +28,7 @@ export class SupplierPaymentsService {
     params = addHttpParam(params, 'sortDirection', param.sortDirection);
     params = addHttpParam(params, 'number', param.number);
 
-    return this.http.get<ApiResponse<SupplierPaymentsList>>(
+    return this.http.get<ApiResponse<PagedResponse<SupplierPayment>>>(
       `${environment.apiUrl}/supplier-payments`,
       {
         params,

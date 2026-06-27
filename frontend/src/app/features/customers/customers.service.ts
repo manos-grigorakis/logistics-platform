@@ -1,14 +1,14 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { FetchCustomersResponse } from './models/fetch-customers-response';
 import { FetchCustomersParameters } from './models/fetch-customers-parameters';
 import { Customer } from './models/customer';
 import { CustomerRequest } from './models/customer-request';
-import { QuotePerCustomerResponse } from './models/quote-per-customer-response';
 import { QuotesPerCustomerParameters } from './models/quotes-per-customer-parameters';
 import { ApiResponse } from '../../shared/models/api-response.interface';
+import { PagedResponse } from '../../shared/models/paged-response.interface';
+import { QuotePerCustomer } from './models/quotes-per-customer';
 
 @Injectable({
   providedIn: 'root',
@@ -25,7 +25,7 @@ export class CustomersService {
 
   public fetchCustomers(
     param: FetchCustomersParameters = {},
-  ): Observable<ApiResponse<FetchCustomersResponse>> {
+  ): Observable<ApiResponse<PagedResponse<Customer>>> {
     let params = new HttpParams();
     params = this.addParam(params, 'page', param.page);
     params = this.addParam(params, 'size', param.size);
@@ -35,7 +35,7 @@ export class CustomersService {
     params = this.addParam(params, 'companyName', param.companyName);
     params = this.addParam(params, 'customerType', param.customerType);
 
-    return this.http.get<ApiResponse<FetchCustomersResponse>>(`${environment.apiUrl}/customers`, {
+    return this.http.get<ApiResponse<PagedResponse<Customer>>>(`${environment.apiUrl}/customers`, {
       params: params,
     });
   }
@@ -59,7 +59,7 @@ export class CustomersService {
   public quotesPerCustomer(
     id: number,
     param: QuotesPerCustomerParameters = {},
-  ): Observable<ApiResponse<QuotePerCustomerResponse>> {
+  ): Observable<ApiResponse<PagedResponse<QuotePerCustomer>>> {
     let params = new HttpParams();
 
     params = this.addParam(params, 'page', param.page);
@@ -69,7 +69,7 @@ export class CustomersService {
     params = this.addParam(params, 'number', param.number);
     params = this.addParam(params, 'quoteStatus', param.quoteStatus);
 
-    return this.http.get<ApiResponse<QuotePerCustomerResponse>>(
+    return this.http.get<ApiResponse<PagedResponse<QuotePerCustomer>>>(
       `${environment.apiUrl}/customers/${id}/quotes`,
       {
         params,
