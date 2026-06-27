@@ -79,6 +79,7 @@ app:
       analytics: 5m
       metadata: 20m
       vehicles: 15m
+      shipments: 5m
   setup_password:
     expires: ${SETUP_PASSWORD_TOKEN_EXPIRATION}
   reset_password:
