@@ -84,6 +84,7 @@ app:
       roles: 20m
       company-profile: 1h
       suppliers: 15m
+      customers: 10m
   setup_password:
     expires: ${SETUP_PASSWORD_TOKEN_EXPIRATION}
   reset_password:
