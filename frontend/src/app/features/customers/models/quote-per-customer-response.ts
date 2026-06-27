@@ -1,13 +1,7 @@
 import { QuotePerCustomer } from './quotes-per-customer';
+import { Page } from '../../../shared/models/page.interface';
 
 export interface QuotePerCustomerResponse {
   content: QuotePerCustomer[];
-  last: boolean;
-  totalPages: number;
-  totalElements: number;
-  first: boolean;
-  size: number;
-  number: number;
-  numberOfElements: number;
-  empty: boolean;
+  page: Page;
 }

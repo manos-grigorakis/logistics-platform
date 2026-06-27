@@ -5,10 +5,8 @@ import { NgClass } from '@angular/common';
 import { ModalFile } from '../../../../../../shared/ui/modal-file/modal-file';
 import { QuotesService } from '../../../../../quotes/quotes.service';
 import { QuotePerCustomer } from '../../../../models/quotes-per-customer';
-import { Pagination } from '../../../../../../shared/ui/pagination/pagination';
 import { MetadataService } from '../../../../../../core/metadata/metadata.service';
 import { FormsModule } from '@angular/forms';
-import { toast } from 'ngx-sonner';
 import { Modal } from '../../../../../../shared/ui/modal/modal';
 import { QuotesFilters } from '../../../../../../shared/components/quotes-filters/quotes-filters';
 import { LoadingSpinner } from '../../../../../../shared/ui/loading-spinner/loading-spinner';
@@ -17,13 +15,14 @@ import { ErrorAlert } from '../../../../../../shared/ui/error-alert/error-alert'
 import { QuoteCard } from './quote-card/quote-card';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LanguageService } from '../../../../../../core/services/language.service';
+import { Page } from '../../../../../../shared/models/page.interface';
+import { Pagination } from '../../../../../../shared/ui/pagination/pagination';
 
 @Component({
   selector: 'app-customer-tab-quotes',
   imports: [
     NgClass,
     ModalFile,
-    Pagination,
     FormsModule,
     Modal,
     QuotesFilters,
@@ -31,6 +30,7 @@ import { LanguageService } from '../../../../../../core/services/language.servic
     ErrorAlert,
     QuoteCard,
     TranslatePipe,
+    Pagination,
   ],
   templateUrl: './customer-tab-quotes.html',
   styleUrl: './customer-tab-quotes.css',
@@ -56,11 +56,7 @@ export class CustomerTabQuotes implements OnInit, OnDestroy {
   public quotesErrorMessage?: string = undefined;
 
   // Pagination
-  public currentPage: number = 0;
-  public totalPages: number = 0;
-  public totalElements: number = 0;
-  private quotesToShow: number = 5;
-  public pageSize: number = this.quotesToShow;
+  public page: Page = { size: 5, number: 0, totalElements: 0, totalPages: 0 };
 
   // Quotes Status Update Modal
   public isQuotesStatusModalEnabled: boolean = false;
@@ -92,7 +88,7 @@ export class CustomerTabQuotes implements OnInit, OnDestroy {
 
   // Lifecycle
   ngOnInit(): void {
-    this.fetchQuotesPerCustomer({ size: this.quotesToShow });
+    this.fetchQuotesPerCustomer({ size: this.page.size });
     this.metadataService.fetchQuotesStatuses();
     this.subscribeToQuotesStatuses();
     this.setLabels();
@@ -134,10 +130,10 @@ export class CustomerTabQuotes implements OnInit, OnDestroy {
   }
 
   public onPageChange(page: number): void {
-    if (page === this.currentPage) return;
+    if (page === this.page.number) return;
 
-    this.currentPage = page;
-    this.fetchQuotesPerCustomer({ page: page, size: this.quotesToShow });
+    this.page.number = page;
+    this.fetchQuotesPerCustomer({ page: page, size: this.page.size });
   }
 
   /**
@@ -191,7 +187,7 @@ export class CustomerTabQuotes implements OnInit, OnDestroy {
    * Refresh the quotes on refresh event
    */
   public onRefresh(): void {
-    this.fetchQuotesPerCustomer({ size: this.quotesToShow });
+    this.fetchQuotesPerCustomer({ size: this.page.size });
   }
 
   /**
@@ -305,10 +301,7 @@ export class CustomerTabQuotes implements OnInit, OnDestroy {
           this.isQuotesLoading = false;
           const data = res.data;
           this.quotes = data.content;
-
-          this.currentPage = data.number;
-          this.totalPages = data.totalPages;
-          this.totalElements = data.totalElements;
+          this.page = data.page;
         },
         error: (err) => {
           this.isQuotesLoading = false;
@@ -438,13 +431,13 @@ export class CustomerTabQuotes implements OnInit, OnDestroy {
     let param = value.trim();
 
     if (param.length === 0) {
-      this.fetchQuotesPerCustomer({ page: 0, size: this.quotesToShow, number: undefined });
+      this.fetchQuotesPerCustomer({ page: 0, size: this.page.size, number: undefined });
       return;
     }
 
     this.activeFilterLabel = this.languageService.translateKey('common.filters.filter-by');
     this.activeSortLabel = this.languageService.translateKey('common.filters.sort-by');
-    this.fetchQuotesPerCustomer({ size: this.quotesToShow, number: param });
+    this.fetchQuotesPerCustomer({ size: this.page.size, number: param });
   }
 
   private setLabels(): void {

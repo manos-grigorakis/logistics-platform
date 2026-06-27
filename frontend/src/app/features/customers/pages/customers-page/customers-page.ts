@@ -2,20 +2,20 @@ import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { CustomersService } from '../../customers.service';
 import { Customer } from '../../models/customer';
 import { CustomersTable } from '../../components/customers-table/customers-table';
-import { Pagination } from '../../../../shared/ui/pagination/pagination';
 import { CustomersFilters } from '../../components/customers-filters/customers-filters';
 import { FetchCustomersParameters } from '../../models/fetch-customers-parameters';
 import { debounceTime, distinctUntilChanged, forkJoin, Subject, Subscription, take } from 'rxjs';
 import { Modal } from '../../../../shared/ui/modal/modal';
-import { toast } from 'ngx-sonner';
 import { MetadataService } from '../../../../core/metadata/metadata.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LanguageService } from '../../../../core/services/language.service';
 import { TranslatePipe } from '@ngx-translate/core';
+import { Page } from '../../../../shared/models/page.interface';
+import { Pagination } from '../../../../shared/ui/pagination/pagination';
 
 @Component({
   selector: 'app-customers-page',
-  imports: [CustomersTable, Pagination, CustomersFilters, Modal, TranslatePipe],
+  imports: [CustomersTable, CustomersFilters, Modal, TranslatePipe, Pagination],
   templateUrl: './customers-page.html',
   styleUrl: './customers-page.css',
 })
@@ -47,11 +47,7 @@ export class CustomersPage implements OnInit, OnDestroy {
   public activeSortLabel: string = '';
 
   // Pagination
-  public currentPage: number = 0;
-  public totalPages: number = 0;
-  public totalElements: number = 0;
-  public isFirstPage: boolean = false;
-  public pageSize: number = 0;
+  public page: Page = { size: 0, number: 0, totalElements: 0, totalPages: 0 };
 
   private langChangeSub?: Subscription;
 
@@ -86,9 +82,9 @@ export class CustomersPage implements OnInit, OnDestroy {
   }
 
   public onPageChange(page: number): void {
-    if (page === this.currentPage) return;
+    if (page === this.page.number) return;
 
-    this.currentPage = page;
+    this.page.number = page;
     this.selectCustomerIds.clear();
     this.disableDeleteButton = true;
     this.fetchCustomers({ page: page });
@@ -234,12 +230,7 @@ export class CustomersPage implements OnInit, OnDestroy {
         this.selectCustomerIds.clear();
         const data = res.data;
         this.customers = data.content;
-
-        // pagination
-        this.currentPage = data.number;
-        this.totalPages = data.totalPages;
-        this.totalElements = data.totalElements;
-        this.pageSize = data.size;
+        this.page = data.page;
       },
       error: (err) => {
         this.isLoading = false;
