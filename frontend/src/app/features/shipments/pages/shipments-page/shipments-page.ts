@@ -2,7 +2,6 @@ import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ShipmentsService } from '../../shipments.service';
 import { Shipment } from '../../models/shipment';
 import { ShipmentsTable } from '../../components/shipments-table/shipments-table';
-import { Pagination } from '../../../../shared/ui/pagination/pagination';
 import { ShipmentParams } from '../../models/shipment-params';
 import { FiltersWrapper } from '../../../../shared/ui/filters-wrapper/filters-wrapper';
 import { ShipmentsFilters } from '../../../../shared/components/shipments-filters/shipments-filters';
@@ -11,10 +10,12 @@ import { debounceTime, distinctUntilChanged, Subject, Subscription, take } from 
 import { ShipmentStatus } from '../../models/shipment-status';
 import { LanguageService } from '../../../../core/services/language.service';
 import { TranslatePipe } from '@ngx-translate/core';
+import { Page } from '../../../../shared/models/page.interface';
+import { Pagination } from '../../../../shared/ui/pagination/pagination';
 
 @Component({
   selector: 'app-shipments-page',
-  imports: [ShipmentsTable, Pagination, FiltersWrapper, ShipmentsFilters, TranslatePipe],
+  imports: [ShipmentsTable, FiltersWrapper, ShipmentsFilters, TranslatePipe, Pagination],
   templateUrl: './shipments-page.html',
   styleUrl: './shipments-page.css',
 })
@@ -24,11 +25,7 @@ export class ShipmentsPage implements OnInit, OnDestroy {
   public errorMessage?: string;
 
   // Pagination
-  public currentPage: number = 0;
-  public totalPages: number = 0;
-  public totalElements: number = 0;
-  public isFirstPage: boolean = false;
-  public pageSize: number = 0;
+  public page: Page = { size: 0, number: 0, totalElements: 0, totalPages: 0 };
 
   // Shipment statuses
   public statuses: ShipmentStatus[] = [];
@@ -76,9 +73,9 @@ export class ShipmentsPage implements OnInit, OnDestroy {
   }
 
   public onPageChange(page: number): void {
-    if (page === this.currentPage) return;
+    if (page === this.page.number) return;
 
-    this.currentPage = page;
+    this.page.number = page;
     this.fetchShipments({ page: page });
   }
 
@@ -210,12 +207,7 @@ export class ShipmentsPage implements OnInit, OnDestroy {
         this.isLoading = false;
         const data = res.data;
         this.shipments = data.content;
-
-        // pagination
-        this.currentPage = data.number;
-        this.totalPages = data.totalPages;
-        this.totalElements = data.totalElements;
-        this.pageSize = data.size;
+        this.page = data.page;
       },
       error: (err) => {
         this.isLoading = false;
