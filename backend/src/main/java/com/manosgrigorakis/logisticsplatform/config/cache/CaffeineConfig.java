@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 public class CaffeineConfig {
     @Bean
     public Caffeine<Object, Object> defaultCaffeineSpec() {
-        return Caffeine.newBuilder().expireAfterWrite(10, TimeUnit.MINUTES);
+        return Caffeine.newBuilder().expireAfterWrite(10, TimeUnit.MINUTES).recordStats();
     }
 
     @Bean
@@ -23,7 +23,8 @@ public class CaffeineConfig {
         caffeineCacheManager.setCaffeine(caffeine);
 
         cacheTtls.ttls().forEach((key, ttl) -> {
-            caffeineCacheManager.registerCustomCache(key, Caffeine.newBuilder().expireAfterWrite(ttl).build());
+            caffeineCacheManager.registerCustomCache(
+                    key, Caffeine.newBuilder().expireAfterWrite(ttl).recordStats().build());
         });
 
         return caffeineCacheManager;
