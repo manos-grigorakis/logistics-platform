@@ -18,8 +18,8 @@ import com.manosgrigorakis.logisticsplatform.users.model.User;
 import com.manosgrigorakis.logisticsplatform.auth.model.UserTokens;
 import com.manosgrigorakis.logisticsplatform.users.repository.RoleRepository;
 import com.manosgrigorakis.logisticsplatform.users.repository.UserRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -32,6 +32,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Slf4j
+@RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
@@ -39,28 +41,17 @@ public class UserServiceImpl implements UserService {
     private final UserTokensServiceImpl userTokensService;
     private final MailService mailService;
     private final AuditService auditService;
-    private final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
+    private final UserMapper userMapper;
 
     @Value("${app.setup_password.expires:48h}")
     private Duration setupPasswordTokenExpirationTime;
-
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
-                           UserTokensServiceImpl userTokensService, MailService mailService, AuditService auditService) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.userTokensService = userTokensService;
-        this.mailService = mailService;
-        this.auditService = auditService;
-    }
 
     @Cacheable(value = "users", key = "'all-users'")
     @Override
     public List<UserResponseDTO> getAllUsers() {
         List<User> users =  userRepository.findAll();
 
-        return users.stream()
-                .map(UserMapper::toResponse)
-                .toList();
+        return users.stream().map(userMapper::toResponse).toList();
     }
 
     @Cacheable(value = "users", key = "#id")
@@ -69,7 +60,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
 
-        return UserMapper.toResponse(user);
+        return userMapper.toResponse(user);
     }
 
     @CacheEvict(value = "users", allEntries = true)
@@ -87,8 +78,7 @@ public class UserServiceImpl implements UserService {
                     log.error("Create user failed. Role not found with id: {}", dto.getRoleId());
                     return new ResourceNotFoundException("Role not found with id: " + dto.getRoleId());
                 });
-
-        User user = UserMapper.toEntity(dto, role);
+        User user = userMapper.toEntity(dto, role);
         user.setStatus(UserStatus.INVITED);
 
         userRepository.save(user);
@@ -105,7 +95,7 @@ public class UserServiceImpl implements UserService {
         mailService.sendSetupPasswordMail(user, userTokens.getToken());
         log.info("Password setup email sent to {}", user.getEmail());
 
-        return UserMapper.toResponse(user);
+        return userMapper.toResponse(user);
     }
 
     @Caching(evict = {
@@ -115,19 +105,17 @@ public class UserServiceImpl implements UserService {
     })
     @Override
     public UserResponseDTO updateUserById(Long id, UserRequestDTO dto) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> {
-                        log.error("Update failed. User not found with id: {}", id);
-                        return new ResourceNotFoundException("User not found with id: " + id);
-                });
+        User user = userRepository.findById(id).orElseThrow(() -> {
+            log.error("Update failed. User not found with id: {}", id);
+            return new ResourceNotFoundException("User not found with id: " + id);
+        });
 
         User oldUser = new User(user);
 
-        Role role = roleRepository.findById(dto.getRoleId())
-                .orElseThrow(() -> {
-                    log.error("Updated failed. Role not found with id: {}", dto.getRoleId());
-                    return new ResourceNotFoundException("Role not found with id: " + dto.getRoleId());
-                });
+        Role role = roleRepository.findById(dto.getRoleId()).orElseThrow(() -> {
+            log.error("Updated failed. Role not found with id: {}", dto.getRoleId());
+            return new ResourceNotFoundException("Role not found with id: " + dto.getRoleId());
+        });
 
         Optional<User> existingUser = userRepository.findByEmail(dto.getEmail());
 
@@ -136,15 +124,11 @@ public class UserServiceImpl implements UserService {
             throw new DuplicateEntryException("email", dto.getEmail());
         }
 
-        user.setFirstName(dto.getFirstName());
-        user.setLastName(dto.getLastName());
-        user.setEmail(dto.getEmail());
-        user.setPhone(dto.getPhone());
-        user.setRole(role);
+        userMapper.toUpdate(user, dto, role);
         userRepository.save(user);
         log.info("User updated: {}", dto.getEmail());
         this.logUpdatedUser(oldUser, user);
-        return UserMapper.toResponse(user);
+        return userMapper.toResponse(user);
     }
 
     @Caching(evict = {
@@ -153,11 +137,10 @@ public class UserServiceImpl implements UserService {
     })
     @Override
     public void deleteUserById(Long id) {
-        User user = this.userRepository.findById(id)
-                .orElseThrow(() -> {
-                    log.error("Delete failed. User not found with id: {}", id);
-                    return new ResourceNotFoundException("User not found with id: " + id);
-                });
+        User user = this.userRepository.findById(id).orElseThrow(() -> {
+            log.error("Delete failed. User not found with id: {}", id);
+            return new ResourceNotFoundException("User not found with id: " + id);
+        });
 
         userRepository.deleteById(id);
         log.info("User deleted: {}", id);
