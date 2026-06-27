@@ -15,6 +15,9 @@ import com.manosgrigorakis.logisticsplatform.users.repository.RoleRepository;
 import com.manosgrigorakis.logisticsplatform.users.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +36,7 @@ public class RoleServiceImpl implements RoleService {
         this.auditService = auditService;
     }
 
+    @Cacheable(value = "roles", key = "'all-roles'")
     @Override
     public List<RoleResponseDTO> getAllRoles() {
         List<Role> roles = roleRepository.findAll();
@@ -42,6 +46,7 @@ public class RoleServiceImpl implements RoleService {
                 .toList();
     }
 
+    @Cacheable(value = "roles", key = "#id")
     @Override
     public RoleResponseDTO getRoleById(Long id) {
         Role role = roleRepository.findById(id)
@@ -53,6 +58,7 @@ public class RoleServiceImpl implements RoleService {
         return RoleMapper.toResponse(role);
     }
 
+    @CacheEvict(value = "roles", allEntries = true)
     @Override
     public RoleResponseDTO createRole(RoleRequestDTO dto) {
         Optional<Role> existingRole = roleRepository.findByName(dto.getName());
@@ -70,6 +76,11 @@ public class RoleServiceImpl implements RoleService {
         return RoleMapper.toResponse(role);
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = "roles", key = "'all-roles'"),
+            @CacheEvict(value = "roles", key = "#id"),
+            @CacheEvict(value = "users", allEntries = true)
+    })
     @Override
     public RoleResponseDTO updateRole(Long id, RoleRequestDTO dto) {
         Role role = roleRepository.findById(id)
@@ -99,6 +110,10 @@ public class RoleServiceImpl implements RoleService {
         return RoleMapper.toResponse(updatedRole);
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = "roles", key = "'all-roles'"),
+            @CacheEvict(value = "roles", key = "#id")
+    })
     @Override
     public void deleteRoleById(Long id) {
         Role role = this.roleRepository.findById(id)
