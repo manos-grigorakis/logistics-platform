@@ -1,6 +1,7 @@
-import { Pagination } from '../../../shared/models/pagination';
 import { Supplier } from './supplier.interface';
+import { Page } from '../../../shared/models/page.interface';
 
-export interface SupplierListResponse extends Pagination {
+export interface SupplierListResponse {
   content: Supplier[];
+  page: Page;
 }
