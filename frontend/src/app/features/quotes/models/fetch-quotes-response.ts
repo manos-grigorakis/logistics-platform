@@ -1,13 +1,7 @@
 import { QuotesListItem } from './quotes-list-item';
+import { Page } from '../../../shared/models/page.interface';
 
 export interface FetchQuotesResponse {
   content: QuotesListItem[];
-  last: boolean;
-  totalPages: number;
-  totalElements: number;
-  first: boolean;
-  size: number;
-  number: number;
-  numberOfElements: number;
-  empty: boolean;
+  page: Page;
 }
