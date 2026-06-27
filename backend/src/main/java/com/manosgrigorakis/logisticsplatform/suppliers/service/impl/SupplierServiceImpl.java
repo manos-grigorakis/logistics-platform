@@ -14,6 +14,8 @@ import com.manosgrigorakis.logisticsplatform.suppliers.repository.SupplierReposi
 import com.manosgrigorakis.logisticsplatform.suppliers.service.SupplierService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -43,6 +45,7 @@ public class SupplierServiceImpl implements SupplierService {
         return supplierPage;
     }
 
+    @Cacheable(value = "suppliers", key = "#id")
     @Override
     public SupplierResponse getSupplierById(Long id) {
         Supplier supplier = supplierRepository.findById(id).orElseThrow(() -> {
@@ -67,6 +70,7 @@ public class SupplierServiceImpl implements SupplierService {
         return SupplierMapper.toResponse(savedSupplier);
     }
 
+    @CacheEvict(value = "suppliers", key = "#id")
     @Override
     public SupplierResponse updateSupplierById(Long id, SupplierRequest request) {
         Supplier supplier = supplierRepository.findById(id).orElseThrow(() -> {
@@ -89,6 +93,7 @@ public class SupplierServiceImpl implements SupplierService {
         return SupplierMapper.toResponse(updatedSupplier);
     }
 
+    @CacheEvict(value = "suppliers", key = "#id")
     @Override
     public void deactivateSupplierById(Long id) {
         Supplier supplier = supplierRepository.findById(id).orElseThrow(() -> {
