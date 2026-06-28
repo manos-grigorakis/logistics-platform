@@ -1,6 +1,5 @@
 # Logistics Platform
 
-
 ![Status](https://img.shields.io/badge/status-active-brightgreen)
 ![Coverage](https://github.com/manos-grigorakis/logistics-platform/blob/main/.github/badges/jacoco.svg?raw=true)
 ![Branches Coverage](https://github.com/manos-grigorakis/logistics-platform/blob/main/.github/badges/branches.svg?raw=true)
@@ -17,29 +16,36 @@
 
 Logistics Platform is a management platform for small to medium businesses aiming to simplify daily operations such as customer quote generation, shipment and fleet management, CMR document generation and payment reconciliation. The application follows a monolithic architecture with a Domain-Driven Design (DDD) structure.
 
+## API Documentation
+
+- [Public API Documentation](https://manos-grigorakis.github.io/logistics-platform/api/)
+- Local Swagger UI: `http://localhost:8080/swagger-ui.html`
+
 ### Core Features
 
-- User Authentication
-- Fleet Management
-- Quote Generation
+- User Authentication & Role-Based Access Control (RBAC)
+- Dashboard Analytics & Business Metrics
+- Customer & Supplier Management
+- Fleet & Vehicle Management
 - Shipment Management
-- CMR Document Generation
-- Payment Reconciliation
+- Quote Generation
+- CMR Document Generation & Signature Verification
+- Payment Reconciliation & Invoice Matching
 - Audit Logging
-- Metrics & Observability
+- Multi-language Support (EN / GR)
 
 ## Tech Stack
 
-| **Technology**          | **Usage**                  |
-| ----------------------- | -------------------------- |
-| Angular                 | Frontend SPA               |
-| Tailwind CSS            | UI Styling                 |
-| Spring Boot             | Backend REST API           |
-| Swagger / OpenAPI       | API Documentation          |
-| Flyway                  | Database Migration         |
-| MariaDB                 | Relational Database        |
-| MinIO                   | S3-compatible File Storage |
-| Docker / Docker Compose | Containerization           |
+| **Technology**               | **Usage**                  |
+| ---------------------------- | -------------------------- |
+| Angular                      | Frontend SPA               |
+| Tailwind CSS                 | UI Styling                 |
+| Spring Boot                  | Backend REST API           |
+| OpenAPI / Swagger UI / ReDoc | API Documentation          |
+| Flyway                       | Database Migration         |
+| MariaDB                      | Relational Database        |
+| MinIO                        | S3-compatible File Storage |
+| Docker / Docker Compose      | Containerization           |
 
 ## Prerequisites
 
@@ -84,13 +90,13 @@ Logistics Platform is a management platform for small to medium businesses aimin
     docker compose -f docker-compose.dev.yaml up -d
     ```
 
-4.  Install Front-end dependencies
+4.  Install frontend dependencies
 
     ```bash
     cd frontend && npm install
     ```
 
-5.  Start Front-end development server
+5.  Start frontend development server
 
     Run from the `frontend/` directory
 
@@ -98,7 +104,7 @@ Logistics Platform is a management platform for small to medium businesses aimin
     ng serve
     ```
 
-6.  Start Backend server
+6.  Start backend server
     1.  With Maven installed
 
         ```bash
@@ -132,12 +138,11 @@ Logistics Platform is a management platform for small to medium businesses aimin
    docker compose -f docker-compose.prod.yaml up -d
    ```
 
-## API Documentation
-
-Interactive API documentation available at:
-`http://localhost:8080/swagger-ui.html`
-
 ## Screenshots
+
+### Dashboard
+
+![Dashboard](/docs/screenshots/dashboard.png)
 
 ### Customer Profile
 
