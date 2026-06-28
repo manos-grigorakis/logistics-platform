@@ -91,7 +91,6 @@ public class Quote {
             Integer validityDays,
             String origin,
             String destination,
-            BigDecimal price,
             String notes,
             String specialTerms,
             QuoteStatus quoteStatus,

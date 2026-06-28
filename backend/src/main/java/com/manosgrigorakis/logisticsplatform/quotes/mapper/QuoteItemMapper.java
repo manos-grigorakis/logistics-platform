@@ -3,28 +3,11 @@ package com.manosgrigorakis.logisticsplatform.quotes.mapper;
 import com.manosgrigorakis.logisticsplatform.quotes.dto.quoteItem.QuoteItemRequestDTO;
 import com.manosgrigorakis.logisticsplatform.quotes.dto.quoteItem.QuoteItemResponseDTO;
 import com.manosgrigorakis.logisticsplatform.quotes.model.QuoteItem;
+import org.mapstruct.Mapper;
 
-public class QuoteItemMapper {
-    // DTO => Entity
-    public static QuoteItem toEntity(QuoteItemRequestDTO dto) {
-        return QuoteItem.builder()
-                .name(dto.getName())
-                .description(dto.getDescription())
-                .quantity(dto.getQuantity())
-                .unit(dto.getUnit())
-                .price(dto.getPrice())
-                .build();
-    }
+@Mapper(componentModel = "spring")
+public interface QuoteItemMapper {
+    QuoteItem toEntity(QuoteItemRequestDTO dto);
 
-    // Entity => Response
-    public static QuoteItemResponseDTO toResponse(QuoteItem quoteItem) {
-        QuoteItemResponseDTO dto = new QuoteItemResponseDTO();
-        dto.setId(quoteItem.getId());
-        dto.setName(quoteItem.getName());
-        dto.setDescription(quoteItem.getDescription());
-        dto.setQuantity(quoteItem.getQuantity());
-        dto.setUnit(quoteItem.getUnit());
-        dto.setPrice(quoteItem.getPrice());
-        return dto;
-    }
+    QuoteItemResponseDTO toResponse(QuoteItem quoteItem);
 }
