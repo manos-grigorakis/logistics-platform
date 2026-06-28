@@ -168,11 +168,6 @@ public class Quote {
         item.setQuote(this);
     }
 
-    public void removeQuoteItem(QuoteItem item) {
-        quoteItems.remove(item);
-        item.setQuote(this);
-    }
-
     /**
      * Returns {@code true} if quote status is finalized
      * otherwise it returns {@code false}
