@@ -1,0 +1,4721 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Logistics Platform API",
+    "description": "API Documentation for Logistics Platform",
+    "contact": {
+      "name": "Manos Grigorakis",
+      "url": "https://manosgrigorakis.com",
+      "email": "contact@manosgrigorakis.com"
+    },
+    "version": "1.0"
+  },
+  "servers": [
+    { "url": "http://localhost:8080", "description": "Generated server url" }
+  ],
+  "security": [{ "Bearer Authentication": [] }],
+  "tags": [
+    { "name": "Suppliers", "description": "CRUD operations for suppliers" },
+    { "name": "Customers", "description": "CRUD operation for customers" },
+    {
+      "name": "User Authentication",
+      "description": "Login, password reset and User authentication"
+    },
+    { "name": "Roles", "description": "CRUD operation for roles" },
+    {
+      "name": "Company Profile",
+      "description": "GET, CREATE, UPDATE operations for company profile"
+    },
+    { "name": "Metadata", "description": "System metadata" },
+    {
+      "name": "Quotes",
+      "description": "Create, Read, Update operations on Quotes with PDF generation, presigned URL for preview and storing on S3/Minio"
+    },
+    {
+      "name": "Supplier Payments",
+      "description": "CRUD operations for suppliers payments with presigned URLs for uploaded files"
+    },
+    { "name": "Users", "description": "CRUD operation on users" },
+    { "name": "Vehicles", "description": "CRUD operation for vehicles" },
+    {
+      "name": "Analytics",
+      "description": "Dashboard metrics and aggregated business insights"
+    }
+  ],
+  "paths": {
+    "/api/v1/vehicles/{id}": {
+      "get": {
+        "tags": ["Vehicles"],
+        "summary": "Get Vehicle by Id",
+        "description": "Find vehicle by id",
+        "operationId": "getVehicleById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Founded vehicle",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperVehicleResponseDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Vehicle doesn't exist",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperVehicleResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Vehicles"],
+        "summary": "Update a Vehicle by Id",
+        "description": "Update a vehicle by id",
+        "operationId": "updateVehicleById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/VehicleRequestDTO" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Vehicle updated successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperVehicleResponseDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Vehicle doesn't exist",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperVehicleResponseDTO"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Vehicle with plate already exists",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperVehicleResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Vehicles"],
+        "summary": "Delete a Vehicle by Id",
+        "description": "Delete a vehicle by id",
+        "operationId": "deleteVehicleById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "204": { "description": "Vehicle deleted successfully" },
+          "404": { "description": "Vehicle doesn't exist" }
+        }
+      }
+    },
+    "/api/v1/users/{id}": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Get User by Id",
+        "description": "Find user by id",
+        "operationId": "getUserById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Founded user",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperUserResponseDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User doesn't exist",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperUserResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Users"],
+        "summary": "Update a User by Id",
+        "description": "Updates a user account by id",
+        "operationId": "updateUserById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UserRequestDTO" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "User updated successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperUserResponseDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User doesn't exists </br> Role doesn't exist",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperUserResponseDTO"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "User email already exists",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperUserResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Users"],
+        "summary": "Delete a User by Id",
+        "description": "Deletes a user by id",
+        "operationId": "deleteUserById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "204": { "description": "User deleted successfully" },
+          "404": { "description": "User doesn't exist" }
+        }
+      }
+    },
+    "/api/v1/suppliers/{id}": {
+      "get": {
+        "tags": ["Suppliers"],
+        "summary": "Get Supplier by Id",
+        "operationId": "getSupplierById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Founded supplier",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperSupplierResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Supplier not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperSupplierResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Suppliers"],
+        "summary": "Update a Supplier",
+        "operationId": "updateSupplierById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SupplierRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Supplier updated successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperSupplierResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Supplier not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperSupplierResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Supplier already exists by company name",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperSupplierResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/supplier-payments/{id}": {
+      "get": {
+        "tags": ["Supplier Payments"],
+        "summary": "Get Supplier Payment by Id",
+        "description": "Find supplier payment by id and generate presigned preview URL for uploaded files if exist",
+        "operationId": "getSupplierPaymentById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Founded supplier payment",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperSupplierPaymentResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Supplier payment not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperSupplierPaymentResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Supplier Payments"],
+        "summary": "Update a Supplier Payment by id",
+        "operationId": "updateSupplierPaymentById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/SupplierPaymentUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated supplier payment",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperSupplierPaymentResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Field validation",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperSupplierPaymentResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Supplier payment not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperSupplierPaymentResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Supplier is inactive or Paid amount exceeds total amount",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperSupplierPaymentResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Storage error or DB error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperSupplierPaymentResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/shipments/{id}": {
+      "get": {
+        "tags": ["Shipments"],
+        "summary": "Get Shipment by Id",
+        "description": "Find Shipment by id",
+        "operationId": "getShipmentById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Founded shipment",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperShipmentResponseDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Shipment id doesn't exist",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperShipmentResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Shipments"],
+        "summary": "Update a Shipment",
+        "description": "Updates a shipment by id",
+        "operationId": "updateShipmentById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateShipmentRequestDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Shipment updated",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperShipmentResponseDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperShipmentResponseDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Shipment doesn't exists",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperShipmentResponseDTO"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict. Possible causes:\n- Shipment cannot be updated due to status \n- Driver doesn't have DRIVER role assigned (If provided) \n- Truck doesn't have TRUCK type (If provided) \n- Trailer doesn't have TRAILER type (If provided) \n",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperShipmentResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/roles/{id}": {
+      "get": {
+        "tags": ["Roles"],
+        "summary": "Get Role by Id",
+        "description": "Find role by id",
+        "operationId": "getRoleById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Founded role",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperRoleResponseDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Role doesn't exist",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperRoleResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Roles"],
+        "summary": "Update a Role by Id",
+        "description": "Update a role by id",
+        "operationId": "updateRole",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/RoleRequestDTO" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Role updated successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperRoleResponseDTO"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Role is protected and cannot been modified",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperRoleResponseDTO"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Role name already exists",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperRoleResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Roles"],
+        "summary": "Delete a Role by Id",
+        "description": "Delete a role by id",
+        "operationId": "deleteRoleById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "204": { "description": "Role deleted successfully" },
+          "404": { "description": "Role doesn't exist" },
+          "409": { "description": "Role has active users assigned" }
+        }
+      }
+    },
+    "/api/v1/quotes/{id}": {
+      "get": {
+        "tags": ["Quotes"],
+        "summary": "Get Quote by Id",
+        "description": "Find quote by id and generates presigned preview URL",
+        "operationId": "getQuoteById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Founded quote",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperQuoteResponseDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Quote doesn't exist",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperQuoteResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Quotes"],
+        "summary": "Update Quote by Id",
+        "description": "Update a quote by id",
+        "operationId": "updateQuoteById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/QuoteUpdateRequestDTO" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Updated quote",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperQuoteResponseDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User doesn't exists | Customer doesn't exists",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperQuoteResponseDTO"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Quote is not editable due to status",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperQuoteResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/customers/{id}": {
+      "get": {
+        "tags": ["Customers"],
+        "summary": "Get Customer by Id",
+        "description": "Find customer by id",
+        "operationId": "getCustomerById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Founded customer",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperCustomerResponseDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Customer doesn't exist",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperCustomerResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Customers"],
+        "summary": "Update Customer by Id",
+        "description": "Update customer by id",
+        "operationId": "updateCustomerById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCustomerRequestDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Customer updated successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperCustomerResponseDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Customer doesn't exist",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperCustomerResponseDTO"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Company name already exists",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperCustomerResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Customers"],
+        "summary": "Delete Customer by Id",
+        "description": "Delete customer by id",
+        "operationId": "deleteCustomerById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "204": { "description": "Customer deleted successfully" },
+          "404": { "description": "Customer doesn't exist" }
+        }
+      }
+    },
+    "/api/v1/company-profile": {
+      "get": {
+        "tags": ["Company Profile"],
+        "summary": "Get Company Profile",
+        "description": "Lists company profile details",
+        "operationId": "getCompanyProfile",
+        "responses": {
+          "200": {
+            "description": "Found company profile",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperCompanyProfileResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Company profile not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperCompanyProfileResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Company Profile"],
+        "summary": "Updates a Company Profile",
+        "operationId": "updateCompanyProfile",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/CompanyProfileUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated company profile",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperCompanyProfileResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation fields, file (MIME Type + file size)",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperCompanyProfileResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Company profile not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperCompanyProfileResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Storage error or DB error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperCompanyProfileResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Company Profile"],
+        "summary": "Creates a new Company Profile",
+        "description": "Creates a new company profile. Only one company can be created",
+        "operationId": "createCompanyProfile",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/CompanyProfileCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Company profile created",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperCompanyProfileResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation fields, file (MIME Type + file size)",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperCompanyProfileResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Company profile already exists",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperCompanyProfileResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Storage error or DB error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperCompanyProfileResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vehicles": {
+      "get": {
+        "tags": ["Vehicles"],
+        "summary": "Get All Vehicles",
+        "description": "Lists all the vehicles",
+        "operationId": "getAllVehicles",
+        "responses": {
+          "200": {
+            "description": "List all the vehicles",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperListVehicleResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Vehicles"],
+        "summary": "Create a Vehicle",
+        "description": "Create a new vehicle",
+        "operationId": "createVehicle",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/VehicleRequestDTO" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Vehicle created successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperVehicleResponseDTO"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Vehicle with plate already exists",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperVehicleResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Get All Users",
+        "description": "Lists all the users",
+        "operationId": "getAllUsers",
+        "responses": {
+          "200": {
+            "description": "List all the users",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperListUserResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Users"],
+        "summary": "Create a User",
+        "description": " Creates a new user without a password. \n Sends an email with a generated token, so user can activate their account\n ",
+        "operationId": "createUser",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UserRequestDTO" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "User created successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperUserResponseDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Role doesn't exist",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperUserResponseDTO"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "User email already exist",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperUserResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/suppliers": {
+      "get": {
+        "tags": ["Suppliers"],
+        "summary": "Get all Suppliers",
+        "description": "Lists all active suppliers with pagination",
+        "operationId": "getAllSuppliers",
+        "parameters": [
+          {
+            "name": "companyName",
+            "in": "query",
+            "description": "Supplier Company Name",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Supplier Company Name",
+              "example": "Revoil",
+              "title": "Supplier Company Name"
+            },
+            "example": "Revoil"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0,
+              "description": "Page number",
+              "example": 0,
+              "minimum": 0,
+              "title": "Page Number"
+            },
+            "example": 0
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Page size",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10,
+              "description": "Page size",
+              "example": 10,
+              "maximum": 50,
+              "minimum": 1,
+              "title": "Page Size"
+            },
+            "example": 10
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "description": "Field to sort by",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "id",
+              "description": "Field to sort by",
+              "example": "companyName",
+              "title": "Field to Sort By"
+            },
+            "example": "companyName"
+          },
+          {
+            "name": "sortDirection",
+            "in": "query",
+            "description": "Sort direction",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "asc",
+              "description": "Sort direction",
+              "enum": ["asc", "desc"],
+              "example": "desc",
+              "title": "Sort Direction"
+            },
+            "example": "desc"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of suppliers with pagination",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperPageSupplierListResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Suppliers"],
+        "summary": "Create a new Supplier",
+        "operationId": "createSupplier",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SupplierRequest" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Supplier created successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperSupplierResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Supplier already exists by company name",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperSupplierResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/supplier-payments": {
+      "get": {
+        "tags": ["Supplier Payments"],
+        "summary": "Get all Supplier Payments",
+        "description": "Lists all supplier payments with pagination",
+        "operationId": "getAllSupplierPayments",
+        "parameters": [
+          {
+            "name": "number",
+            "in": "query",
+            "description": "Supplier Payment Number",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Supplier Payment Number",
+              "example": "SP-2025-0004",
+              "title": "Supplier Payment Number"
+            },
+            "example": "SP-2025-0004"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0,
+              "description": "Page number",
+              "example": 0,
+              "minimum": 0,
+              "title": "Page Number"
+            },
+            "example": 0
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Page size",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10,
+              "description": "Page size",
+              "example": 10,
+              "maximum": 50,
+              "minimum": 1,
+              "title": "Page Size"
+            },
+            "example": 10
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "description": "Field to sort by",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "id",
+              "description": "Field to sort by",
+              "example": "companyName",
+              "title": "Field to Sort By"
+            },
+            "example": "companyName"
+          },
+          {
+            "name": "sortDirection",
+            "in": "query",
+            "description": "Sort direction",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "asc",
+              "description": "Sort direction",
+              "enum": ["asc", "desc"],
+              "example": "desc",
+              "title": "Sort Direction"
+            },
+            "example": "desc"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of supplier payments with pagination",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperPageSupplierPaymentResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Supplier Payments"],
+        "summary": "Create a new Supplier Payment",
+        "operationId": "createSupplierPayment",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/SupplierPaymentCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Supplier payment created successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperSupplierPaymentResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Field validation",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperSupplierPaymentResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Supplier not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperSupplierPaymentResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Supplier is inactive or Paid amount exceeds total amount",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperSupplierPaymentResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Storage error or DB error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperSupplierPaymentResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/shipments": {
+      "get": {
+        "tags": ["Shipments"],
+        "summary": "Get All Shipments",
+        "description": "Gets the shipments collection with pagination, filtering and sorting",
+        "operationId": "getAllShipments",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0,
+              "description": "Page number",
+              "example": 0,
+              "minimum": 0,
+              "title": "Page Number"
+            },
+            "example": 0
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Page size",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10,
+              "description": "Page size",
+              "example": 10,
+              "maximum": 50,
+              "minimum": 1,
+              "title": "Page Size"
+            },
+            "example": 10
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "description": "Field to sort by",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "id",
+              "description": "Field to sort by",
+              "example": "companyName",
+              "title": "Field to Sort By"
+            },
+            "example": "companyName"
+          },
+          {
+            "name": "sortDirection",
+            "in": "query",
+            "description": "Sort direction",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "asc",
+              "description": "Sort direction",
+              "enum": ["asc", "desc"],
+              "example": "desc",
+              "title": "Sort Direction"
+            },
+            "example": "desc"
+          },
+          {
+            "name": "number",
+            "in": "query",
+            "description": "Shipment number",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Shipment number",
+              "example": "TO-2025-0004",
+              "title": "Shipment Number"
+            },
+            "example": "TO-2025-0004"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["pending", "dispatched", "delivered"],
+              "example": "DISPATCHED",
+              "title": "Shipment Status"
+            },
+            "example": "DISPATCHED"
+          },
+          {
+            "name": "pickupFrom",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2025-01-15T00:00:00",
+              "title": "Pickup date from"
+            },
+            "example": "2025-01-15T00:00:00"
+          },
+          {
+            "name": "pickupTo",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2025-01-15T23:59:59",
+              "title": "Pickup date to"
+            },
+            "example": "2025-01-15T23:59:59"
+          },
+          {
+            "name": "driverId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1,
+              "title": "Driver's id"
+            },
+            "example": 1
+          },
+          {
+            "name": "customerId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1,
+              "title": "Customer's id"
+            },
+            "example": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Founded shipments",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperPageShipmentResponseDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "pickupFrom must be before pickupTo",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperPageShipmentResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Shipments"],
+        "summary": "Create a Shipment",
+        "description": "Creates a new shipment",
+        "operationId": "createShipment",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ShipmentRequestDTO" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Shipment created",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperShipmentResponseDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperShipmentResponseDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found. Possible causes: \n- Quote Id doesn't exist \n- Created by User Id` doesn't exist \n- Driver Id doesn't exist (If provided) \n- Truck Id doesn't exist (If provided) \n- Trailer Id doesn't exist (If provided) \n",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperShipmentResponseDTO"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict. Possible causes:\n- Quote has no accepted status \n- Shipment for that quote already exist \n- Driver doesn't have DRIVER role assigned (If provided) \n- Truck doesn't have TRUCK type (If provided) \n- Trailer doesn't have TRAILER type (If provided) \n",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperShipmentResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/roles": {
+      "get": {
+        "tags": ["Roles"],
+        "summary": "Get All Roles",
+        "description": "Lists all the roles",
+        "operationId": "getAllRoles",
+        "responses": {
+          "200": {
+            "description": "List all the roles",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperListRoleResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Roles"],
+        "summary": "Create a Role",
+        "description": "Create a new role",
+        "operationId": "createRole",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/RoleRequestDTO" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Role created successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperRoleResponseDTO"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Role name already exists",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperRoleResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/reconciliation/process": {
+      "post": {
+        "tags": ["Reconciliation"],
+        "summary": "Reconciliation Process",
+        "description": "Reconciliation process used to track paid invoices from an invoices file and a bank statement",
+        "operationId": "reconciliationProcess",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/ReconciliationRequestDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Reconciliation process successfully operated",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperReconciliationProcessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request. Possible Causes:\n<ul>\n    <li>Unsupported file extension</li>\n    <li>Failed to process the uploaded files</li>\n    <li>No invoices found in the uploaded file</li>\n</ul>\n",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperReconciliationProcessResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Customer doesn't exist",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperReconciliationProcessResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Possible Causes:\n<ul>\n    <li>Customer's TIN doesn't match TIN founded in the file</li>\n    <li>A report already exist with this invoice range</li>\n    <li>Invoices already exist in the system</li>\n</ul>\n",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperReconciliationProcessResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/quotes": {
+      "get": {
+        "tags": ["Quotes"],
+        "summary": "Get all Quotes",
+        "description": "Lists all quotes with pagination",
+        "operationId": "getAllQuotes",
+        "parameters": [
+          {
+            "name": "number",
+            "in": "query",
+            "description": "Quote number",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Quote number",
+              "example": "Q-2025-0004",
+              "title": "Quote Number"
+            },
+            "example": "Q-2025-0004"
+          },
+          {
+            "name": "companyName",
+            "in": "query",
+            "description": "Company name",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Company name",
+              "example": "ACME Corp",
+              "title": "Company Name"
+            },
+            "example": "ACME Corp"
+          },
+          {
+            "name": "quoteStatus",
+            "in": "query",
+            "description": "Quote status",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Quote status",
+              "enum": [
+                "draft",
+                "sent",
+                "accepted",
+                "rejected",
+                "cancelled",
+                "expired",
+                "converted"
+              ],
+              "title": "Quote Status"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0,
+              "description": "Page number",
+              "example": 0,
+              "minimum": 0,
+              "title": "Page Number"
+            },
+            "example": 0
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Page size",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10,
+              "description": "Page size",
+              "example": 10,
+              "maximum": 50,
+              "minimum": 1,
+              "title": "Page Size"
+            },
+            "example": 10
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "description": "Field to sort by",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "id",
+              "description": "Field to sort by",
+              "example": "companyName",
+              "title": "Field to Sort By"
+            },
+            "example": "companyName"
+          },
+          {
+            "name": "sortDirection",
+            "in": "query",
+            "description": "Sort direction",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "asc",
+              "description": "Sort direction",
+              "enum": ["asc", "desc"],
+              "example": "desc",
+              "title": "Sort Direction"
+            },
+            "example": "desc"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of quotes with pagination",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperPageQuoteListResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Quotes"],
+        "summary": "Create a Quote",
+        "description": "Creates a new quote with the following processes:\n- Generates unique quote number\n- Calculates total net, VAT, amount and gross price\n- Generates PDF file from an HTML template\n- Uploads PDF file to S3/Minio storage\n- Creates a presigned URL for preview\n",
+        "operationId": "createQuote",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/QuoteRequestDTO" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Customer created successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperQuoteCreatedResponseDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User doesn't exists | Customer doesn't exists",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperQuoteCreatedResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/invoices/bulk-import": {
+      "post": {
+        "tags": ["Invoices"],
+        "summary": "Bulk Invoices Import via Excel",
+        "description": "Bulk invoices upload operation",
+        "operationId": "bulkInvoicesImport",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": { "$ref": "#/components/schemas/BulkInvoiceRequestDTO" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Bulk invoices operation was successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperBulkInvoiceResponseDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request. Possible Causes:\n<ul>\n    <li>Unsupported file extension</li>\n    <li>Failed to process the uploaded file</li>\n</ul>\n",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperBulkInvoiceResponseDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Customer doesn't exist",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperBulkInvoiceResponseDTO"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Customer's TIN doesn't match TIN founded in the file",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperBulkInvoiceResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/customers": {
+      "get": {
+        "tags": ["Customers"],
+        "summary": "Get all Customers",
+        "description": "Lists all customers with pagination",
+        "operationId": "getAllCustomers",
+        "parameters": [
+          {
+            "name": "tin",
+            "in": "query",
+            "description": "Tax Identification Number (9 digits)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Tax Identification Number (9 digits)",
+              "example": 123456789,
+              "maxLength": 9,
+              "minLength": 9,
+              "title": "TIN"
+            },
+            "example": 123456789
+          },
+          {
+            "name": "companyName",
+            "in": "query",
+            "description": "Company name",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Company name",
+              "example": "ACME Corp",
+              "maxLength": 80,
+              "minLength": 0,
+              "title": "Company Name"
+            },
+            "example": "ACME Corp"
+          },
+          {
+            "name": "customerType",
+            "in": "query",
+            "description": "Customer type",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Customer type",
+              "enum": ["INDIVIDUAL", "COMPANY"],
+              "title": "Customer Type"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0,
+              "description": "Page number",
+              "example": 0,
+              "minimum": 0,
+              "title": "Page Number"
+            },
+            "example": 0
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Page size",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10,
+              "description": "Page size",
+              "example": 10,
+              "maximum": 50,
+              "minimum": 1,
+              "title": "Page Size"
+            },
+            "example": 10
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "description": "Field to sort by",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "id",
+              "description": "Field to sort by",
+              "example": "companyName",
+              "title": "Field to Sort By"
+            },
+            "example": "companyName"
+          },
+          {
+            "name": "sortDirection",
+            "in": "query",
+            "description": "Sort direction",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "asc",
+              "description": "Sort direction",
+              "enum": ["asc", "desc"],
+              "example": "desc",
+              "title": "Sort Direction"
+            },
+            "example": "desc"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of customers with pagination",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperPageCustomerResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Customers"],
+        "summary": "Create a Customer",
+        "description": "Creates a new customer",
+        "operationId": "createCustomer",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CustomerRequestDTO" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Customer created successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperCustomerResponseDTO"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "TIN already exists | Company name already exists",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperCustomerResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cmr-documents/signed-copy": {
+      "post": {
+        "tags": ["CMR Documents"],
+        "summary": "Upload Signed CMR Document",
+        "description": "Upload of the signed CMR document and marks the CMR document as signed after the validation",
+        "operationId": "uploadSignedCmrDocument",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadCmrDocumentRequestDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": { "description": "CMR signed document uploaded successfully" },
+          "400": {
+            "description": "Failed to process the PDF or Invalid QR Code"
+          },
+          "404": { "description": "CMR document not found" },
+          "409": {
+            "description": "CMR document is already signed or Missing 3 signatures or Status transition violation"
+          }
+        }
+      }
+    },
+    "/api/v1/auth/setup-password": {
+      "post": {
+        "tags": ["User Authentication"],
+        "summary": "Setup User Password",
+        "description": "Setup the user's password and activates their account",
+        "operationId": "setupPassword",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetupPasswordRequestDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Setup the user's passwords and activates their account",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperMessageResponseDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Setup token is expired",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperMessageResponseDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Setup token does not exist",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperMessageResponseDTO"
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/auth/reset-password/confirm": {
+      "post": {
+        "tags": ["User Authentication"],
+        "summary": "Reset user's password",
+        "description": "Reset user's password",
+        "operationId": "resetPassword",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPasswordRequestDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "User's password reset successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperMessageResponseDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation token is expired",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperMessageResponseDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Validation token does not exist for the user",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperMessageResponseDTO"
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/auth/request-reset": {
+      "post": {
+        "tags": ["User Authentication"],
+        "summary": "Request Reset Password",
+        "description": "Request for reset password",
+        "operationId": "requestResetPassword",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestResetPasswordRequestDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Generates a URI for the user to reset their password",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperMessageResponseDTO"
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "tags": ["User Authentication"],
+        "summary": "User Login",
+        "description": "Authenticates user and returns JWT token",
+        "operationId": "login",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AuthRequestDTO" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "User authenticated successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperJwtResponseDTO"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials | Locked Account",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperJwtResponseDTO"
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/suppliers/{id}/deactivate": {
+      "patch": {
+        "tags": ["Suppliers"],
+        "summary": "Deactivate a Supplier by id",
+        "operationId": "deactivateSupplierById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "204": { "description": "Supplier deactivated successfully" },
+          "404": { "description": "Supplier not found" }
+        }
+      }
+    },
+    "/api/v1/supplier-payments/{id}/status": {
+      "patch": {
+        "tags": ["Supplier Payments"],
+        "summary": "Update a Supplier Payment Status by id",
+        "description": "Update the current supplier payment status to the desired one",
+        "operationId": "updateSupplierPaymentStatusById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SupplierPaymentStatusUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": { "description": "Supplier payment status updated" },
+          "400": { "description": "Field validation" },
+          "404": { "description": "Supplier payment not found" },
+          "409": {
+            "description": "**Possible Causes:**\n- Supplier is inactive\n- Violation on status transition\n"
+          }
+        }
+      }
+    },
+    "/api/v1/shipments/{id}/status": {
+      "patch": {
+        "tags": ["Shipments"],
+        "summary": "Update Shipment Status",
+        "description": "Updates shipment status by id",
+        "operationId": "updateShipmentStatus",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateShipmentStatusRequestDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": { "description": "Shipment status updated" },
+          "400": { "description": "Validation Error" },
+          "404": { "description": "Shipment doesn't exists" },
+          "409": {
+            "description": "Business rules doesn't allow this status transition"
+          },
+          "204": { "description": "No Content" }
+        }
+      }
+    },
+    "/api/v1/quotes/{id}/status": {
+      "patch": {
+        "tags": ["Quotes"],
+        "summary": "Update Quote Status by Id",
+        "description": "Update a quote status by id",
+        "operationId": "updateQuoteStatus",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateQuoteStatusRequestDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": { "description": "Updated quote" },
+          "404": { "description": "Quote doesn't exist" },
+          "409": { "description": "Quote is not editable due to status" }
+        }
+      }
+    },
+    "/api/v1/cmr-documents/{id}/status": {
+      "patch": {
+        "tags": ["CMR Documents"],
+        "summary": "Updates CMR document Status",
+        "description": "Updates the status of the CMR document by ID",
+        "operationId": "updateCmrDocumentStatus",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCmrDocumentStatusRequestDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": { "description": "CMR document status updated successfully" },
+          "404": { "description": "CMR document id doesn't exist" },
+          "409": {
+            "description": "CMR document status cannot be updated due to business rules"
+          }
+        }
+      }
+    },
+    "/api/v1/shipments/{id}/cmr": {
+      "get": {
+        "tags": ["Shipments"],
+        "summary": "Get Shipment's CMR",
+        "description": "Gets all the CMR for the selected shipment",
+        "operationId": "getCmrDocumentByShipmentId",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "CMR for shipment found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperCmrDocumentSummary"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Shipment doesn't exist or Shipment doesn't have CMR Document",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperCmrDocumentSummary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/shipments/driver": {
+      "get": {
+        "tags": ["Shipments"],
+        "summary": "Get Shipments by Driver",
+        "description": "Gets all shipments assigned specifically to the authenticated driver",
+        "operationId": "getShipmentsByDriver",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0,
+              "description": "Page number",
+              "example": 0,
+              "minimum": 0,
+              "title": "Page Number"
+            },
+            "example": 0
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Page size",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10,
+              "description": "Page size",
+              "example": 10,
+              "maximum": 50,
+              "minimum": 1,
+              "title": "Page Size"
+            },
+            "example": 10
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "description": "Field to sort by",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "id",
+              "description": "Field to sort by",
+              "example": "companyName",
+              "title": "Field to Sort By"
+            },
+            "example": "companyName"
+          },
+          {
+            "name": "sortDirection",
+            "in": "query",
+            "description": "Sort direction",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "asc",
+              "description": "Sort direction",
+              "enum": ["asc", "desc"],
+              "example": "desc",
+              "title": "Sort Direction"
+            },
+            "example": "desc"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Shipments that driver has",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperPageShipmentResponseDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperPageShipmentResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/reconciliation/report/{id}": {
+      "get": {
+        "tags": ["Reconciliation"],
+        "summary": "Find the Reconciliation Report by Id",
+        "description": "Finds the reconciliation report from the given id",
+        "operationId": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operation was successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperReconciliationReportResponseDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Reconciliation report with the given id not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperReconciliationReportResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/metadata/supplier-payments-types": {
+      "get": {
+        "tags": ["Metadata"],
+        "summary": "ENUM Supplier Payments Types",
+        "description": "List of supplier payments types",
+        "operationId": "getSupplierPaymentTypes",
+        "responses": {
+          "200": {
+            "description": "List of supplier payments types",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperListString"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/metadata/supplier-payments-statuses": {
+      "get": {
+        "tags": ["Metadata"],
+        "summary": "ENUM Supplier Payments Status",
+        "description": "List of supplier payments statuses",
+        "operationId": "getSupplierPaymentStatuses",
+        "responses": {
+          "200": {
+            "description": "List of supplier payment statuses",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperListString"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/metadata/shipment-statuses": {
+      "get": {
+        "tags": ["Metadata"],
+        "summary": "ENUM Shipment Statuses",
+        "description": "List of shipment statuses",
+        "operationId": "getShipmentStatuses",
+        "responses": {
+          "200": {
+            "description": "List of shipment statuses",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperListShipmentStatusResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/metadata/shipment-cargo-units": {
+      "get": {
+        "tags": ["Metadata"],
+        "summary": "ENUM Shipment Cargo Unit",
+        "description": "List of shipment cargo units",
+        "operationId": "getShipmentCargosUnits",
+        "responses": {
+          "200": {
+            "description": "List of shipment cargo units",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperListString"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/metadata/quote-statuses": {
+      "get": {
+        "tags": ["Metadata"],
+        "summary": "ENUM Quote Status",
+        "description": "List of quote status",
+        "operationId": "getQuoteStatus",
+        "responses": {
+          "200": {
+            "description": "List of quote status",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperListString"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/metadata/quote-item-units": {
+      "get": {
+        "tags": ["Metadata"],
+        "summary": "ENUM Quote Item Units",
+        "description": "List of quote items units",
+        "operationId": "getQuoteItemUnits",
+        "responses": {
+          "200": {
+            "description": "List of quote items units",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperListString"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/metadata/customer-types": {
+      "get": {
+        "tags": ["Metadata"],
+        "summary": "ENUM Customer Types",
+        "description": "List of customer types",
+        "operationId": "getCustomerTypes",
+        "responses": {
+          "200": {
+            "description": "List of customer types",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperListString"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/customers/{id}/quotes": {
+      "get": {
+        "tags": ["Customers"],
+        "summary": "Get Quotes Per Customer",
+        "description": "Get all quotes per customer with pagination and filters",
+        "operationId": "getCustomerQuotes",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0,
+              "description": "Page number",
+              "example": 0,
+              "minimum": 0,
+              "title": "Page Number"
+            },
+            "example": 0
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Page size",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10,
+              "description": "Page size",
+              "example": 10,
+              "maximum": 50,
+              "minimum": 1,
+              "title": "Page Size"
+            },
+            "example": 10
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "description": "Field to sort by",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "id",
+              "description": "Field to sort by",
+              "example": "companyName",
+              "title": "Field to Sort By"
+            },
+            "example": "companyName"
+          },
+          {
+            "name": "sortDirection",
+            "in": "query",
+            "description": "Sort direction",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "asc",
+              "description": "Sort direction",
+              "enum": ["asc", "desc"],
+              "example": "desc",
+              "title": "Sort Direction"
+            },
+            "example": "desc"
+          },
+          {
+            "name": "number",
+            "in": "query",
+            "description": "Quote number",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Quote number",
+              "example": "Q-2025-0004",
+              "title": "Quote Number"
+            },
+            "example": "Q-2025-0004"
+          },
+          {
+            "name": "quoteStatus",
+            "in": "query",
+            "description": "Quote status",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Quote status",
+              "enum": [
+                "draft",
+                "sent",
+                "accepted",
+                "rejected",
+                "cancelled",
+                "expired",
+                "converted"
+              ],
+              "title": "Quote Status"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Founded quotes for customer",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperPageQuoteSummaryDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cmr-documents": {
+      "get": {
+        "tags": ["CMR Documents"],
+        "summary": "Get all CMR documents",
+        "description": "Get the CMR documents collection with pagination, filtering and sorting",
+        "operationId": "getAllCmrDocuments",
+        "parameters": [
+          {
+            "name": "number",
+            "in": "query",
+            "description": "CMR document number",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "CMR document number",
+              "example": "CMR-2025-0004",
+              "title": "CMR Document Number"
+            },
+            "example": "CMR-2025-0004"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "CMR status",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "CMR status",
+              "enum": ["generated", "signed", "cancelled"],
+              "title": "CMR Status"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0,
+              "description": "Page number",
+              "example": 0,
+              "minimum": 0,
+              "title": "Page Number"
+            },
+            "example": 0
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Page size",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10,
+              "description": "Page size",
+              "example": 10,
+              "maximum": 50,
+              "minimum": 1,
+              "title": "Page Size"
+            },
+            "example": 10
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "description": "Field to sort by",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "id",
+              "description": "Field to sort by",
+              "example": "companyName",
+              "title": "Field to Sort By"
+            },
+            "example": "companyName"
+          },
+          {
+            "name": "sortDirection",
+            "in": "query",
+            "description": "Sort direction",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "asc",
+              "description": "Sort direction",
+              "enum": ["asc", "desc"],
+              "example": "desc",
+              "title": "Sort Direction"
+            },
+            "example": "desc"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Founded CMR documents",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperPageCmrDocumentListResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cmr-documents/{id}": {
+      "get": {
+        "tags": ["CMR Documents"],
+        "summary": "Get CMR Document by Id",
+        "description": "Find CMR document by id",
+        "operationId": "getCmrDocumentById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Founded CMR document",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperCmrDocumentResponseDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "CMR document id doesn't exist",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperCmrDocumentResponseDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/cmr-documents/{id}/copies": {
+      "get": {
+        "tags": ["CMR Documents"],
+        "summary": "Download CMR Document Copies",
+        "description": "Downloads all CMR document copies into a merged PDF file, highlighting one copy section per page",
+        "operationId": "downloadAllCopies",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "CMR Document copies successfully returned",
+            "content": {
+              "*/*": { "schema": { "type": "string", "format": "byte" } }
+            }
+          },
+          "400": {
+            "description": "Failed to generate or merge the PDF copies",
+            "content": {
+              "*/*": { "schema": { "type": "string", "format": "byte" } }
+            }
+          },
+          "404": {
+            "description": "CMR document not found",
+            "content": {
+              "*/*": { "schema": { "type": "string", "format": "byte" } }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/reset-password": {
+      "get": {
+        "tags": ["User Authentication"],
+        "summary": "Validates Reset Password Token",
+        "description": "Validation of reset password token",
+        "operationId": "validateResetPasswordToken",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Validation token is valid",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperValidateResetPasswordTokenResponseDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation token is expired",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperValidateResetPasswordTokenResponseDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Validation token does not exist for the user",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperValidateResetPasswordTokenResponseDTO"
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/analytics/total-shipments": {
+      "get": {
+        "tags": ["Analytics"],
+        "summary": "Get Total Shipments",
+        "description": "Returns total number of shipments",
+        "operationId": "getTotalShipments",
+        "responses": {
+          "200": {
+            "description": "Count of shipments",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperValueResponseLong"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/analytics/total-pending-shipments": {
+      "get": {
+        "tags": ["Analytics"],
+        "summary": "Get Upcoming Pending Shipments Count",
+        "description": "Returns the total number of pending shipments scheduled until tomorrow",
+        "operationId": "getUpcomingPendingShipments",
+        "responses": {
+          "200": {
+            "description": "Upcoming pending shipments count",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperValueResponseInteger"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/analytics/total-outstanding-amount": {
+      "get": {
+        "tags": ["Analytics"],
+        "summary": "Get Total Outstanding Invoices Amount",
+        "description": "Returns the total remaining unpaid amount for invoices marked as OUTSTANDING or PARTIALLY_PAID",
+        "operationId": "getTotalOutstandingInvoicesAmount",
+        "responses": {
+          "200": {
+            "description": "Total outstanding invoices amount",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperValueResponseBigDecimal"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/analytics/total-customers": {
+      "get": {
+        "tags": ["Analytics"],
+        "summary": "Get Total Customers",
+        "description": "Returns total number of registered customers",
+        "operationId": "getTotalCustomers",
+        "responses": {
+          "200": {
+            "description": "Count of customers",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperValueResponseLong"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/analytics/shipments-by-status": {
+      "get": {
+        "tags": ["Analytics"],
+        "summary": "Get Shipments Grouped by Status",
+        "description": "Returns aggregated shipments statistics grouped by status",
+        "operationId": "getShipmentsByStatus",
+        "responses": {
+          "200": {
+            "description": "Found shipments grouped by status",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperListValueByStatusShipmentStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/analytics/quotes-by-status": {
+      "get": {
+        "tags": ["Analytics"],
+        "summary": "Get Quotes Grouped by Status",
+        "description": "Returns aggregated quotes statistics grouped by status",
+        "operationId": "getQuotesByStatus",
+        "responses": {
+          "200": {
+            "description": "Found quotes grouped by status",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperListValueByStatusQuoteStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/analytics/invoices-by-status": {
+      "get": {
+        "tags": ["Analytics"],
+        "summary": "Get Invoices Grouped by Status",
+        "description": "Returns aggregated invoices statistics grouped by status",
+        "operationId": "getInvoicesByStatus",
+        "responses": {
+          "200": {
+            "description": "Found invoices grouped by status",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseWrapperListValueByStatusInvoiceStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "VehicleRequestDTO": {
+        "type": "object",
+        "properties": {
+          "brand": { "type": "string" },
+          "plate": { "type": "string", "maxLength": 8, "minLength": 8 },
+          "type": { "type": "string", "enum": ["truck", "trailer"] }
+        },
+        "required": ["brand", "plate", "type"]
+      },
+      "ApiResponseWrapperVehicleResponseDTO": {
+        "type": "object",
+        "properties": {
+          "transactionId": { "type": "string" },
+          "data": { "$ref": "#/components/schemas/VehicleResponseDTO" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "error": { "$ref": "#/components/schemas/ErrorResponse" }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "status": { "type": "integer", "format": "int32" },
+          "message": { "type": "string" },
+          "errorCode": { "type": "string" },
+          "details": {}
+        }
+      },
+      "VehicleResponseDTO": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" },
+          "brand": { "type": "string" },
+          "plate": { "type": "string" },
+          "type": { "type": "string", "enum": ["truck", "trailer"] },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "UserRequestDTO": {
+        "type": "object",
+        "properties": {
+          "firstName": { "type": "string", "maxLength": 50, "minLength": 0 },
+          "lastName": { "type": "string", "maxLength": 50, "minLength": 0 },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "maxLength": 320,
+            "minLength": 0
+          },
+          "phone": { "type": "string", "maxLength": 30, "minLength": 0 },
+          "roleId": { "type": "integer", "format": "int64" }
+        },
+        "required": ["email", "firstName", "lastName", "roleId"]
+      },
+      "ApiResponseWrapperUserResponseDTO": {
+        "type": "object",
+        "properties": {
+          "transactionId": { "type": "string" },
+          "data": { "$ref": "#/components/schemas/UserResponseDTO" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "error": { "$ref": "#/components/schemas/ErrorResponse" }
+        }
+      },
+      "UserResponseDTO": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" },
+          "firstName": { "type": "string" },
+          "lastName": { "type": "string" },
+          "email": { "type": "string" },
+          "phone": { "type": "string" },
+          "roleId": { "type": "integer", "format": "int64" },
+          "roleName": { "type": "string" },
+          "status": {
+            "type": "string",
+            "enum": ["INVITED", "ACTIVE", "SUSPENDED"]
+          },
+          "enabled": { "type": "boolean" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "SupplierRequest": {
+        "type": "object",
+        "properties": {
+          "companyName": { "type": "string", "maxLength": 100, "minLength": 0 },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "maxLength": 320,
+            "minLength": 0
+          }
+        },
+        "required": ["companyName"]
+      },
+      "ApiResponseWrapperSupplierResponse": {
+        "type": "object",
+        "properties": {
+          "transactionId": { "type": "string" },
+          "data": { "$ref": "#/components/schemas/SupplierResponse" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "error": { "$ref": "#/components/schemas/ErrorResponse" }
+        }
+      },
+      "SupplierResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" },
+          "companyName": { "type": "string" },
+          "email": { "type": "string" },
+          "isActive": { "type": "boolean" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "SupplierPaymentUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string", "maxLength": 50, "minLength": 0 },
+          "description": {
+            "type": "string",
+            "maxLength": 1000,
+            "minLength": 0
+          },
+          "totalAmount": { "type": "number", "minimum": 0.0 },
+          "paidAmount": { "type": "number", "minimum": 0.0 },
+          "type": {
+            "type": "string",
+            "enum": ["fuel", "insurance", "service", "other"]
+          },
+          "invoiceFile": { "type": "string", "format": "binary" },
+          "receiptFile": { "type": "string", "format": "binary" }
+        },
+        "required": ["title", "totalAmount", "type"]
+      },
+      "ApiResponseWrapperSupplierPaymentResponse": {
+        "type": "object",
+        "properties": {
+          "transactionId": { "type": "string" },
+          "data": { "$ref": "#/components/schemas/SupplierPaymentResponse" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "error": { "$ref": "#/components/schemas/ErrorResponse" }
+        }
+      },
+      "SupplierPaymentResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" },
+          "number": { "type": "string" },
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "totalAmount": { "type": "number" },
+          "paidAmount": { "type": "number" },
+          "unpaidAmount": { "type": "number" },
+          "status": {
+            "type": "string",
+            "enum": ["pending", "paid", "partially_paid", "canceled"]
+          },
+          "type": {
+            "type": "string",
+            "enum": ["fuel", "insurance", "service", "other"]
+          },
+          "invoiceUrl": { "type": "string" },
+          "receiptUrl": { "type": "string" },
+          "supplier": {
+            "$ref": "#/components/schemas/SupplierSummaryResponse"
+          },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "SupplierSummaryResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" },
+          "companyName": { "type": "string" }
+        }
+      },
+      "ShipmentCargoRequestDTO": {
+        "type": "object",
+        "properties": {
+          "description": { "type": "string", "minLength": 1 },
+          "unit": {
+            "type": "string",
+            "enum": ["pallet", "box", "piece", "roll", "bag"]
+          },
+          "quantity": { "type": "integer", "format": "int32", "minimum": 1 },
+          "weightKg": { "type": "number" },
+          "volumeM3": { "type": "number" }
+        },
+        "required": ["description", "quantity", "unit", "weightKg"]
+      },
+      "UpdateShipmentRequestDTO": {
+        "type": "object",
+        "properties": {
+          "driverId": { "type": "integer", "format": "int64" },
+          "truckId": { "type": "integer", "format": "int64" },
+          "trailerId": { "type": "integer", "format": "int64" },
+          "pickup": { "type": "string", "format": "date-time" },
+          "notes": { "type": "string" },
+          "cargoItems": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ShipmentCargoRequestDTO" }
+          }
+        },
+        "required": ["pickup"]
+      },
+      "ApiResponseWrapperShipmentResponseDTO": {
+        "type": "object",
+        "properties": {
+          "transactionId": { "type": "string" },
+          "data": { "$ref": "#/components/schemas/ShipmentResponseDTO" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "error": { "$ref": "#/components/schemas/ErrorResponse" }
+        }
+      },
+      "QuoteSummaryDTO": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" },
+          "number": { "type": "string" }
+        }
+      },
+      "ShipmentCargoResponseDTO": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" },
+          "description": { "type": "string" },
+          "unit": {
+            "type": "string",
+            "enum": ["pallet", "box", "piece", "roll", "bag"]
+          },
+          "quantity": { "type": "integer", "format": "int32" },
+          "weightKg": { "type": "number" },
+          "volumeM3": { "type": "number" }
+        }
+      },
+      "ShipmentResponseDTO": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" },
+          "status": { "$ref": "#/components/schemas/ShipmentStatusSummaryDTO" },
+          "number": { "type": "string" },
+          "pickup": { "type": "string", "format": "date-time" },
+          "notes": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" },
+          "quote": { "$ref": "#/components/schemas/QuoteSummaryDTO" },
+          "driver": { "$ref": "#/components/schemas/UserSummaryDTO" },
+          "createdByUser": { "$ref": "#/components/schemas/UserSummaryDTO" },
+          "truck": { "$ref": "#/components/schemas/VehicleSummaryDTO" },
+          "trailer": { "$ref": "#/components/schemas/VehicleSummaryDTO" },
+          "cargoItems": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ShipmentCargoResponseDTO" }
+          }
+        }
+      },
+      "ShipmentStatusSummaryDTO": {
+        "type": "object",
+        "properties": {
+          "label": { "type": "string" },
+          "isEditable": { "type": "boolean" },
+          "isFinalized": { "type": "boolean" }
+        }
+      },
+      "UserSummaryDTO": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" },
+          "fullName": { "type": "string" }
+        }
+      },
+      "VehicleSummaryDTO": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" },
+          "plate": { "type": "string" },
+          "type": { "type": "string", "enum": ["truck", "trailer"] }
+        }
+      },
+      "RoleRequestDTO": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "maxLength": 30, "minLength": 0 },
+          "description": { "type": "string", "maxLength": 255, "minLength": 0 }
+        },
+        "required": ["name"]
+      },
+      "ApiResponseWrapperRoleResponseDTO": {
+        "type": "object",
+        "properties": {
+          "transactionId": { "type": "string" },
+          "data": { "$ref": "#/components/schemas/RoleResponseDTO" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "error": { "$ref": "#/components/schemas/ErrorResponse" }
+        }
+      },
+      "RoleResponseDTO": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" },
+          "editable": { "type": "boolean" }
+        }
+      },
+      "QuoteItemRequestDTO": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "description": { "type": "string" },
+          "quantity": { "type": "integer", "format": "int32" },
+          "unit": { "type": "string", "enum": ["hour", "piece", "pallet"] },
+          "price": { "type": "number", "minimum": 0.0 }
+        },
+        "required": ["name", "price", "quantity", "unit"]
+      },
+      "QuoteUpdateRequestDTO": {
+        "type": "object",
+        "properties": {
+          "validityDays": { "type": "integer", "format": "int32" },
+          "origin": { "type": "string", "minLength": 1 },
+          "destination": { "type": "string", "minLength": 1 },
+          "notes": { "type": "string" },
+          "specialTerms": { "type": "string" },
+          "customerId": { "type": "integer", "format": "int64" },
+          "quoteItems": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/QuoteItemRequestDTO" },
+            "minItems": 1
+          }
+        },
+        "required": [
+          "customerId",
+          "destination",
+          "origin",
+          "quoteItems",
+          "validityDays"
+        ]
+      },
+      "ApiResponseWrapperQuoteResponseDTO": {
+        "type": "object",
+        "properties": {
+          "transactionId": { "type": "string" },
+          "data": { "$ref": "#/components/schemas/QuoteResponseDTO" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "error": { "$ref": "#/components/schemas/ErrorResponse" }
+        }
+      },
+      "CustomerSummaryDTO": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" },
+          "companyName": { "type": "string" }
+        }
+      },
+      "QuoteItemResponseDTO": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "quantity": { "type": "integer", "format": "int32" },
+          "unit": { "type": "string", "enum": ["hour", "piece", "pallet"] },
+          "price": { "type": "number" }
+        }
+      },
+      "QuoteResponseDTO": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" },
+          "number": { "type": "string" },
+          "pdfUrl": { "type": "string" },
+          "issueDate": { "type": "string", "format": "date" },
+          "validityDays": { "type": "integer", "format": "int32" },
+          "expirationDate": { "type": "string", "format": "date" },
+          "origin": { "type": "string" },
+          "destination": { "type": "string" },
+          "taxRatePercentage": { "type": "integer", "format": "int32" },
+          "netPrice": { "type": "number" },
+          "vatAmount": { "type": "number" },
+          "grossPrice": { "type": "number" },
+          "notes": { "type": "string" },
+          "specialTerms": { "type": "string" },
+          "quoteStatus": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "sent",
+              "accepted",
+              "rejected",
+              "cancelled",
+              "expired",
+              "converted"
+            ]
+          },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" },
+          "userId": { "type": "integer", "format": "int64" },
+          "customer": { "$ref": "#/components/schemas/CustomerSummaryDTO" },
+          "quoteItems": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/QuoteItemResponseDTO" }
+          }
+        }
+      },
+      "UpdateCustomerRequestDTO": {
+        "type": "object",
+        "properties": {
+          "companyName": { "type": "string", "maxLength": 80, "minLength": 0 },
+          "firstName": { "type": "string", "maxLength": 80, "minLength": 0 },
+          "lastName": { "type": "string", "maxLength": 80, "minLength": 0 },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "maxLength": 320,
+            "minLength": 0
+          },
+          "customerType": {
+            "type": "string",
+            "enum": ["INDIVIDUAL", "COMPANY"]
+          },
+          "location": { "type": "string", "maxLength": 255, "minLength": 0 },
+          "phone": { "type": "string", "maxLength": 30, "minLength": 0 }
+        },
+        "required": ["companyName", "customerType", "firstName", "lastName"]
+      },
+      "ApiResponseWrapperCustomerResponseDTO": {
+        "type": "object",
+        "properties": {
+          "transactionId": { "type": "string" },
+          "data": { "$ref": "#/components/schemas/CustomerResponseDTO" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "error": { "$ref": "#/components/schemas/ErrorResponse" }
+        }
+      },
+      "CustomerResponseDTO": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" },
+          "tin": { "type": "string" },
+          "companyName": { "type": "string" },
+          "firstName": { "type": "string" },
+          "lastName": { "type": "string" },
+          "email": { "type": "string" },
+          "customerType": {
+            "type": "string",
+            "enum": ["INDIVIDUAL", "COMPANY"]
+          },
+          "location": { "type": "string" },
+          "phone": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "CompanyProfileUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "maxLength": 100, "minLength": 0 },
+          "vatPercentage": { "type": "integer", "format": "int32" },
+          "representativeTitle": {
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 0
+          },
+          "representative": {
+            "type": "string",
+            "maxLength": 150,
+            "minLength": 0
+          },
+          "street": { "type": "string", "maxLength": 120, "minLength": 0 },
+          "streetNumber": { "type": "string", "maxLength": 10, "minLength": 0 },
+          "postalCode": { "type": "string", "maxLength": 10, "minLength": 0 },
+          "region": { "type": "string", "maxLength": 100, "minLength": 0 },
+          "country": { "type": "string", "maxLength": 100, "minLength": 0 },
+          "brandPrimaryColor": {
+            "type": "string",
+            "maxLength": 7,
+            "minLength": 7,
+            "pattern": "^#[0-9A-Fa-f]{6}$"
+          },
+          "brandSecondaryColor": {
+            "type": "string",
+            "maxLength": 7,
+            "minLength": 7,
+            "pattern": "^#[0-9A-Fa-f]{6}$"
+          },
+          "logoFile": { "type": "string", "format": "binary" },
+          "websiteUrl": { "type": "string", "maxLength": 500, "minLength": 0 },
+          "slogan": { "type": "string", "maxLength": 100, "minLength": 0 },
+          "phones": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^[0-9+\\-\\s]{8,15}$"
+            },
+            "minItems": 1
+          },
+          "email": { "type": "string", "format": "email", "minLength": 1 }
+        },
+        "required": [
+          "country",
+          "email",
+          "name",
+          "phones",
+          "postalCode",
+          "region",
+          "representative",
+          "representativeTitle",
+          "street",
+          "streetNumber",
+          "vatPercentage"
+        ]
+      },
+      "ApiResponseWrapperCompanyProfileResponse": {
+        "type": "object",
+        "properties": {
+          "transactionId": { "type": "string" },
+          "data": { "$ref": "#/components/schemas/CompanyProfileResponse" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "error": { "$ref": "#/components/schemas/ErrorResponse" }
+        }
+      },
+      "CompanyProfileAddressSummary": {
+        "type": "object",
+        "properties": {
+          "street": { "type": "string" },
+          "streetNumber": { "type": "string" },
+          "postalCode": { "type": "string" },
+          "region": { "type": "string" },
+          "country": { "type": "string" }
+        }
+      },
+      "CompanyProfileBrandingSummary": {
+        "type": "object",
+        "properties": {
+          "primaryColor": { "type": "string" },
+          "secondaryColor": { "type": "string" }
+        }
+      },
+      "CompanyProfileResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" },
+          "name": { "type": "string" },
+          "tin": { "type": "string" },
+          "slogan": { "type": "string" },
+          "logoUrl": { "type": "string" },
+          "vatPercentage": { "type": "integer", "format": "int32" },
+          "representativeTitle": { "type": "string" },
+          "representative": { "type": "string" },
+          "email": { "type": "string" },
+          "phones": { "type": "array", "items": { "type": "string" } },
+          "websiteUrl": { "type": "string" },
+          "address": {
+            "$ref": "#/components/schemas/CompanyProfileAddressSummary"
+          },
+          "branding": {
+            "$ref": "#/components/schemas/CompanyProfileBrandingSummary"
+          },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "SupplierPaymentCreateRequest": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string", "maxLength": 50, "minLength": 0 },
+          "description": {
+            "type": "string",
+            "maxLength": 1000,
+            "minLength": 0
+          },
+          "totalAmount": { "type": "number", "minimum": 0.0 },
+          "paidAmount": { "type": "number", "minimum": 0.0 },
+          "type": {
+            "type": "string",
+            "enum": ["fuel", "insurance", "service", "other"]
+          },
+          "invoiceFile": { "type": "string", "format": "binary" },
+          "receiptFile": { "type": "string", "format": "binary" },
+          "supplierId": { "type": "integer", "format": "int64" }
+        },
+        "required": ["supplierId", "title", "totalAmount", "type"]
+      },
+      "ShipmentRequestDTO": {
+        "type": "object",
+        "properties": {
+          "quoteId": { "type": "integer", "format": "int64" },
+          "driverId": { "type": "integer", "format": "int64" },
+          "createdByUserId": { "type": "integer", "format": "int64" },
+          "truckId": { "type": "integer", "format": "int64" },
+          "trailerId": { "type": "integer", "format": "int64" },
+          "pickup": { "type": "string", "format": "date-time" },
+          "notes": { "type": "string" },
+          "cargoItems": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ShipmentCargoRequestDTO" }
+          }
+        },
+        "required": ["createdByUserId", "pickup", "quoteId"]
+      },
+      "ReconciliationRequestDTO": {
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Customer's ID"
+          },
+          "invoiceFile": {
+            "type": "string",
+            "format": "binary",
+            "description": "Invoices Excel file"
+          },
+          "bankStatementFile": {
+            "type": "string",
+            "format": "binary",
+            "description": "Bank statement Excel file"
+          }
+        },
+        "required": ["bankStatementFile", "customerId", "invoiceFile"]
+      },
+      "ApiResponseWrapperReconciliationProcessResponse": {
+        "type": "object",
+        "properties": {
+          "transactionId": { "type": "string" },
+          "data": {
+            "$ref": "#/components/schemas/ReconciliationProcessResponse"
+          },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "error": { "$ref": "#/components/schemas/ErrorResponse" }
+        }
+      },
+      "ReconciliationProcessResponse": {
+        "type": "object",
+        "properties": {
+          "totalInvoices": { "type": "integer", "format": "int32" },
+          "matchedInvoices": { "type": "integer", "format": "int32" },
+          "unmatchedInvoices": { "type": "integer", "format": "int32" },
+          "matchedTransactions": { "type": "integer", "format": "int32" },
+          "unmatchedTransaction": { "type": "integer", "format": "int32" },
+          "paidInvoices": { "type": "integer", "format": "int32" },
+          "partiallyPaidInvoice": { "type": "integer", "format": "int32" },
+          "outstandingInvoices": { "type": "integer", "format": "int32" },
+          "disputedInvoices": { "type": "integer", "format": "int32" },
+          "reportSummary": {
+            "$ref": "#/components/schemas/ReconciliationReportCreateResponseDTO"
+          }
+        }
+      },
+      "ReconciliationReportCreateResponseDTO": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" },
+          "name": { "type": "string" },
+          "fileUrl": { "type": "string" },
+          "fromDate": { "type": "string", "format": "date" },
+          "toDate": { "type": "string", "format": "date" },
+          "customerId": { "type": "integer", "format": "int64" },
+          "createdAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "QuoteRequestDTO": {
+        "type": "object",
+        "properties": {
+          "validityDays": { "type": "integer", "format": "int32" },
+          "origin": { "type": "string", "minLength": 1 },
+          "destination": { "type": "string", "minLength": 1 },
+          "notes": { "type": "string" },
+          "specialTerms": { "type": "string" },
+          "userId": { "type": "integer", "format": "int64" },
+          "customerId": { "type": "integer", "format": "int64" },
+          "quoteItems": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/QuoteItemRequestDTO" },
+            "minItems": 1
+          }
+        },
+        "required": [
+          "customerId",
+          "destination",
+          "origin",
+          "quoteItems",
+          "userId",
+          "validityDays"
+        ]
+      },
+      "ApiResponseWrapperQuoteCreatedResponseDTO": {
+        "type": "object",
+        "properties": {
+          "transactionId": { "type": "string" },
+          "data": { "$ref": "#/components/schemas/QuoteCreatedResponseDTO" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "error": { "$ref": "#/components/schemas/ErrorResponse" }
+        }
+      },
+      "QuoteCreatedResponseDTO": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" },
+          "number": { "type": "string" },
+          "issueDate": { "type": "string", "format": "date" },
+          "expirationDate": { "type": "string", "format": "date" },
+          "grossPrice": { "type": "number" },
+          "quoteStatus": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "sent",
+              "accepted",
+              "rejected",
+              "cancelled",
+              "expired",
+              "converted"
+            ]
+          },
+          "pdfUrl": { "type": "string" },
+          "customerId": { "type": "integer", "format": "int64" },
+          "customerFullName": { "type": "string" }
+        }
+      },
+      "BulkInvoiceRequestDTO": {
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Customer's ID"
+          },
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "description": "Invoices Excel file"
+          }
+        },
+        "required": ["customerId", "file"]
+      },
+      "ApiResponseWrapperBulkInvoiceResponseDTO": {
+        "type": "object",
+        "properties": {
+          "transactionId": { "type": "string" },
+          "data": { "$ref": "#/components/schemas/BulkInvoiceResponseDTO" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "error": { "$ref": "#/components/schemas/ErrorResponse" }
+        }
+      },
+      "BulkInvoiceResponseDTO": {
+        "type": "object",
+        "properties": {
+          "totalRows": { "type": "integer", "format": "int32" },
+          "imported": { "type": "integer", "format": "int32" },
+          "skipped": { "type": "integer", "format": "int32" }
+        }
+      },
+      "CustomerRequestDTO": {
+        "type": "object",
+        "properties": {
+          "tin": { "type": "string", "maxLength": 9, "minLength": 9 },
+          "companyName": { "type": "string", "maxLength": 80, "minLength": 0 },
+          "firstName": { "type": "string", "maxLength": 80, "minLength": 0 },
+          "lastName": { "type": "string", "maxLength": 80, "minLength": 0 },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "maxLength": 320,
+            "minLength": 0
+          },
+          "customerType": {
+            "type": "string",
+            "enum": ["INDIVIDUAL", "COMPANY"]
+          },
+          "location": { "type": "string", "maxLength": 255, "minLength": 0 },
+          "phone": { "type": "string", "maxLength": 30, "minLength": 0 }
+        },
+        "required": [
+          "companyName",
+          "customerType",
+          "firstName",
+          "lastName",
+          "tin"
+        ]
+      },
+      "CompanyProfileCreateRequest": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "maxLength": 100, "minLength": 0 },
+          "tin": { "type": "string", "maxLength": 9, "minLength": 9 },
+          "vatPercentage": { "type": "integer", "format": "int32" },
+          "representativeTitle": {
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 0
+          },
+          "representative": {
+            "type": "string",
+            "maxLength": 150,
+            "minLength": 0
+          },
+          "street": { "type": "string", "maxLength": 120, "minLength": 0 },
+          "streetNumber": { "type": "string", "maxLength": 10, "minLength": 0 },
+          "postalCode": { "type": "string", "maxLength": 10, "minLength": 0 },
+          "region": { "type": "string", "maxLength": 100, "minLength": 0 },
+          "country": { "type": "string", "maxLength": 100, "minLength": 0 },
+          "brandPrimaryColor": {
+            "type": "string",
+            "maxLength": 7,
+            "minLength": 7,
+            "pattern": "^#[0-9A-Fa-f]{6}$"
+          },
+          "brandSecondaryColor": {
+            "type": "string",
+            "maxLength": 7,
+            "minLength": 7,
+            "pattern": "^#[0-9A-Fa-f]{6}$"
+          },
+          "logoFile": { "type": "string", "format": "binary" },
+          "websiteUrl": { "type": "string", "maxLength": 500, "minLength": 0 },
+          "slogan": { "type": "string", "maxLength": 100, "minLength": 0 },
+          "phones": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^[0-9+\\-\\s]{8,15}$"
+            },
+            "minItems": 1
+          },
+          "email": { "type": "string", "format": "email", "minLength": 1 }
+        },
+        "required": [
+          "country",
+          "email",
+          "name",
+          "phones",
+          "postalCode",
+          "region",
+          "representative",
+          "representativeTitle",
+          "street",
+          "streetNumber",
+          "tin",
+          "vatPercentage"
+        ]
+      },
+      "UploadCmrDocumentRequestDTO": {
+        "type": "object",
+        "properties": {
+          "Indicates that the sender has signed": { "type": "boolean" },
+          "Indicates that the carrier has signed": { "type": "boolean" },
+          "Indicates that the consignee has signed": { "type": "boolean" },
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "description": "Signed CMR PDF file"
+          }
+        },
+        "required": [
+          "Indicates that the carrier has signed",
+          "Indicates that the consignee has signed",
+          "Indicates that the sender has signed",
+          "file"
+        ]
+      },
+      "SetupPasswordRequestDTO": {
+        "type": "object",
+        "properties": {
+          "token": { "type": "string", "minLength": 1 },
+          "password": { "type": "string", "minLength": 1 }
+        },
+        "required": ["password", "token"]
+      },
+      "ApiResponseWrapperMessageResponseDTO": {
+        "type": "object",
+        "properties": {
+          "transactionId": { "type": "string" },
+          "data": { "$ref": "#/components/schemas/MessageResponseDTO" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "error": { "$ref": "#/components/schemas/ErrorResponse" }
+        }
+      },
+      "MessageResponseDTO": {
+        "type": "object",
+        "properties": { "message": { "type": "string" } }
+      },
+      "ResetPasswordRequestDTO": {
+        "type": "object",
+        "properties": {
+          "token": { "type": "string", "minLength": 1 },
+          "newPassword": { "type": "string", "minLength": 1 }
+        },
+        "required": ["newPassword", "token"]
+      },
+      "RequestResetPasswordRequestDTO": {
+        "type": "object",
+        "properties": {
+          "email": { "type": "string", "format": "email", "minLength": 1 }
+        },
+        "required": ["email"]
+      },
+      "AuthRequestDTO": {
+        "type": "object",
+        "properties": {
+          "email": { "type": "string", "format": "email", "minLength": 1 },
+          "password": { "type": "string", "minLength": 1 }
+        },
+        "required": ["email", "password"]
+      },
+      "ApiResponseWrapperJwtResponseDTO": {
+        "type": "object",
+        "properties": {
+          "transactionId": { "type": "string" },
+          "data": { "$ref": "#/components/schemas/JwtResponseDTO" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "error": { "$ref": "#/components/schemas/ErrorResponse" }
+        }
+      },
+      "JwtResponseDTO": {
+        "type": "object",
+        "properties": {
+          "tokenType": { "type": "string" },
+          "token": { "type": "string" },
+          "user": { "$ref": "#/components/schemas/UserDetailsDTO" }
+        }
+      },
+      "UserDetailsDTO": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" },
+          "email": { "type": "string" },
+          "firstName": { "type": "string" },
+          "lastName": { "type": "string" },
+          "role": { "type": "string" }
+        }
+      },
+      "SupplierPaymentStatusUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Supplier Payment Status",
+            "enum": ["pending", "paid", "partially_paid", "canceled"],
+            "example": "paid",
+            "title": "Supplier Payment Status"
+          }
+        },
+        "required": ["status"]
+      },
+      "UpdateShipmentStatusRequestDTO": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["pending", "dispatched", "delivered"]
+          }
+        },
+        "required": ["status"]
+      },
+      "UpdateQuoteStatusRequestDTO": {
+        "type": "object",
+        "properties": {
+          "quoteStatus": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "sent",
+              "accepted",
+              "rejected",
+              "cancelled",
+              "expired",
+              "converted"
+            ]
+          }
+        },
+        "required": ["quoteStatus"]
+      },
+      "UpdateCmrDocumentStatusRequestDTO": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "CMR Status",
+            "enum": ["generated", "signed", "cancelled"],
+            "example": "SIGNED"
+          }
+        },
+        "required": ["status"]
+      },
+      "ApiResponseWrapperListVehicleResponseDTO": {
+        "type": "object",
+        "properties": {
+          "transactionId": { "type": "string" },
+          "data": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/VehicleResponseDTO" }
+          },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "error": { "$ref": "#/components/schemas/ErrorResponse" }
+        }
+      },
+      "ApiResponseWrapperListUserResponseDTO": {
+        "type": "object",
+        "properties": {
+          "transactionId": { "type": "string" },
+          "data": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/UserResponseDTO" }
+          },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "error": { "$ref": "#/components/schemas/ErrorResponse" }
+        }
+      },
+      "ApiResponseWrapperPageSupplierListResponse": {
+        "type": "object",
+        "properties": {
+          "transactionId": { "type": "string" },
+          "data": { "$ref": "#/components/schemas/PageObject" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "error": { "$ref": "#/components/schemas/ErrorResponse" }
+        }
+      },
+      "PageObject": {
+        "type": "object",
+        "properties": {
+          "totalElements": { "type": "integer", "format": "int64" },
+          "totalPages": { "type": "integer", "format": "int32" },
+          "size": { "type": "integer", "format": "int32" },
+          "content": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/SupplierListResponse" }
+          },
+          "number": { "type": "integer", "format": "int32" },
+          "sort": { "$ref": "#/components/schemas/SortObject" },
+          "first": { "type": "boolean" },
+          "last": { "type": "boolean" },
+          "numberOfElements": { "type": "integer", "format": "int32" },
+          "pageable": { "$ref": "#/components/schemas/PageableObject" },
+          "empty": { "type": "boolean" }
+        }
+      },
+      "PageableObject": {
+        "type": "object",
+        "properties": {
+          "offset": { "type": "integer", "format": "int64" },
+          "sort": { "$ref": "#/components/schemas/SortObject" },
+          "paged": { "type": "boolean" },
+          "unpaged": { "type": "boolean" },
+          "pageNumber": { "type": "integer", "format": "int32" },
+          "pageSize": { "type": "integer", "format": "int32" }
+        }
+      },
+      "SortObject": {
+        "type": "object",
+        "properties": {
+          "empty": { "type": "boolean" },
+          "sorted": { "type": "boolean" },
+          "unsorted": { "type": "boolean" }
+        }
+      },
+      "SupplierListResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" },
+          "companyName": { "type": "string" },
+          "email": { "type": "string" },
+          "isActive": { "type": "boolean" },
+          "totalAmount": { "type": "number" },
+          "remainingAmount": { "type": "number" }
+        }
+      },
+      "ApiResponseWrapperPageSupplierPaymentResponse": {
+        "type": "object",
+        "properties": {
+          "transactionId": { "type": "string" },
+          "data": { "$ref": "#/components/schemas/PageObject" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "error": { "$ref": "#/components/schemas/ErrorResponse" }
+        }
+      },
+      "ApiResponseWrapperPageShipmentResponseDTO": {
+        "type": "object",
+        "properties": {
+          "transactionId": { "type": "string" },
+          "data": { "$ref": "#/components/schemas/PageObject" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "error": { "$ref": "#/components/schemas/ErrorResponse" }
+        }
+      },
+      "ApiResponseWrapperCmrDocumentSummary": {
+        "type": "object",
+        "properties": {
+          "transactionId": { "type": "string" },
+          "data": { "$ref": "#/components/schemas/CmrDocumentSummary" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "error": { "$ref": "#/components/schemas/ErrorResponse" }
+        }
+      },
+      "CmrDocumentSummary": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" },
+          "number": { "type": "string" },
+          "status": {
+            "type": "string",
+            "enum": ["generated", "signed", "cancelled"]
+          },
+          "fileUrl": { "type": "string" },
+          "senderSigned": { "type": "boolean" },
+          "carrierSigned": { "type": "boolean" },
+          "consigneeSigned": { "type": "boolean" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "ApiResponseWrapperListRoleResponseDTO": {
+        "type": "object",
+        "properties": {
+          "transactionId": { "type": "string" },
+          "data": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/RoleResponseDTO" }
+          },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "error": { "$ref": "#/components/schemas/ErrorResponse" }
+        }
+      },
+      "ApiResponseWrapperReconciliationReportResponseDTO": {
+        "type": "object",
+        "properties": {
+          "transactionId": { "type": "string" },
+          "data": {
+            "$ref": "#/components/schemas/ReconciliationReportResponseDTO"
+          },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "error": { "$ref": "#/components/schemas/ErrorResponse" }
+        }
+      },
+      "ReconciliationReportResponseDTO": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" },
+          "name": { "type": "string" },
+          "fileUrl": { "type": "string" },
+          "fromDate": { "type": "string", "format": "date" },
+          "toDate": { "type": "string", "format": "date" },
+          "matchedInvoices": { "type": "integer", "format": "int32" },
+          "unmatchedInvoices": { "type": "integer", "format": "int32" },
+          "customerId": { "type": "integer", "format": "int64" },
+          "createdAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "ApiResponseWrapperPageQuoteListResponseDTO": {
+        "type": "object",
+        "properties": {
+          "transactionId": { "type": "string" },
+          "data": { "$ref": "#/components/schemas/PageObject" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "error": { "$ref": "#/components/schemas/ErrorResponse" }
+        }
+      },
+      "ApiResponseWrapperListString": {
+        "type": "object",
+        "properties": {
+          "transactionId": { "type": "string" },
+          "data": { "type": "array", "items": { "type": "string" } },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "error": { "$ref": "#/components/schemas/ErrorResponse" }
+        }
+      },
+      "ApiResponseWrapperListShipmentStatusResponse": {
+        "type": "object",
+        "properties": {
+          "transactionId": { "type": "string" },
+          "data": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ShipmentStatusResponse" }
+          },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "error": { "$ref": "#/components/schemas/ErrorResponse" }
+        }
+      },
+      "ShipmentStatusResponse": {
+        "type": "object",
+        "properties": {
+          "label": { "type": "string" },
+          "isEditable": { "type": "boolean" },
+          "isFinalized": { "type": "boolean" }
+        }
+      },
+      "ApiResponseWrapperPageCustomerResponseDTO": {
+        "type": "object",
+        "properties": {
+          "transactionId": { "type": "string" },
+          "data": { "$ref": "#/components/schemas/PageObject" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "error": { "$ref": "#/components/schemas/ErrorResponse" }
+        }
+      },
+      "ApiResponseWrapperPageQuoteSummaryDTO": {
+        "type": "object",
+        "properties": {
+          "transactionId": { "type": "string" },
+          "data": { "$ref": "#/components/schemas/PageObject" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "error": { "$ref": "#/components/schemas/ErrorResponse" }
+        }
+      },
+      "ApiResponseWrapperPageCmrDocumentListResponseDTO": {
+        "type": "object",
+        "properties": {
+          "transactionId": { "type": "string" },
+          "data": { "$ref": "#/components/schemas/PageObject" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "error": { "$ref": "#/components/schemas/ErrorResponse" }
+        }
+      },
+      "ApiResponseWrapperCmrDocumentResponseDTO": {
+        "type": "object",
+        "properties": {
+          "transactionId": { "type": "string" },
+          "data": { "$ref": "#/components/schemas/CmrDocumentResponseDTO" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "error": { "$ref": "#/components/schemas/ErrorResponse" }
+        }
+      },
+      "CmrDocumentResponseDTO": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "format": "int64" },
+          "shipmentId": { "type": "integer", "format": "int64" },
+          "number": { "type": "string" },
+          "status": {
+            "type": "string",
+            "enum": ["generated", "signed", "cancelled"]
+          },
+          "fileUrl": { "type": "string" },
+          "senderSigned": { "type": "boolean" },
+          "carriedSigned": { "type": "boolean" },
+          "consigneeSigned": { "type": "boolean" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "ApiResponseWrapperValidateResetPasswordTokenResponseDTO": {
+        "type": "object",
+        "properties": {
+          "transactionId": { "type": "string" },
+          "data": {
+            "$ref": "#/components/schemas/ValidateResetPasswordTokenResponseDTO"
+          },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "error": { "$ref": "#/components/schemas/ErrorResponse" }
+        }
+      },
+      "ValidateResetPasswordTokenResponseDTO": {
+        "type": "object",
+        "properties": {
+          "valid": { "type": "boolean" },
+          "message": { "type": "string" }
+        }
+      },
+      "ApiResponseWrapperValueResponseLong": {
+        "type": "object",
+        "properties": {
+          "transactionId": { "type": "string" },
+          "data": { "$ref": "#/components/schemas/ValueResponseLong" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "error": { "$ref": "#/components/schemas/ErrorResponse" }
+        }
+      },
+      "ValueResponseLong": {
+        "type": "object",
+        "properties": { "value": { "type": "integer", "format": "int64" } }
+      },
+      "ApiResponseWrapperValueResponseInteger": {
+        "type": "object",
+        "properties": {
+          "transactionId": { "type": "string" },
+          "data": { "$ref": "#/components/schemas/ValueResponseInteger" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "error": { "$ref": "#/components/schemas/ErrorResponse" }
+        }
+      },
+      "ValueResponseInteger": {
+        "type": "object",
+        "properties": { "value": { "type": "integer", "format": "int32" } }
+      },
+      "ApiResponseWrapperValueResponseBigDecimal": {
+        "type": "object",
+        "properties": {
+          "transactionId": { "type": "string" },
+          "data": { "$ref": "#/components/schemas/ValueResponseBigDecimal" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "error": { "$ref": "#/components/schemas/ErrorResponse" }
+        }
+      },
+      "ValueResponseBigDecimal": {
+        "type": "object",
+        "properties": { "value": { "type": "number" } }
+      },
+      "ApiResponseWrapperListValueByStatusShipmentStatus": {
+        "type": "object",
+        "properties": {
+          "transactionId": { "type": "string" },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValueByStatusShipmentStatus"
+            }
+          },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "error": { "$ref": "#/components/schemas/ErrorResponse" }
+        }
+      },
+      "ValueByStatusShipmentStatus": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["pending", "dispatched", "delivered"]
+          },
+          "count": { "type": "integer", "format": "int64" }
+        }
+      },
+      "ApiResponseWrapperListValueByStatusQuoteStatus": {
+        "type": "object",
+        "properties": {
+          "transactionId": { "type": "string" },
+          "data": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ValueByStatusQuoteStatus" }
+          },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "error": { "$ref": "#/components/schemas/ErrorResponse" }
+        }
+      },
+      "ValueByStatusQuoteStatus": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "sent",
+              "accepted",
+              "rejected",
+              "cancelled",
+              "expired",
+              "converted"
+            ]
+          },
+          "count": { "type": "integer", "format": "int64" }
+        }
+      },
+      "ApiResponseWrapperListValueByStatusInvoiceStatus": {
+        "type": "object",
+        "properties": {
+          "transactionId": { "type": "string" },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValueByStatusInvoiceStatus"
+            }
+          },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "error": { "$ref": "#/components/schemas/ErrorResponse" }
+        }
+      },
+      "ValueByStatusInvoiceStatus": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["paid", "disputed", "outstanding", "partially_paid"]
+          },
+          "count": { "type": "integer", "format": "int64" }
+        }
+      }
+    },
+    "securitySchemes": {
+      "Bearer Authentication": {
+        "type": "http",
+        "name": "Bearer Authentication",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
