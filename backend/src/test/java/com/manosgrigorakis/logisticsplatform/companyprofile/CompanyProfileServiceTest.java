@@ -6,6 +6,7 @@ import com.manosgrigorakis.logisticsplatform.common.exception.ResourceNotFoundEx
 import com.manosgrigorakis.logisticsplatform.companyprofile.dto.CompanyProfileCreateRequest;
 import com.manosgrigorakis.logisticsplatform.companyprofile.dto.CompanyProfileResponse;
 import com.manosgrigorakis.logisticsplatform.companyprofile.dto.CompanyProfileUpdateRequest;
+import com.manosgrigorakis.logisticsplatform.companyprofile.mapper.CompanyProfileMapper;
 import com.manosgrigorakis.logisticsplatform.companyprofile.model.CompanyProfile;
 import com.manosgrigorakis.logisticsplatform.companyprofile.repository.CompanyProfileRepository;
 import com.manosgrigorakis.logisticsplatform.companyprofile.service.CompanyProfileServiceImpl;
@@ -29,17 +30,21 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class CompanyProfileServiceTest {
     @Mock
+    private FileStorageService storageService;
+
+    @Mock
     private CompanyProfileRepository repository;
+
+    @Mock
+    private CompanyProfileMapper companyProfileMapper;
 
     @InjectMocks
     private CompanyProfileServiceImpl service;
 
-    @Mock
-    private FileStorageService storageService;
-
     private CompanyProfile mockCompany;
     private CompanyProfileCreateRequest mockCreateRequest;
     private CompanyProfileUpdateRequest mockUpdateRequest;
+    private CompanyProfileResponse mockResponse;
     private MockMultipartFile validFile;
     private MockMultipartFile wrongFileType;
     private MockMultipartFile tooLargeFile;
@@ -52,6 +57,15 @@ public class CompanyProfileServiceTest {
         mockCreateRequest = buildCreateRequest(null);
 
         mockUpdateRequest = buildUpdateRequest(null);
+
+        // Response
+        mockResponse = new CompanyProfileResponse(mockCompany.getId(), mockCompany.getName(), mockCompany.getTin(),
+                                                  mockCompany.getSlogan(), mockCompany.getLogoUrl(),
+                                                  mockCompany.getVatPercentage(), mockCompany.getRepresentativeTitle(),
+                                                  mockCompany.getRepresentative(), mockCompany.getEmail(),
+                                                  mockCompany.getPhones(), mockCompany.getWebsiteUrl(), null, null,
+                                                  mockCompany.getCreatedAt(), mockCompany.getUpdatedAt());
+
         // Files
         validFile = new MockMultipartFile("logo", "logo.png", "image/png", "logo".getBytes());
         wrongFileType = new MockMultipartFile("logo", "doc.pdf", "application/pdf", "document".getBytes());
@@ -62,6 +76,7 @@ public class CompanyProfileServiceTest {
     void getCompanyProfile_ShouldReturnCompanyProfile_whenExists() {
         // Arrange
         when(repository.findFirstByOrderByIdAsc()).thenReturn(Optional.of(mockCompany));
+        when(companyProfileMapper.toResponse(any(CompanyProfile.class), any())).thenReturn(mockResponse);
 
         // Act
         CompanyProfileResponse response = service.getCompanyProfile();
@@ -102,6 +117,9 @@ public class CompanyProfileServiceTest {
     void createCompanyProfile_shouldCreateCompanyProfile_whenNoOtherCompanyExists() {
         // Arrange
         when(repository.findFirstByOrderByIdAsc()).thenReturn(Optional.empty());
+        when(companyProfileMapper.toEntity(mockCreateRequest)).thenReturn(mockCompany);
+        when(repository.save(any(CompanyProfile.class))).thenReturn(mockCompany);
+        when(companyProfileMapper.toResponse(any(CompanyProfile.class), any())).thenReturn(mockResponse);
 
         // Act
         CompanyProfileResponse response = service.createCompanyProfile(mockCreateRequest);
@@ -122,7 +140,13 @@ public class CompanyProfileServiceTest {
     void createCompanyProfile_shouldCreateCompanyProfileAndStoreUploadedFile_whenFileValid() {
         // Arrange
         when(repository.findFirstByOrderByIdAsc()).thenReturn(Optional.empty());
+
         CompanyProfileCreateRequest mockCreateRequestValidFile = buildCreateRequest(validFile);
+
+        when(companyProfileMapper.toEntity(mockCreateRequestValidFile)).thenReturn(mockCompany);
+        when(repository.save(any(CompanyProfile.class))).thenReturn(mockCompany);
+        when(storageService.createPresignedUrl(anyString())).thenReturn("presigned-url");
+        when(companyProfileMapper.toResponse(any(CompanyProfile.class), anyString())).thenReturn(mockResponse);
 
         // Act
         CompanyProfileResponse response = service.createCompanyProfile(mockCreateRequestValidFile);
@@ -197,7 +221,9 @@ public class CompanyProfileServiceTest {
     void createCompanyProfile_shouldDeleteUploadedFile_whenDbSaveFails() {
         // Arrange
         when(repository.findFirstByOrderByIdAsc()).thenReturn(Optional.empty());
+        when(companyProfileMapper.toEntity(any())).thenReturn(new CompanyProfile());
         when(repository.save(any(CompanyProfile.class))).thenThrow(new RuntimeException("DB error"));
+
         CompanyProfileCreateRequest request = buildCreateRequest(validFile);
 
         // Act & Assert
@@ -211,6 +237,9 @@ public class CompanyProfileServiceTest {
     void updateCompanyProfile_shouldUpdateCompanyProfile() {
         // Assert
         when(repository.findFirstByOrderByIdAsc()).thenReturn(Optional.of(mockCompany));
+
+        CompanyProfileResponse mockResponse = mock(CompanyProfileResponse.class);
+        when(companyProfileMapper.toResponse(any(), any())).thenReturn(mockResponse);
 
         // Act
         CompanyProfileResponse response = service.updateCompanyProfile(mockUpdateRequest);
@@ -232,7 +261,11 @@ public class CompanyProfileServiceTest {
     void updateCompanyProfile_shouldUpdateCompanyProfileAndStoreUploadedFile_whenFileValid() {
         // Arrange
         when(repository.findFirstByOrderByIdAsc()).thenReturn(Optional.of(mockCompany));
+
         CompanyProfileUpdateRequest mockUpdateRequestValidFile = buildUpdateRequest(validFile);
+
+        when(storageService.createPresignedUrl(anyString())).thenReturn("presigned-url");
+        when(companyProfileMapper.toResponse(any(), any())).thenReturn(mockResponse);
 
         // Act
         CompanyProfileResponse response = service.updateCompanyProfile(mockUpdateRequestValidFile);

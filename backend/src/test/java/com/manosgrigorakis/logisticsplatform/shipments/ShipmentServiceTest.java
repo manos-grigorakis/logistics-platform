@@ -20,7 +20,6 @@ import com.manosgrigorakis.logisticsplatform.shipments.dto.summary.CmrDocumentSu
 import com.manosgrigorakis.logisticsplatform.shipments.enums.ShipmentStatus;
 import com.manosgrigorakis.logisticsplatform.shipments.enums.VehicleType;
 import com.manosgrigorakis.logisticsplatform.shipments.mapper.ShipmentCargoMapper;
-import com.manosgrigorakis.logisticsplatform.shipments.mapper.ShipmentCargoMapperImpl;
 import com.manosgrigorakis.logisticsplatform.shipments.mapper.ShipmentMapper;
 import com.manosgrigorakis.logisticsplatform.shipments.model.Shipment;
 import com.manosgrigorakis.logisticsplatform.shipments.model.ShipmentCargo;
@@ -30,7 +29,6 @@ import com.manosgrigorakis.logisticsplatform.shipments.repository.VehicleReposit
 import com.manosgrigorakis.logisticsplatform.shipments.service.ShipmentServiceImpl;
 import com.manosgrigorakis.logisticsplatform.users.model.User;
 import com.manosgrigorakis.logisticsplatform.users.repository.UserRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -44,7 +42,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -55,6 +53,12 @@ public class ShipmentServiceTest {
 
     @Mock
     private FileStorageService fileStorageService;
+
+    @Mock
+    private AuditService auditService;
+
+    @Mock
+    private CmrDocumentService cmrDocumentService;
 
     @Mock
     private ShipmentRepository shipmentRepository;
@@ -72,10 +76,9 @@ public class ShipmentServiceTest {
     private CmrDocumentRepository cmrDocumentRepository;
 
     @Mock
-    private AuditService auditService;
+    private ShipmentMapper shipmentMapper;
 
-    @Mock
-    private CmrDocumentService cmrDocumentService;
+    @Mock ShipmentCargoMapper shipmentCargoMapper;
 
     @InjectMocks
     private ShipmentServiceImpl shipmentService;
@@ -89,7 +92,11 @@ public class ShipmentServiceTest {
         shipment.setNumber("SH-2026-0001");
         shipment.setDriver(driver);
 
+        ShipmentResponseDTO expectedResponse = new ShipmentResponseDTO(null, null, "SH-2026-0001", null, null, null,
+                                                                       null, null, null, null, null, null, null);
+
         when(shipmentRepository.findById(1L)).thenReturn(Optional.of(shipment));
+        when(shipmentMapper.toResponse(shipment)).thenReturn(expectedResponse);
 
         // Act
         ShipmentResponseDTO response = shipmentService.getShipmentById(1L);
@@ -171,16 +178,14 @@ public class ShipmentServiceTest {
     public void createShipment_shouldSaveShipmentAndQuoteStatusToConverted() {
         // Arrange
         Quote quote = buildQuote(QuoteStatus.ACCEPTED);
-
         User createdBy = new User();
-
-        Shipment savedShipment = new Shipment();
-        savedShipment.setQuote(quote);
-        savedShipment.setCreatedByUser(createdBy);
+        Shipment buildShipment = Shipment.builder().quote(quote).createdByUser(createdBy).build();
+        Shipment savedShipment = Shipment.builder().quote(quote).createdByUser(createdBy).build();
 
         when(quoteRepository.findById(1L)).thenReturn(Optional.of(quote));
         when(userRepository.findById(1L)).thenReturn(Optional.of(new User()));
         when(shipmentRepository.existsByQuoteId(1L)).thenReturn(false);
+        when(shipmentMapper.toEntity(any(), eq(quote), any(), any(), any(), any())).thenReturn(buildShipment);
         when(shipmentRepository.save(any(Shipment.class))).thenReturn(savedShipment);
 
         ShipmentRequestDTO request = new ShipmentRequestDTO();
@@ -220,12 +225,8 @@ public class ShipmentServiceTest {
         shipmentService.updateShipmentById(1L, request);
 
         // Assert
-        ArgumentCaptor<Shipment> captor = ArgumentCaptor.forClass(Shipment.class);
-        verify(shipmentRepository).save(captor.capture());
-        Shipment updatedShipment = captor.getValue();
-
-        assertEquals(truck.getId(), updatedShipment.getTruck().getId());
-        assertEquals(truck.getPlate(), updatedShipment.getTruck().getPlate());
+        verify(shipmentMapper).toUpdate(eq(shipment), eq(request), isNull(), eq(truck), isNull());
+        verify(shipmentRepository).save(shipment);
     }
 
     @Test
