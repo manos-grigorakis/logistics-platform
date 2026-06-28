@@ -72,12 +72,12 @@ public class ShipmentServiceImpl implements ShipmentService {
     private final ShipmentMapper shipmentMapper;
     private final ShipmentCargoMapper shipmentCargoMapper;
 
-
     @Value("${app.minio.bucketPathCmr}")
     private String bucketPathCmr;
 
     @Override
-    public Page<ShipmentResponseDTO> getAllShipments(PageFilterRequest page, SortFilterRequest sort, ShipmentFilterRequest filterRequest) {
+    public Page<ShipmentResponseDTO> getAllShipments(PageFilterRequest page, SortFilterRequest sort,
+                                                     ShipmentFilterRequest filterRequest) {
         Specification<Shipment> spec = Specification.allOf();
 
         spec = andIf(spec, filterRequest.getNumber(), ShipmentSpecs::likeNumber);
@@ -183,11 +183,7 @@ public class ShipmentServiceImpl implements ShipmentService {
         Vehicle truck = findByIdOrNull(dto.getTruckId(), vehicleRepository::findById, "Truck");
         Vehicle trailer = findByIdOrNull(dto.getTrailerId(), vehicleRepository::findById, "Trailer");
 
-        shipment.setDriver(driver);
-        shipment.setTruck(truck);
-        shipment.setTrailer(trailer);
-        shipment.setPickup(dto.getPickup());
-        shipment.setNotes(dto.getNotes());
+        shipmentMapper.toUpdate(shipment, dto, driver, truck, trailer);
 
         validators(shipment);
 
@@ -227,8 +223,7 @@ public class ShipmentServiceImpl implements ShipmentService {
 
         this.shipmentRepository.save(shipment);
         log.info("Shipment status updated with number {} from {} to {}",
-                shipment.getNumber(), oldShipment.getStatus(), shipment.getStatus())
-        ;
+                shipment.getNumber(), oldShipment.getStatus(), shipment.getStatus());
 
         logShipmentStatusUpdate(oldShipment, shipment);
 
@@ -239,7 +234,8 @@ public class ShipmentServiceImpl implements ShipmentService {
     }
 
     @Override
-    public Page<ShipmentResponseDTO> getShipmentsByDriver(Long driverId, PageFilterRequest pageFilter, SortFilterRequest sortFilter) {
+    public Page<ShipmentResponseDTO> getShipmentsByDriver(Long driverId, PageFilterRequest pageFilter,
+                                                          SortFilterRequest sortFilter) {
         Pageable pageable = PageRequest.of(pageFilter.getPage(), pageFilter.getSize(), sortFilter.createSort());
 
         Page<Shipment> shipmentPage = shipmentRepository.findShipmentByDriverId(driverId, pageable);

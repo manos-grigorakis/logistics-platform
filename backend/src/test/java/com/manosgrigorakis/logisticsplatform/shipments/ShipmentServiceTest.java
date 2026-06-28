@@ -80,25 +80,6 @@ public class ShipmentServiceTest {
     @InjectMocks
     private ShipmentServiceImpl shipmentService;
 
-    private ShipmentCargoMapper shipmentCargoMapper = new ShipmentCargoMapperImpl();
-    private ShipmentMapper shipmentMapper = new ShipmentMapper(shipmentCargoMapper);
-
-    @BeforeEach
-    void setUp() {
-        shipmentService = new ShipmentServiceImpl(
-                shipmentRepository,
-                quoteRepository,
-                userRepository,
-                vehicleRepository,
-                auditService,
-                cmrDocumentService,
-                documentNumberGenerator,
-                cmrDocumentRepository,
-                fileStorageService,
-                shipmentMapper,
-                shipmentCargoMapper
-        );
-    }
 
     @Test
     public void getShipmentById_shouldReturnResponse() {

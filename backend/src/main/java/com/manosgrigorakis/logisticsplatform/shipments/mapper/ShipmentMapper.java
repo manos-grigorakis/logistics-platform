@@ -3,90 +3,55 @@ package com.manosgrigorakis.logisticsplatform.shipments.mapper;
 import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.ShipmentRequestDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.ShipmentResponseDTO;
-import com.manosgrigorakis.logisticsplatform.shipments.dto.shipmentCargo.ShipmentCargoResponseDTO;
-import com.manosgrigorakis.logisticsplatform.shipments.dto.summary.QuoteSummaryDTO;
+import com.manosgrigorakis.logisticsplatform.shipments.dto.shipment.UpdateShipmentRequestDTO;
+import com.manosgrigorakis.logisticsplatform.shipments.dto.shipmentCargo.ShipmentCargoRequestDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.summary.ShipmentStatusSummaryDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.summary.UserSummaryDTO;
-import com.manosgrigorakis.logisticsplatform.shipments.dto.summary.VehicleSummaryDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.enums.ShipmentStatus;
 import com.manosgrigorakis.logisticsplatform.shipments.model.Shipment;
 import com.manosgrigorakis.logisticsplatform.shipments.model.ShipmentCargo;
 import com.manosgrigorakis.logisticsplatform.shipments.model.Vehicle;
 import com.manosgrigorakis.logisticsplatform.users.model.User;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.mapstruct.*;
 
-import java.util.List;
+@Mapper(componentModel = "spring", uses = ShipmentCargoMapper.class)
+public interface ShipmentMapper {
+    @Mapping(target = "number", ignore = true)
+    @Mapping(target = "notes", source = "dto.notes")
+    Shipment toEntity(ShipmentRequestDTO dto, Quote quote, User driver, User createdByUser, Vehicle truck,
+                      Vehicle trailer);
 
-@RequiredArgsConstructor
-@Component
-public class ShipmentMapper {
-    private final ShipmentCargoMapper shipmentCargoMapper;
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "status", ignore = true)
+    @Mapping(target = "number", ignore = true)
+    @Mapping(target = "quote", ignore = true)
+    @Mapping(target = "createdByUser", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "shipmentCargos", ignore = true)
+    @Mapping(target = "notes", source = "dto.notes")
+    void toUpdate(@MappingTarget Shipment shipment, UpdateShipmentRequestDTO dto, User driver, Vehicle truck,
+                  Vehicle trailer);
 
-    // DTO -> Entity
-    public Shipment toEntity(ShipmentRequestDTO dto, Quote quote, User driver, User createdByUser, Vehicle truck,
-                                    Vehicle trailer) {
-        Shipment shipment = Shipment.builder()
-                .pickup(dto.getPickup())
-                .notes(dto.getNotes())
-                .quote(quote)
-                .driver(driver)
-                .createdByUser(createdByUser)
-                .truck(truck)
-                .trailer(trailer)
-                .build();
+    @Mapping(target = "status", source = "status", qualifiedByName = "toStatusSummary")
+    @Mapping(target = "cargoItems", source = "shipmentCargos")
+    ShipmentResponseDTO toResponse(Shipment shipment);
 
-        if(dto.getCargoItems() != null) {
-            dto.getCargoItems().forEach(item ->
-                                                shipment.addShipmentCargoItem(shipmentCargoMapper.toEntity(item)));
-        }
+    ShipmentCargo toShipmentCargo(ShipmentCargoRequestDTO dto);
 
-        return  shipment;
+    @AfterMapping
+    default void linkCargoItemsBackToShipment(@MappingTarget Shipment shipment, ShipmentRequestDTO dto) {
+        if (dto == null || dto.getCargoItems() == null) return;
+
+        dto.getCargoItems().forEach(item -> shipment.addShipmentCargoItem(toShipmentCargo(item)));
     }
 
-    // Entity -> Response
-    public ShipmentResponseDTO toResponse(Shipment shipment) {
-        Quote quote = shipment.getQuote();
-        User driver = shipment.getDriver();
-        User createdByUser = shipment.getCreatedByUser();
-        Vehicle truck = shipment.getTruck();
-        Vehicle trailer = shipment.getTrailer();
-        List<ShipmentCargo> shipmentCargo = shipment.getShipmentCargos();
-
-        // Summaries
-        ShipmentStatus shipmentStatus = shipment.getStatus();
-
-        QuoteSummaryDTO quoteSummary = new QuoteSummaryDTO(quote.getId(), quote.getNumber());
-        UserSummaryDTO createsByUserSummary = new UserSummaryDTO(createdByUser.getId(), createdByUser.fullName());
-        ShipmentStatusSummaryDTO shipmentStatusSummary = new ShipmentStatusSummaryDTO(shipmentStatus.getLabel(),
-                                                                                      shipmentStatus.isEditable(),
-                                                                                      shipmentStatus.isFinalized());
-        List<ShipmentCargoResponseDTO> cargoItems = shipmentCargo.stream().map(shipmentCargoMapper::toResponse).toList();
-
-        return new ShipmentResponseDTO(
-                shipment.getId(),
-                shipmentStatusSummary,
-                shipment.getNumber(),
-                shipment.getPickup(),
-                shipment.getNotes(),
-                shipment.getCreatedAt(),
-                shipment.getUpdatedAt(),
-                quoteSummary,
-                toUserSummary(driver),
-                createsByUserSummary,
-                toVehicleSummary(truck),
-                toVehicleSummary(trailer),
-                cargoItems
-        );
+    @Named("toStatusSummary")
+    default ShipmentStatusSummaryDTO toStatusSummary(ShipmentStatus status) {
+        if(status == null) return null;
+        return new ShipmentStatusSummaryDTO(status.getLabel(), status.isEditable(), status.isFinalized());
     }
 
-    private static UserSummaryDTO toUserSummary(User user) {
-        if (user == null) return null;
-        return new UserSummaryDTO(user.getId(), user.fullName());
-    }
-
-    private static VehicleSummaryDTO toVehicleSummary(Vehicle vehicle) {
-        if(vehicle == null) return null;
-        return new VehicleSummaryDTO(vehicle.getId(), vehicle.getPlate(), vehicle.getType());
-    }
+    @Mapping(target = "fullName", expression = "java(user.fullName())")
+    UserSummaryDTO toUserSummary(User user);
 }
