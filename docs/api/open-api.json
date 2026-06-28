@@ -36,7 +36,11 @@
       "description": "CRUD operations for suppliers payments with presigned URLs for uploaded files"
     },
     { "name": "Users", "description": "CRUD operation on users" },
-    { "name": "Vehicles", "description": "CRUD operation for vehicles" }
+    { "name": "Vehicles", "description": "CRUD operation for vehicles" },
+    {
+      "name": "Analytics",
+      "description": "Dashboard metrics and aggregated business insights"
+    }
   ],
   "paths": {
     "/api/v1/vehicles/{id}": {
@@ -92,9 +96,7 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/VehicleRequestDTO"
-              }
+              "schema": { "$ref": "#/components/schemas/VehicleRequestDTO" }
             }
           },
           "required": true
@@ -731,9 +733,7 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/QuoteUpdateRequestDTO"
-              }
+              "schema": { "$ref": "#/components/schemas/QuoteUpdateRequestDTO" }
             }
           },
           "required": true
@@ -1054,9 +1054,7 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/VehicleRequestDTO"
-              }
+              "schema": { "$ref": "#/components/schemas/VehicleRequestDTO" }
             }
           },
           "required": true
@@ -1620,9 +1618,7 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ShipmentRequestDTO"
-              }
+              "schema": { "$ref": "#/components/schemas/ShipmentRequestDTO" }
             }
           },
           "required": true
@@ -1961,9 +1957,7 @@
         "requestBody": {
           "content": {
             "multipart/form-data": {
-              "schema": {
-                "$ref": "#/components/schemas/BulkInvoiceRequestDTO"
-              }
+              "schema": { "$ref": "#/components/schemas/BulkInvoiceRequestDTO" }
             }
           }
         },
@@ -2144,9 +2138,7 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CustomerRequestDTO"
-              }
+              "schema": { "$ref": "#/components/schemas/CustomerRequestDTO" }
             }
           },
           "required": true
@@ -2191,9 +2183,7 @@
           }
         },
         "responses": {
-          "204": {
-            "description": "CMR signed document uploaded successfully"
-          },
+          "204": { "description": "CMR signed document uploaded successfully" },
           "400": {
             "description": "Failed to process the PDF or Invalid QR Code"
           },
@@ -2520,9 +2510,7 @@
           "required": true
         },
         "responses": {
-          "204": {
-            "description": "CMR document status updated successfully"
-          },
+          "204": { "description": "CMR document status updated successfully" },
           "404": { "description": "CMR document id doesn't exist" },
           "409": {
             "description": "CMR document status cannot be updated due to business rules"
@@ -3128,25 +3116,19 @@
           "200": {
             "description": "CMR Document copies successfully returned",
             "content": {
-              "*/*": {
-                "schema": { "type": "string", "format": "byte" }
-              }
+              "*/*": { "schema": { "type": "string", "format": "byte" } }
             }
           },
           "400": {
             "description": "Failed to generate or merge the PDF copies",
             "content": {
-              "*/*": {
-                "schema": { "type": "string", "format": "byte" }
-              }
+              "*/*": { "schema": { "type": "string", "format": "byte" } }
             }
           },
           "404": {
             "description": "CMR document not found",
             "content": {
-              "*/*": {
-                "schema": { "type": "string", "format": "byte" }
-              }
+              "*/*": { "schema": { "type": "string", "format": "byte" } }
             }
           }
         }
@@ -3203,11 +3185,13 @@
     },
     "/api/v1/analytics/total-shipments": {
       "get": {
-        "tags": ["analytics-controller"],
+        "tags": ["Analytics"],
+        "summary": "Get Total Shipments",
+        "description": "Returns total number of shipments",
         "operationId": "getTotalShipments",
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Count of shipments",
             "content": {
               "*/*": {
                 "schema": {
@@ -3221,11 +3205,13 @@
     },
     "/api/v1/analytics/total-pending-shipments": {
       "get": {
-        "tags": ["analytics-controller"],
+        "tags": ["Analytics"],
+        "summary": "Get Upcoming Pending Shipments Count",
+        "description": "Returns the total number of pending shipments scheduled until tomorrow",
         "operationId": "getUpcomingPendingShipments",
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Upcoming pending shipments count",
             "content": {
               "*/*": {
                 "schema": {
@@ -3239,11 +3225,13 @@
     },
     "/api/v1/analytics/total-outstanding-amount": {
       "get": {
-        "tags": ["analytics-controller"],
+        "tags": ["Analytics"],
+        "summary": "Get Total Outstanding Invoices Amount",
+        "description": "Returns the total remaining unpaid amount for invoices marked as OUTSTANDING or PARTIALLY_PAID",
         "operationId": "getTotalOutstandingInvoicesAmount",
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Total outstanding invoices amount",
             "content": {
               "*/*": {
                 "schema": {
@@ -3257,11 +3245,13 @@
     },
     "/api/v1/analytics/total-customers": {
       "get": {
-        "tags": ["analytics-controller"],
+        "tags": ["Analytics"],
+        "summary": "Get Total Customers",
+        "description": "Returns total number of registered customers",
         "operationId": "getTotalCustomers",
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Count of customers",
             "content": {
               "*/*": {
                 "schema": {
@@ -3275,11 +3265,13 @@
     },
     "/api/v1/analytics/shipments-by-status": {
       "get": {
-        "tags": ["analytics-controller"],
+        "tags": ["Analytics"],
+        "summary": "Get Shipments Grouped by Status",
+        "description": "Returns aggregated shipments statistics grouped by status",
         "operationId": "getShipmentsByStatus",
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Found shipments grouped by status",
             "content": {
               "*/*": {
                 "schema": {
@@ -3293,11 +3285,13 @@
     },
     "/api/v1/analytics/quotes-by-status": {
       "get": {
-        "tags": ["analytics-controller"],
+        "tags": ["Analytics"],
+        "summary": "Get Quotes Grouped by Status",
+        "description": "Returns aggregated quotes statistics grouped by status",
         "operationId": "getQuotesByStatus",
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Found quotes grouped by status",
             "content": {
               "*/*": {
                 "schema": {
@@ -3311,11 +3305,13 @@
     },
     "/api/v1/analytics/invoices-by-status": {
       "get": {
-        "tags": ["analytics-controller"],
+        "tags": ["Analytics"],
+        "summary": "Get Invoices Grouped by Status",
+        "description": "Returns aggregated invoices statistics grouped by status",
         "operationId": "getInvoicesByStatus",
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "Found invoices grouped by status",
             "content": {
               "*/*": {
                 "schema": {
@@ -3532,9 +3528,7 @@
           "notes": { "type": "string" },
           "cargoItems": {
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ShipmentCargoRequestDTO"
-            }
+            "items": { "$ref": "#/components/schemas/ShipmentCargoRequestDTO" }
           }
         },
         "required": ["pickup"]
@@ -3586,9 +3580,7 @@
           "trailer": { "$ref": "#/components/schemas/VehicleSummaryDTO" },
           "cargoItems": {
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ShipmentCargoResponseDTO"
-            }
+            "items": { "$ref": "#/components/schemas/ShipmentCargoResponseDTO" }
           }
         }
       },
@@ -3935,9 +3927,7 @@
           "notes": { "type": "string" },
           "cargoItems": {
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ShipmentCargoRequestDTO"
-            }
+            "items": { "$ref": "#/components/schemas/ShipmentCargoRequestDTO" }
           }
         },
         "required": ["createdByUserId", "pickup", "quoteId"]
@@ -4364,12 +4354,8 @@
       "PageObject": {
         "type": "object",
         "properties": {
-          "totalPages": { "type": "integer", "format": "int32" },
           "totalElements": { "type": "integer", "format": "int64" },
-          "pageable": { "$ref": "#/components/schemas/PageableObject" },
-          "numberOfElements": { "type": "integer", "format": "int32" },
-          "first": { "type": "boolean" },
-          "last": { "type": "boolean" },
+          "totalPages": { "type": "integer", "format": "int32" },
           "size": { "type": "integer", "format": "int32" },
           "content": {
             "type": "array",
@@ -4377,26 +4363,30 @@
           },
           "number": { "type": "integer", "format": "int32" },
           "sort": { "$ref": "#/components/schemas/SortObject" },
+          "first": { "type": "boolean" },
+          "last": { "type": "boolean" },
+          "numberOfElements": { "type": "integer", "format": "int32" },
+          "pageable": { "$ref": "#/components/schemas/PageableObject" },
           "empty": { "type": "boolean" }
         }
       },
       "PageableObject": {
         "type": "object",
         "properties": {
-          "paged": { "type": "boolean" },
-          "pageNumber": { "type": "integer", "format": "int32" },
-          "pageSize": { "type": "integer", "format": "int32" },
-          "unpaged": { "type": "boolean" },
           "offset": { "type": "integer", "format": "int64" },
-          "sort": { "$ref": "#/components/schemas/SortObject" }
+          "sort": { "$ref": "#/components/schemas/SortObject" },
+          "paged": { "type": "boolean" },
+          "unpaged": { "type": "boolean" },
+          "pageNumber": { "type": "integer", "format": "int32" },
+          "pageSize": { "type": "integer", "format": "int32" }
         }
       },
       "SortObject": {
         "type": "object",
         "properties": {
+          "empty": { "type": "boolean" },
           "sorted": { "type": "boolean" },
-          "unsorted": { "type": "boolean" },
-          "empty": { "type": "boolean" }
+          "unsorted": { "type": "boolean" }
         }
       },
       "SupplierListResponse": {
@@ -4515,9 +4505,7 @@
           "transactionId": { "type": "string" },
           "data": {
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ShipmentStatusResponse"
-            }
+            "items": { "$ref": "#/components/schemas/ShipmentStatusResponse" }
           },
           "timestamp": { "type": "string", "format": "date-time" },
           "error": { "$ref": "#/components/schemas/ErrorResponse" }
@@ -4672,9 +4660,7 @@
           "transactionId": { "type": "string" },
           "data": {
             "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ValueByStatusQuoteStatus"
-            }
+            "items": { "$ref": "#/components/schemas/ValueByStatusQuoteStatus" }
           },
           "timestamp": { "type": "string", "format": "date-time" },
           "error": { "$ref": "#/components/schemas/ErrorResponse" }
