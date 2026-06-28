@@ -3,27 +3,13 @@ package com.manosgrigorakis.logisticsplatform.users.mapper;
 import com.manosgrigorakis.logisticsplatform.users.dto.RoleRequestDTO;
 import com.manosgrigorakis.logisticsplatform.users.dto.RoleResponseDTO;
 import com.manosgrigorakis.logisticsplatform.users.model.Role;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-public class RoleMapper {
-    // DTO => Entity
-    public static Role toEntity(RoleRequestDTO dto) {
-        return Role.builder()
-                .name(dto.getName().toUpperCase())
-                .description(dto.getDescription())
-                .build();
-    }
+@Mapper(componentModel = "spring")
+public interface RoleMapper {
+    @Mapping(target = "name", expression = "java(dto.getName().toUpperCase())")
+    Role toEntity(RoleRequestDTO dto);
 
-    // Entity => Response
-    public static RoleResponseDTO toResponse(Role role) {
-        RoleResponseDTO dto = new RoleResponseDTO();
-        dto.setId(role.getId());
-        dto.setName(role.getName());
-        dto.setDescription(role.getDescription());
-        dto.setEditable(role.isEditable());
-        dto.setCreatedAt(role.getCreatedAt());
-        dto.setUpdatedAt(role.getUpdatedAt());
-
-        return dto;
-    }
-
+    RoleResponseDTO toResponse(Role entity);
 }

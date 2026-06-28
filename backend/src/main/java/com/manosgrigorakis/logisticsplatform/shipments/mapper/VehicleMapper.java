@@ -1,17 +1,16 @@
 package com.manosgrigorakis.logisticsplatform.shipments.mapper;
 
+import com.manosgrigorakis.logisticsplatform.shipments.dto.vehicle.VehicleRequestDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.dto.vehicle.VehicleResponseDTO;
 import com.manosgrigorakis.logisticsplatform.shipments.model.Vehicle;
+import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
 
-public class VehicleMapper {
-    public static VehicleResponseDTO toResponse(Vehicle vehicle) {
-        return new VehicleResponseDTO(
-                vehicle.getId(),
-                vehicle.getBrand(),
-                vehicle.getPlate(),
-                vehicle.getType(),
-                vehicle.getCreatedAt(),
-                vehicle.getUpdatedAt()
-        );
-    }
+@Mapper(componentModel = "spring")
+public interface VehicleMapper {
+    Vehicle toEntity(VehicleRequestDTO dto);
+
+    void toUpdate(@MappingTarget Vehicle vehicle, VehicleRequestDTO dto);
+
+    VehicleResponseDTO toResponse(Vehicle vehicle);
 }

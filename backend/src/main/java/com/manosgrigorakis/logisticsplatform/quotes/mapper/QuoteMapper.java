@@ -1,116 +1,53 @@
 package com.manosgrigorakis.logisticsplatform.quotes.mapper;
 
-import com.manosgrigorakis.logisticsplatform.quotes.dto.CustomerSummaryDTO;
-import com.manosgrigorakis.logisticsplatform.quotes.dto.quote.QuoteCreatedResponseDTO;
-import com.manosgrigorakis.logisticsplatform.quotes.dto.quote.QuoteListResponseDTO;
-import com.manosgrigorakis.logisticsplatform.quotes.dto.quote.QuoteRequestDTO;
-import com.manosgrigorakis.logisticsplatform.quotes.dto.quote.QuoteResponseDTO;
-import com.manosgrigorakis.logisticsplatform.quotes.dto.quoteItem.QuoteItemRequestDTO;
+import com.manosgrigorakis.logisticsplatform.quotes.dto.quote.*;
 import com.manosgrigorakis.logisticsplatform.customers.model.Customer;
+import com.manosgrigorakis.logisticsplatform.quotes.dto.quoteItem.QuoteItemRequestDTO;
 import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
 import com.manosgrigorakis.logisticsplatform.quotes.model.QuoteItem;
 import com.manosgrigorakis.logisticsplatform.users.model.User;
+import org.mapstruct.AfterMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
-import java.util.List;
-
-public class QuoteMapper {
-    // DTO => Entity
-    public static Quote toEntity(QuoteRequestDTO dto, User user, Customer customer) {
-        Quote quote = Quote.builder()
-                .validityDays(dto.getValidityDays())
-                .origin(dto.getOrigin())
-                .destination(dto.getDestination())
-                .notes(dto.getNotes())
-                .specialTerms(dto.getSpecialTerms())
-                .user(user)
-                .customer(customer)
-                .build();
-
-        for (QuoteItemRequestDTO itemDto : dto.getQuoteItems()) {
-            QuoteItem item = QuoteItemMapper.toEntity(itemDto);
-            quote.addQuoteItem(item);
-        }
-
-        return quote;
-    }
-
-    // Entity => Response
-    public static QuoteResponseDTO toResponse(Quote quote) {
-        QuoteResponseDTO dto = new QuoteResponseDTO();
-        dto.setId(quote.getId());
-        dto.setNumber(quote.getNumber());
-        dto.setIssueDate(quote.getIssueDate());
-        dto.setValidityDays(quote.getValidityDays());
-        dto.setExpirationDate(quote.getExpirationDate());
-        dto.setOrigin(quote.getOrigin());
-        dto.setDestination(quote.getDestination());
-        dto.setTaxRatePercentage(quote.getTaxRatePercentage());
-        dto.setNetPrice(quote.getNetPrice());
-        dto.setVatAmount(quote.getVatAmount());
-        dto.setGrossPrice(quote.getGrossPrice());
-        dto.setNotes(quote.getNotes());
-        dto.setSpecialTerms(quote.getSpecialTerms());
-        dto.setQuoteStatus(quote.getQuoteStatus());
-        dto.setCreatedAt(quote.getCreatedAt());
-        dto.setUpdatedAt(quote.getUpdatedAt());
-
-        if (quote.getUser() != null) {
-            dto.setUserId(quote.getUser().getId());
-        }
-
-        if (quote.getCustomer() != null) {
-            dto.setCustomer(new CustomerSummaryDTO(
-                    quote.getCustomer().getId(),
-                    quote.getCustomer().getCompanyName()
-            ));
-        }
-
-        List<QuoteItem> quoteItems = quote.getQuoteItems();
+import java.math.BigDecimal;
 
 
-        dto.setQuoteItems(quoteItems
-                .stream()
-                .map(QuoteItemMapper::toResponse)
-                .toList());
+@Mapper(componentModel = "spring", uses = QuoteItemMapper.class)
+public interface QuoteMapper {
+    @Mapping(target = "quoteItems", ignore = true)
+    Quote toEntity(QuoteRequestDTO dto, User user, Customer customer);
 
-        return dto;
-    }
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "number", ignore = true)
+    @Mapping(target = "quoteStatus", ignore = true)
+    @Mapping(target = "quoteItems", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "netPrice", source = "netTotal")
+    @Mapping(target = "grossPrice", source = "grossTotal")
+    void toUpdate(@MappingTarget Quote quote, QuoteUpdateRequestDTO dto, BigDecimal netTotal, BigDecimal vatAmount,
+                  BigDecimal grossTotal, Customer customer);
 
-    // Created Entity -> Response
-    public static QuoteCreatedResponseDTO toCreatedResponse(Quote quote) {
-        QuoteCreatedResponseDTO dto = new QuoteCreatedResponseDTO();
-        dto.setId(quote.getId());
-        dto.setNumber(quote.getNumber());
-        dto.setIssueDate(quote.getIssueDate());
-        dto.setExpirationDate(quote.getExpirationDate());
-        dto.setGrossPrice(quote.getGrossPrice());
-        dto.setQuoteStatus(quote.getQuoteStatus());
+    @Mapping(target = "userId", source = "user.id")
+    QuoteResponseDTO toResponse(Quote quote);
 
-        // Set Customer and full name
-        if (quote.getCustomer() != null) {
-            dto.setCustomerId(quote.getCustomer().getId());
+    @Mapping(target = "customerId", source = "quote.customer.id")
+    @Mapping(target = "customerFullName", source = "quote.customer.fullName")
+    QuoteCreatedResponseDTO toCreatedResponse(Quote quote);
 
-            if (quote.getCustomer().getFullName() != null) {
-                dto.setCustomerFullName(quote.getCustomer().getFullName());
-            }
-        }
+    @Mapping(target = "status", source = "quote.quoteStatus")
+    @Mapping(target = "companyName", source = "quote.customer.companyName")
+    QuoteListResponseDTO toListResponse(Quote quote);
 
-        return dto;
-    }
+    QuoteItem toQuoteItem(QuoteItemRequestDTO dto);
 
-    // List Entity -> Response
-    public static QuoteListResponseDTO toListResponse(Quote quote) {
-        QuoteListResponseDTO dto = new QuoteListResponseDTO();
-        dto.setId(quote.getId());
-        dto.setNumber(quote.getNumber());
-        dto.setStatus(quote.getQuoteStatus());
-        dto.setGrossPrice(quote.getGrossPrice());
-        dto.setIssueDate(quote.getIssueDate());
+    @AfterMapping
+    default void linkQuoteItemsBackToQuote(@MappingTarget Quote quote, QuoteRequestDTO dto) {
+        if(dto == null) return;
 
-        if(quote.getCustomer() != null) {
-            dto.setCompanyName(quote.getCustomer().getCompanyName());
-        }
-
-        return dto;
+        dto.getQuoteItems().forEach(item ->
+            quote.addQuoteItem(toQuoteItem(item)));
     }
 }

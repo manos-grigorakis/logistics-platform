@@ -34,6 +34,7 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
     private final SupplierRepository supplierRepository;
     private final DocumentNumberGenerator documentNumberGenerator;
     private final FileStorageService fileStorageService;
+    private final SupplierPaymentMapper supplierPaymentMapper;
 
     private final String fileCode = "SP";
     private final List<String> allowedContentTypes = List.of("application/pdf", "image/jpeg", "image/png");
@@ -60,7 +61,7 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
             String receiptPresignedUrl = payment.getReceiptUrl() != null ?
                     fileStorageService.createPresignedUrl(payment.getReceiptUrl()) : null;
 
-            return SupplierPaymentMapper.toResponse(payment,  invoicePresignedUrl, receiptPresignedUrl);
+            return supplierPaymentMapper.toResponse(payment, invoicePresignedUrl, receiptPresignedUrl);
         });
     }
 
@@ -77,7 +78,7 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
         String receiptPresignedUrl = payment.getReceiptUrl() != null ?
                 fileStorageService.createPresignedUrl(payment.getReceiptUrl()) : null;
 
-        return SupplierPaymentMapper.toResponse(payment, invoicePresignedUrl, receiptPresignedUrl);
+        return supplierPaymentMapper.toResponse(payment, invoicePresignedUrl, receiptPresignedUrl);
     }
 
     @Override
@@ -95,7 +96,7 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
                 fileCode + "-" + currentYear + "-0000");
         String newNumber = documentNumberGenerator.generateNextSequentialNumber(fileCode, lastNumber);
 
-        SupplierPayment payment = SupplierPaymentMapper.toEntity(request, newNumber, supplier);
+        SupplierPayment payment = supplierPaymentMapper.toEntity(request, newNumber, supplier);
 
         // Set payment status based on amount
         if (request.paidAmount() != null) {
@@ -132,7 +133,7 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
             throw e;
         }
 
-        return SupplierPaymentMapper.toResponse(payment, invoicePresignedUrl, receiptPresignedUrl);
+        return supplierPaymentMapper.toResponse(payment, invoicePresignedUrl, receiptPresignedUrl);
     }
 
     @Override
@@ -172,7 +173,7 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
                     fileStorageService.createPresignedUrl(payment.getReceiptUrl()) : null;
         }
 
-        SupplierPayment updatedPayment = SupplierPaymentMapper.toUpdateEntity(payment, request);
+        supplierPaymentMapper.toUpdateEntity(payment, request);
 
         // Set payment status based on amount
         if (request.paidAmount() != null) {
@@ -180,14 +181,13 @@ public class SupplierPaymentServiceImpl implements SupplierPaymentService {
                 throw new ConflictException("Supplier payment paid amount is greater than total amount",
                                             "PAID_AMOUNT_EXCEEDS_TOTAL");
             }
-            updatedPayment.setStatusBasedOnAmounts();
+            payment.setStatusBasedOnAmounts();
         }
 
         try {
-            SupplierPayment savedPayment = supplierPaymentRepository.save(updatedPayment);
-            log.info("Supplier payment updated with id {}", updatedPayment.getNumber());
-
-            return SupplierPaymentMapper.toResponse(savedPayment, invoicePresignedUrl, receiptPresignedUrl);
+            SupplierPayment savedPayment = supplierPaymentRepository.save(payment);
+            log.info("Supplier payment updated with id {}", savedPayment.getNumber());
+            return supplierPaymentMapper.toResponse(savedPayment, invoicePresignedUrl, receiptPresignedUrl);
         } catch (Exception e) {
             log.error("Supplier payment update failed with number {}", payment.getNumber(), e);
             throw e;

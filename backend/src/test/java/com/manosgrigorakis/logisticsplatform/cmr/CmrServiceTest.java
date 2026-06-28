@@ -6,14 +6,13 @@ import com.manosgrigorakis.logisticsplatform.cmr.dto.RegenerateCmrDocumentPdf;
 import com.manosgrigorakis.logisticsplatform.cmr.dto.UpdateCmrDocumentStatusRequestDTO;
 import com.manosgrigorakis.logisticsplatform.cmr.dto.UploadCmrDocumentRequestDTO;
 import com.manosgrigorakis.logisticsplatform.cmr.enums.CmrStatus;
+import com.manosgrigorakis.logisticsplatform.cmr.mapper.CmrDocumentMapper;
 import com.manosgrigorakis.logisticsplatform.cmr.model.CmrDocument;
 import com.manosgrigorakis.logisticsplatform.cmr.repository.CmrDocumentRepository;
 import com.manosgrigorakis.logisticsplatform.cmr.service.CmrDocumentServiceImpl;
 import com.manosgrigorakis.logisticsplatform.common.exception.ConflictException;
 import com.manosgrigorakis.logisticsplatform.common.exception.ResourceNotFoundException;
 import com.manosgrigorakis.logisticsplatform.common.generators.DocumentNumberGenerator;
-import com.manosgrigorakis.logisticsplatform.companyprofile.model.CompanyProfile;
-import com.manosgrigorakis.logisticsplatform.companyprofile.repository.CompanyProfileRepository;
 import com.manosgrigorakis.logisticsplatform.companyprofile.service.CompanyProfileServiceImpl;
 import com.manosgrigorakis.logisticsplatform.infrastructure.document.generators.CmrDocumentPdfGenerator;
 import com.manosgrigorakis.logisticsplatform.infrastructure.storage.FileStorageService;
@@ -41,35 +40,42 @@ public class CmrServiceTest {
     private DocumentNumberGenerator documentNumberGenerator;
 
     @Mock
-    private FileStorageService fileStorageService;
+    private CmrDocumentPdfGenerator cmrDocumentPdfGenerator;
 
     @Mock
-    private CmrDocumentPdfGenerator cmrDocumentPdfGenerator;
+    private FileStorageService fileStorageService;
 
     @Mock
     private AuditService auditService;
 
     @Mock
+    private CompanyProfileServiceImpl companyProfileService;
+
+    @Mock
     private CmrDocumentRepository cmrDocumentRepository;
+
+    @Mock
+    private CmrDocumentMapper cmrDocumentMapper;
 
     @InjectMocks
     private CmrDocumentServiceImpl cmrDocumentService;
 
-    @Mock
-    private CompanyProfileServiceImpl companyProfileService;
-
     @Test
     public void getCmrDocumentById_shouldReturnCmrDocument_whenExists() {
         // Arrange
-        CmrDocument cmrDocument = new CmrDocument();
-        cmrDocument.setNumber("CMR-2026-0001");
+        String number = "CMR-2026-0001";
+        CmrDocument cmrDocument = CmrDocument.builder().number(number).build();
+        CmrDocumentResponseDTO expectedResponse = new CmrDocumentResponseDTO();
+        expectedResponse.setNumber(number);
+
         when(cmrDocumentRepository.findById(1L)).thenReturn(Optional.of(cmrDocument));
+        when(cmrDocumentMapper.toResponse(cmrDocument)).thenReturn(expectedResponse);
 
         // Act
         CmrDocumentResponseDTO responseDTO = cmrDocumentService.getCmrDocumentById(1L);
 
         // Assert
-        assertEquals("CMR-2026-0001", responseDTO.getNumber());
+        assertEquals(number, responseDTO.getNumber());
     }
 
     @Test

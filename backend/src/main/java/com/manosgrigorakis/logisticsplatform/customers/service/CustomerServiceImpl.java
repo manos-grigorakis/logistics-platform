@@ -16,8 +16,8 @@ import com.manosgrigorakis.logisticsplatform.customers.specs.CustomerSpecs;
 import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
 import com.manosgrigorakis.logisticsplatform.quotes.repository.QuoteRepository;
 import com.manosgrigorakis.logisticsplatform.quotes.specs.QuotesSpecs;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -30,22 +30,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+@Slf4j
+@RequiredArgsConstructor
 @Service
 public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
     private final QuoteRepository quoteRepository;
     private final AuditService auditService;
-
-    private final Logger log = LoggerFactory.getLogger(CustomerServiceImpl.class);
-
-    public CustomerServiceImpl(
-            CustomerRepository customerRepository,
-            QuoteRepository quoteRepository,
-            AuditService auditService) {
-        this.customerRepository = customerRepository;
-        this.quoteRepository = quoteRepository;
-        this.auditService = auditService;
-    }
+    private final CustomerMapper customerMapper;
 
     @Override
     public Page<CustomerResponseDTO> getAllCustomers(CustomerFilterRequest customerFilter,
@@ -68,7 +60,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         Page<Customer> customerPage = customerRepository.findAll(spec, pageable);
 
-        return customerPage.map(CustomerMapper::toResponse);
+        return customerPage.map(customerMapper::toResponse);
     }
 
     @Cacheable(value = "customers", key = "#id")
@@ -80,12 +72,12 @@ public class CustomerServiceImpl implements CustomerService {
                     return new ResourceNotFoundException("Customer not found with id: " + id);
                 });
 
-        return CustomerMapper.toResponse(customer);
+        return customerMapper.toResponse(customer);
     }
 
     @Override
     public CustomerResponseDTO createCustomer(CustomerRequestDTO dto) {
-        Customer customer = CustomerMapper.toEntity(dto);
+        Customer customer = customerMapper.toEntity(dto);
 
         Optional<Customer> existingCustomerByTin = customerRepository.findByTin(dto.getTin());
         Optional<Customer> existingCustomerCompanyName = customerRepository.findByCompanyName(dto.getCompanyName());
@@ -103,7 +95,7 @@ public class CustomerServiceImpl implements CustomerService {
         Customer savedCustomer = customerRepository.save(customer);
         log.info("Customer created with company name: {}", dto.getCompanyName());
         this.logCustomer(customer, AuditAction.CREATE);
-        return CustomerMapper.toResponse(savedCustomer);
+        return customerMapper.toResponse(savedCustomer);
     }
 
     @CacheEvict(value = "customers", key = "#id")
@@ -123,19 +115,12 @@ public class CustomerServiceImpl implements CustomerService {
             throw  new DuplicateEntryException("companyName", dto.getCompanyName());
         }
 
-        customer.setTin(customer.getTin());
-        customer.setCompanyName(dto.getCompanyName());
-        customer.setFirstName(dto.getFirstName());
-        customer.setLastName(dto.getLastName());
-        customer.setEmail(dto.getEmail());
-        customer.setCustomerType(dto.getCustomerType());
-        customer.setLocation(dto.getLocation());
-        customer.setPhone(dto.getPhone());
+        customerMapper.toUpdate(customer, dto);
 
         Customer updatedCustomer = customerRepository.save(customer);
         log.info("Customer updated: {}", dto.getCompanyName());
         this.logUpdatedCustomer(oldCustomer, updatedCustomer);
-        return CustomerMapper.toResponse(updatedCustomer);
+        return customerMapper.toResponse(updatedCustomer);
     }
 
     @CacheEvict(value = "customers", key = "#id")
@@ -153,12 +138,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Page<QuoteSummaryDTO> quotesPerCustomer(
-            Long id,
-            PageFilterRequest page,
-            SortFilterRequest sortFilterRequest,
-            QuotesPerCustomerFilterRequest filterRequest
-            ) {
+    public Page<QuoteSummaryDTO> quotesPerCustomer(Long id, PageFilterRequest page, SortFilterRequest sortFilterRequest,
+                                                   QuotesPerCustomerFilterRequest filterRequest) {
         Specification<Quote> spec = QuotesSpecs.hasCustomerId(id);
 
         if(filterRequest.getNumber() != null) {

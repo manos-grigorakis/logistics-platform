@@ -13,8 +13,8 @@ import com.manosgrigorakis.logisticsplatform.users.mapper.RoleMapper;
 import com.manosgrigorakis.logisticsplatform.users.model.Role;
 import com.manosgrigorakis.logisticsplatform.users.repository.RoleRepository;
 import com.manosgrigorakis.logisticsplatform.users.repository.UserRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
@@ -23,27 +23,21 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+@Slf4j
+@RequiredArgsConstructor
 @Service
 public class RoleServiceImpl implements RoleService {
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final AuditService auditService;
-    private final Logger log = LoggerFactory.getLogger(RoleServiceImpl.class);
-
-    public RoleServiceImpl(RoleRepository roleRepository, UserRepository userRepository, AuditService auditService) {
-        this.roleRepository = roleRepository;
-        this.userRepository = userRepository;
-        this.auditService = auditService;
-    }
+    private final RoleMapper roleMapper;
 
     @Cacheable(value = "roles", key = "'all-roles'")
     @Override
     public List<RoleResponseDTO> getAllRoles() {
         List<Role> roles = roleRepository.findAll();
 
-        return roles.stream()
-                .map(RoleMapper::toResponse)
-                .toList();
+        return roles.stream().map(roleMapper::toResponse).toList();
     }
 
     @Cacheable(value = "roles", key = "#id")
@@ -51,11 +45,11 @@ public class RoleServiceImpl implements RoleService {
     public RoleResponseDTO getRoleById(Long id) {
         Role role = roleRepository.findById(id)
                 .orElseThrow(() -> {
-                        log.error("Role not found with id: {}", id);
-                        return new ResourceNotFoundException("Role not found with id: " + id);
+                    log.error("Role not found with id: {}", id);
+                    return new ResourceNotFoundException("Role not found with id: " + id);
                 });
 
-        return RoleMapper.toResponse(role);
+        return roleMapper.toResponse(role);
     }
 
     @CacheEvict(value = "roles", allEntries = true)
@@ -68,12 +62,12 @@ public class RoleServiceImpl implements RoleService {
             throw new DuplicateEntryException("name", dto.getName());
         }
 
-        Role role = RoleMapper.toEntity(dto);
+        Role role = roleMapper.toEntity(dto);
 
         roleRepository.save(role);
         log.info("Role created: {}", dto.getName());
         this.logRole(role, AuditAction.CREATE);
-        return RoleMapper.toResponse(role);
+        return roleMapper.toResponse(role);
     }
 
     @Caching(evict = {
@@ -107,7 +101,7 @@ public class RoleServiceImpl implements RoleService {
         Role updatedRole = roleRepository.save(role);
         log.info("Role updated: {}", dto.getName());
         this.logUpdatedRole(oldRole, updatedRole);
-        return RoleMapper.toResponse(updatedRole);
+        return roleMapper.toResponse(updatedRole);
     }
 
     @Caching(evict = {
@@ -132,7 +126,6 @@ public class RoleServiceImpl implements RoleService {
         roleRepository.deleteById(id);
         log.info("Role deleted: {}", id);
         this.logRole(role, AuditAction.DELETE);
-
     }
 
     /**

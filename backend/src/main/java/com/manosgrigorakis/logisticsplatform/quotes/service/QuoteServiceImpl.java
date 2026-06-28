@@ -6,7 +6,6 @@ import com.manosgrigorakis.logisticsplatform.audit.service.AuditService;
 import com.manosgrigorakis.logisticsplatform.common.generators.DocumentNumberGenerator;
 import com.manosgrigorakis.logisticsplatform.common.utils.EntityChangeTracker;
 import com.manosgrigorakis.logisticsplatform.companyprofile.model.CompanyProfile;
-import com.manosgrigorakis.logisticsplatform.companyprofile.repository.CompanyProfileRepository;
 import com.manosgrigorakis.logisticsplatform.companyprofile.service.CompanyProfileService;
 import com.manosgrigorakis.logisticsplatform.infrastructure.document.generators.QuotePdfGenerator;
 import com.manosgrigorakis.logisticsplatform.infrastructure.document.dto.QuotePdfRequestDTO;
@@ -30,8 +29,8 @@ import com.manosgrigorakis.logisticsplatform.users.repository.UserRepository;
 import com.manosgrigorakis.logisticsplatform.infrastructure.storage.FileStorageService;
 import com.manosgrigorakis.logisticsplatform.quotes.specs.QuotesSpecs;
 import com.manosgrigorakis.logisticsplatform.common.utils.FinancialCalculator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -46,13 +45,15 @@ import java.util.*;
 
 import static com.manosgrigorakis.logisticsplatform.common.utils.SpecsUtils.andIf;
 
+@Slf4j
+@RequiredArgsConstructor
 @Service
 public class QuoteServiceImpl implements QuoteService {
     private final QuoteRepository quoteRepository;
     private final UserRepository userRepository;
     private final CustomerRepository customerRepository;
-    private final CompanyProfileService companyProfileService;
 
+    private final CompanyProfileService companyProfileService;
     private final FileStorageService fileStorageService;
     private final AuditService auditService;
 
@@ -60,38 +61,15 @@ public class QuoteServiceImpl implements QuoteService {
     private final DocumentNumberGenerator documentNumberGenerator;
     private final QuotePdfGenerator quotePdfGenerator;
 
-    private final Logger log = LoggerFactory.getLogger(QuoteServiceImpl.class);
+    private final QuoteMapper quoteMapper;
+    private final QuoteItemMapper quoteItemMapper;
 
     @Value("${app.minio.bucketPathQuotes}")
     private String bucketPathQuotes;
 
-    public QuoteServiceImpl(
-            QuoteRepository quoteRepository,
-            UserRepository userRepository,
-            CustomerRepository customerRepository,
-            QuotePdfGenerator quotePdfGenerator,
-            FileStorageService fileStorageService,
-            AuditService auditService,
-            QuoteCalculator quoteCalculator,
-            DocumentNumberGenerator documentNumberGenerator,
-            CompanyProfileService companyProfileService) {
-        this.quoteRepository = quoteRepository;
-        this.userRepository = userRepository;
-        this.customerRepository = customerRepository;
-        this.companyProfileService = companyProfileService;
-        this.quotePdfGenerator = quotePdfGenerator;
-        this.fileStorageService = fileStorageService;
-        this.auditService = auditService;
-        this.quoteCalculator = quoteCalculator;
-        this.documentNumberGenerator = documentNumberGenerator;
-    }
-
     @Override
-    public Page<QuoteListResponseDTO> getAllQuotes(
-            QuoteFilterRequest quoteFilter,
-            PageFilterRequest page,
-            SortFilterRequest sort)
-    {
+    public Page<QuoteListResponseDTO> getAllQuotes(QuoteFilterRequest quoteFilter, PageFilterRequest page,
+                                                   SortFilterRequest sort) {
         Specification<Quote> spec = Specification.allOf();
         spec = andIf(spec, quoteFilter.getNumber(), QuotesSpecs::likeNumber);
         spec = andIf(spec, quoteFilter.getCompanyName(), QuotesSpecs::likeCompanyName);
@@ -100,39 +78,36 @@ public class QuoteServiceImpl implements QuoteService {
         Pageable pageable = PageRequest.of(page.getPage(), page.getSize(), sort.createSort());
         Page<Quote> quotePage = quoteRepository.findAll(spec, pageable);
 
-        return quotePage.map(QuoteMapper::toListResponse);
+        return quotePage.map(quoteMapper::toListResponse);
     }
 
     @Override
     public QuoteResponseDTO getQuoteById(Long id) {
-        Quote quote = quoteRepository.findById(id)
-                .orElseThrow(() -> {
-                    log.warn("Quote not found with id: {}", id);
-                    return new ResourceNotFoundException("Quote not found with id: " + id);
-                });
+        Quote quote = quoteRepository.findById(id).orElseThrow(() -> {
+            log.warn("Quote not found with id: {}", id);
+            return new ResourceNotFoundException("Quote not found with id: " + id);
+        });
 
         String presignedUrl = fileStorageService.createPresignedUrl(this.bucketPathQuotes + quote.getNumber());
 
-        QuoteResponseDTO response = QuoteMapper.toResponse(quote);
+        QuoteResponseDTO response = quoteMapper.toResponse(quote);
         response.setPdfUrl(presignedUrl);
         return response;
     }
 
     @Override
     public QuoteCreatedResponseDTO createQuote(QuoteRequestDTO dto) {
-        User user = userRepository.findById(dto.getUserId())
-                .orElseThrow(() -> {
-                    log.warn("Create failed. User not found with id: {}", dto.getUserId());
-                    return new ResourceNotFoundException("User not found with id: " + dto.getUserId());
-                });
+        User user = userRepository.findById(dto.getUserId()).orElseThrow(() -> {
+            log.warn("Create failed. User not found with id: {}", dto.getUserId());
+            return new ResourceNotFoundException("User not found with id: " + dto.getUserId());
+        });
 
-        Customer customer = customerRepository.findById(dto.getCustomerId())
-                .orElseThrow(() -> {
-                    log.warn("Create failed. Customer not found with id: {}", dto.getCustomerId());
-                    return new ResourceNotFoundException("Customer not found with id: " + dto.getCustomerId());
-                });
+        Customer customer = customerRepository.findById(dto.getCustomerId()).orElseThrow(() -> {
+            log.warn("Create failed. Customer not found with id: {}", dto.getCustomerId());
+            return new ResourceNotFoundException("Customer not found with id: " + dto.getCustomerId());
+        });
 
-        Quote quote = QuoteMapper.toEntity(dto, user, customer);
+        Quote quote = quoteMapper.toEntity(dto, user, customer);
         quote.setQuoteStatus(QuoteStatus.DRAFT);
 
         int currentYear = LocalDate.now().getYear();
@@ -159,7 +134,7 @@ public class QuoteServiceImpl implements QuoteService {
 
         Quote savedQuote = quoteRepository.save(quote);
         String presignedUrl = fileStorageService.createPresignedUrl(this.bucketPathQuotes + savedQuote.getNumber());
-        QuoteCreatedResponseDTO response = QuoteMapper.toCreatedResponse(savedQuote);
+        QuoteCreatedResponseDTO response = quoteMapper.toCreatedResponse(savedQuote);
         response.setPdfUrl(presignedUrl);
 
         log.info("Quote created and generated with number {}", savedQuote.getNumber());
@@ -169,32 +144,27 @@ public class QuoteServiceImpl implements QuoteService {
 
     @Override
     public QuoteResponseDTO updateQuote(Long id, QuoteUpdateRequestDTO dto) {
-        Quote quote = quoteRepository.findById(id)
-                .orElseThrow(() -> {
-                    log.warn("Update failed. Quote not found with id: {}", id);
-                    return new ResourceNotFoundException("Quote not found with id: " + id);
-                });
+        Quote quote = quoteRepository.findById(id).orElseThrow(() -> {
+            log.warn("Update failed. Quote not found with id: {}", id);
+            return new ResourceNotFoundException("Quote not found with id: " + id);
+        });
 
         Quote oldQuote = new Quote(quote);
 
-        Customer customer = customerRepository.findById(dto.getCustomerId())
-                .orElseThrow(() -> {
-                    log.warn("Update failed. Customer not found with id: {}", dto.getCustomerId());
-                    return new ResourceNotFoundException("Customer not found with id: " + dto.getCustomerId());
-                });
+        Customer customer = customerRepository.findById(dto.getCustomerId()).orElseThrow(() -> {
+            log.warn("Update failed. Customer not found with id: {}", dto.getCustomerId());
+            return new ResourceNotFoundException("Customer not found with id: " + dto.getCustomerId());
+        });
 
         if (!quote.isEditable()) {
-            throw new ConflictException(
-                    "Quote is not editable",
-                    Map.of("quoteStatus", quote.getQuoteStatus())
-            );
+            throw new ConflictException("Quote is not editable", Map.of("quoteStatus", quote.getQuoteStatus()));
         }
 
         // Clear old items
         quote.getQuoteItems().clear();
 
         for(QuoteItemRequestDTO itemDto : dto.getQuoteItems()) {
-            QuoteItem item = QuoteItemMapper.toEntity(itemDto);
+            QuoteItem item = quoteItemMapper.toEntity(itemDto);
             quote.addQuoteItem(item);
         }
 
@@ -206,15 +176,7 @@ public class QuoteServiceImpl implements QuoteService {
         BigDecimal grossTotal = FinancialCalculator.calculateGrossTotal(netTotal, vatAmount);
 
         // Update fields
-        quote.setValidityDays(dto.getValidityDays());
-        quote.setOrigin(dto.getOrigin());
-        quote.setDestination(dto.getDestination());
-        quote.setNotes(dto.getNotes());
-        quote.setSpecialTerms(dto.getSpecialTerms());
-        quote.setCustomer(customer);
-        quote.setNetPrice(netTotal);
-        quote.setVatAmount(vatAmount);
-        quote.setGrossPrice(grossTotal);
+        quoteMapper.toUpdate(quote, dto, netTotal, vatAmount, grossTotal, customer);
 
         // Re-generate PDF and store / upload it
         byte[] quotePdf = quotePdfGenerator.generatePdf(new QuotePdfRequestDTO(quote, companyProfile));
@@ -228,26 +190,24 @@ public class QuoteServiceImpl implements QuoteService {
         String presignedUrl = fileStorageService.createPresignedUrl(this.bucketPathQuotes + savedQuote.getNumber());
 
         // Set response
-        QuoteResponseDTO response = QuoteMapper.toResponse(savedQuote);
+        QuoteResponseDTO response = quoteMapper.toResponse(savedQuote);
         response.setPdfUrl(presignedUrl);
         return response;
     }
 
     @Override
     public void updateQuoteStatus(Long id, UpdateQuoteStatusRequestDTO dto) {
-        Quote quote = quoteRepository.findById(id)
-                .orElseThrow(() -> {
-                    log.warn("Quote not found with id: {}", id);
-                    return new ResourceNotFoundException("Quote not found with id: " + id);
-                });
+        Quote quote = quoteRepository.findById(id).orElseThrow(() -> {
+            log.warn("Quote not found with id: {}", id);
+            return new ResourceNotFoundException("Quote not found with id: " + id);
+        });
 
         Quote oldQuote = new Quote(quote);
 
         try {
             quote.changeStatusTo(dto.getQuoteStatus());
         } catch (IllegalStateException e) {
-            throw new ConflictException(
-                    e.getMessage(),
+            throw new ConflictException(e.getMessage(),
                     Map.of("currentStatus", quote.getQuoteStatus(), "desiredStatus", dto.getQuoteStatus())
             );
         }

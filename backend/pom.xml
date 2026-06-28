@@ -39,6 +39,8 @@
 		<aws-s3.version>2.39.6</aws-s3.version>
 		<springdoc.version>2.8.14</springdoc.version>
 		<jacoco.version>0.8.11</jacoco.version>
+		<lombok-mapstruct.version>0.2.0</lombok-mapstruct.version>
+		<mapstruct.version>1.6.3</mapstruct.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -76,6 +78,18 @@
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-mysql</artifactId>
+		</dependency>
+
+		<!-- Mapper -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok-mapstruct-binding</artifactId>
+			<version>${lombok-mapstruct.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
+			<version>${mapstruct.version}</version>
 		</dependency>
 
 		<!-- Monitoring -->
@@ -191,15 +205,29 @@
 
 	<build>
 		<plugins>
-			<!-- Lombok -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
 					<annotationProcessorPaths>
+						<!-- Lombok -->
 						<path>
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
+						</path>
+
+						<!-- Lombok MapStruct) -->
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok-mapstruct-binding</artifactId>
+							<version>${lombok-mapstruct.version}</version>
+						</path>
+
+						<!-- MapStruct -->
+						<path>
+							<groupId>org.mapstruct</groupId>
+							<artifactId>mapstruct-processor</artifactId>
+							<version>${mapstruct.version}</version>
 						</path>
 					</annotationProcessorPaths>
 				</configuration>

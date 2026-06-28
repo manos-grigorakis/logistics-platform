@@ -4,47 +4,34 @@ import com.manosgrigorakis.logisticsplatform.users.dto.UserRequestDTO;
 import com.manosgrigorakis.logisticsplatform.users.dto.UserResponseDTO;
 import com.manosgrigorakis.logisticsplatform.users.model.Role;
 import com.manosgrigorakis.logisticsplatform.users.model.User;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.Named;
 
-public class UserMapper {
-    // DTO => Entity
-    public static User toEntity(UserRequestDTO dto, Role role) {
-        String phone = null;
+@Mapper(componentModel = "spring",  builder = @org.mapstruct.Builder(disableBuilder = true))
+public interface UserMapper {
+    @Mapping(target = "role", source = "role")
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "phone", source = "dto.phone", qualifiedByName = "normalizePhone")
+    User toEntity(UserRequestDTO dto, Role role);
 
-        if (dto.getPhone() != null && dto.getPhone().isBlank()) {
-            phone = dto.getPhone();
-        }
+    @Mapping(target = "role", source = "role")
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "phone", source = "dto.phone", qualifiedByName = "normalizePhone")
+    void toUpdate(@MappingTarget User user, UserRequestDTO dto, Role role);
 
-        User user = User.builder()
-                .firstName(dto.getFirstName())
-                .lastName(dto.getLastName())
-                .email(dto.getEmail())
-                .phone(phone)
-                .build();
+    @Mapping(target = "roleId", source = "role.id")
+    @Mapping(target = "roleName", source = "role.name")
+    UserResponseDTO toResponse(User user);
 
-        user.setRole(role);
-
-        return user;
-    }
-
-    // Entity => Response
-    public static UserResponseDTO toResponse(User user) {
-        UserResponseDTO dto = new UserResponseDTO();
-
-        dto.setId(user.getId());
-        dto.setFirstName(user.getFirstName());
-        dto.setLastName(user.getLastName());
-        dto.setEmail(user.getEmail());
-        dto.setPhone(user.getPhone());
-        dto.setStatus(user.getStatus());
-        dto.setEnabled(user.getEnabled());
-        dto.setCreatedAt(user.getCreatedAt());
-        dto.setUpdatedAt(user.getUpdatedAt());
-
-        if (user.getRole() != null) {
-            dto.setRoleId(user.getRole().getId());
-            dto.setRoleName(user.getRole().getName());
-        }
-
-        return dto;
+    @Named("normalizePhone")
+    default String normalizePhone(String phone) {
+        if (phone == null || phone.isBlank()) return null;
+        return phone;
     }
 }

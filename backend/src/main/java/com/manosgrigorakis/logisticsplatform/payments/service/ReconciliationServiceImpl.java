@@ -44,6 +44,7 @@ public class ReconciliationServiceImpl implements ReconciliationService {
     private final ReconciliationReportExcelGenerator reconciliationReportExcelGenerator;
     private final ReconciliationReportService reconciliationReportService;
     private final AuditService auditService;
+    private final BankTransactionMapper bankTransactionMapper;
 
     @Override
     @Transactional
@@ -159,7 +160,7 @@ public class ReconciliationServiceImpl implements ReconciliationService {
         try {
             List<BankStatementImportResultDTO> bankResults = excelBankTransactionReaderNgb.readExcel(bankStatement);
             return bankResults.stream().map(result ->
-                                                    BankTransactionMapper.toEntity(result, "NBG")).toList();
+                                                    bankTransactionMapper.toEntity(result, "NBG")).toList();
         } catch (IOException e) {
             log.error("Failed to process bank statement for {}", bankStatement.getOriginalFilename(), e);
             throw new BadRequestException("Processing Excel bank statement failed", "FAILED_TO_PROCESS_BANK");

@@ -91,7 +91,6 @@ public class Quote {
             Integer validityDays,
             String origin,
             String destination,
-            BigDecimal price,
             String notes,
             String specialTerms,
             QuoteStatus quoteStatus,
@@ -166,11 +165,6 @@ public class Quote {
 
     public void addQuoteItem(QuoteItem item) {
         quoteItems.add(item);
-        item.setQuote(this);
-    }
-
-    public void removeQuoteItem(QuoteItem item) {
-        quoteItems.remove(item);
         item.setQuote(this);
     }
 

@@ -33,12 +33,11 @@ import com.manosgrigorakis.logisticsplatform.shipments.specs.ShipmentSpecs;
 import com.manosgrigorakis.logisticsplatform.users.model.User;
 import com.manosgrigorakis.logisticsplatform.users.repository.UserRepository;
 import jakarta.transaction.Transactional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -53,46 +52,32 @@ import java.util.function.Function;
 
 import static com.manosgrigorakis.logisticsplatform.common.utils.SpecsUtils.andIf;
 
+@Slf4j
+@RequiredArgsConstructor
 @Service
 public class ShipmentServiceImpl implements ShipmentService {
     private final ShipmentRepository shipmentRepository;
     private final QuoteRepository quoteRepository;
     private final UserRepository userRepository;
     private final VehicleRepository vehicleRepository;
+
     private final AuditService auditService;
     private final CmrDocumentService cmrDocumentService;
 
     private final DocumentNumberGenerator documentNumberGenerator;
 
-    private static final Logger log = LoggerFactory.getLogger(ShipmentServiceImpl.class);
     private final CmrDocumentRepository cmrDocumentRepository;
     private final FileStorageService fileStorageService;
+
+    private final ShipmentMapper shipmentMapper;
+    private final ShipmentCargoMapper shipmentCargoMapper;
 
     @Value("${app.minio.bucketPathCmr}")
     private String bucketPathCmr;
 
-    public ShipmentServiceImpl(
-            ShipmentRepository shipmentRepository,
-            QuoteRepository quoteRepository,
-            UserRepository userRepository,
-            VehicleRepository vehicleRepository,
-            DocumentNumberGenerator documentNumberGenerator,
-            AuditService auditService,
-            CmrDocumentService cmrDocumentService,
-            CmrDocumentRepository cmrDocumentRepository, FileStorageService fileStorageService) {
-        this.shipmentRepository = shipmentRepository;
-        this.quoteRepository = quoteRepository;
-        this.userRepository = userRepository;
-        this.vehicleRepository = vehicleRepository;
-        this.documentNumberGenerator = documentNumberGenerator;
-        this.auditService = auditService;
-        this.cmrDocumentService = cmrDocumentService;
-        this.cmrDocumentRepository = cmrDocumentRepository;
-        this.fileStorageService = fileStorageService;
-    }
-
     @Override
-    public Page<ShipmentResponseDTO> getAllShipments(PageFilterRequest page, SortFilterRequest sort, ShipmentFilterRequest filterRequest) {
+    public Page<ShipmentResponseDTO> getAllShipments(PageFilterRequest page, SortFilterRequest sort,
+                                                     ShipmentFilterRequest filterRequest) {
         Specification<Shipment> spec = Specification.allOf();
 
         spec = andIf(spec, filterRequest.getNumber(), ShipmentSpecs::likeNumber);
@@ -118,7 +103,7 @@ public class ShipmentServiceImpl implements ShipmentService {
         Pageable pageable = PageRequest.of(page.getPage(), page.getSize(), sort.createSort());
         Page<Shipment> shipmentPage = shipmentRepository.findAll(spec, pageable);
 
-        return shipmentPage.map(ShipmentMapper::toResponse);
+        return shipmentPage.map(shipmentMapper::toResponse);
     }
 
     @Cacheable(value = "shipments", key = "#id")
@@ -126,7 +111,7 @@ public class ShipmentServiceImpl implements ShipmentService {
     public ShipmentResponseDTO getShipmentById(Long id) {
         Shipment shipment = findByIdOrThrow(id, shipmentRepository::findById, "Shipment");
 
-        return ShipmentMapper.toResponse(shipment);
+        return shipmentMapper.toResponse(shipment);
     }
 
     @CacheEvict(value = "shipments", allEntries = true)
@@ -142,17 +127,16 @@ public class ShipmentServiceImpl implements ShipmentService {
         Vehicle truck = findByIdOrNull(dto.getTruckId(), vehicleRepository::findById, "Truck");
         Vehicle trailer = findByIdOrNull(dto.getTrailerId(), vehicleRepository::findById, "Trailer");
 
-        Shipment shipment = ShipmentMapper.toEntity(dto, quote, driver, createdByUser, truck, trailer);
+        Shipment shipment = shipmentMapper.toEntity(dto, quote, driver, createdByUser, truck, trailer);
 
         if(quote.getQuoteStatus() != QuoteStatus.ACCEPTED) {
             log.warn("Attempted to create shipment for quote number {}", quote.getNumber());
-            throw new ConflictException(
-                    "Shipment can be created only for ACCEPTED quotes",
-                    Map.of(
-                            "quoteId", quote.getId(),
-                            "quoteNumber", quote.getNumber(),
-                            "currentStatus", quote.getQuoteStatus()
-                            )
+            throw new ConflictException("Shipment can be created only for ACCEPTED quotes",
+                                        Map.of(
+                                                "quoteId", quote.getId(),
+                                                "quoteNumber", quote.getNumber(),
+                                                "currentStatus", quote.getQuoteStatus()
+                                        )
             );
         }
 
@@ -178,7 +162,7 @@ public class ShipmentServiceImpl implements ShipmentService {
         log.info("Shipment created with number: {}", savedShipment.getNumber());
         this.logShipment(shipment);
 
-        return ShipmentMapper.toResponse(savedShipment);
+        return shipmentMapper.toResponse(savedShipment);
     }
 
     @CacheEvict(value = "shipments", key = "#id")
@@ -199,11 +183,7 @@ public class ShipmentServiceImpl implements ShipmentService {
         Vehicle truck = findByIdOrNull(dto.getTruckId(), vehicleRepository::findById, "Truck");
         Vehicle trailer = findByIdOrNull(dto.getTrailerId(), vehicleRepository::findById, "Trailer");
 
-        shipment.setDriver(driver);
-        shipment.setTruck(truck);
-        shipment.setTrailer(trailer);
-        shipment.setPickup(dto.getPickup());
-        shipment.setNotes(dto.getNotes());
+        shipmentMapper.toUpdate(shipment, dto, driver, truck, trailer);
 
         validators(shipment);
 
@@ -212,12 +192,12 @@ public class ShipmentServiceImpl implements ShipmentService {
 
         // Add updated shipments cargos
         dto.getCargoItems().forEach(item ->
-                shipment.addShipmentCargoItem(ShipmentCargoMapper.toEntity(item))
+                shipment.addShipmentCargoItem(shipmentCargoMapper.toEntity(item))
         );
 
         Shipment savedShipment = shipmentRepository.save(shipment);
         this.logUpdatedShipment(oldShipment, shipment);
-        return ShipmentMapper.toResponse(savedShipment);
+        return shipmentMapper.toResponse(savedShipment);
     }
 
     @CacheEvict(value = "shipments", key = "#id")
@@ -233,19 +213,17 @@ public class ShipmentServiceImpl implements ShipmentService {
             log.warn("Failed to update Shipment status with number {} from {} to {}",
                     shipment.getNumber(), oldShipment.getStatus(), shipment.getStatus()
             );
-            throw new ConflictException(
-                    e.getMessage(),
-                    e.getErrorCode(),
-                    Map.of(
-                            "currentStatus", shipment.getStatus(),
-                            "desiredStatus", dto.status()
-                    ));
+            throw new ConflictException(e.getMessage(), e.getErrorCode(),
+                                        Map.of(
+                                                "currentStatus", shipment.getStatus(),
+                                                "desiredStatus", dto.status()
+                                        )
+            );
         }
 
         this.shipmentRepository.save(shipment);
         log.info("Shipment status updated with number {} from {} to {}",
-                shipment.getNumber(), oldShipment.getStatus(), shipment.getStatus())
-        ;
+                shipment.getNumber(), oldShipment.getStatus(), shipment.getStatus());
 
         logShipmentStatusUpdate(oldShipment, shipment);
 
@@ -256,13 +234,14 @@ public class ShipmentServiceImpl implements ShipmentService {
     }
 
     @Override
-    public Page<ShipmentResponseDTO> getShipmentsByDriver(Long driverId, PageFilterRequest pageFilter, SortFilterRequest sortFilter) {
+    public Page<ShipmentResponseDTO> getShipmentsByDriver(Long driverId, PageFilterRequest pageFilter,
+                                                          SortFilterRequest sortFilter) {
         Pageable pageable = PageRequest.of(pageFilter.getPage(), pageFilter.getSize(), sortFilter.createSort());
 
         Page<Shipment> shipmentPage = shipmentRepository.findShipmentByDriverId(driverId, pageable);
 
-        return shipmentPage.map(ShipmentMapper::toResponse);
-    };
+        return shipmentPage.map(shipmentMapper::toResponse);
+    }
 
     @Override
     public CmrDocumentSummary getCmrDocumentByShipmentId(Long shipmentId) {

@@ -29,6 +29,7 @@ import java.util.Map;
 public class CompanyProfileServiceImpl implements CompanyProfileService {
     private final CompanyProfileRepository companyProfileRepository;
     private final FileStorageService fileStorageService;
+    private final CompanyProfileMapper companyProfileMapper;
 
     @Value("${app.minio.bucketPathCompanyProfile}")
     private String companyProfileBucketPath;
@@ -57,7 +58,7 @@ public class CompanyProfileServiceImpl implements CompanyProfileService {
     public CompanyProfileResponse getCompanyProfile() {
         CompanyProfile company = getCompanyProfileEntity();
 
-        return CompanyProfileMapper.toResponse(company, createPresignedUrl(company));
+        return companyProfileMapper.toResponse(company, createPresignedUrl(company));
     }
 
     @Override
@@ -69,21 +70,20 @@ public class CompanyProfileServiceImpl implements CompanyProfileService {
 
         String logoKey = companyProfileBucketPath + fileKey;
         storeLogoFileIfExists(request.logoFile(), logoKey);
-        CompanyProfile companyProfile = CompanyProfileMapper.toEntity(request);
+        CompanyProfile companyProfile = companyProfileMapper.toEntity(request);
 
         if(request.logoFile() != null && !request.logoFile().isEmpty()) companyProfile.setLogoUrl(logoKey);
 
         try {
-            companyProfileRepository.save(companyProfile);
+            CompanyProfile saved = companyProfileRepository.save(companyProfile);
             log.info("Company profile created successfully");
+            return companyProfileMapper.toResponse(saved, createPresignedUrl(companyProfile));
         } catch (Exception e) {
             log.error("Error while creating company profile", e);
             fileStorageService.deleteObject(logoKey);
             log.info("Company profile logo deleted successfully");
             throw e;
         }
-
-        return CompanyProfileMapper.toResponse(companyProfile, createPresignedUrl(companyProfile));
     }
 
     @CacheEvict(value = "company-profile", allEntries = true)
@@ -93,21 +93,20 @@ public class CompanyProfileServiceImpl implements CompanyProfileService {
 
         String logoKey = companyProfileBucketPath + fileKey;
         storeLogoFileIfExists(request.logoFile(), logoKey);
-        CompanyProfile updated = CompanyProfileMapper.toUpdate(request, company);
+        companyProfileMapper.toUpdate(company, request);
 
-        if(request.logoFile() != null && !request.logoFile().isEmpty()) updated.setLogoUrl(logoKey);
+        if(request.logoFile() != null && !request.logoFile().isEmpty()) company.setLogoUrl(logoKey);
 
         try {
-            companyProfileRepository.save(updated);
+            CompanyProfile saved = companyProfileRepository.save(company);
             log.info("Company profile updated successfully");
+            return companyProfileMapper.toResponse(saved, createPresignedUrl(company));
         } catch (Exception e) {
             log.error("Error while updating company profile", e);
             fileStorageService.deleteObject(logoKey);
             log.info("Company profile logo deleted successfully");
             throw e;
         }
-
-        return CompanyProfileMapper.toResponse(updated, createPresignedUrl(updated));
     }
 
     /**

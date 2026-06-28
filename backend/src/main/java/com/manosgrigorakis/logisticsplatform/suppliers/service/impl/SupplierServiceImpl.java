@@ -21,14 +21,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
-
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class SupplierServiceImpl implements SupplierService {
     private final SupplierRepository supplierRepository;
+    private final SupplierMapper supplierMapper;
 
     @Override
     public Page<SupplierListResponse> findAllSuppliers(SupplierFilterRequest filterRequest, PageFilterRequest page,
@@ -53,7 +52,7 @@ public class SupplierServiceImpl implements SupplierService {
             return new ResourceNotFoundException("Supplier not found with id " + id);
         });
 
-        return SupplierMapper.toResponse(supplier);
+        return supplierMapper.toResponse(supplier);
     }
 
     @Override
@@ -63,11 +62,11 @@ public class SupplierServiceImpl implements SupplierService {
             throw new DuplicateEntryException("Supplier with company name already exists", "COMPANY_NAME");
         }
 
-        Supplier supplier = SupplierMapper.toEntity(request);
+        Supplier supplier = supplierMapper.toEntity(request);
         Supplier savedSupplier = supplierRepository.save(supplier);
 
         log.info("Created Supplier with id {}", savedSupplier.getId());
-        return SupplierMapper.toResponse(savedSupplier);
+        return supplierMapper.toResponse(savedSupplier);
     }
 
     @CacheEvict(value = "suppliers", key = "#id")
@@ -85,12 +84,11 @@ public class SupplierServiceImpl implements SupplierService {
                     throw new DuplicateEntryException("Supplier with company name already exists", "COMPANY_NAME");
                 });
 
-        supplier.setCompanyName(request.companyName());
-        supplier.setEmail(request.email());
+        supplierMapper.toUpdate(supplier, request);
         Supplier updatedSupplier = supplierRepository.save(supplier);
 
         log.info("Updated Supplier with id {}", updatedSupplier.getId());
-        return SupplierMapper.toResponse(updatedSupplier);
+        return supplierMapper.toResponse(updatedSupplier);
     }
 
     @CacheEvict(value = "suppliers", key = "#id")
