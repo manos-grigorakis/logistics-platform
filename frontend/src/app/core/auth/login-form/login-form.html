@@ -1,38 +1,28 @@
-<section class="flex min-h-screen items-center justify-center">
-  @if (isLoading) {
-    <app-loading-spinner />
-  }
-  <div class="w-full max-w-lg rounded-lg bg-white p-8 shadow-md">
-    <app-auth-header />
+<app-auth-layout
+  [isLoading]="isLoading"
+  [header]="'auth.login.title' | translate"
+  [errorMessage]="errorMessage | translate"
+>
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <div class="mb-5">
+      <app-main-input label="Email" placeholder="Email" type="email" formControlName="email" />
+    </div>
+    <div class="mb-1">
+      <app-main-input
+        [label]="'auth.password' | translate"
+        placeholder="Password"
+        type="password"
+        formControlName="password"
+      />
+    </div>
+    <div class="mb-6 text-right">
+      <a
+        routerLink="/forgot-password"
+        class="text-primary-500 hover:text-primary-600 text-sm font-medium transition-colors duration-200 ease-in-out hover:underline"
+        >{{ 'auth.forgot-password.title' | translate }}</a
+      >
+    </div>
 
-    <h2 class="mb-8 text-center text-3xl font-semibold">{{ 'auth.login.title' | translate }}</h2>
-
-    @if (loginFailed) {
-      <div class="mb-5">
-        <app-error-alert [errorMessage]="errorMessage | translate" />
-      </div>
-    }
-
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <div class="mb-5">
-        <app-main-input label="Email" placeholder="Email" type="email" formControlName="email" />
-      </div>
-      <div class="mb-1">
-        <app-main-input
-          [label]="'auth.password' | translate"
-          placeholder="Password"
-          type="password"
-          formControlName="password"
-        />
-      </div>
-      <div class="mb-6 text-right">
-        <a
-          routerLink="/forgot-password"
-          class="text-primary-500 hover:text-primary-600 text-sm font-medium transition-colors duration-200 ease-in-out hover:underline"
-          >{{ 'auth.forgot-password.title' | translate }}</a
-        >
-      </div>
-      <app-primary-button [value]="'auth.login.button' | translate" [isDisabled]="isLoading" />
-    </form>
-  </div>
-</section>
+    <app-primary-button [value]="'auth.login.button' | translate" [isDisabled]="isLoading" />
+  </form>
+</app-auth-layout>

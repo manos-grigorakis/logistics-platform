@@ -3,25 +3,16 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { AuthService } from '../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PrimaryButton } from '../../../shared/ui/primary-button/primary-button';
-import { LoadingSpinner } from '../../../shared/ui/loading-spinner/loading-spinner';
 import { ResetPasswordRequest } from '../models/reset-password-request';
 import { MainInput } from '../../../shared/components/forms/main-input/main-input';
-import { ErrorAlert } from '../../../shared/ui/error-alert/error-alert';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LanguageService } from '../../services/language.service';
-import { AuthHeader } from '../components/auth-header/auth-header';
+import { AuthLayout } from '../components/auth-layout/auth-layout';
+import { handleHttpErrors } from '../../../shared/utils/handle-http-errors.util';
 
 @Component({
   selector: 'app-reset-password-form',
-  imports: [
-    PrimaryButton,
-    LoadingSpinner,
-    ReactiveFormsModule,
-    MainInput,
-    ErrorAlert,
-    TranslatePipe,
-    AuthHeader,
-  ],
+  imports: [PrimaryButton, ReactiveFormsModule, MainInput, TranslatePipe, AuthLayout],
   templateUrl: './reset-password-form.html',
   styleUrl: './reset-password-form.css',
 })
@@ -71,11 +62,10 @@ export class ResetPasswordForm implements OnInit {
       error: (err) => {
         if (err.status === 400 || err.status === 404) {
           this.languageService.toastError('auth.reset-password.errors.invalid-or-used-link');
-        } else if (err.status === 500) {
-          this.languageService.toastError('common.errors.server');
         } else {
-          this.languageService.toastError('common.errors.generic');
+          this.languageService.toastError(handleHttpErrors(err.status));
         }
+
         this.router.navigate(['/login']);
       },
     });
@@ -113,10 +103,8 @@ export class ResetPasswordForm implements OnInit {
         if (err.status === 400 || err.status === 404) {
           this.languageService.toastError('auth.reset-password.errors.invalid-or-used-link');
           this.router.navigate(['/login']);
-        } else if (err.status === 500) {
-          this.errorMessage = 'common.errors.server';
         } else {
-          this.errorMessage = 'common.errors.generic';
+          this.errorMessage = handleHttpErrors(err.status);
         }
       },
     });

@@ -4,24 +4,14 @@ import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angu
 import { AuthService } from '../services/auth.service';
 import { LoginRequest } from '../models/login-request';
 import { Router, RouterLink } from '@angular/router';
-import { LoadingSpinner } from '../../../shared/ui/loading-spinner/loading-spinner';
 import { MainInput } from '../../../shared/components/forms/main-input/main-input';
-import { ErrorAlert } from '../../../shared/ui/error-alert/error-alert';
 import { TranslatePipe } from '@ngx-translate/core';
-import { AuthHeader } from '../components/auth-header/auth-header';
+import { AuthLayout } from '../components/auth-layout/auth-layout';
+import { handleHttpErrors } from '../../../shared/utils/handle-http-errors.util';
 
 @Component({
   selector: 'app-login-form',
-  imports: [
-    PrimaryButton,
-    ReactiveFormsModule,
-    LoadingSpinner,
-    RouterLink,
-    MainInput,
-    ErrorAlert,
-    TranslatePipe,
-    AuthHeader,
-  ],
+  imports: [PrimaryButton, ReactiveFormsModule, RouterLink, MainInput, TranslatePipe, AuthLayout],
   templateUrl: './login-form.html',
   styleUrl: './login-form.css',
 })
@@ -29,9 +19,8 @@ export class LoginForm {
   private formBuilder = inject(FormBuilder);
   private router = inject(Router);
 
-  loginFailed: boolean = false;
-  errorMessage?: string;
   isLoading: boolean = false;
+  errorMessage: string | null = null;
 
   authService: AuthService = inject(AuthService);
 
@@ -68,18 +57,15 @@ export class LoginForm {
       },
       error: (err) => {
         this.isLoading = false;
-        this.loginFailed = true;
 
         if (err.status === 401) {
           this.errorMessage = 'auth.login.errors.invalid-credentials';
-        } else if (err.status === 500) {
-          this.errorMessage = 'common.errors.server';
         } else {
-          this.errorMessage = 'common.errors.generic';
+          this.errorMessage = handleHttpErrors(err.status);
         }
 
         setTimeout(() => {
-          this.loginFailed = false;
+          this.errorMessage = null;
         }, 5000);
       },
     });
