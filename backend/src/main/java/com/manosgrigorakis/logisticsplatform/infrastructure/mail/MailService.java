@@ -50,6 +50,8 @@ public class MailService {
     @Value("${app.setup_password.expires}")
     private String setupPasswordTokenExpiresIn;
 
+    private final String logoPath = "/assets/images/logo-light.svg";
+
     public MailService(JavaMailSender mailSender) {
         this.mailSender = mailSender;
     }
@@ -82,7 +84,8 @@ public class MailService {
                     .replace("${tokenExpiresIn}", formattedTokenExpiration)
                     .replace("${currentYear}", String.valueOf(Year.now().getValue()))
                     .replace("${primaryDarkColor}", primaryDarkColor)
-                    .replace("${accentLightColor}", accentLightColor);
+                    .replace("${accentLightColor}", accentLightColor)
+                    .replace("${logoUrl}", frontendUrl + logoPath);
 
             MimeMessage mail = buildHtmlMail(user.getEmail(), subject, htmlTemplate);
             mailSender.send(mail);
@@ -118,7 +121,8 @@ public class MailService {
                     .replace("${resetPasswordTokenExpiresIn}", formattedTokenExpiration)
                     .replace("${currentYear}", String.valueOf(Year.now().getValue()))
                     .replace("${primaryDarkColor}", primaryDarkColor)
-                    .replace("${accentLightColor}", accentLightColor);
+                    .replace("${accentLightColor}", accentLightColor)
+                    .replace("${logoUrl}", frontendUrl + logoPath);
 
             MimeMessage mail = buildHtmlMail(email, subject, htmlTemplate);
             mailSender.send(mail);
