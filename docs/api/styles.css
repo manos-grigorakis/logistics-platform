@@ -8,14 +8,27 @@ body {
     sans-serif;
 }
 
+/* Top Bar */
 .top-bar {
   height: 64px;
   background: #0f172a;
-  color: white;
   display: flex;
   align-items: center;
   padding: 0 24px;
-  border-bottom: 1px solid #1e293b;
-  font-size: 1.15rem;
-  font-weight: 600;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.brand img {
+  width: 24px;
+  height: 24px;
+  display: block;
 }

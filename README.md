@@ -1,4 +1,6 @@
-# Logistics Platform
+<h1 align="center" style="border-bottom: none">
+    <img alt="Logistics Platform" src="./docs/logo/logo-light.svg" width="120"><br>Logistics Platform
+</h1>
 
 ![Status](https://img.shields.io/badge/status-active-brightgreen)
 ![Coverage](https://github.com/manos-grigorakis/logistics-platform/blob/main/.github/badges/jacoco.svg?raw=true)

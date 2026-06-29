@@ -1,0 +1,21 @@
+<section class="flex min-h-screen items-center justify-center">
+  @if (isLoading) {
+    <app-loading-spinner />
+  }
+
+  <div class="w-full max-w-lg rounded-lg bg-white p-8 shadow-md">
+    <app-auth-header />
+
+    <h2 class="text-center text-3xl font-semibold" [ngClass]="errorMessage ? 'mb-5' : 'mb-8'">
+      {{ header }}
+    </h2>
+
+    @if (errorMessage) {
+      <div class="mb-5">
+        <app-error-alert [errorMessage]="errorMessage" />
+      </div>
+    }
+
+    <ng-content></ng-content>
+  </div>
+</section>
