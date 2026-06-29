@@ -3,7 +3,10 @@
 }
 
 <section class="mx-auto mt-6 max-w-4xl rounded-lg bg-white p-6 shadow-lg shadow-black/10">
-  <h1 class="mb-8 text-center text-3xl font-bold">{{ 'app.title' | translate }}</h1>
+  <div class="mb-8 flex items-center justify-center gap-2">
+    <img src="assets/images/logo-dark.svg" class="h-8" alt="Logo" />
+    <h1 class="text-3xl font-semibold">{{ 'app.title' | translate }}</h1>
+  </div>
 
   <app-detailed-stepper [steps]="steps" [activeStep]="currentStep" [showDescription]="false" />
 
