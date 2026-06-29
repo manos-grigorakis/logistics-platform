@@ -1,12 +1,13 @@
 import { Component, inject } from '@angular/core';
 import { PrimaryButton } from '../../../shared/ui/primary-button/primary-button';
-import { FormControl, Validators, ReactiveFormsModule, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { LoadingSpinner } from '../../../shared/ui/loading-spinner/loading-spinner';
 import { RouterLink } from '@angular/router';
 import { MainInput } from '../../../shared/components/forms/main-input/main-input';
 import { ErrorAlert } from '../../../shared/ui/error-alert/error-alert';
 import { TranslatePipe } from '@ngx-translate/core';
+import { AuthHeader } from '../components/auth-header/auth-header';
 
 @Component({
   selector: 'app-forgot-password-form',
@@ -18,6 +19,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     MainInput,
     ErrorAlert,
     TranslatePipe,
+    AuthHeader,
   ],
   templateUrl: './forgot-password-form.html',
   styleUrl: './forgot-password-form.css',

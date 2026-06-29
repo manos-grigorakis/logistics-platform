@@ -2,18 +2,16 @@
   @if (isLoading) {
     <app-loading-spinner />
   }
-  <div class="w-full max-w-md rounded-lg bg-white p-6 shadow-md">
-    <!-- Language Switcher -->
-    <div class="mb-2 flex justify-end">
-      <app-language-switcher />
-    </div>
+  <div class="w-full max-w-lg rounded-lg bg-white p-8 shadow-md">
+    <app-auth-header />
 
-    <h2 class="mb-4 text-center text-3xl font-semibold">{{ 'auth.login.title' | translate }}</h2>
-    <div class="mb-5">
-      @if (loginFailed) {
+    <h2 class="mb-8 text-center text-3xl font-semibold">{{ 'auth.login.title' | translate }}</h2>
+
+    @if (loginFailed) {
+      <div class="mb-5">
         <app-error-alert [errorMessage]="errorMessage | translate" />
-      }
-    </div>
+      </div>
+    }
 
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <div class="mb-5">
@@ -30,7 +28,7 @@
       <div class="mb-6 text-right">
         <a
           routerLink="/forgot-password"
-          class="text-primary-400 text-sm font-medium hover:underline"
+          class="text-primary-500 hover:text-primary-600 text-sm font-medium transition-colors duration-200 ease-in-out hover:underline"
           >{{ 'auth.forgot-password.title' | translate }}</a
         >
       </div>

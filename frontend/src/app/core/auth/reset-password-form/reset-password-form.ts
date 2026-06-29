@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { FormControl, Validators, ReactiveFormsModule, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PrimaryButton } from '../../../shared/ui/primary-button/primary-button';
@@ -9,6 +9,7 @@ import { MainInput } from '../../../shared/components/forms/main-input/main-inpu
 import { ErrorAlert } from '../../../shared/ui/error-alert/error-alert';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LanguageService } from '../../services/language.service';
+import { AuthHeader } from '../components/auth-header/auth-header';
 
 @Component({
   selector: 'app-reset-password-form',
@@ -19,6 +20,7 @@ import { LanguageService } from '../../services/language.service';
     MainInput,
     ErrorAlert,
     TranslatePipe,
+    AuthHeader,
   ],
   templateUrl: './reset-password-form.html',
   styleUrl: './reset-password-form.css',

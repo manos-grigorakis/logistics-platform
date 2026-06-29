@@ -9,6 +9,7 @@ import { MainInput } from '../../../shared/components/forms/main-input/main-inpu
 import { ErrorAlert } from '../../../shared/ui/error-alert/error-alert';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LanguageService } from '../../services/language.service';
+import { AuthHeader } from '../components/auth-header/auth-header';
 
 @Component({
   selector: 'app-setup-password-form',
@@ -19,6 +20,7 @@ import { LanguageService } from '../../services/language.service';
     MainInput,
     ErrorAlert,
     TranslatePipe,
+    AuthHeader,
   ],
   templateUrl: './setup-password-form.html',
   styleUrl: './setup-password-form.css',

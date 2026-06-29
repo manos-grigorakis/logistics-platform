@@ -8,7 +8,7 @@ import { LoadingSpinner } from '../../../shared/ui/loading-spinner/loading-spinn
 import { MainInput } from '../../../shared/components/forms/main-input/main-input';
 import { ErrorAlert } from '../../../shared/ui/error-alert/error-alert';
 import { TranslatePipe } from '@ngx-translate/core';
-import { LanguageSwitcher } from '../../../shared/ui/language-switcher/language-switcher';
+import { AuthHeader } from '../components/auth-header/auth-header';
 
 @Component({
   selector: 'app-login-form',
@@ -20,7 +20,7 @@ import { LanguageSwitcher } from '../../../shared/ui/language-switcher/language-
     MainInput,
     ErrorAlert,
     TranslatePipe,
-    LanguageSwitcher,
+    AuthHeader,
   ],
   templateUrl: './login-form.html',
   styleUrl: './login-form.css',
