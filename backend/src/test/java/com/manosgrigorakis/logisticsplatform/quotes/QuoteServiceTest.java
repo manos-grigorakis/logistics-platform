@@ -1,226 +1,342 @@
 package com.manosgrigorakis.logisticsplatform.quotes;
 
+import com.manosgrigorakis.logisticsplatform.audit.service.AuditService;
+import com.manosgrigorakis.logisticsplatform.common.exception.ConflictException;
 import com.manosgrigorakis.logisticsplatform.common.exception.ResourceNotFoundException;
+import com.manosgrigorakis.logisticsplatform.common.generators.DocumentNumberGenerator;
 import com.manosgrigorakis.logisticsplatform.companyprofile.model.CompanyProfile;
-import com.manosgrigorakis.logisticsplatform.companyprofile.service.CompanyProfileServiceImpl;
-import com.manosgrigorakis.logisticsplatform.customers.enums.CustomerType;
+import com.manosgrigorakis.logisticsplatform.companyprofile.service.CompanyProfileService;
 import com.manosgrigorakis.logisticsplatform.customers.model.Customer;
 import com.manosgrigorakis.logisticsplatform.customers.repository.CustomerRepository;
+import com.manosgrigorakis.logisticsplatform.infrastructure.document.generators.QuotePdfGenerator;
 import com.manosgrigorakis.logisticsplatform.infrastructure.storage.FileStorageService;
-import com.manosgrigorakis.logisticsplatform.quotes.dto.quote.QuoteCreatedResponseDTO;
-import com.manosgrigorakis.logisticsplatform.quotes.dto.quote.QuoteRequestDTO;
-import com.manosgrigorakis.logisticsplatform.quotes.dto.quote.QuoteResponseDTO;
-import com.manosgrigorakis.logisticsplatform.quotes.dto.quote.QuoteUpdateRequestDTO;
+import com.manosgrigorakis.logisticsplatform.quotes.dto.quote.*;
 import com.manosgrigorakis.logisticsplatform.quotes.dto.quoteItem.QuoteItemRequestDTO;
-import com.manosgrigorakis.logisticsplatform.quotes.enums.QuoteItemUnit;
 import com.manosgrigorakis.logisticsplatform.quotes.enums.QuoteStatus;
+import com.manosgrigorakis.logisticsplatform.quotes.mapper.QuoteItemMapper;
+import com.manosgrigorakis.logisticsplatform.quotes.mapper.QuoteMapper;
 import com.manosgrigorakis.logisticsplatform.quotes.model.Quote;
+import com.manosgrigorakis.logisticsplatform.quotes.model.QuoteItem;
 import com.manosgrigorakis.logisticsplatform.quotes.repository.QuoteRepository;
+import com.manosgrigorakis.logisticsplatform.quotes.service.QuoteCalculator;
 import com.manosgrigorakis.logisticsplatform.quotes.service.QuoteServiceImpl;
-import com.manosgrigorakis.logisticsplatform.users.enums.UserStatus;
 import com.manosgrigorakis.logisticsplatform.users.model.User;
 import com.manosgrigorakis.logisticsplatform.users.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
-@ActiveProfiles("test")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
-@Transactional
+@ExtendWith(MockitoExtension.class)
 public class QuoteServiceTest {
-    @MockitoBean
-    private FileStorageService fileStorageService;
-
-    @MockitoBean
-    private JavaMailSender javaMailSender;
-
-    @Autowired
+    @Mock
     private QuoteRepository quoteRepository;
 
-    @Autowired
+    @Mock
     private UserRepository userRepository;
 
-    @Autowired
+    @Mock
     private CustomerRepository customerRepository;
 
-    @Autowired
+    @Mock
+    private CompanyProfileService companyProfileService;
+
+    @Mock
+    private FileStorageService fileStorageService;
+
+    @Mock
+    private AuditService auditService;
+
+    @Mock
+    private QuoteCalculator quoteCalculator;
+
+    @Mock
+    private DocumentNumberGenerator documentNumberGenerator;
+
+    @Mock
+    private QuotePdfGenerator quotePdfGenerator;
+
+    @Mock
+    private QuoteMapper quoteMapper;
+
+    @Mock
+    private QuoteItemMapper quoteItemMapper;
+
+    @InjectMocks
     private QuoteServiceImpl quoteService;
 
-    @MockitoBean
-    private CompanyProfileServiceImpl companyProfileService;
+    private static final String BUCKET_PATH = "quotes/";
+
+    private static final String PRESIGNED_URL = "https://minio.example.com/presigned-url";
 
     @BeforeEach
-    public void setUp() {
-        when(companyProfileService.getCompanyProfileEntity()).thenReturn(CompanyProfile.builder()
-                                                                                 .name("Test Company")
-                                                                                 .slogan("Test")
-                                                                                 .email("test@test.com")
-                                                                                 .street("Street")
-                                                                                 .streetNumber("1")
-                                                                                 .postalCode("12345")
-                                                                                 .region("Athens")
-                                                                                 .tin("123456789")
-                                                                                 .vatPercentage(24)
-                                                                                 .representative("John Doe")
-                                                                                 .representativeTitle("Manager")
-                                                                                 .brandPrimaryColor("#0f172a")
-                                                                                 .brandSecondaryColor("#2563eb")
-                                                                                 .phones(List.of("2101234567"))
-                                                                                 .country("Greece")
-                                                                                 .build()
-        );
+    void setUp() {
+        ReflectionTestUtils.setField(quoteService, "bucketPathQuotes", BUCKET_PATH);
     }
 
     @Test
-    void getQuoteById_shouldReturnQuote() {
+    void getQuoteById_shouldReturnQuote_whenExists() {
         // Arrange
-        QuoteRequestDTO dto = this.createQuote(createUser().getId(), createCustomer().getId());
-        QuoteCreatedResponseDTO responseDTO = quoteService.createQuote(dto);
+        String number = "Q-2026-0001";
+        Quote quote = new Quote();
+        quote.setNumber(number);
+
+        QuoteResponseDTO expectedResponse = new QuoteResponseDTO();
+        expectedResponse.setNumber(number);
+
+        String bucketPath = BUCKET_PATH + number;
+
+        when(quoteRepository.findById(1L)).thenReturn(Optional.of(quote));
+        when(fileStorageService.createPresignedUrl(bucketPath)).thenReturn(PRESIGNED_URL);
+        when(quoteMapper.toResponse(quote)).thenReturn(expectedResponse);
 
         // Act
-        QuoteResponseDTO response = quoteService.getQuoteById(responseDTO.getId());
+        QuoteResponseDTO response = quoteService.getQuoteById(1L);
 
         // Assert
-        assertEquals(responseDTO.getId(), response.getId());
-        assertEquals(0, response.getGrossPrice().compareTo(responseDTO.getGrossPrice()));
+        assertNotNull(response);
+        assertEquals(quote.getNumber(), response.getNumber());
+        assertEquals(PRESIGNED_URL, response.getPdfUrl());
+        verify(quoteRepository, times(1)).findById(1L);
+        verify(fileStorageService, times(1)).createPresignedUrl(bucketPath);
+    }
+
+    @Test
+    void getQuoteById_shouldThrowNotFoundException_whenNotExists() {
+        // Arrange
+        when(quoteRepository.findById(1L)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(ResourceNotFoundException.class, () -> quoteService.getQuoteById(1L));
+        verify(quoteRepository, times(1)).findById(1L);
+        verify(fileStorageService, never()).createPresignedUrl(BUCKET_PATH);
     }
 
     @Test
     void createQuote_shouldCreateQuote() {
         // Arrange
-        LocalDate today = LocalDate.now();
-        QuoteRequestDTO dto = this.createQuote(createUser().getId(), createCustomer().getId());
+        Quote expectedQuote = new Quote();
+        User mockUser = new User();
+        Customer mockCustomer = Customer.builder().firstName("John").lastName("Doe").build();
+        QuoteRequestDTO request = new QuoteRequestDTO();
+        QuoteItemRequestDTO mockItemRequest = new QuoteItemRequestDTO();
+
+        expectedQuote.setCustomer(mockCustomer);
+        mockItemRequest.setPrice(new BigDecimal("10.00"));
+        mockItemRequest.setQuantity(2);
+        request.setQuoteItems(List.of(mockItemRequest));
+        request.setUserId(1L);
+        request.setCustomerId(1L);
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(mockUser));
+        when(customerRepository.findById(1L)).thenReturn(Optional.of(mockCustomer));
+        when(quoteMapper.toEntity(request, mockUser, mockCustomer)).thenReturn(expectedQuote);
+        when(quoteRepository.findLastQuoteNumberByYear(LocalDate.now().getYear())).thenReturn(
+                Optional.of("Q-2026-0001"));
+        when(documentNumberGenerator.generateNextSequentialNumber(eq("Q"), anyString())).thenReturn("Q-2026-0001");
+        mockCompanyProfile();
+        when(quoteCalculator.calculateNetTotal(expectedQuote)).thenReturn(new BigDecimal("20.00"));
+        when(quotePdfGenerator.generatePdf(any())).thenReturn(new byte[0]);
+        when(quoteRepository.save(expectedQuote)).thenReturn(expectedQuote);
+        when(fileStorageService.createPresignedUrl(anyString())).thenReturn(PRESIGNED_URL);
+        when(quoteMapper.toCreatedResponse(expectedQuote)).thenReturn(new QuoteCreatedResponseDTO());
 
         // Act
-        QuoteCreatedResponseDTO responseDTO = quoteService.createQuote(dto);
-        Quote foundedQuote = quoteRepository.findById(responseDTO.getId())
-                .orElseThrow();
+        quoteService.createQuote(request);
 
         // Assert
-        assertEquals(dto.getOrigin(), foundedQuote.getOrigin());
-        assertEquals(dto.getDestination(), foundedQuote.getDestination());
+        ArgumentCaptor<Quote> captor = ArgumentCaptor.forClass(Quote.class);
+        verify(quoteRepository).save(captor.capture());
 
-        assertEquals(today, foundedQuote.getIssueDate());
-        assertEquals(QuoteStatus.DRAFT, foundedQuote.getQuoteStatus());
-        assertEquals(today.plusDays(30), foundedQuote.getExpirationDate());
+        Quote savedQuote = captor.getValue();
+        assertEquals(QuoteStatus.DRAFT, savedQuote.getQuoteStatus());
+        assertEquals(0, savedQuote.getNetPrice().compareTo(new BigDecimal("20.00")));
+        assertEquals(0, savedQuote.getVatAmount().compareTo(new BigDecimal("4.80")));
+        assertEquals(0, savedQuote.getGrossPrice().compareTo(new BigDecimal("24.80")));
+    }
 
-        assertEquals(0, foundedQuote.getNetPrice().compareTo(new BigDecimal("100.00")));
-        assertEquals(0, foundedQuote.getVatAmount().compareTo(new BigDecimal("24.00")));
-        assertEquals(0, foundedQuote.getGrossPrice().compareTo(new BigDecimal("124.00")));
+    @Test
+    void createQuote_shouldThrowResourceNotFound_whenUserNotExists() {
+        // Arrange
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
+        QuoteRequestDTO request = new QuoteRequestDTO();
+        request.setUserId(1L);
 
-        assertEquals(1, foundedQuote.getQuoteItems().size());
-        assertEquals("Boat", foundedQuote.getQuoteItems().get(0).getName());
+        // Act & Assert
+        assertThrows(ResourceNotFoundException.class, () -> quoteService.createQuote(request));
+        verify(userRepository, times(1)).findById(1L);
+        verify(quoteRepository, never()).save(any(Quote.class));
+        verify(fileStorageService, never()).createPresignedUrl(anyString());
+    }
+
+    @Test
+    void createQuote_shouldThrowResourceNotFound_whenCustomerNotExists() {
+        // Arrange
+        User mockUser = new User();
+        QuoteRequestDTO request = new QuoteRequestDTO();
+        request.setCustomerId(1L);
+        request.setUserId(1L);
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(mockUser));
+        when(customerRepository.findById(1L)).thenReturn(Optional.empty());
+
+
+        // Act & Assert
+        assertThrows(ResourceNotFoundException.class, () -> quoteService.createQuote(request));
+        verify(userRepository, times(1)).findById(1L);
+        verify(customerRepository, times(1)).findById(1L);
+        verify(quoteRepository, never()).save(any(Quote.class));
+        verify(fileStorageService, never()).createPresignedUrl(anyString());
     }
 
     @Test
     void updateQuote_shouldUpdateQuote() {
         // Arrange
-        QuoteRequestDTO dto = this.createQuote(createUser().getId(), createCustomer().getId());
-        QuoteCreatedResponseDTO responseDTO = quoteService.createQuote(dto);
-        Quote foundedQuote = quoteRepository.findById(responseDTO.getId())
-                .orElseThrow();
+        Quote mockQuote = new Quote();
+        Customer mockCustomer = new Customer();
+        QuoteUpdateRequestDTO request = new QuoteUpdateRequestDTO();
+        QuoteItemRequestDTO mockItemRequest = new QuoteItemRequestDTO();
+        BigDecimal netPrice = new BigDecimal("20.00");
 
-        QuoteItemRequestDTO itemRequestDTO1 = createItem("Boat", 1, new BigDecimal("100.00"));
-        QuoteItemRequestDTO itemRequestDTO2 = createItem("Box", 1, new BigDecimal("20.00"));
+        mockQuote.setQuoteStatus(QuoteStatus.DRAFT);
+        mockQuote.setCustomer(mockCustomer);
+        mockItemRequest.setPrice(new BigDecimal("10.00"));
+        mockItemRequest.setQuantity(2);
 
-        QuoteUpdateRequestDTO requestDTO = new QuoteUpdateRequestDTO();
-        requestDTO.setValidityDays(30);
-        requestDTO.setOrigin("Athens");
-        requestDTO.setDestination("Patra");
-        requestDTO.setCustomerId(foundedQuote.getCustomer().getId());
-        requestDTO.setQuoteItems(List.of(itemRequestDTO1, itemRequestDTO2));
+        request.setQuoteItems(List.of(mockItemRequest));
+        request.setCustomerId(1L);
+
+        when(quoteRepository.findById(1L)).thenReturn(Optional.of(mockQuote));
+        when(customerRepository.findById(1L)).thenReturn(Optional.of(mockCustomer));
+        when(quoteItemMapper.toEntity(mockItemRequest)).thenReturn(new QuoteItem());
+        mockCompanyProfile();
+        when(quoteCalculator.calculateNetTotal(mockQuote)).thenReturn(netPrice);
+        when(quotePdfGenerator.generatePdf(any())).thenReturn(new byte[0]);
+        when(quoteRepository.save(mockQuote)).thenReturn(mockQuote);
+        when(fileStorageService.createPresignedUrl(anyString())).thenReturn(PRESIGNED_URL);
+        when(quoteMapper.toResponse(mockQuote)).thenReturn(new QuoteResponseDTO());
 
         // Act
-        QuoteResponseDTO response = quoteService.updateQuote(foundedQuote.getId(), requestDTO);
+        QuoteResponseDTO response = quoteService.updateQuote(1L, request);
 
         // Assert
-        assertEquals("Athens", response.getOrigin());
-        assertEquals("Patra", response.getDestination());
-
-        assertEquals(0, response.getNetPrice().compareTo(new BigDecimal("120.00")));
-        assertEquals(0, response.getVatAmount().compareTo(new BigDecimal("28.80")));
-        assertEquals(0, response.getGrossPrice().compareTo(new BigDecimal("148.80")));
-
-        assertEquals(2, response.getQuoteItems().size());
-        assertEquals("Boat", response.getQuoteItems().get(0).getName());
-        assertEquals("Box", response.getQuoteItems().get(1).getName());
-
+        verify(quoteMapper, times(1)).toUpdate(eq(mockQuote), eq(request), any(BigDecimal.class), any(BigDecimal.class),
+                                               any(BigDecimal.class), eq(mockCustomer));
+        verify(quoteRepository, times(1)).save(mockQuote);
     }
 
     @Test
-    void createQuote_shouldThrow_whenUserNotFound() {
+    void updateQuote_shouldThrow_whenQuoteNotExists() {
         // Arrange
-        QuoteRequestDTO dto = this.createQuote(9999L, createCustomer().getId());
+        when(quoteRepository.findById(1L)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(ResourceNotFoundException.class,
-                () -> quoteService.createQuote(dto));
+        assertThrows(ResourceNotFoundException.class, () -> quoteService.updateQuote(1L, new QuoteUpdateRequestDTO()));
+        verify(quoteRepository, times(1)).findById(1L);
+        verify(customerRepository, never()).findById(1L);
+        verify(quoteRepository, never()).save(any(Quote.class));
+        verify(fileStorageService, never()).createPresignedUrl(anyString());
     }
 
     @Test
-    void createQuote_shouldThrow_whenCustomerNotFound() {
+    void updateQuote_shouldThrowConflictException_whenQuoteStatusIsNotEditable() {
         // Arrange
-        QuoteRequestDTO dto = this.createQuote(createUser().getId(), 9999L);
+        Customer mockCustomer = new Customer();
+        Quote mockQuote = Quote.builder().quoteStatus(QuoteStatus.EXPIRED).customer(mockCustomer).build();
+
+        when(quoteRepository.findById(1L)).thenReturn(Optional.of(mockQuote));
+        when(customerRepository.findById(1L)).thenReturn(Optional.of(mockCustomer));
+
+        QuoteUpdateRequestDTO request = new QuoteUpdateRequestDTO();
+        request.setCustomerId(1L);
+
+        // Act && Assert
+        assertThrows(ConflictException.class, () -> quoteService.updateQuote(1L, request));
+        verify(quoteRepository, never()).save(any(Quote.class));
+    }
+
+    @Test
+    void updateQuoteStatus_shouldUpdateQuoteStatus() {
+        // Assert
+        Quote mockQuote = new Quote();
+        Customer mockCustomer = new Customer();
+        mockQuote.setQuoteStatus(QuoteStatus.DRAFT);
+        mockQuote.setCustomer(mockCustomer);
+
+        UpdateQuoteStatusRequestDTO request = new UpdateQuoteStatusRequestDTO();
+        request.setQuoteStatus(QuoteStatus.SENT);
+
+        when(quoteRepository.findById(1L)).thenReturn(Optional.of(mockQuote));
+
+        // Act
+        quoteService.updateQuoteStatus(1L, request);
+
+        // Assert
+        assertEquals(QuoteStatus.SENT, mockQuote.getQuoteStatus());
+        verify(quoteRepository, times(1)).findById(1L);
+        verify(quoteRepository, times(1)).save(mockQuote);
+    }
+
+    @Test
+    void updateQuoteStatus_shouldThrowResourceNotFoundException_whenQuoteNotExists() {
+        // Arrange
+        when(quoteRepository.findById(1L)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(ResourceNotFoundException.class,
-                () -> quoteService.createQuote(dto));
+        assertThrows(ResourceNotFoundException.class, () ->
+                quoteService.updateQuoteStatus(1L, new UpdateQuoteStatusRequestDTO()));
+        verify(quoteRepository, times(1)).findById(1L);
+        verify(quoteRepository, never()).save(any(Quote.class));
     }
 
-    // Helpers
-    private QuoteRequestDTO createQuote(Long userId, Long customerId) {
-        QuoteItemRequestDTO itemRequestDTO = createItem("Boat", 1, new BigDecimal("100.00"));
-        QuoteRequestDTO dto = new QuoteRequestDTO();
-        dto.setOrigin("Athens");
-        dto.setDestination("Karditsa");
-        dto.setValidityDays(30);
-        dto.setUserId(userId);
-        dto.setCustomerId(customerId);
-        dto.setQuoteItems(List.of(itemRequestDTO));
-        return dto;
+    @Test
+    void updateQuoteStatus_shouldThrowConflictException_whenInvalidStatusTransition() {
+        // Assert
+        Quote mockQuote = new Quote();
+        mockQuote.setQuoteStatus(QuoteStatus.DRAFT);
+
+        UpdateQuoteStatusRequestDTO request = new UpdateQuoteStatusRequestDTO();
+        request.setQuoteStatus(QuoteStatus.ACCEPTED);
+
+        when(quoteRepository.findById(1L)).thenReturn(Optional.of(mockQuote));
+
+        // Act & Assert
+        assertThrows(ConflictException.class, () -> quoteService.updateQuoteStatus(1L, request));
+        verify(quoteRepository, times(1)).findById(1L);
+        verify(quoteRepository, never()).save(mockQuote);
     }
 
-    private QuoteItemRequestDTO createItem(String name, int quantity, BigDecimal price) {
-        QuoteItemRequestDTO itemRequestDTO = new QuoteItemRequestDTO();
-        itemRequestDTO.setName(name);
-        itemRequestDTO.setQuantity(quantity);
-        itemRequestDTO.setUnit(QuoteItemUnit.PIECE);
-        itemRequestDTO.setPrice(price);
-        return itemRequestDTO;
-    }
-
-    private User createUser() {
-        User user = User.builder()
-                .firstName("John")
-                .lastName("Doe")
-                .email("john.doe@example.com")
-                .status(UserStatus.INVITED)
-                .build();
-
-        return userRepository.save(user);
-    }
-
-    private Customer createCustomer() {
-        Customer customer = Customer.builder()
-                .tin("123456789")
-                .companyName("Cargo A.E.")
-                .firstName("Maria")
-                .lastName("Papadopoulou")
-                .customerType(CustomerType.COMPANY)
-                .build();
-
-        return customerRepository.save(customer);
+    private void mockCompanyProfile() {
+        when(companyProfileService.getCompanyProfileEntity()).thenReturn(
+                CompanyProfile.builder()
+                        .name("Test Company")
+                        .slogan("Test")
+                        .email("test@test.com")
+                        .street("Street")
+                        .streetNumber("1")
+                        .postalCode("12345")
+                        .region("Athens")
+                        .tin("123456789")
+                        .vatPercentage(24)
+                        .representative("John Doe")
+                        .representativeTitle("Manager")
+                        .brandPrimaryColor("#0f172a")
+                        .brandSecondaryColor("#2563eb")
+                        .phones(List.of("2101234567"))
+                        .country("Greece")
+                        .build());
     }
 }
